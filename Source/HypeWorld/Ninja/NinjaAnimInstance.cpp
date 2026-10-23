@@ -153,6 +153,7 @@ void FNinjaAnimInstanceProxy::PreUpdate(UAnimInstance* InAnimInstance, float Del
 		SprintExtraLean = Ninja->SprintExtraLean;
 		SprintArmsDrop = Ninja->SprintArmsDrop;
 		SprintCrouchDepth = Ninja->SprintCrouchDepth;
+		SprintArmLock = Ninja->SprintArmLock;
 		ChargeCrouchDepth = Ninja->ChargeCrouchDepth;
 		ChargeStanceWidth = Ninja->ChargeStanceWidth;
 		ChargeToeOut = Ninja->ChargeToeOut;
@@ -393,7 +394,7 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 			const FCompactPoseBoneIndex Lower = Bone(bRight ? TEXT("lowerarm_r") : TEXT("lowerarm_l"));
 			const FCompactPoseBoneIndex Hand = Bone(bRight ? TEXT("hand_r") : TEXT("hand_l"));
 			const FVector Side = bRight ? Right : -Right;
-			AimBone(Upper, Lower, (-Forward - Up * SprintArmsDrop + Side * 0.15f).GetSafeNormal(), Inputs.SprintAlpha);
+			AimBone(Upper, Lower, (-Forward - Up * SprintArmsDrop + Side * 0.15f).GetSafeNormal(), Inputs.SprintAlpha * SprintArmLock);   // sobra um pouco do balanço da animação
 			if (Upper.IsValid() && Lower.IsValid())
 			{
 				const FVector UpperDir = (CS.GetComponentSpaceTransform(Lower).GetLocation() - CS.GetComponentSpaceTransform(Upper).GetLocation()).GetSafeNormal();

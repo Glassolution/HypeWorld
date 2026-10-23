@@ -62,6 +62,7 @@ private:
 	float SprintExtraLean = 0.f;
 	float SprintArmsDrop = 0.f;
 	float SprintCrouchDepth = 0.f;
+	float SprintArmLock = 0.f;
 	float ChargeCrouchDepth = 0.f;
 	float ChargeStanceWidth = 0.f;
 	float ChargeToeOut = 0.f;
@@ -137,9 +138,13 @@ public:
 	UPROPERTY(EditAnywhere, Category="Ninja|Corrida")
 	float SprintArmsDrop = 0.05f;
 
-	/** Quanto o quadril desce na corrida ninja (cm): joelhos mais dobrados, corpo mais baixo. */
+	/** Quanto o quadril desce na corrida ninja (cm). 0 = pernas livres como na animação (passada natural). */
 	UPROPERTY(EditAnywhere, Category="Ninja|Corrida")
-	float SprintCrouchDepth = 16.f;
+	float SprintCrouchDepth = 0.f;
+
+	/** Quanto os braços ficam presos para trás (1 = parados; menos = balançam um pouco com as passadas). */
+	UPROPERTY(EditAnywhere, Category="Ninja|Corrida")
+	float SprintArmLock = 0.85f;
 
 	/** Quanto o quadril desce concentrando chakra (cm). Base de artes marciais: joelhos dobrados 45-60°. */
 	UPROPERTY(EditAnywhere, Category="Ninja|Chakra")
