@@ -61,6 +61,7 @@ private:
 	float LandSpineAngle = 0.f;
 	float SprintExtraLean = 0.f;
 	float SprintArmsDrop = 0.f;
+	float SprintArmsInward = 0.f;
 	float SprintCrouchDepth = 0.f;
 	float SprintArmLock = 0.f;
 	float SprintStraighten = 0.f;
@@ -140,6 +141,10 @@ public:
 	/** Quanto os braços apontam para baixo na corrida ninja (0 = horizontais para trás, 1 = bem para baixo, negativo = acima da horizontal). */
 	UPROPERTY(EditAnywhere, Category="Ninja|Corrida")
 	float SprintArmsDrop = 0.05f;
+
+	/** Quanto os braços fecham para o centro das costas na corrida ninja (0 = retos para trás, 0,5 = mãos perto da coluna). */
+	UPROPERTY(EditAnywhere, Category="Ninja|Corrida")
+	float SprintArmsInward = 0.3f;
 
 	/** Quanto o quadril desce na corrida ninja (cm). 0 = pernas livres como na animação (passada natural). */
 	UPROPERTY(EditAnywhere, Category="Ninja|Corrida")
