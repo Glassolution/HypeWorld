@@ -402,30 +402,40 @@ void AHypeWorldCharacter::UpdateTurnInPlace(float DeltaSeconds)
 		Move->RotationRate.Yaw = Speed > CameraFollowMinSpeed ? SprintRotationRate : DefaultRotationRate;
 	}
 
-	if (!Move->IsMovingOnGround() || Speed > 10.f)
+	const bool bStill = Move->IsMovingOnGround() && Speed < 10.f;
+
+	if (!bStill)
 	{
-		// Começou a andar agora (estava parado): vira com animação se a direção for muito diferente
-		if (StillTime > 0.2f && Move->IsMovingOnGround() && Move->GetCurrentAcceleration().SizeSquared() > 1.f)
-		{
-			const float Angle = FMath::FindDeltaAngleDegrees(GetActorRotation().Yaw, Move->GetCurrentAcceleration().Rotation().Yaw);
-			UAnimMontage* Montage = nullptr;
-			if (FMath::Abs(Angle) >= 135.f)
-			{
-				Montage = Turn180Montage;
-			}
-			else if (Angle >= 60.f)
-			{
-				Montage = TurnRightMontage;
-			}
-			if (Montage && TurnDuration > 0.f)
-			{
-				PlayAnimMontage(Montage, Montage->GetPlayLength() / TurnDuration);
-				Move->RotationRate.Yaw = FMath::Abs(Angle) / TurnDuration;   // corpo gira no ritmo da animação
-				TurnTimeLeft = TurnDuration;
-			}
-		}
 		StillTime = 0.f;
 		return;
 	}
 	StillTime += DeltaSeconds;
+}
+
+void AHypeWorldCharacter::HandleMoveStart(const FVector& MoveAcceleration)
+{
+	// Chamado pelo componente de movimento antes de girar o corpo, com a direção da tecla deste quadro
+	UCharacterMovementComponent* Move = GetCharacterMovement();
+	if (StillTime < 0.2f || MoveAcceleration.IsNearlyZero() || GetVelocity().Size2D() > 10.f || !Move->IsMovingOnGround())
+	{
+		return;
+	}
+	StillTime = 0.f;
+
+	const float Angle = FMath::FindDeltaAngleDegrees(GetActorRotation().Yaw, MoveAcceleration.Rotation().Yaw);
+	UAnimMontage* Montage = nullptr;
+	if (FMath::Abs(Angle) >= 135.f)
+	{
+		Montage = Turn180Montage;
+	}
+	else if (FMath::Abs(Angle) >= 60.f)
+	{
+		Montage = TurnRightMontage;   // a animação só dá os passos (o giro é do código), serve para os dois lados
+	}
+	if (Montage && TurnDuration > 0.f)
+	{
+		PlayAnimMontage(Montage, Montage->GetPlayLength() / TurnDuration);
+		Move->RotationRate.Yaw = FMath::Abs(Angle) / TurnDuration;   // corpo gira no ritmo da animação
+		TurnTimeLeft = TurnDuration;
+	}
 }

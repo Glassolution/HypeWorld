@@ -4,6 +4,7 @@
 #include "GameFramework/Character.h"
 #include "Components/CapsuleComponent.h"
 #include "HypeWorld.h"
+#include "HypeWorldCharacter.h"
 #include "Animation/AnimSequenceBase.h"
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -93,6 +94,12 @@ void UNinjaMovementComponent::UpdateCharacterStateBeforeMovement(float DeltaSeco
 	if (IsFalling())
 	{
 		TryStartWallRun();
+	}
+
+	// Virada ao sair do lugar (só visual; não roda ao refazer movimentos depois de correção do servidor)
+	if (AHypeWorldCharacter* Ninja = Cast<AHypeWorldCharacter>(CharacterOwner); Ninja && !Ninja->bClientUpdating)
+	{
+		Ninja->HandleMoveStart(Acceleration);
 	}
 }
 

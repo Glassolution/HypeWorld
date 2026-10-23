@@ -199,6 +199,9 @@ public:
 	UFUNCTION(BlueprintPure, Category="Ninja")
 	UNinjaMovementComponent* GetNinjaMovement() const;
 
+	/** Saindo do lugar: toca a virada se a direção for muito diferente (chamado pelo movimento antes de girar) */
+	void HandleMoveStart(const FVector& MoveAcceleration);
+
 private:
 
 	/** Inclina o boneco nas curvas e na parede (só visual, roda em todas as máquinas) */
