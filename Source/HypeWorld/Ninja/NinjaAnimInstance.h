@@ -65,6 +65,8 @@ private:
 	float ChargeCrouchDepth = 0.f;
 	float ChargeStanceWidth = 0.f;
 	float ChargeToeOut = 0.f;
+	float ChargeKneeOut = 0.f;
+	float ChargeStraighten = 0.f;
 };
 
 /** Classe-mãe do Animation Blueprint do ninja (ABP_Ninja). */
@@ -137,15 +139,23 @@ public:
 
 	/** Quanto o quadril desce concentrando chakra (cm). Base de artes marciais: joelhos dobrados 45-60°. */
 	UPROPERTY(EditAnywhere, Category="Ninja|Chakra")
-	float ChargeCrouchDepth = 22.f;
+	float ChargeCrouchDepth = 9.f;
 
 	/** Distância entre os pés concentrando chakra (cm) — cerca de 1,5x a largura dos ombros. */
 	UPROPERTY(EditAnywhere, Category="Ninja|Chakra")
-	float ChargeStanceWidth = 62.f;
+	float ChargeStanceWidth = 46.f;
 
 	/** Quanto as pontas dos pés giram para fora (graus); os joelhos acompanham a direção dos pés. */
 	UPROPERTY(EditAnywhere, Category="Ninja|Chakra")
-	float ChargeToeOut = 22.f;
+	float ChargeToeOut = 14.f;
+
+	/** Quanto os joelhos abrem para fora (0 = para a frente, 1 = bem abertos). */
+	UPROPERTY(EditAnywhere, Category="Ninja|Chakra")
+	float ChargeKneeOut = 0.35f;
+
+	/** Quanto a coluna é endireitada (0 = como a animação, 1 = totalmente vertical). */
+	UPROPERTY(EditAnywhere, Category="Ninja|Chakra")
+	float ChargeStraighten = 0.75f;
 
 	/** Rapidez com que a mão vai até a parede / volta. */
 	UPROPERTY(EditAnywhere, Category="Ninja|Parede")

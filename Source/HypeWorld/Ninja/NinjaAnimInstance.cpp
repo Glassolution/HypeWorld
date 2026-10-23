@@ -156,6 +156,8 @@ void FNinjaAnimInstanceProxy::PreUpdate(UAnimInstance* InAnimInstance, float Del
 		ChargeCrouchDepth = Ninja->ChargeCrouchDepth;
 		ChargeStanceWidth = Ninja->ChargeStanceWidth;
 		ChargeToeOut = Ninja->ChargeToeOut;
+		ChargeKneeOut = Ninja->ChargeKneeOut;
+		ChargeStraighten = Ninja->ChargeStraighten;
 	}
 }
 
@@ -329,15 +331,20 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 			const FBoneTransform Changed[] = { FBoneTransform(Index, T) };
 			CS.LocalBlendCSBoneTransforms(Changed, 1.f);
 		};
-		Square(TEXT("thigh_l"), TEXT("thigh_r"), Pelvis, Inputs.ChargeAlpha);              // quadril
-		Square(TEXT("upperarm_l"), TEXT("upperarm_r"), Spine03, Inputs.ChargeAlpha * 0.6f); // meio das costas
-		Square(TEXT("upperarm_l"), TEXT("upperarm_r"), Spine05, Inputs.ChargeAlpha);        // peito
-		Square(TEXT("upperarm_l"), TEXT("upperarm_r"), Head, Inputs.ChargeAlpha);           // cabeça reta
+		Square(TEXT("thigh_l"), TEXT("thigh_r"), Pelvis, Inputs.ChargeAlpha * 0.6f);        // quadril quase de frente (sobra um pouco de naturalidade)
+		Square(TEXT("upperarm_l"), TEXT("upperarm_r"), Spine05, Inputs.ChargeAlpha * 0.5f); // peito acompanha pela metade
+
+		// Coluna ereta: cada trecho aponta mais para cima, sem rigidez total
+		const FCompactPoseBoneIndex Spine01 = Bone(TEXT("spine_01"));
+		AimBone(Spine01, Spine03, Up, Inputs.ChargeAlpha * ChargeStraighten);
+		AimBone(Spine03, Spine05, Up, Inputs.ChargeAlpha * ChargeStraighten);
+		AimBone(Spine05, Neck, Up, Inputs.ChargeAlpha * ChargeStraighten * 0.8f);
+		AimBone(Neck, Head, Up, Inputs.ChargeAlpha * 0.6f);
 	}
 
 	// 2) Tronco e cabeça curvam para frente (olhar o chão / absorver o pouso)
 	const float SpineDegrees = LookDownSpineAngle * Inputs.LookDownAlpha + LandSpineAngle * Inputs.LandAlpha + SprintExtraLean * Inputs.SprintAlpha
-		+ (5.f + FMath::Sin(Inputs.Time * 2.2f) * 1.2f) * Inputs.ChargeAlpha;   // concentrando: peito um pouco à frente, respirando
+		+ (FMath::Sin(Inputs.Time * 2.2f) * 1.0f) * Inputs.ChargeAlpha;   // concentrando: só a respiração
 	RotateBone(Spine03, BendAxis, SpineDegrees * 0.5f);
 	RotateBone(Spine05, BendAxis, SpineDegrees * 0.5f);
 	RotateBone(Neck, BendAxis, LookDownHeadAngle * Inputs.LookDownAlpha * 0.4f);
@@ -356,7 +363,7 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 			const FVector StanceFoot = Side * (ChargeStanceWidth * 0.5f) + Forward * (bRight ? -3.f : 3.f) + Up * Ground;
 			const FVector Target = FMath::Lerp(AnimFoot, StanceFoot, Inputs.ChargeAlpha) + Up * (Lift + StepArc);
 			// Joelho aponta para a ponta do pé: para frente e para fora na base de concentração
-			const FVector Pole = FMath::Lerp(Forward, (Forward * 0.55f + Side * 0.85f).GetSafeNormal(), Inputs.ChargeAlpha).GetSafeNormal();
+			const FVector Pole = FMath::Lerp(Forward, (Forward + Side * ChargeKneeOut).GetSafeNormal(), Inputs.ChargeAlpha).GetSafeNormal();
 			SolveLimb(bRight ? ThighR : ThighL, bRight ? CalfR : CalfL, bRight ? FootR : FootL, Target, Pole);
 
 			// Ponta do pé para fora
@@ -394,9 +401,8 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 	// 5) Concentrando chakra: ombros um pouco à frente, mãos juntas na frente do peito (selo), cotovelos abertos, queixo baixo
 	if (Inputs.ChargeAlpha > 0.01f && Spine05.IsValid())
 	{
-		RotateBone(Neck, BendAxis, 3.f * Inputs.ChargeAlpha);
-		RotateBone(Head, BendAxis, 8.f * Inputs.ChargeAlpha);
-		const FVector Chest = CS.GetComponentSpaceTransform(Spine05).GetLocation() + Forward * 30.f - Up * 8.f;
+		RotateBone(Head, BendAxis, 6.f * Inputs.ChargeAlpha);
+		const FVector Chest = CS.GetComponentSpaceTransform(Spine05).GetLocation() + Forward * 26.f - Up * 16.f;   // altura do plexo solar
 		for (const bool bRight : { true, false })
 		{
 			const FCompactPoseBoneIndex Clavicle = Bone(bRight ? TEXT("clavicle_r") : TEXT("clavicle_l"));
@@ -409,13 +415,13 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 			if (Clavicle.IsValid() && Upper.IsValid())
 			{
 				const FVector ClavDir = (CS.GetComponentSpaceTransform(Upper).GetLocation() - CS.GetComponentSpaceTransform(Clavicle).GetLocation()).GetSafeNormal();
-				AimBone(Clavicle, Upper, (ClavDir + Forward * 0.3f).GetSafeNormal(), Inputs.ChargeAlpha * 0.7f);
+				AimBone(Clavicle, Upper, (ClavDir + Forward * 0.15f).GetSafeNormal(), Inputs.ChargeAlpha * 0.5f);
 			}
 			if (Hand.IsValid())
 			{
 				const FVector Current = CS.GetComponentSpaceTransform(Hand).GetLocation();
 				const FVector Target = Chest + Side * 3.f;
-				SolveLimb(Upper, Lower, Hand, FMath::Lerp(Current, Target, Inputs.ChargeAlpha), (Side * 1.f - Up * 0.35f - Forward * 0.2f).GetSafeNormal());
+				SolveLimb(Upper, Lower, Hand, FMath::Lerp(Current, Target, Inputs.ChargeAlpha), (Side * 0.6f - Up * 0.7f - Forward * 0.1f).GetSafeNormal());   // cotovelos para baixo e um pouco para fora
 
 				// Palma virada para a outra mão, dedos para cima e um pouco à frente
 				const int32 HandSide = bRight ? 1 : 0;
