@@ -31,6 +31,7 @@ public class HypeWorld : ModuleRules
 			"HypeWorld/Ninja",
 			"HypeWorld/UI",
 			"HypeWorld/Combat",
+			"HypeWorld/Editor",
 			"HypeWorld/Variant_Platforming",
 			"HypeWorld/Variant_Platforming/Animation",
 			"HypeWorld/Variant_Combat",

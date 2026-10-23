@@ -11,8 +11,24 @@
 // Regras gerais
 // ---------------------------------------------------------------------------------------------------------------------
 
+float UNinjaMovementComponent::GetMaxAcceleration() const
+{
+	// Já correndo e acelerando para a corrida ninja: aceleração menor (transição suave)
+	if (bWantsToSprint && IsMovingOnGround() && Velocity.Size2D() >= MaxWalkSpeed * 0.95f)
+	{
+		return SprintAcceleration;
+	}
+	return Super::GetMaxAcceleration();
+}
+
 float UNinjaMovementComponent::GetMaxSpeed() const
 {
+	// Atacando: mantém um pouco do embalo, mas desacelera suave até AttackMaxSpeed
+	if (const AHypeWorldCharacter* Ninja = Cast<AHypeWorldCharacter>(CharacterOwner); Ninja && Ninja->IsAttacking() && IsMovingOnGround())
+	{
+		return AttackMaxSpeed;
+	}
+
 	// Correndo (ou no pulo que saiu de uma corrida), o limite de velocidade sobe.
 	if (bWantsToSprint && (MovementMode == MOVE_Walking || MovementMode == MOVE_NavWalking || MovementMode == MOVE_Falling))
 	{

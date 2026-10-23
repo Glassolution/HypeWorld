@@ -30,7 +30,15 @@ public:
 
 	/** Velocidade da corrida ninja (segurando o botão de correr). */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Corrida")
-	float SprintSpeed = 1200.f;
+	float SprintSpeed = 800.f;
+
+	/** Aceleração acima da velocidade de corrida normal (sobe para a corrida ninja em ~0,35 s, sem tranco). */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Corrida")
+	float SprintAcceleration = 1100.f;
+
+	/** Velocidade máxima enquanto ataca (o embalo da corrida diminui suave até aqui). */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Corrida")
+	float AttackMaxSpeed = 250.f;
 
 	/** Animação cujo deslocamento o dash segue (arranca, acelera e freia junto com ela). Vazio = velocidade constante. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Dash")
@@ -116,6 +124,7 @@ public:
 	// ---------- UCharacterMovementComponent ----------
 
 	virtual float GetMaxSpeed() const override;
+	virtual float GetMaxAcceleration() const override;
 	virtual FRotator ComputeOrientToMovementRotation(const FRotator& CurrentRotation, float DeltaTime, FRotator& DeltaRotation) const override;
 	virtual bool CanAttemptJump() const override;
 	virtual bool DoJump(bool bReplayingMoves, float DeltaTime) override;

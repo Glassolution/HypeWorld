@@ -159,6 +159,11 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
 	float RunAnimNaturalSpeed = 600.f;
 
+	/** Pares (velocidade do jogo, velocidade natural da animação naquele ponto). A animação acelera na razão entre os dois
+	 *  — os pés acompanham o chão em qualquer velocidade. Deve casar com as amostras do BS_Ninja_Locomocao. */
+	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
+	TArray<FVector2D> AnimSpeedCurve = { FVector2D(155.f, 155.f), FVector2D(420.f, 351.f), FVector2D(800.f, 359.f) };
+
 	/** Quanto a animação de corrida pode ser acelerada no máximo (2,7x = corrida de 4,5 m/s chega a ~12 m/s) */
 	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
 	float MaxRunAnimRate = 2.7f;
@@ -192,6 +197,10 @@ public:
 	float MeleeReach = 130.f;
 	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
 	float MeleeRadius = 55.f;
+
+	/** Atacando: quanto da direção das teclas ainda vale (0 = trava, 1 = livre) — dá para corrigir a mira no meio do golpe */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
+	float AttackSteering = 0.3f;
 
 	/** Quanto o personagem avança a cada golpe (cm/s de impulso) */
 	UPROPERTY(EditAnywhere, Category="Ninja|Combate")

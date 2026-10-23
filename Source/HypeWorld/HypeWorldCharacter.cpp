@@ -158,10 +158,15 @@ void AHypeWorldCharacter::DoMove(float Right, float Forward)
 
 		FVector Wish = ForwardDirection * Forward + RightDirection * Right;
 
-		// Atacando ou carregando chakra: não anda (o golpe já empurra para a frente)
-		if (IsAttacking() || bChargingChakra)
+		// Carregando chakra: não anda. Atacando: só ajusta um pouco a direção (o golpe já empurra para a frente)
+		if (bChargingChakra)
 		{
 			return;
+		}
+		if (IsAttacking() && !Wish.IsNearlyZero())
+		{
+			// Só puxa um pouco a direção do golpe (a força fica cheia; o limite de velocidade vem do componente de movimento)
+			Wish = (GetActorForwardVector() * (1.f - AttackSteering) + Wish.GetSafeNormal() * AttackSteering).GetSafeNormal2D() * FMath::Min(Wish.Size(), 1.f);
 		}
 
 		// Correndo rápido: A/D viram em arco (limita o ângulo em relação à direção atual), para o boneco
@@ -398,11 +403,27 @@ void AHypeWorldCharacter::UpdateRunAnimRate()
 	}
 
 	float Rate = 1.f;
-	if ((NinjaMovement->IsMovingOnGround() || NinjaMovement->IsWallRunning()) && RunAnimNaturalSpeed > 0.f)
+	const float Speed = GetVelocity().Size2D();
+	if (NinjaMovement->IsWallRunning() && RunAnimNaturalSpeed > 0.f)
 	{
-		Rate = FMath::Clamp(GetVelocity().Size2D() / RunAnimNaturalSpeed, 1.f, FMath::Max(1.f, MaxRunAnimRate));
+		Rate = FMath::Clamp(Speed / RunAnimNaturalSpeed, 1.f, FMath::Max(1.f, MaxRunAnimRate));
 	}
-	GetMesh()->GlobalAnimRateScale = Rate;
+	else if (NinjaMovement->IsMovingOnGround() && !IsAttacking() && AnimSpeedCurve.Num() > 0 && Speed > AnimSpeedCurve[0].X)
+	{
+		// Velocidade natural da mistura de animações nessa velocidade (interpola a curva)
+		float Natural = AnimSpeedCurve.Last().Y;
+		for (int32 i = 1; i < AnimSpeedCurve.Num(); ++i)
+		{
+			if (Speed <= AnimSpeedCurve[i].X)
+			{
+				const float T = (Speed - AnimSpeedCurve[i - 1].X) / FMath::Max(1.f, AnimSpeedCurve[i].X - AnimSpeedCurve[i - 1].X);
+				Natural = FMath::Lerp(AnimSpeedCurve[i - 1].Y, AnimSpeedCurve[i].Y, T);
+				break;
+			}
+		}
+		Rate = FMath::Clamp(Speed / FMath::Max(1.f, Natural), 1.f, FMath::Max(1.f, MaxRunAnimRate));
+	}
+	GetMesh()->GlobalAnimRateScale = FMath::FInterpTo(GetMesh()->GlobalAnimRateScale, Rate, GetWorld()->GetDeltaSeconds(), 10.f);
 }
 
 void AHypeWorldCharacter::UpdateCameraFollow(float DeltaSeconds)
@@ -659,7 +680,9 @@ void AHypeWorldCharacter::Lunge()
 {
 	if (GetCharacterMovement()->IsMovingOnGround())
 	{
-		LaunchCharacter(GetActorForwardVector() * AttackLunge, true, false);
+		// Vindo correndo, o golpe aproveita parte do embalo (mas nunca menos que o avanço normal)
+		const float Carry = FMath::Max(AttackLunge, GetVelocity().Size2D() * 0.6f);
+		LaunchCharacter(GetActorForwardVector() * Carry, true, false);
 	}
 }
 
