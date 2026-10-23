@@ -168,6 +168,16 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
 	TArray<FVector2D> AnimSpeedCurve = { FVector2D(155.f, 155.f), FVector2D(420.f, 351.f), FVector2D(800.f, 359.f) };
 
+	/** Velocidade natural das corridas de lado (esquerda, direita) — a animação acelera nessa proporção */
+	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
+	float RunStrafeLeftNatural = 428.f;
+	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
+	float RunStrafeRightNatural = 342.f;
+
+	/** Acima desta velocidade o ajuste por direção vale (abaixo é andar) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
+	float RunAnimMinSpeed = 300.f;
+
 	/** Quanto a animação de corrida pode ser acelerada no máximo (2,7x = corrida de 4,5 m/s chega a ~12 m/s) */
 	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
 	float MaxRunAnimRate = 2.7f;

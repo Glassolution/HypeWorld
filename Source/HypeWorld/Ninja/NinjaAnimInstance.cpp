@@ -90,7 +90,7 @@ void UNinjaAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	PoseInputs.LookDownAlpha = FMath::FInterpTo(PoseInputs.LookDownAlpha, LookTarget, DeltaSeconds, 6.f);
 
 	// --- Corrida ninja: braços esticados para trás (pela velocidade, então funciona nos outros jogadores também) ---
-	const float SprintTarget = (Move->IsMovingOnGround() && Velocity.Size2D() > SprintPoseMinSpeed) ? 1.f : 0.f;
+	const float SprintTarget = (Move->IsMovingOnGround() && (Move->IsSprinting() || Velocity.Size2D() > SprintPoseMinSpeed)) ? 1.f : 0.f;
 	PoseInputs.SprintAlpha = FMath::FInterpTo(PoseInputs.SprintAlpha, SprintTarget, DeltaSeconds, 6.f);
 
 	// --- Concentrando chakra: base aberta e mãos juntas no peito ---

@@ -29,6 +29,13 @@ float UNinjaMovementComponent::GetMaxSpeed() const
 		return AttackMaxSpeed;
 	}
 
+	// Correndo de lado: animações de strafe são mais lentas, a velocidade acompanha
+	if (IsStrafeRunning())
+	{
+		const float Side = GetSidewaysAmount();
+		return bWantsToSprint ? FMath::Lerp(SprintSpeed, SprintStrafeSpeed, Side) : FMath::Lerp(RunSpeed, RunStrafeSpeed, Side);
+	}
+
 	// Andando: de costas para a câmera (frente/lado/costas); de costas é mais devagar
 	if (IsFocusing())
 	{
@@ -49,6 +56,25 @@ float UNinjaMovementComponent::GetMaxSpeed() const
 	return Super::GetMaxSpeed();
 }
 
+bool UNinjaMovementComponent::IsStrafeRunning() const
+{
+	if (!(bWantsToRun || bWantsToSprint) || !IsMovingOnGround() || !CharacterOwner || Acceleration.SizeSquared2D() < UE_KINDA_SMALL_NUMBER)
+	{
+		return false;
+	}
+	const float Angle = FMath::Abs(FMath::FindDeltaAngleDegrees(CharacterOwner->GetControlRotation().Yaw, Acceleration.Rotation().Yaw));
+	return Angle <= StrafeMaxAngle;
+}
+
+float UNinjaMovementComponent::GetSidewaysAmount() const
+{
+	if (!UpdatedComponent || Acceleration.SizeSquared2D() < UE_KINDA_SMALL_NUMBER)
+	{
+		return 0.f;
+	}
+	return FMath::Abs(FVector::CrossProduct(UpdatedComponent->GetForwardVector().GetSafeNormal2D(), Acceleration.GetSafeNormal2D()).Z);
+}
+
 FRotator UNinjaMovementComponent::ComputeOrientToMovementRotation(const FRotator& CurrentRotation, float DeltaTime, FRotator& DeltaRotation) const
 {
 	// Na parede o corpo olha ao longo da parede, não para onde o controle aponta (senão ele vira de cara para a parede).
@@ -60,8 +86,8 @@ FRotator UNinjaMovementComponent::ComputeOrientToMovementRotation(const FRotator
 			return AlongWall.Rotation();
 		}
 	}
-	// Andando: o corpo olha para onde a câmera olha (anda de lado/de costas). Parado: não gira — a câmera orbita livre.
-	if (IsFocusing() && CharacterOwner)
+	// Andando (ou correndo para frente/lado): o corpo olha para onde a câmera olha. Parado: não gira — a câmera orbita livre.
+	if ((IsFocusing() || IsStrafeRunning()) && CharacterOwner)
 	{
 		if (Acceleration.SizeSquared2D() < UE_KINDA_SMALL_NUMBER)
 		{

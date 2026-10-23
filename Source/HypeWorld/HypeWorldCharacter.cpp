@@ -415,7 +415,7 @@ void AHypeWorldCharacter::UpdateRunAnimRate()
 	{
 		Rate = FMath::Clamp(Speed / RunAnimNaturalSpeed, 1.f, FMath::Max(1.f, MaxRunAnimRate));
 	}
-	else if (NinjaMovement->IsMovingOnGround() && !IsAttacking() && AnimSpeedCurve.Num() > 0 && Speed > AnimSpeedCurve[0].X)
+	else if (NinjaMovement->IsMovingOnGround() && !IsAttacking() && Speed > RunAnimMinSpeed && AnimSpeedCurve.Num() > 0)
 	{
 		// Velocidade natural da mistura de animações nessa velocidade (interpola a curva)
 		float Natural = AnimSpeedCurve.Last().Y;
@@ -428,6 +428,11 @@ void AHypeWorldCharacter::UpdateRunAnimRate()
 				break;
 			}
 		}
+		// Correndo de lado: a velocidade natural muda com a direção (strafe esquerda/direita)
+		const FVector VelDir = GetVelocity().GetSafeNormal2D();
+		const float Side = FVector::CrossProduct(GetActorForwardVector().GetSafeNormal2D(), VelDir).Z;   // + direita, - esquerda
+		const float SideNatural = Side >= 0.f ? RunStrafeRightNatural : RunStrafeLeftNatural;
+		Natural = FMath::Lerp(Natural, FMath::Min(Natural, SideNatural), FMath::Abs(Side));
 		Rate = FMath::Clamp(Speed / FMath::Max(1.f, Natural), 1.f, FMath::Max(1.f, MaxRunAnimRate));
 	}
 	GetMesh()->GlobalAnimRateScale = FMath::FInterpTo(GetMesh()->GlobalAnimRateScale, Rate, GetWorld()->GetDeltaSeconds(), 10.f);
@@ -443,7 +448,9 @@ void AHypeWorldCharacter::UpdateCameraFollow(float DeltaSeconds)
 	}
 
 	const FVector Velocity2D = GetVelocity().GetSafeNormal2D() * GetVelocity().Size2D();
-	const bool bFast = Velocity2D.Size() > CameraFollowMinSpeed && !NinjaMovement->IsWallRunning();
+	// Correndo de lado ou na direção da câmera (de frente para ela) a câmera não persegue — senão o strafe vira círculo
+	const bool bTowardCamera = FMath::Abs(FMath::FindDeltaAngleDegrees(PC->GetControlRotation().Yaw, Velocity2D.Rotation().Yaw)) > 100.f;
+	const bool bFast = Velocity2D.Size() > CameraFollowMinSpeed && !NinjaMovement->IsWallRunning() && !NinjaMovement->IsStrafeRunning() && !bTowardCamera;
 	const bool bMouseIdle = GetWorld()->GetTimeSeconds() - LastLookInputTime > CameraFollowDelay;
 	if (!bFast || !bMouseIdle)
 	{
