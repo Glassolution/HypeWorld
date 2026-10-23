@@ -50,7 +50,7 @@ private:
 	void ApplyRelaxedHands(FPoseContext& Output) const;
 
 	/** Abre os dedos de uma mão (puxa para a pose de referência, que é a mão aberta). */
-	void OpenHand(FCompactPose& Pose, bool bRight, float Alpha) const;
+	void OpenHand(FCompactPose& Pose, bool bRight, float Alpha, bool bOnlyIndexAndMiddle = false) const;
 
 	FNinjaPoseInputs Inputs;
 	const UAnimSequenceBase* RelaxedHands = nullptr;
@@ -67,6 +67,10 @@ private:
 	float ChargeToeOut = 0.f;
 	float ChargeKneeOut = 0.f;
 	float ChargeStraighten = 0.f;
+	float ChargeStagger = 0.f;
+	float ChargeLean = 0.f;
+	float ChargeHandForward = 0.f;
+	float ChargeHandDrop = 0.f;
 };
 
 /** Classe-mãe do Animation Blueprint do ninja (ABP_Ninja). */
@@ -155,7 +159,23 @@ public:
 
 	/** Quanto a coluna é endireitada (0 = como a animação, 1 = totalmente vertical). */
 	UPROPERTY(EditAnywhere, Category="Ninja|Chakra")
-	float ChargeStraighten = 0.75f;
+	float ChargeStraighten = 0.5f;
+
+	/** Um pé à frente do outro (cm): base assimétrica, mais humana. */
+	UPROPERTY(EditAnywhere, Category="Ninja|Chakra")
+	float ChargeStagger = 12.f;
+
+	/** Tronco inclinado para a frente, "entrando" no selo (graus). */
+	UPROPERTY(EditAnywhere, Category="Ninja|Chakra")
+	float ChargeLean = 10.f;
+
+	/** Distância das mãos à frente do pescoço (cm) — no anime ficam perto do queixo. */
+	UPROPERTY(EditAnywhere, Category="Ninja|Chakra")
+	float ChargeHandForward = 20.f;
+
+	/** Quanto as mãos ficam abaixo da base do pescoço (cm) — 0 = altura do queixo. */
+	UPROPERTY(EditAnywhere, Category="Ninja|Chakra")
+	float ChargeHandDrop = 6.f;
 
 	/** Rapidez com que a mão vai até a parede / volta. */
 	UPROPERTY(EditAnywhere, Category="Ninja|Parede")
