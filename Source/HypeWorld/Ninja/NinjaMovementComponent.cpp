@@ -4,6 +4,7 @@
 #include "GameFramework/Character.h"
 #include "Components/CapsuleComponent.h"
 #include "HypeWorld.h"
+#include "Animation/AnimSequenceBase.h"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Regras gerais
@@ -149,15 +150,24 @@ void UNinjaMovementComponent::StartDash()
 	{
 		bAirDashUsed = true;
 	}
-	DashTimeLeft = DashDuration;
+	DashTimeLeft = GetDashDuration();
 	DashCooldownLeft = DashCooldown;
 	SetMovementMode(MOVE_Custom, NMOVE_Dash);
+}
+
+float UNinjaMovementComponent::GetDashDuration() const
+{
+	return DashRootMotionAnim ? DashAnimMoveEnd / FMath::Max(DashAnimRate, 0.01f) : DashDuration;
 }
 
 void UNinjaMovementComponent::EndDash()
 {
 	DashTimeLeft = 0.f;
-	Velocity = DashDirection * (bWantsToSprint ? SprintSpeed : MaxWalkSpeed);
+	// Seguindo a animação, o dash já termina freando: mantém a velocidade final dela. Sem animação, sai correndo.
+	if (!DashRootMotionAnim)
+	{
+		Velocity = DashDirection * (bWantsToSprint ? SprintSpeed : MaxWalkSpeed);
+	}
 	ExitToWalkingOrFalling();
 }
 
@@ -168,11 +178,19 @@ void UNinjaMovementComponent::PhysDash(float DeltaTime, int32 Iterations)
 		return;
 	}
 
-	// Velocidade constante e sem gravidade enquanto o dash dura.
-	// Nunca anda mais que o tempo restante do dash (com FPS baixo um frame pode ser maior que o dash inteiro).
+	// Sem gravidade enquanto o dash dura. Nunca anda mais que o tempo restante (com FPS baixo um frame pode ser maior que o dash inteiro).
 	const float StepTime = FMath::Min(DeltaTime, DashTimeLeft);
+	const float Elapsed = GetDashDuration() - DashTimeLeft;
 	DashTimeLeft -= StepTime;
-	Velocity = DashDirection * DashSpeed;
+
+	float Speed = DashSpeed;
+	if (DashRootMotionAnim && StepTime > 0.f)
+	{
+		// Quanto a animação anda neste pedaço de tempo = quanto o personagem anda (pés e corpo sincronizados)
+		const FTransform Motion = DashRootMotionAnim->ExtractRootMotionFromRange(Elapsed * DashAnimRate, (Elapsed + StepTime) * DashAnimRate, FAnimExtractContext());
+		Speed = Motion.GetTranslation().Size2D() * DashDistanceScale / StepTime;
+	}
+	Velocity = DashDirection * Speed;
 
 	const FVector Delta = Velocity * StepTime;
 	FHitResult Hit(1.f);

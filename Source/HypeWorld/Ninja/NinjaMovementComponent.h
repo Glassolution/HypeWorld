@@ -6,6 +6,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "NinjaMovementComponent.generated.h"
 
+class UAnimSequenceBase;
+
 /** Modos de movimento próprios (usados com MOVE_Custom). */
 UENUM(BlueprintType)
 enum ENinjaMoveMode : uint8
@@ -30,17 +32,36 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Corrida")
 	float SprintSpeed = 1200.f;
 
-	/** Velocidade do dash. */
+	/** Animação cujo deslocamento o dash segue (arranca, acelera e freia junto com ela). Vazio = velocidade constante. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Dash")
+	UAnimSequenceBase* DashRootMotionAnim = nullptr;
+
+	/** Velocidade de reprodução da animação do dash (1 = normal). O personagem toca a montagem nessa mesma velocidade. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Dash")
+	float DashAnimRate = 1.2f;
+
+	/** Até que segundo da animação o dash anda; o resto da animação é só a aterrissagem. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Dash")
+	float DashAnimMoveEnd = 0.75f;
+
+	/** Fração da distância da animação que o dash percorre (MM_Dash anda ~8,8 m; 0,7 = ~6,2 m). */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Dash")
+	float DashDistanceScale = 0.7f;
+
+	/** Sem animação: velocidade constante do dash. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Dash")
 	float DashSpeed = 2400.f;
 
-	/** Quanto tempo o dash dura (segundos). Distância = DashSpeed x DashDuration. */
+	/** Sem animação: quanto tempo o dash dura (segundos). */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Dash")
 	float DashDuration = 0.2f;
 
-	/** Tempo de espera entre dashes (segundos). */
+	/** Tempo de espera entre dashes (segundos), contado do início do dash. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Dash")
-	float DashCooldown = 0.6f;
+	float DashCooldown = 0.8f;
+
+	/** Duração real do dash (segue a animação quando houver uma). */
+	float GetDashDuration() const;
 
 	/** Velocidade correndo na parede. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Parede")

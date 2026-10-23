@@ -231,7 +231,7 @@ void AHypeWorldCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, 
 	// Entrou num modo: toca a animação dele
 	if (NinjaMovement->IsDashing())
 	{
-		PlayAnimMontage(DashMontage, 1.3f);
+		PlayAnimMontage(DashMontage, NinjaMovement->DashAnimRate);
 	}
 	else if (NinjaMovement->IsWallRunning() && WallRunMontage)
 	{
