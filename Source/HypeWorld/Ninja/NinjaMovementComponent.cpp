@@ -23,18 +23,18 @@ float UNinjaMovementComponent::GetMaxAcceleration() const
 
 float UNinjaMovementComponent::GetMaxSpeed() const
 {
-	// Modo foco: anda devagar de frente para a câmera; de costas, mais devagar ainda
+	// Atacando: mantém um pouco do embalo, mas desacelera suave até AttackMaxSpeed
+	if (const AHypeWorldCharacter* Ninja = Cast<AHypeWorldCharacter>(CharacterOwner); Ninja && Ninja->IsAttacking() && IsMovingOnGround())
+	{
+		return AttackMaxSpeed;
+	}
+
+	// Andando: de costas para a câmera (frente/lado/costas); de costas é mais devagar
 	if (IsFocusing())
 	{
 		const FVector Facing = UpdatedComponent ? UpdatedComponent->GetForwardVector().GetSafeNormal2D() : FVector::ForwardVector;
 		const float Back = FMath::Clamp(-FVector::DotProduct(Facing, Acceleration.GetSafeNormal2D()), 0.f, 1.f);
 		return FMath::Lerp(FocusSpeed, FocusBackSpeed, Back);
-	}
-
-	// Atacando: mantém um pouco do embalo, mas desacelera suave até AttackMaxSpeed
-	if (const AHypeWorldCharacter* Ninja = Cast<AHypeWorldCharacter>(CharacterOwner); Ninja && Ninja->IsAttacking() && IsMovingOnGround())
-	{
-		return AttackMaxSpeed;
 	}
 
 	// Correndo (ou no pulo que saiu de uma corrida), o limite de velocidade sobe.
@@ -60,9 +60,13 @@ FRotator UNinjaMovementComponent::ComputeOrientToMovementRotation(const FRotator
 			return AlongWall.Rotation();
 		}
 	}
-	// Modo foco: o corpo fica de frente para onde a câmera olha (anda de lado/de costas)
+	// Andando: o corpo olha para onde a câmera olha (anda de lado/de costas). Parado: não gira — a câmera orbita livre.
 	if (IsFocusing() && CharacterOwner)
 	{
+		if (Acceleration.SizeSquared2D() < UE_KINDA_SMALL_NUMBER)
+		{
+			return CurrentRotation;
+		}
 		return FRotator(0.f, CharacterOwner->GetControlRotation().Yaw, 0.f);
 	}
 	return Super::ComputeOrientToMovementRotation(CurrentRotation, DeltaTime, DeltaRotation);

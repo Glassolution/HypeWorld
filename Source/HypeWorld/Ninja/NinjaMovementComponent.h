@@ -122,7 +122,7 @@ public:
 	bool IsRunning() const { return bWantsToRun && !bWantsToSprint && IsMovingOnGround(); }
 
 	UFUNCTION(BlueprintPure, Category="Ninja")
-	bool IsFocusing() const { return bWantsToFocus && !bWantsToSprint && IsMovingOnGround(); }
+	bool IsFocusing() const { return (bWantsToFocus || !bWantsToRun) && !bWantsToSprint && IsMovingOnGround(); }   // andando (ou botão direito): de costas para a câmera
 
 	UFUNCTION(BlueprintPure, Category="Ninja")
 	bool IsSprinting() const { return bWantsToSprint && IsMovingOnGround(); }
