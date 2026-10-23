@@ -72,6 +72,10 @@ void UNinjaAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	}
 	PoseInputs.LookDownAlpha = FMath::FInterpTo(PoseInputs.LookDownAlpha, LookTarget, DeltaSeconds, 6.f);
 
+	// --- Corrida ninja: braços esticados para trás (pela velocidade, então funciona nos outros jogadores também) ---
+	const float SprintTarget = (Move->IsMovingOnGround() && Velocity.Size2D() > SprintPoseMinSpeed) ? 1.f : 0.f;
+	PoseInputs.SprintAlpha = FMath::FInterpTo(PoseInputs.SprintAlpha, SprintTarget, DeltaSeconds, 6.f);
+
 	// --- Pouso: agacha proporcional à velocidade da queda ---
 	if (bWasInAir && Move->IsMovingOnGround())
 	{
@@ -125,6 +129,8 @@ void FNinjaAnimInstanceProxy::PreUpdate(UAnimInstance* InAnimInstance, float Del
 		LookDownHeadAngle = Ninja->LookDownHeadAngle;
 		AirLegLift = Ninja->AirLegLift;
 		LandSpineAngle = Ninja->LandSpineAngle;
+		SprintExtraLean = Ninja->SprintExtraLean;
+		SprintArmsDrop = Ninja->SprintArmsDrop;
 	}
 }
 
@@ -141,7 +147,7 @@ bool FNinjaAnimInstanceProxy::Evaluate_WithRoot(FPoseContext& Output, FAnimNode_
 
 void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 {
-	if (Inputs.WallHandAlpha < 0.01f && Inputs.LookDownAlpha < 0.01f && Inputs.LandAlpha < 0.01f)
+	if (Inputs.WallHandAlpha < 0.01f && Inputs.LookDownAlpha < 0.01f && Inputs.LandAlpha < 0.01f && Inputs.SprintAlpha < 0.01f)
 	{
 		return;
 	}
@@ -185,6 +191,12 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 		}
 		OpenHand(Output.Pose, bWallRight, Inputs.WallHandAlpha);
 		OpenHand(Output.Pose, !bWallRight, Inputs.WallHandAlpha * 0.6f);
+	}
+	if (Inputs.SprintAlpha > 0.01f)
+	{
+		// Corrida ninja: mãos abertas e retas, como nas referências
+		OpenHand(Output.Pose, true, Inputs.SprintAlpha * 0.8f);
+		OpenHand(Output.Pose, false, Inputs.SprintAlpha * 0.8f);
 	}
 
 	FCSPose<FCompactPose> CS;
@@ -253,7 +265,7 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 	}
 
 	// 2) Tronco e cabeça curvam para frente (olhar o chão / absorver o pouso)
-	const float SpineDegrees = LookDownSpineAngle * Inputs.LookDownAlpha + LandSpineAngle * Inputs.LandAlpha;
+	const float SpineDegrees = LookDownSpineAngle * Inputs.LookDownAlpha + LandSpineAngle * Inputs.LandAlpha + SprintExtraLean * Inputs.SprintAlpha;
 	RotateBone(Spine03, BendAxis, SpineDegrees * 0.5f);
 	RotateBone(Spine05, BendAxis, SpineDegrees * 0.5f);
 	RotateBone(Neck, BendAxis, LookDownHeadAngle * Inputs.LookDownAlpha * 0.4f);
@@ -267,7 +279,25 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 		SolveLimb(ThighR, CalfR, FootR, FootRPos + Up * Lift, Forward);
 	}
 
-	// 4) Braços na parede: um apoia na parede, o outro abre para trás para equilibrar
+	// 4) Corrida ninja: os dois braços esticados para trás, um pouco abertos (como nas referências)
+	if (Inputs.SprintAlpha > 0.01f)
+	{
+		for (const bool bRight : { true, false })
+		{
+			const FCompactPoseBoneIndex Upper = Bone(bRight ? TEXT("upperarm_r") : TEXT("upperarm_l"));
+			const FCompactPoseBoneIndex Lower = Bone(bRight ? TEXT("lowerarm_r") : TEXT("lowerarm_l"));
+			const FCompactPoseBoneIndex Hand = Bone(bRight ? TEXT("hand_r") : TEXT("hand_l"));
+			const FVector Side = bRight ? Right : -Right;
+			AimBone(Upper, Lower, (-Forward - Up * SprintArmsDrop + Side * 0.15f).GetSafeNormal(), Inputs.SprintAlpha);
+			if (Upper.IsValid() && Lower.IsValid())
+			{
+				const FVector UpperDir = (CS.GetComponentSpaceTransform(Lower).GetLocation() - CS.GetComponentSpaceTransform(Upper).GetLocation()).GetSafeNormal();
+				AimBone(Lower, Hand, UpperDir, Inputs.SprintAlpha * 0.95f);   // antebraço reto, seguindo o braço
+			}
+		}
+	}
+
+	// 5) Braços na parede: um apoia na parede, o outro abre para trás para equilibrar
 	if (Inputs.WallHandAlpha > 0.01f)
 	{
 		const FCompactPoseBoneIndex WallUpper = Bone(bWallRight ? TEXT("upperarm_r") : TEXT("upperarm_l"));

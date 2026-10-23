@@ -24,6 +24,7 @@ struct FNinjaPoseInputs
 
 	float LookDownAlpha = 0.f;					// 0..1 olhando o chão / pernas se preparando para pousar
 	float LandAlpha = 0.f;						// 0..1 agachamento do pouso
+	float SprintAlpha = 0.f;					// 0..1 pose da corrida ninja (braços esticados para trás)
 };
 
 USTRUCT()
@@ -52,6 +53,8 @@ private:
 	float LookDownHeadAngle = 0.f;
 	float AirLegLift = 0.f;
 	float LandSpineAngle = 0.f;
+	float SprintExtraLean = 0.f;
+	float SprintArmsDrop = 0.f;
 };
 
 /** Classe-mãe do Animation Blueprint do ninja (ABP_Ninja). */
@@ -101,6 +104,18 @@ public:
 	/** Inclinação da cabeça olhando o chão (graus). */
 	UPROPERTY(EditAnywhere, Category="Ninja|Pouso")
 	float LookDownHeadAngle = 30.f;
+
+	/** Velocidade no chão a partir da qual entra a pose de corrida ninja (cm/s). */
+	UPROPERTY(EditAnywhere, Category="Ninja|Corrida")
+	float SprintPoseMinSpeed = 700.f;
+
+	/** Inclinação extra do tronco na corrida ninja (graus). */
+	UPROPERTY(EditAnywhere, Category="Ninja|Corrida")
+	float SprintExtraLean = 8.f;
+
+	/** Quanto os braços apontam para baixo na corrida ninja (0 = horizontais para trás, 1 = bem para baixo). */
+	UPROPERTY(EditAnywhere, Category="Ninja|Corrida")
+	float SprintArmsDrop = 0.05f;
 
 	/** Rapidez com que a mão vai até a parede / volta. */
 	UPROPERTY(EditAnywhere, Category="Ninja|Parede")
