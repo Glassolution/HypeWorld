@@ -21,11 +21,12 @@ public class HypeWorld : ModuleRules
 			"Slate"
 		});
 
-		PrivateDependencyModuleNames.AddRange(new string[] { "AnimationCore" });
+		PrivateDependencyModuleNames.AddRange(new string[] { "AnimationCore", "SlateCore" });
 
 		PublicIncludePaths.AddRange(new string[] {
 			"HypeWorld",
 			"HypeWorld/Ninja",
+			"HypeWorld/UI",
 			"HypeWorld/Variant_Platforming",
 			"HypeWorld/Variant_Platforming/Animation",
 			"HypeWorld/Variant_Combat",

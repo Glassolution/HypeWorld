@@ -7,11 +7,22 @@
 #include "InputMappingContext.h"
 #include "Blueprint/UserWidget.h"
 #include "HypeWorld.h"
+#include "NinjaHUDWidget.h"
 #include "Widgets/Input/SVirtualJoystick.h"
 
 void AHypeWorldPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// HUD só para quem está jogando nesta máquina
+	if (IsLocalPlayerController() && HUDWidgetClass)
+	{
+		HUDWidget = CreateWidget<UNinjaHUDWidget>(this, HUDWidgetClass);
+		if (HUDWidget)
+		{
+			HUDWidget->AddToPlayerScreen(1);
+		}
+	}
 
 	// only spawn touch controls on local player controllers
 	if (IsLocalPlayerController() && ShouldUseTouchControls())
