@@ -93,7 +93,8 @@ void UNinjaAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	// --- Concentrando chakra: base aberta e mãos juntas no peito ---
 	const AHypeWorldCharacter* Ninja = Cast<AHypeWorldCharacter>(Char);
 	const float ChargeTarget = (Ninja && Ninja->IsChargingChakra()) ? 1.f : 0.f;
-	PoseInputs.ChargeAlpha = FMath::FInterpTo(PoseInputs.ChargeAlpha, ChargeTarget, DeltaSeconds, 8.f);
+	PoseInputs.ChargeAlpha = FMath::FInterpConstantTo(PoseInputs.ChargeAlpha, ChargeTarget, DeltaSeconds, 4.f);   // ~0,25 s para assumir a base
+	PoseInputs.Time += DeltaSeconds;
 
 	// --- Pouso: agacha proporcional à velocidade da queda ---
 	if (bWasInAir && Move->IsMovingOnGround())
@@ -153,6 +154,8 @@ void FNinjaAnimInstanceProxy::PreUpdate(UAnimInstance* InAnimInstance, float Del
 		SprintArmsDrop = Ninja->SprintArmsDrop;
 		SprintCrouchDepth = Ninja->SprintCrouchDepth;
 		ChargeCrouchDepth = Ninja->ChargeCrouchDepth;
+		ChargeStanceWidth = Ninja->ChargeStanceWidth;
+		ChargeToeOut = Ninja->ChargeToeOut;
 	}
 }
 
@@ -189,31 +192,45 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 	const FCompactPoseBoneIndex Neck = Bone(TEXT("neck_01"));
 	const FCompactPoseBoneIndex Head = Bone(TEXT("head"));
 
-	// Antes de tudo, guarda para que lado a palma da mão da parede aponta (os dedos dobrados da animação indicam a palma)
+	// Antes de tudo, guarda para que lado aponta a palma de cada mão (os dedos dobrados da mão relaxada indicam a palma)
 	const bool bWallRight = Inputs.WallSide > 0.f;
-	FVector PalmLocal = FVector::ZeroVector;
-	FVector FingersLocal = FVector::ZeroVector;
-	if (Inputs.WallHandAlpha > 0.01f)
+	FVector HandPalmLocal[2] = { FVector::ZeroVector, FVector::ZeroVector };     // [0] esquerda, [1] direita
+	FVector HandFingersLocal[2] = { FVector::ZeroVector, FVector::ZeroVector };
+	if (Inputs.WallHandAlpha > 0.01f || Inputs.ChargeAlpha > 0.01f)
 	{
 		FCSPose<FCompactPose> Before;
 		Before.InitPose(Output.Pose);
-		const FCompactPoseBoneIndex Hand = Bone(bWallRight ? TEXT("hand_r") : TEXT("hand_l"));
-		const FCompactPoseBoneIndex Knuckle = Bone(bWallRight ? TEXT("middle_01_r") : TEXT("middle_01_l"));
-		const FCompactPoseBoneIndex Tip = Bone(bWallRight ? TEXT("middle_03_r") : TEXT("middle_03_l"));
-		if (Hand.IsValid() && Knuckle.IsValid() && Tip.IsValid())
+		for (int32 Side = 0; Side < 2; ++Side)
 		{
-			const FTransform HandT = Before.GetComponentSpaceTransform(Hand);
-			const FVector Fingers = (Before.GetComponentSpaceTransform(Knuckle).GetLocation() - HandT.GetLocation()).GetSafeNormal();
-			const FVector Curl = Before.GetComponentSpaceTransform(Tip).GetLocation() - Before.GetComponentSpaceTransform(Knuckle).GetLocation();
-			const FVector Palm = Curl - Fingers * FVector::DotProduct(Curl, Fingers);
-			if (Palm.Size() > 1.f)
+			const FCompactPoseBoneIndex Hand = Bone(Side ? TEXT("hand_r") : TEXT("hand_l"));
+			const FCompactPoseBoneIndex Knuckle = Bone(Side ? TEXT("middle_01_r") : TEXT("middle_01_l"));
+			const FCompactPoseBoneIndex Tip = Bone(Side ? TEXT("middle_03_r") : TEXT("middle_03_l"));
+			if (Hand.IsValid() && Knuckle.IsValid() && Tip.IsValid())
 			{
-				FingersLocal = HandT.GetRotation().UnrotateVector(Fingers);
-				PalmLocal = HandT.GetRotation().UnrotateVector(Palm.GetSafeNormal());
+				const FTransform HandT = Before.GetComponentSpaceTransform(Hand);
+				const FVector Fingers = (Before.GetComponentSpaceTransform(Knuckle).GetLocation() - HandT.GetLocation()).GetSafeNormal();
+				const FVector Curl = Before.GetComponentSpaceTransform(Tip).GetLocation() - Before.GetComponentSpaceTransform(Knuckle).GetLocation();
+				const FVector Palm = Curl - Fingers * FVector::DotProduct(Curl, Fingers);
+				if (Palm.Size() > 0.5f)
+				{
+					HandFingersLocal[Side] = HandT.GetRotation().UnrotateVector(Fingers);
+					HandPalmLocal[Side] = HandT.GetRotation().UnrotateVector(Palm.GetSafeNormal());
+				}
 			}
 		}
+	}
+	const FVector PalmLocal = HandPalmLocal[bWallRight ? 1 : 0];
+	const FVector FingersLocal = HandFingersLocal[bWallRight ? 1 : 0];
+	if (Inputs.WallHandAlpha > 0.01f)
+	{
 		OpenHand(Output.Pose, bWallRight, Inputs.WallHandAlpha);
 		OpenHand(Output.Pose, !bWallRight, Inputs.WallHandAlpha * 0.6f);
+	}
+	if (Inputs.ChargeAlpha > 0.01f)
+	{
+		// Selo: dedos esticados, palmas que vão se encostar
+		OpenHand(Output.Pose, true, Inputs.ChargeAlpha);
+		OpenHand(Output.Pose, false, Inputs.ChargeAlpha);
 	}
 	if (Inputs.SprintAlpha > 0.01f)
 	{
@@ -284,12 +301,43 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 	{
 		FTransform T = CS.GetComponentSpaceTransform(Pelvis);
 		T.AddToTranslation(-Up * CrouchDepth);
+		if (Inputs.ChargeAlpha > 0.01f)
+		{
+			// Peso no meio da base (o quadril sai de cima de um pé só) + respiração lenta
+			const FVector Loc = T.GetLocation();
+			const FVector Horizontal = Loc - Up * FVector::DotProduct(Loc, Up);
+			T.AddToTranslation(-Horizontal * 0.8f * Inputs.ChargeAlpha);
+			T.AddToTranslation(Up * FMath::Sin(Inputs.Time * 2.2f) * 0.8f * Inputs.ChargeAlpha);
+		}
 		const FBoneTransform Changed[] = { FBoneTransform(Pelvis, T) };
 		CS.LocalBlendCSBoneTransforms(Changed, 1.f);
 	}
 
+	// 1b) Concentrando chakra: quadril e ombros nivelados e de frente (desfaz a torção da animação base)
+	if (Inputs.ChargeAlpha > 0.01f)
+	{
+		auto Square = [&CS, &Bone, Right](const TCHAR* LeftBone, const TCHAR* RightBone, FCompactPoseBoneIndex Index, float Alpha)
+		{
+			const FCompactPoseBoneIndex L = Bone(LeftBone), R = Bone(RightBone);
+			if (!Index.IsValid() || !L.IsValid() || !R.IsValid())
+			{
+				return;
+			}
+			const FVector Across = (CS.GetComponentSpaceTransform(R).GetLocation() - CS.GetComponentSpaceTransform(L).GetLocation()).GetSafeNormal();
+			FTransform T = CS.GetComponentSpaceTransform(Index);
+			T.SetRotation(FQuat::Slerp(FQuat::Identity, FQuat::FindBetweenNormals(Across, Right), Alpha) * T.GetRotation());
+			const FBoneTransform Changed[] = { FBoneTransform(Index, T) };
+			CS.LocalBlendCSBoneTransforms(Changed, 1.f);
+		};
+		Square(TEXT("thigh_l"), TEXT("thigh_r"), Pelvis, Inputs.ChargeAlpha);              // quadril
+		Square(TEXT("upperarm_l"), TEXT("upperarm_r"), Spine03, Inputs.ChargeAlpha * 0.6f); // meio das costas
+		Square(TEXT("upperarm_l"), TEXT("upperarm_r"), Spine05, Inputs.ChargeAlpha);        // peito
+		Square(TEXT("upperarm_l"), TEXT("upperarm_r"), Head, Inputs.ChargeAlpha);           // cabeça reta
+	}
+
 	// 2) Tronco e cabeça curvam para frente (olhar o chão / absorver o pouso)
-	const float SpineDegrees = LookDownSpineAngle * Inputs.LookDownAlpha + LandSpineAngle * Inputs.LandAlpha + SprintExtraLean * Inputs.SprintAlpha;
+	const float SpineDegrees = LookDownSpineAngle * Inputs.LookDownAlpha + LandSpineAngle * Inputs.LandAlpha + SprintExtraLean * Inputs.SprintAlpha
+		+ (5.f + FMath::Sin(Inputs.Time * 2.2f) * 1.2f) * Inputs.ChargeAlpha;   // concentrando: peito um pouco à frente, respirando
 	RotateBone(Spine03, BendAxis, SpineDegrees * 0.5f);
 	RotateBone(Spine05, BendAxis, SpineDegrees * 0.5f);
 	RotateBone(Neck, BendAxis, LookDownHeadAngle * Inputs.LookDownAlpha * 0.4f);
@@ -299,8 +347,30 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 	const float Lift = AirLegLift * Inputs.LookDownAlpha;
 	if (CrouchDepth > 0.1f || Lift > 0.1f)
 	{
-		SolveLimb(ThighL, CalfL, FootL, FootLPos + Up * Lift, Forward);
-		SolveLimb(ThighR, CalfR, FootR, FootRPos + Up * Lift, Forward);
+		const float Ground = FMath::Min(FVector::DotProduct(FootLPos, Up), FVector::DotProduct(FootRPos, Up));
+		const float StepArc = FMath::Sin(PI * Inputs.ChargeAlpha) * 7.f;   // o pé sobe no meio da transição: é um passo, não um deslize
+		for (const bool bRight : { false, true })
+		{
+			const FVector Side = bRight ? Right : -Right;
+			const FVector AnimFoot = bRight ? FootRPos : FootLPos;
+			const FVector StanceFoot = Side * (ChargeStanceWidth * 0.5f) + Forward * (bRight ? -3.f : 3.f) + Up * Ground;
+			const FVector Target = FMath::Lerp(AnimFoot, StanceFoot, Inputs.ChargeAlpha) + Up * (Lift + StepArc);
+			// Joelho aponta para a ponta do pé: para frente e para fora na base de concentração
+			const FVector Pole = FMath::Lerp(Forward, (Forward * 0.55f + Side * 0.85f).GetSafeNormal(), Inputs.ChargeAlpha).GetSafeNormal();
+			SolveLimb(bRight ? ThighR : ThighL, bRight ? CalfR : CalfL, bRight ? FootR : FootL, Target, Pole);
+
+			// Ponta do pé para fora
+			const FCompactPoseBoneIndex Foot = bRight ? FootR : FootL;
+			if (Foot.IsValid() && Inputs.ChargeAlpha > 0.01f)
+			{
+				FTransform T = CS.GetComponentSpaceTransform(Foot);
+				const FVector Out = (Forward + Side * FMath::Tan(FMath::DegreesToRadians(ChargeToeOut))).GetSafeNormal();
+				const FQuat Turn = FQuat::Slerp(FQuat::Identity, FQuat::FindBetweenNormals(Forward, Out), Inputs.ChargeAlpha);
+				T.SetRotation(Turn * T.GetRotation());
+				const FBoneTransform Changed[] = { FBoneTransform(Foot, T) };
+				CS.LocalBlendCSBoneTransforms(Changed, 1.f);
+			}
+		}
 	}
 
 	// 4) Corrida ninja: os dois braços esticados para trás, um pouco abertos (como nas referências)
@@ -321,22 +391,44 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 		}
 	}
 
-	// 5) Concentrando chakra: mãos juntas na frente do peito (selo), cotovelos para fora, cabeça baixa
+	// 5) Concentrando chakra: ombros um pouco à frente, mãos juntas na frente do peito (selo), cotovelos abertos, queixo baixo
 	if (Inputs.ChargeAlpha > 0.01f && Spine05.IsValid())
 	{
-		RotateBone(Head, BendAxis, 10.f * Inputs.ChargeAlpha);
-		const FVector Chest = CS.GetComponentSpaceTransform(Spine05).GetLocation() + Forward * 28.f - Up * 12.f;
+		RotateBone(Neck, BendAxis, 3.f * Inputs.ChargeAlpha);
+		RotateBone(Head, BendAxis, 8.f * Inputs.ChargeAlpha);
+		const FVector Chest = CS.GetComponentSpaceTransform(Spine05).GetLocation() + Forward * 30.f - Up * 8.f;
 		for (const bool bRight : { true, false })
 		{
+			const FCompactPoseBoneIndex Clavicle = Bone(bRight ? TEXT("clavicle_r") : TEXT("clavicle_l"));
 			const FCompactPoseBoneIndex Upper = Bone(bRight ? TEXT("upperarm_r") : TEXT("upperarm_l"));
 			const FCompactPoseBoneIndex Lower = Bone(bRight ? TEXT("lowerarm_r") : TEXT("lowerarm_l"));
 			const FCompactPoseBoneIndex Hand = Bone(bRight ? TEXT("hand_r") : TEXT("hand_l"));
 			const FVector Side = bRight ? Right : -Right;
+
+			// Ombro avança junto com as mãos (a escápula acompanha o braço)
+			if (Clavicle.IsValid() && Upper.IsValid())
+			{
+				const FVector ClavDir = (CS.GetComponentSpaceTransform(Upper).GetLocation() - CS.GetComponentSpaceTransform(Clavicle).GetLocation()).GetSafeNormal();
+				AimBone(Clavicle, Upper, (ClavDir + Forward * 0.3f).GetSafeNormal(), Inputs.ChargeAlpha * 0.7f);
+			}
 			if (Hand.IsValid())
 			{
 				const FVector Current = CS.GetComponentSpaceTransform(Hand).GetLocation();
-				const FVector Target = Chest + Side * 4.f;
-				SolveLimb(Upper, Lower, Hand, FMath::Lerp(Current, Target, Inputs.ChargeAlpha), (Side - Up * 0.4f).GetSafeNormal());
+				const FVector Target = Chest + Side * 3.f;
+				SolveLimb(Upper, Lower, Hand, FMath::Lerp(Current, Target, Inputs.ChargeAlpha), (Side * 1.f - Up * 0.35f - Forward * 0.2f).GetSafeNormal());
+
+				// Palma virada para a outra mão, dedos para cima e um pouco à frente
+				const int32 HandSide = bRight ? 1 : 0;
+				if (!HandPalmLocal[HandSide].IsNearlyZero())
+				{
+					FTransform HandT = CS.GetComponentSpaceTransform(Hand);
+					const FQuat HandRot = HandT.GetRotation();
+					const FMatrix HandBasis = FRotationMatrix::MakeFromXZ(HandRot.RotateVector(HandFingersLocal[HandSide]), HandRot.RotateVector(HandPalmLocal[HandSide]));
+					const FMatrix Wanted = FRotationMatrix::MakeFromXZ((Up * 0.85f + Forward * 0.5f).GetSafeNormal(), -Side);
+					HandT.SetRotation(FQuat::Slerp(HandRot, Wanted.ToQuat() * HandBasis.ToQuat().Inverse() * HandRot, Inputs.ChargeAlpha));
+					const FBoneTransform Changed[] = { FBoneTransform(Hand, HandT) };
+					CS.LocalBlendCSBoneTransforms(Changed, 1.f);
+				}
 			}
 		}
 	}

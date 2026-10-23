@@ -25,7 +25,8 @@ struct FNinjaPoseInputs
 	float LookDownAlpha = 0.f;					// 0..1 olhando o chão / pernas se preparando para pousar
 	float LandAlpha = 0.f;						// 0..1 agachamento do pouso
 	float SprintAlpha = 0.f;					// 0..1 pose da corrida ninja (braços esticados para trás)
-	float ChargeAlpha = 0.f;					// 0..1 pose de concentrar chakra (mãos juntas no peito)
+	float ChargeAlpha = 0.f;					// 0..1 pose de concentrar chakra (base larga, mãos juntas no peito)
+	float Time = 0.f;							// relógio da animação (respiração)
 };
 
 USTRUCT()
@@ -62,6 +63,8 @@ private:
 	float SprintArmsDrop = 0.f;
 	float SprintCrouchDepth = 0.f;
 	float ChargeCrouchDepth = 0.f;
+	float ChargeStanceWidth = 0.f;
+	float ChargeToeOut = 0.f;
 };
 
 /** Classe-mãe do Animation Blueprint do ninja (ABP_Ninja). */
@@ -132,9 +135,17 @@ public:
 	UPROPERTY(EditAnywhere, Category="Ninja|Corrida")
 	float SprintCrouchDepth = 16.f;
 
-	/** Quanto o quadril desce concentrando chakra (cm). */
+	/** Quanto o quadril desce concentrando chakra (cm). Base de artes marciais: joelhos dobrados 45-60°. */
 	UPROPERTY(EditAnywhere, Category="Ninja|Chakra")
-	float ChargeCrouchDepth = 14.f;
+	float ChargeCrouchDepth = 22.f;
+
+	/** Distância entre os pés concentrando chakra (cm) — cerca de 1,5x a largura dos ombros. */
+	UPROPERTY(EditAnywhere, Category="Ninja|Chakra")
+	float ChargeStanceWidth = 62.f;
+
+	/** Quanto as pontas dos pés giram para fora (graus); os joelhos acompanham a direção dos pés. */
+	UPROPERTY(EditAnywhere, Category="Ninja|Chakra")
+	float ChargeToeOut = 22.f;
 
 	/** Rapidez com que a mão vai até a parede / volta. */
 	UPROPERTY(EditAnywhere, Category="Ninja|Parede")
