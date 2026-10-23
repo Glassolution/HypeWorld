@@ -254,7 +254,7 @@ bool UNinjaMovementComponent::TryStartWallRun()
 		WallNormal = Normal;
 		WallRunTimeLeft = WallRunMaxDuration;
 		bAirDashUsed = false;
-		Velocity.Z = FMath::Clamp(Velocity.Z, 0.f, 300.f);
+		Velocity.Z = FMath::Clamp(Velocity.Z, 0.f, WallRunEntryMaxUpSpeed);
 		SetMovementMode(MOVE_Custom, NMOVE_WallRun);
 		return true;
 	}

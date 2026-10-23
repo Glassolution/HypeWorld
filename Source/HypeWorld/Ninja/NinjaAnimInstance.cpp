@@ -222,6 +222,21 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 		CS.LocalBlendCSBoneTransforms(Changed, 1.f);
 	};
 
+	// Aponta um osso (de Bone até Child) para uma direção, girando pelo menor caminho (sem torcer)
+	auto AimBone = [&CS](FCompactPoseBoneIndex Index, FCompactPoseBoneIndex Child, const FVector& Direction, float Alpha)
+	{
+		if (!Index.IsValid() || !Child.IsValid() || Alpha < 0.01f)
+		{
+			return;
+		}
+		FTransform T = CS.GetComponentSpaceTransform(Index);
+		const FVector Current = (CS.GetComponentSpaceTransform(Child).GetLocation() - T.GetLocation()).GetSafeNormal();
+		const FQuat Turn = FQuat::Slerp(FQuat::Identity, FQuat::FindBetweenNormals(Current, Direction), Alpha);
+		T.SetRotation(Turn * T.GetRotation());
+		const FBoneTransform Changed[] = { FBoneTransform(Index, T) };
+		CS.LocalBlendCSBoneTransforms(Changed, 1.f);
+	};
+
 	// Posição dos pés antes de agachar (no pouso eles ficam onde estavam)
 	const FCompactPoseBoneIndex ThighL = Bone(TEXT("thigh_l")), CalfL = Bone(TEXT("calf_l")), FootL = Bone(TEXT("foot_l"));
 	const FCompactPoseBoneIndex ThighR = Bone(TEXT("thigh_r")), CalfR = Bone(TEXT("calf_r")), FootR = Bone(TEXT("foot_r"));
@@ -283,13 +298,14 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 				CS.LocalBlendCSBoneTransforms(Changed, 1.f);
 			}
 		}
-		if (FreeUpper.IsValid() && FreeHand.IsValid())
+		if (FreeUpper.IsValid() && FreeLower.IsValid() && FreeHand.IsValid())
 		{
-			const FVector Shoulder = CS.GetComponentSpaceTransform(FreeUpper).GetLocation();
-			const FVector Current = CS.GetComponentSpaceTransform(FreeHand).GetLocation();
-			const FVector Balance = Shoulder + AwayFromWall * 45.f - Up * 15.f - Forward * 20.f;
-			const FVector Effector = FMath::Lerp(Current, Balance, Inputs.WallHandAlpha * 0.7f);
-			SolveLimb(FreeUpper, FreeLower, FreeHand, Effector, (-Up + AwayFromWall).GetSafeNormal());
+			// Braço livre: gira a partir do ombro (sem IK, para o punho não torcer) — aberto, para baixo e para trás
+			const FVector Wanted = (AwayFromWall - Up * 0.6f - Forward * 0.35f).GetSafeNormal();
+			AimBone(FreeUpper, FreeLower, Wanted, Inputs.WallHandAlpha);
+			// Antebraço quase reto, seguindo o braço
+			const FVector UpperDir = (CS.GetComponentSpaceTransform(FreeLower).GetLocation() - CS.GetComponentSpaceTransform(FreeUpper).GetLocation()).GetSafeNormal();
+			AimBone(FreeLower, FreeHand, (UpperDir - Up * 0.25f).GetSafeNormal(), Inputs.WallHandAlpha * 0.6f);
 		}
 	}
 

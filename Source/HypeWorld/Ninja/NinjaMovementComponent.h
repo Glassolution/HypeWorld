@@ -58,6 +58,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Parede")
 	float WallRunGravityScale = 0.15f;
 
+	/** Velocidade máxima para cima ao grudar na parede (o resto do impulso do pulo é cortado). */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Parede")
+	float WallRunEntryMaxUpSpeed = 100.f;
+
 	/** Distância extra (além da cápsula) para detectar a parede. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Parede")
 	float WallDetectDistance = 40.f;
