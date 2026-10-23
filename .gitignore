@@ -1,0 +1,15 @@
+# Arquivos gerados pela Unreal/Xcode (recriados automaticamente; não versionar)
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+*.xcworkspace/
+*.xcodeproj/
+.vs/
+.vscode/
+*.sln
+.DS_Store
+
+# Plugins do projeto: mesma regra
+Plugins/**/Binaries/
+Plugins/**/Intermediate/
