@@ -42,7 +42,10 @@ AHypeWorldCharacter::AHypeWorldCharacter(const FObjectInitializer& ObjectInitial
 	GetCharacterMovement()->MaxAcceleration = 3000.f;
 	JumpMaxCount = 2;
 	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
-	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
+	// Freada suave: atrito próprio para frear (em vez do atrito do chão, que parava no tranco)
+	GetCharacterMovement()->BrakingDecelerationWalking = 1200.f;
+	GetCharacterMovement()->bUseSeparateBrakingFriction = true;
+	GetCharacterMovement()->BrakingFriction = 0.6f;
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 
 	// Create a camera boom (pulls in towards the player if there is a collision)
@@ -126,9 +129,25 @@ void AHypeWorldCharacter::DoMove(float Right, float Forward)
 		// get right vector 
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
+		FVector Wish = ForwardDirection * Forward + RightDirection * Right;
+
+		// Correndo rápido: A/D viram em arco (limita o ângulo em relação à direção atual), para o boneco
+		// não sair correndo de lado na frente da câmera. Para trás (S) continua valendo: freia e vira.
+		const FVector VelocityDir = GetVelocity().GetSafeNormal2D();
+		if (GetVelocity().Size2D() > CameraFollowMinSpeed && GetCharacterMovement()->IsMovingOnGround() && !Wish.IsNearlyZero())
+		{
+			const float WishSize = FMath::Min(Wish.Size(), 1.f);
+			const FVector WishDir = Wish.GetSafeNormal2D();
+			const float Angle = FMath::RadiansToDegrees(FMath::Acos(FMath::Clamp(FVector::DotProduct(VelocityDir, WishDir), -1.f, 1.f)));
+			if (Angle > SprintSteerAngle && Angle < 150.f)
+			{
+				const float Side = FMath::Sign(FVector::CrossProduct(VelocityDir, WishDir).Z);
+				Wish = VelocityDir.RotateAngleAxis(Side * SprintSteerAngle, FVector::UpVector) * WishSize;
+			}
+		}
+
 		// add movement 
-		AddMovementInput(ForwardDirection, Forward);
-		AddMovementInput(RightDirection, Right);
+		AddMovementInput(Wish.GetSafeNormal2D(), FMath::Min(Wish.Size(), 1.f));
 	}
 }
 
@@ -136,6 +155,11 @@ void AHypeWorldCharacter::DoLook(float Yaw, float Pitch)
 {
 	if (GetController() != nullptr)
 	{
+		if (!FMath::IsNearlyZero(Yaw) || !FMath::IsNearlyZero(Pitch))
+		{
+			LastLookInputTime = GetWorld()->GetTimeSeconds();
+		}
+
 		// add yaw and pitch input to controller
 		AddControllerYawInput(Yaw);
 		AddControllerPitchInput(Pitch);
@@ -190,6 +214,7 @@ void AHypeWorldCharacter::BeginPlay()
 	BaseMeshRotation = GetMesh()->GetRelativeRotation();
 	BaseMeshLocation = GetMesh()->GetRelativeLocation();
 	LastYaw = GetActorRotation().Yaw;
+	DefaultRotationRate = GetCharacterMovement()->RotationRate.Yaw;
 }
 
 void AHypeWorldCharacter::Tick(float DeltaSeconds)
@@ -199,6 +224,8 @@ void AHypeWorldCharacter::Tick(float DeltaSeconds)
 	UpdateLean(DeltaSeconds);
 	UpdateRunAnimRate();
 	UpdateIdleBreak(DeltaSeconds);
+	UpdateTurnInPlace(DeltaSeconds);
+	UpdateCameraFollow(DeltaSeconds);
 }
 
 void AHypeWorldCharacter::UpdateIdleBreak(float DeltaSeconds)
@@ -334,4 +361,71 @@ void AHypeWorldCharacter::UpdateRunAnimRate()
 		Rate = FMath::Clamp(GetVelocity().Size2D() / RunAnimNaturalSpeed, 1.f, FMath::Max(1.f, MaxRunAnimRate));
 	}
 	GetMesh()->GlobalAnimRateScale = Rate;
+}
+
+void AHypeWorldCharacter::UpdateCameraFollow(float DeltaSeconds)
+{
+	AController* PC = GetController();
+	UNinjaMovementComponent* NinjaMovement = GetNinjaMovement();
+	if (!IsLocallyControlled() || !PC || !NinjaMovement)
+	{
+		return;
+	}
+
+	const FVector Velocity2D = GetVelocity().GetSafeNormal2D() * GetVelocity().Size2D();
+	const bool bFast = Velocity2D.Size() > CameraFollowMinSpeed && !NinjaMovement->IsWallRunning();
+	const bool bMouseIdle = GetWorld()->GetTimeSeconds() - LastLookInputTime > CameraFollowDelay;
+	if (!bFast || !bMouseIdle)
+	{
+		return;
+	}
+
+	// Gira só o yaw da câmera em direção à direção da corrida, mais forte quanto mais rápido
+	FRotator Control = PC->GetControlRotation();
+	const float SpeedFactor = FMath::Clamp(Velocity2D.Size() / 1200.f, 0.3f, 1.f);
+	Control.Yaw = FMath::FInterpTo(Control.Yaw, Control.Yaw + FMath::FindDeltaAngleDegrees(Control.Yaw, Velocity2D.Rotation().Yaw), DeltaSeconds, CameraFollowSpeed * SpeedFactor);
+	PC->SetControlRotation(Control);
+}
+
+void AHypeWorldCharacter::UpdateTurnInPlace(float DeltaSeconds)
+{
+	UCharacterMovementComponent* Move = GetCharacterMovement();
+	const float Speed = GetVelocity().Size2D();
+
+	// Rapidez de giro: virada em andamento > corrida (curva aberta) > normal
+	if (TurnTimeLeft > 0.f)
+	{
+		TurnTimeLeft -= DeltaSeconds;
+	}
+	else
+	{
+		Move->RotationRate.Yaw = Speed > CameraFollowMinSpeed ? SprintRotationRate : DefaultRotationRate;
+	}
+
+	if (!Move->IsMovingOnGround() || Speed > 10.f)
+	{
+		// Começou a andar agora (estava parado): vira com animação se a direção for muito diferente
+		if (StillTime > 0.2f && Move->IsMovingOnGround() && Move->GetCurrentAcceleration().SizeSquared() > 1.f)
+		{
+			const float Angle = FMath::FindDeltaAngleDegrees(GetActorRotation().Yaw, Move->GetCurrentAcceleration().Rotation().Yaw);
+			UAnimMontage* Montage = nullptr;
+			if (FMath::Abs(Angle) >= 135.f)
+			{
+				Montage = Turn180Montage;
+			}
+			else if (Angle >= 60.f)
+			{
+				Montage = TurnRightMontage;
+			}
+			if (Montage && TurnDuration > 0.f)
+			{
+				PlayAnimMontage(Montage, Montage->GetPlayLength() / TurnDuration);
+				Move->RotationRate.Yaw = FMath::Abs(Angle) / TurnDuration;   // corpo gira no ritmo da animação
+				TurnTimeLeft = TurnDuration;
+			}
+		}
+		StillTime = 0.f;
+		return;
+	}
+	StillTime += DeltaSeconds;
 }

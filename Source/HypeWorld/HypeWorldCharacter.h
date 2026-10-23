@@ -71,6 +71,38 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
 	UAnimMontage* WallRunMontage;
 
+	/** Virada para a direita (~90°) ao sair do lugar */
+	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
+	UAnimMontage* TurnRightMontage;
+
+	/** Meia-volta (~180°) ao sair do lugar */
+	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
+	UAnimMontage* Turn180Montage;
+
+	/** Quanto tempo a virada leva (s) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
+	float TurnDuration = 0.45f;
+
+	/** Velocidade a partir da qual a câmera passa a seguir as costas do boneco (cm/s) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Câmera")
+	float CameraFollowMinSpeed = 400.f;
+
+	/** Rapidez com que a câmera volta para as costas do boneco */
+	UPROPERTY(EditAnywhere, Category="Ninja|Câmera")
+	float CameraFollowSpeed = 2.5f;
+
+	/** Tempo sem mexer o mouse até a câmera começar a seguir (s) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Câmera")
+	float CameraFollowDelay = 0.6f;
+
+	/** Correndo rápido, A/D viram em arco: no máximo este ângulo em relação à direção atual (graus) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Movimento")
+	float SprintSteerAngle = 35.f;
+
+	/** Rapidez de giro do corpo correndo rápido (graus/s): menor = curva mais aberta */
+	UPROPERTY(EditAnywhere, Category="Ninja|Movimento")
+	float SprintRotationRate = 360.f;
+
 	/** Animação que toca de vez em quando se ficar parado (olhar em volta) */
 	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
 	UAnimMontage* IdleBreakMontage;
@@ -174,6 +206,17 @@ private:
 
 	/** Acelera a animação de corrida quando o boneco vai mais rápido que ela, para os pés não "patinarem" */
 	void UpdateRunAnimRate();
+
+	/** Câmera volta suave para trás do boneco quando ele corre e o mouse está parado */
+	void UpdateCameraFollow(float DeltaSeconds);
+
+	/** Ao sair do lugar numa direção muito diferente, toca a animação de virar e gira no mesmo ritmo */
+	void UpdateTurnInPlace(float DeltaSeconds);
+
+	float LastLookInputTime = -100.f;
+	float StillTime = 0.f;
+	float TurnTimeLeft = 0.f;
+	float DefaultRotationRate = 720.f;
 
 	/** Conta o tempo parado e toca a animação de olhar em volta depois de IdleBreakDelay */
 	void UpdateIdleBreak(float DeltaSeconds);
