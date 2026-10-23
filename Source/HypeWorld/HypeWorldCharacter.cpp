@@ -48,16 +48,20 @@ AHypeWorldCharacter::AHypeWorldCharacter(const FObjectInitializer& ObjectInitial
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 400.0f;
+	// Câmera única (parado, andando e correndo): atrás, perto e um pouco acima, olhando levemente para baixo,
+	// com o boneco na parte de baixo da tela e o caminho à frente visível
+	CameraBoom->TargetArmLength = 300.0f;
+	CameraBoom->SocketOffset = FVector(0.f, 0.f, 70.f);
 	CameraBoom->bUsePawnControlRotation = true;
-	CameraBoom->bEnableCameraLag = true; // câmera "atrasa" um pouco, dá sensação de velocidade
-	CameraBoom->CameraLagSpeed = 12.f;
-	CameraBoom->CameraLagMaxDistance = 60.f; // em alta velocidade o boneco não fica muito à frente da câmera
+	CameraBoom->bEnableCameraLag = true; // segue suave, mas sem deixar o boneco escapar
+	CameraBoom->CameraLagSpeed = 20.f;
+	CameraBoom->CameraLagMaxDistance = 25.f;
 
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
+	FollowCamera->SetRelativeRotation(FRotator(-8.f, 0.f, 0.f));
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
@@ -186,12 +190,6 @@ void AHypeWorldCharacter::BeginPlay()
 	BaseMeshRotation = GetMesh()->GetRelativeRotation();
 	BaseMeshLocation = GetMesh()->GetRelativeLocation();
 	LastYaw = GetActorRotation().Yaw;
-
-	DefaultArmLength = CameraBoom->TargetArmLength;
-	DefaultSocketOffset = CameraBoom->SocketOffset;
-	DefaultCameraRotation = FollowCamera->GetRelativeRotation();
-	DefaultLagSpeed = CameraBoom->CameraLagSpeed;
-	DefaultLagMaxDistance = CameraBoom->CameraLagMaxDistance;
 }
 
 void AHypeWorldCharacter::Tick(float DeltaSeconds)
@@ -201,25 +199,6 @@ void AHypeWorldCharacter::Tick(float DeltaSeconds)
 	UpdateLean(DeltaSeconds);
 	UpdateRunAnimRate();
 	UpdateIdleBreak(DeltaSeconds);
-	UpdateSprintCamera(DeltaSeconds);
-}
-
-void AHypeWorldCharacter::UpdateSprintCamera(float DeltaSeconds)
-{
-	UNinjaMovementComponent* NinjaMovement = GetNinjaMovement();
-	if (!IsLocallyControlled() || !NinjaMovement)
-	{
-		return;
-	}
-
-	const bool bFast = NinjaMovement->IsMovingOnGround() && GetVelocity().Size2D() > SprintCameraMinSpeed;
-	SprintCameraAlpha = FMath::FInterpTo(SprintCameraAlpha, bFast ? 1.f : 0.f, DeltaSeconds, CameraBlendSpeed);
-
-	CameraBoom->TargetArmLength = FMath::Lerp(DefaultArmLength, SprintCameraArmLength, SprintCameraAlpha);
-	CameraBoom->SocketOffset = DefaultSocketOffset + FVector(0.f, 0.f, SprintCameraHeight * SprintCameraAlpha);
-	FollowCamera->SetRelativeRotation(DefaultCameraRotation + FRotator(-SprintCameraPitch * SprintCameraAlpha, 0.f, 0.f));
-	CameraBoom->CameraLagSpeed = FMath::Lerp(DefaultLagSpeed, SprintCameraLagSpeed, SprintCameraAlpha);
-	CameraBoom->CameraLagMaxDistance = FMath::Lerp(DefaultLagMaxDistance, 20.f, SprintCameraAlpha);
 }
 
 void AHypeWorldCharacter::UpdateIdleBreak(float DeltaSeconds)

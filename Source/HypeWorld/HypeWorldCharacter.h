@@ -71,30 +71,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
 	UAnimMontage* WallRunMontage;
 
-	/** Câmera na corrida ninja: distância até o boneco (cm) */
-	UPROPERTY(EditAnywhere, Category="Ninja|Câmera")
-	float SprintCameraArmLength = 280.f;
-
-	/** Câmera na corrida ninja: quanto sobe (cm) */
-	UPROPERTY(EditAnywhere, Category="Ninja|Câmera")
-	float SprintCameraHeight = 90.f;
-
-	/** Câmera na corrida ninja: quanto inclina para baixo (graus) */
-	UPROPERTY(EditAnywhere, Category="Ninja|Câmera")
-	float SprintCameraPitch = 14.f;
-
-	/** Velocidade a partir da qual a câmera entra no modo corrida (cm/s) */
-	UPROPERTY(EditAnywhere, Category="Ninja|Câmera")
-	float SprintCameraMinSpeed = 700.f;
-
-	/** Na corrida ninja a câmera acompanha mais firme (menos atraso), senão o boneco escapa para a frente */
-	UPROPERTY(EditAnywhere, Category="Ninja|Câmera")
-	float SprintCameraLagSpeed = 40.f;
-
-	/** Rapidez da transição da câmera */
-	UPROPERTY(EditAnywhere, Category="Ninja|Câmera")
-	float CameraBlendSpeed = 4.f;
-
 	/** Animação que toca de vez em quando se ficar parado (olhar em volta) */
 	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
 	UAnimMontage* IdleBreakMontage;
@@ -198,16 +174,6 @@ private:
 
 	/** Acelera a animação de corrida quando o boneco vai mais rápido que ela, para os pés não "patinarem" */
 	void UpdateRunAnimRate();
-
-	/** Aproxima, sobe e inclina a câmera durante a corrida ninja (só para quem está jogando nesta máquina) */
-	void UpdateSprintCamera(float DeltaSeconds);
-
-	float DefaultArmLength = 400.f;
-	FVector DefaultSocketOffset = FVector::ZeroVector;
-	FRotator DefaultCameraRotation = FRotator::ZeroRotator;
-	float DefaultLagSpeed = 12.f;
-	float DefaultLagMaxDistance = 60.f;
-	float SprintCameraAlpha = 0.f;
 
 	/** Conta o tempo parado e toca a animação de olhar em volta depois de IdleBreakDelay */
 	void UpdateIdleBreak(float DeltaSeconds);
