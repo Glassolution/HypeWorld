@@ -63,6 +63,9 @@ private:
 	float SprintArmsDrop = 0.f;
 	float SprintCrouchDepth = 0.f;
 	float SprintArmLock = 0.f;
+	float SprintStraighten = 0.f;
+	float SprintFootNarrow = 0.f;
+	float SprintHandRelax = 0.f;
 	float ChargeCrouchDepth = 0.f;
 	float ChargeStanceWidth = 0.f;
 	float ChargeToeOut = 0.f;
@@ -132,7 +135,7 @@ public:
 
 	/** Inclinação extra do tronco na corrida ninja (graus). */
 	UPROPERTY(EditAnywhere, Category="Ninja|Corrida")
-	float SprintExtraLean = 8.f;
+	float SprintExtraLean = 0.f;
 
 	/** Quanto os braços apontam para baixo na corrida ninja (0 = horizontais para trás, 1 = bem para baixo). */
 	UPROPERTY(EditAnywhere, Category="Ninja|Corrida")
@@ -144,7 +147,19 @@ public:
 
 	/** Quanto os braços ficam presos para trás (1 = parados; menos = balançam um pouco com as passadas). */
 	UPROPERTY(EditAnywhere, Category="Ninja|Corrida")
-	float SprintArmLock = 0.85f;
+	float SprintArmLock = 0.72f;
+
+	/** Quanto o tronco é levantado na corrida ninja (0 = deitado como a animação, 1 = em pé). */
+	UPROPERTY(EditAnywhere, Category="Ninja|Corrida")
+	float SprintStraighten = 0.3f;
+
+	/** Quanto as pisadas vão para o eixo do corpo (0 = como a animação, 1 = um pé na frente do outro). */
+	UPROPERTY(EditAnywhere, Category="Ninja|Corrida")
+	float SprintFootNarrow = 0.55f;
+
+	/** Mãos leves: 1 = dedos esticados e firmes, 0 = soltos como na animação. */
+	UPROPERTY(EditAnywhere, Category="Ninja|Corrida")
+	float SprintHandRelax = 0.45f;
 
 	/** Quanto o quadril desce concentrando chakra (cm). Base de artes marciais: joelhos dobrados 45-60°. */
 	UPROPERTY(EditAnywhere, Category="Ninja|Chakra")
@@ -189,11 +204,15 @@ public:
 protected:
 
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
+	virtual void NativeThreadSafeUpdateAnimation(float DeltaSeconds) override;
 	virtual FAnimInstanceProxy* CreateAnimInstanceProxy() override { return new FNinjaAnimInstanceProxy(this); }
 
 private:
 
 	FNinjaPoseInputs PoseInputs;
+
+	/** Direção do movimento em relação ao corpo, -180..180 (o gráfico do template limitava a ±45°, sem andar de lado/de costas). */
+	float FullDirection = 0.f;
 
 	bool bWasInAir = false;
 	float LastVelocityZ = 0.f;

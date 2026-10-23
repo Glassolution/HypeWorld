@@ -36,6 +36,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Corrida")
 	float SprintAcceleration = 1100.f;
 
+	/** Modo foco (segurar botão direito): de frente para a câmera, andando de lado/de costas. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Foco")
+	float FocusSpeed = 170.f;
+
+	/** Velocidade andando de costas no modo foco (a animação de costas é mais lenta). */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Foco")
+	float FocusBackSpeed = 110.f;
+
 	/** Velocidade máxima enquanto ataca (o embalo da corrida diminui suave até aqui). */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Corrida")
 	float AttackMaxSpeed = 250.f;
@@ -103,6 +111,10 @@ public:
 
 	void SetSprinting(bool bSprint) { bWantsToSprint = bSprint; }
 	void RequestDash() { bWantsToDash = true; }
+	void SetFocusing(bool bFocus) { bWantsToFocus = bFocus; }
+
+	UFUNCTION(BlueprintPure, Category="Ninja")
+	bool IsFocusing() const { return bWantsToFocus && !bWantsToSprint && IsMovingOnGround(); }
 
 	UFUNCTION(BlueprintPure, Category="Ninja")
 	bool IsSprinting() const { return bWantsToSprint && IsMovingOnGround(); }
@@ -155,6 +167,7 @@ private:
 	// Entradas enviadas ao servidor a cada movimento
 	bool bWantsToSprint = false;
 	bool bWantsToDash = false;
+	bool bWantsToFocus = false;
 
 	// Estado do movimento (também guardado em FSavedMove_Ninja para refazer movimentos após correção do servidor)
 	float DashTimeLeft = 0.f;
@@ -181,6 +194,7 @@ public:
 
 	uint8 bSavedWantsToSprint : 1 = 0;
 	uint8 bSavedWantsToDash : 1 = 0;
+	uint8 bSavedWantsToFocus : 1 = 0;
 	uint8 bSavedAirDashUsed : 1 = 0;
 	float SavedDashTimeLeft = 0.f;
 	float SavedDashCooldownLeft = 0.f;

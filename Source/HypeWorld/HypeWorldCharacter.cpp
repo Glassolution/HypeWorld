@@ -117,6 +117,8 @@ void AHypeWorldCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &AHypeWorldCharacter::DoAttackPressed);
 		EnhancedInputComponent->BindAction(ChargeChakraAction, ETriggerEvent::Started, this, &AHypeWorldCharacter::DoChargePressed);
 		EnhancedInputComponent->BindAction(ChargeChakraAction, ETriggerEvent::Completed, this, &AHypeWorldCharacter::DoChargeReleased);
+		EnhancedInputComponent->BindAction(FocusAction, ETriggerEvent::Started, this, &AHypeWorldCharacter::DoFocusStart);
+		EnhancedInputComponent->BindAction(FocusAction, ETriggerEvent::Completed, this, &AHypeWorldCharacter::DoFocusEnd);
 	}
 	else
 	{
@@ -784,4 +786,20 @@ float AHypeWorldCharacter::GetHealth() const
 float AHypeWorldCharacter::GetChakra() const
 {
 	return Attributes ? Attributes->GetChakra() : 0.f;
+}
+
+void AHypeWorldCharacter::DoFocusStart()
+{
+	if (UNinjaMovementComponent* NinjaMovement = GetNinjaMovement())
+	{
+		NinjaMovement->SetFocusing(true);
+	}
+}
+
+void AHypeWorldCharacter::DoFocusEnd()
+{
+	if (UNinjaMovementComponent* NinjaMovement = GetNinjaMovement())
+	{
+		NinjaMovement->SetFocusing(false);
+	}
 }

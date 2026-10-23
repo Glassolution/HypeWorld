@@ -23,6 +23,14 @@ float UNinjaMovementComponent::GetMaxAcceleration() const
 
 float UNinjaMovementComponent::GetMaxSpeed() const
 {
+	// Modo foco: anda devagar de frente para a câmera; de costas, mais devagar ainda
+	if (IsFocusing())
+	{
+		const FVector Facing = UpdatedComponent ? UpdatedComponent->GetForwardVector().GetSafeNormal2D() : FVector::ForwardVector;
+		const float Back = FMath::Clamp(-FVector::DotProduct(Facing, Acceleration.GetSafeNormal2D()), 0.f, 1.f);
+		return FMath::Lerp(FocusSpeed, FocusBackSpeed, Back);
+	}
+
 	// Atacando: mantém um pouco do embalo, mas desacelera suave até AttackMaxSpeed
 	if (const AHypeWorldCharacter* Ninja = Cast<AHypeWorldCharacter>(CharacterOwner); Ninja && Ninja->IsAttacking() && IsMovingOnGround())
 	{
@@ -47,6 +55,11 @@ FRotator UNinjaMovementComponent::ComputeOrientToMovementRotation(const FRotator
 		{
 			return AlongWall.Rotation();
 		}
+	}
+	// Modo foco: o corpo fica de frente para onde a câmera olha (anda de lado/de costas)
+	if (IsFocusing() && CharacterOwner)
+	{
+		return FRotator(0.f, CharacterOwner->GetControlRotation().Yaw, 0.f);
 	}
 	return Super::ComputeOrientToMovementRotation(CurrentRotation, DeltaTime, DeltaRotation);
 }
@@ -78,6 +91,7 @@ void UNinjaMovementComponent::UpdateFromCompressedFlags(uint8 Flags)
 	Super::UpdateFromCompressedFlags(Flags);
 	bWantsToSprint = (Flags & FSavedMove_Character::FLAG_Custom_0) != 0;
 	bWantsToDash = (Flags & FSavedMove_Character::FLAG_Custom_1) != 0;
+	bWantsToFocus = (Flags & FSavedMove_Character::FLAG_Custom_2) != 0;
 }
 
 FNetworkPredictionData_Client* UNinjaMovementComponent::GetPredictionData_Client() const
@@ -365,6 +379,7 @@ void FSavedMove_Ninja::Clear()
 	Super::Clear();
 	bSavedWantsToSprint = false;
 	bSavedWantsToDash = false;
+	bSavedWantsToFocus = false;
 	bSavedAirDashUsed = false;
 	SavedDashTimeLeft = 0.f;
 	SavedDashCooldownLeft = 0.f;
@@ -385,6 +400,10 @@ uint8 FSavedMove_Ninja::GetCompressedFlags() const
 	{
 		Flags |= FLAG_Custom_1;
 	}
+	if (bSavedWantsToFocus)
+	{
+		Flags |= FLAG_Custom_2;
+	}
 	return Flags;
 }
 
@@ -396,6 +415,7 @@ void FSavedMove_Ninja::SetMoveFor(ACharacter* C, float InDeltaTime, FVector cons
 	{
 		bSavedWantsToSprint = Move->bWantsToSprint;
 		bSavedWantsToDash = Move->bWantsToDash;
+		bSavedWantsToFocus = Move->bWantsToFocus;
 		bSavedAirDashUsed = Move->bAirDashUsed;
 		SavedDashTimeLeft = Move->DashTimeLeft;
 		SavedDashCooldownLeft = Move->DashCooldownLeft;

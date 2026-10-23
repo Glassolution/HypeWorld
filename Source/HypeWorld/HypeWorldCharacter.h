@@ -87,6 +87,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Input")
 	UInputAction* ChargeChakraAction;
 
+	/** Modo foco (segurar): de frente para a câmera, anda de lado e de costas */
+	UPROPERTY(EditAnywhere, Category="Input")
+	UInputAction* FocusAction;
+
 	/** Animação do dash */
 	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
 	UAnimMontage* DashMontage;
@@ -340,6 +344,12 @@ public:
 	/** Pede um dash */
 	UFUNCTION(BlueprintCallable, Category="Input")
 	virtual void DoDash();
+
+	/** Liga/desliga o modo foco */
+	UFUNCTION(BlueprintCallable, Category="Input")
+	void DoFocusStart();
+	UFUNCTION(BlueprintCallable, Category="Input")
+	void DoFocusEnd();
 
 public:
 

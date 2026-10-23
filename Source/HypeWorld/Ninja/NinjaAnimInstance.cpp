@@ -40,6 +40,9 @@ void UNinjaAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		return;
 	}
 
+	const FVector Vel2D = Char->GetVelocity().GetSafeNormal2D();
+	FullDirection = Vel2D.IsNearlyZero() ? 0.f : FMath::FindDeltaAngleDegrees(Char->GetActorRotation().Yaw, Vel2D.Rotation().Yaw);
+
 	const FTransform CompTM = Mesh->GetComponentTransform();
 	const FVector Forward = Char->GetActorForwardVector();
 	PoseInputs.ForwardCS = CompTM.InverseTransformVectorNoScale(Forward);
@@ -133,6 +136,25 @@ void UNinjaAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	PoseInputs.LandAlpha = LandAlpha;
 }
 
+void UNinjaAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds)
+{
+	Super::NativeThreadSafeUpdateAnimation(DeltaSeconds);
+
+	// Roda depois do gráfico de eventos do Blueprint: troca a direção limitada pela completa
+	static const FName DirectionName(TEXT("Direction"));
+	if (FProperty* Prop = GetClass()->FindPropertyByName(DirectionName))
+	{
+		if (FDoubleProperty* D = CastField<FDoubleProperty>(Prop))
+		{
+			D->SetPropertyValue_InContainer(this, FullDirection);
+		}
+		else if (FFloatProperty* F = CastField<FFloatProperty>(Prop))
+		{
+			F->SetPropertyValue_InContainer(this, FullDirection);
+		}
+	}
+}
+
 // ---------------------------------------------------------------------------------------------------------------------
 // Pose (thread de animação): aplica os retoques depois do gráfico
 // ---------------------------------------------------------------------------------------------------------------------
@@ -154,6 +176,9 @@ void FNinjaAnimInstanceProxy::PreUpdate(UAnimInstance* InAnimInstance, float Del
 		SprintArmsDrop = Ninja->SprintArmsDrop;
 		SprintCrouchDepth = Ninja->SprintCrouchDepth;
 		SprintArmLock = Ninja->SprintArmLock;
+		SprintStraighten = Ninja->SprintStraighten;
+		SprintFootNarrow = Ninja->SprintFootNarrow;
+		SprintHandRelax = Ninja->SprintHandRelax;
 		ChargeCrouchDepth = Ninja->ChargeCrouchDepth;
 		ChargeStanceWidth = Ninja->ChargeStanceWidth;
 		ChargeToeOut = Ninja->ChargeToeOut;
@@ -242,8 +267,8 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 	if (Inputs.SprintAlpha > 0.01f)
 	{
 		// Corrida ninja: mãos abertas e retas, como nas referências
-		OpenHand(Output.Pose, true, Inputs.SprintAlpha * 0.8f);
-		OpenHand(Output.Pose, false, Inputs.SprintAlpha * 0.8f);
+		OpenHand(Output.Pose, true, Inputs.SprintAlpha * SprintHandRelax);
+		OpenHand(Output.Pose, false, Inputs.SprintAlpha * SprintHandRelax);
 	}
 
 	FCSPose<FCompactPose> CS;
@@ -385,6 +410,30 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 		}
 	}
 
+	// 3b) Corrida ninja: pisadas perto da linha do centro (sem mexer na passada para a frente) e tronco menos deitado
+	if (Inputs.SprintAlpha > 0.01f && Pelvis.IsValid())
+	{
+		const FVector Center = CS.GetComponentSpaceTransform(Pelvis).GetLocation();
+		for (const bool bRight : { false, true })
+		{
+			const FCompactPoseBoneIndex Foot = bRight ? FootR : FootL;
+			if (!Foot.IsValid())
+			{
+				continue;
+			}
+			const FVector FootPos = CS.GetComponentSpaceTransform(Foot).GetLocation();
+			const float Lateral = FVector::DotProduct(FootPos - Center, Right);
+			const float Keep = bRight ? 7.f : -7.f;   // sobra um pouco de largura (não cruza os pés)
+			const FVector Target = FootPos - Right * (Lateral - Keep) * SprintFootNarrow * Inputs.SprintAlpha;
+			SolveLimb(bRight ? ThighR : ThighL, bRight ? CalfR : CalfL, Foot, Target, Forward);
+		}
+
+		const FCompactPoseBoneIndex Spine01 = Bone(TEXT("spine_01"));
+		AimBone(Spine01, Spine03, Up, Inputs.SprintAlpha * SprintStraighten);
+		AimBone(Spine03, Spine05, Up, Inputs.SprintAlpha * SprintStraighten * 0.6f);
+		AimBone(Neck, Head, (Forward * 0.5f + Up).GetSafeNormal(), Inputs.SprintAlpha * 0.4f);   // olhar para onde vai
+	}
+
 	// 4) Corrida ninja: os dois braços esticados para trás, um pouco abertos (como nas referências)
 	if (Inputs.SprintAlpha > 0.01f)
 	{
@@ -398,7 +447,7 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 			if (Upper.IsValid() && Lower.IsValid())
 			{
 				const FVector UpperDir = (CS.GetComponentSpaceTransform(Lower).GetLocation() - CS.GetComponentSpaceTransform(Upper).GetLocation()).GetSafeNormal();
-				AimBone(Lower, Hand, UpperDir, Inputs.SprintAlpha * 0.95f);   // antebraço reto, seguindo o braço
+				AimBone(Lower, Hand, UpperDir, Inputs.SprintAlpha * 0.7f);   // antebraço quase reto, cotovelo solto
 			}
 		}
 	}
