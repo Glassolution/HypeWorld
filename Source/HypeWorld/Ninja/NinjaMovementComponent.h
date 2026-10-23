@@ -82,6 +82,9 @@ public:
 
 	bool IsCustomMode(ENinjaMoveMode Mode) const { return MovementMode == MOVE_Custom && CustomMovementMode == Mode; }
 
+	/** Procura uma parede quase vertical na direção indicada (horizontal). */
+	bool TraceForWall(const FVector& Direction, FHitResult& OutHit) const;
+
 	// ---------- UCharacterMovementComponent ----------
 
 	virtual float GetMaxSpeed() const override;
@@ -105,9 +108,6 @@ private:
 	void EndDash();
 	bool TryStartWallRun();
 	void EndWallRun();
-
-	/** Procura uma parede quase vertical na direção indicada (horizontal). */
-	bool TraceForWall(const FVector& Direction, FHitResult& OutHit) const;
 
 	bool CanDash() const;
 

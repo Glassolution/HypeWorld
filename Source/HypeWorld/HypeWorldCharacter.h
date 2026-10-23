@@ -11,6 +11,7 @@ class USpringArmComponent;
 class UCameraComponent;
 class UInputAction;
 class UNinjaMovementComponent;
+class UAnimMontage;
 struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
@@ -58,12 +59,48 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Input")
 	UInputAction* DashAction;
 
+	/** Animação do dash */
+	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
+	UAnimMontage* DashMontage;
+
+	/** Animação do pulo de parede */
+	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
+	UAnimMontage* WallJumpMontage;
+
+	/** Animação em loop enquanto corre na parede */
+	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
+	UAnimMontage* WallRunMontage;
+
+	/** Inclinação máxima ao fazer curva correndo (graus) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
+	float MaxTurnLean = 15.f;
+
+	/** Inclinação correndo na parede, para longe da parede (graus) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
+	float WallRunLean = 30.f;
+
+	/** Quanto o boneco encosta na parede durante a corrida na parede (cm) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
+	float WallRunMeshOffset = 35.f;
+
+	/** Rapidez com que a inclinação acompanha (maior = mais rápido) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
+	float LeanInterpSpeed = 8.f;
+
+	/** Velocidade em que a animação de corrida combina com os pés; acima disso ela é acelerada */
+	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
+	float RunAnimNaturalSpeed = 600.f;
+
 public:
 
 	/** Constructor */
 	AHypeWorldCharacter(const FObjectInitializer& ObjectInitializer);
 
 protected:
+
+	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaSeconds) override;
+	virtual void OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PreviousCustomMode = 0) override;
 
 	/** Initialize input action bindings */
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -117,5 +154,19 @@ public:
 	/** Componente de movimento ninja */
 	UFUNCTION(BlueprintPure, Category="Ninja")
 	UNinjaMovementComponent* GetNinjaMovement() const;
+
+private:
+
+	/** Inclina o boneco nas curvas e na parede (só visual, roda em todas as máquinas) */
+	void UpdateLean(float DeltaSeconds);
+
+	/** Acelera a animação de corrida quando o boneco vai mais rápido que ela, para os pés não "patinarem" */
+	void UpdateRunAnimRate();
+
+	FRotator BaseMeshRotation = FRotator::ZeroRotator;
+	FVector BaseMeshLocation = FVector::ZeroVector;
+	float CurrentLean = 0.f;
+	float CurrentWallOffset = 0.f;
+	float LastYaw = 0.f;
 };
 

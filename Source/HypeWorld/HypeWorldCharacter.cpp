@@ -12,10 +12,14 @@
 #include "InputActionValue.h"
 #include "HypeWorld.h"
 #include "NinjaMovementComponent.h"
+#include "Animation/AnimMontage.h"
+#include "Animation/AnimInstance.h"
 
 AHypeWorldCharacter::AHypeWorldCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UNinjaMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
+	PrimaryActorTick.bCanEverTick = true;
+
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 		
@@ -172,4 +176,124 @@ void AHypeWorldCharacter::DoDash()
 UNinjaMovementComponent* AHypeWorldCharacter::GetNinjaMovement() const
 {
 	return Cast<UNinjaMovementComponent>(GetCharacterMovement());
+}
+
+void AHypeWorldCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	BaseMeshRotation = GetMesh()->GetRelativeRotation();
+	BaseMeshLocation = GetMesh()->GetRelativeLocation();
+	LastYaw = GetActorRotation().Yaw;
+}
+
+void AHypeWorldCharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	UpdateLean(DeltaSeconds);
+	UpdateRunAnimRate();
+}
+
+void AHypeWorldCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PreviousCustomMode)
+{
+	Super::OnMovementModeChanged(PrevMovementMode, PreviousCustomMode);
+
+	// Ao refazer movimentos depois de uma correção do servidor, não repetir animações.
+	UNinjaMovementComponent* NinjaMovement = GetNinjaMovement();
+	if (bClientUpdating || !NinjaMovement)
+	{
+		return;
+	}
+
+	const bool bWasDashing = PrevMovementMode == MOVE_Custom && PreviousCustomMode == NMOVE_Dash;
+	const bool bWasWallRunning = PrevMovementMode == MOVE_Custom && PreviousCustomMode == NMOVE_WallRun;
+
+	// Saiu de um modo: para a animação dele
+	if (bWasDashing && !NinjaMovement->IsDashing() && DashMontage)
+	{
+		StopAnimMontage(DashMontage);
+	}
+	if (bWasWallRunning && !NinjaMovement->IsWallRunning())
+	{
+		if (WallRunMontage)
+		{
+			StopAnimMontage(WallRunMontage);
+		}
+
+		// Saiu da parede subindo = pulo de parede
+		if (NinjaMovement->IsFalling() && GetVelocity().Z > 0.f)
+		{
+			PlayAnimMontage(WallJumpMontage);
+		}
+	}
+
+	// Entrou num modo: toca a animação dele
+	if (NinjaMovement->IsDashing())
+	{
+		PlayAnimMontage(DashMontage, 1.3f);
+	}
+	else if (NinjaMovement->IsWallRunning() && WallRunMontage)
+	{
+		PlayAnimMontage(WallRunMontage);
+		if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
+		{
+			// Faz a montagem repetir sozinha enquanto estiver na parede
+			AnimInstance->Montage_SetNextSection(FName("Default"), FName("Default"), WallRunMontage);
+		}
+	}
+}
+
+void AHypeWorldCharacter::UpdateLean(float DeltaSeconds)
+{
+	UNinjaMovementComponent* NinjaMovement = GetNinjaMovement();
+	if (!NinjaMovement || DeltaSeconds <= 0.f)
+	{
+		return;
+	}
+
+	const float Yaw = GetActorRotation().Yaw;
+	const float YawRate = FMath::FindDeltaAngleDegrees(LastYaw, Yaw) / DeltaSeconds;
+	LastYaw = Yaw;
+
+	float TargetLean = 0.f;
+	float TargetWallOffset = 0.f;
+
+	if (NinjaMovement->IsWallRunning())
+	{
+		// Descobre de que lado está a parede (funciona também nos outros jogadores)
+		FHitResult Hit;
+		const float WallSide = NinjaMovement->TraceForWall(GetActorRightVector(), Hit) ? 1.f : -1.f;
+		TargetLean = WallSide * WallRunLean;              // positivo = topo vai para a esquerda
+		TargetWallOffset = WallSide * WallRunMeshOffset;  // pés encostam na parede
+	}
+	else if (NinjaMovement->IsMovingOnGround())
+	{
+		// Inclina para dentro da curva; mais forte quanto mais rápido
+		const float SpeedFactor = FMath::Clamp(GetVelocity().Size2D() / RunAnimNaturalSpeed, 0.f, 1.f);
+		TargetLean = -FMath::Clamp(YawRate * (MaxTurnLean / 360.f), -MaxTurnLean, MaxTurnLean) * SpeedFactor;
+	}
+
+	CurrentLean = FMath::FInterpTo(CurrentLean, TargetLean, DeltaSeconds, LeanInterpSpeed);
+	CurrentWallOffset = FMath::FInterpTo(CurrentWallOffset, TargetWallOffset, DeltaSeconds, LeanInterpSpeed);
+
+	const FQuat LeanQuat(FVector::ForwardVector, FMath::DegreesToRadians(CurrentLean));
+	GetMesh()->SetRelativeRotation(LeanQuat * BaseMeshRotation.Quaternion());
+	GetMesh()->SetRelativeLocation(BaseMeshLocation + FVector(0.f, CurrentWallOffset, 0.f));
+}
+
+void AHypeWorldCharacter::UpdateRunAnimRate()
+{
+	UNinjaMovementComponent* NinjaMovement = GetNinjaMovement();
+	if (!NinjaMovement)
+	{
+		return;
+	}
+
+	float Rate = 1.f;
+	if ((NinjaMovement->IsMovingOnGround() || NinjaMovement->IsWallRunning()) && RunAnimNaturalSpeed > 0.f)
+	{
+		Rate = FMath::Clamp(GetVelocity().Size2D() / RunAnimNaturalSpeed, 1.f, 2.f);
+	}
+	GetMesh()->GlobalAnimRateScale = Rate;
 }
