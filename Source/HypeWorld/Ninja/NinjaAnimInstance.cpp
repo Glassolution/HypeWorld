@@ -145,6 +145,7 @@ void FNinjaAnimInstanceProxy::PreUpdate(UAnimInstance* InAnimInstance, float Del
 		LandSpineAngle = Ninja->LandSpineAngle;
 		SprintExtraLean = Ninja->SprintExtraLean;
 		SprintArmsDrop = Ninja->SprintArmsDrop;
+		SprintCrouchDepth = Ninja->SprintCrouchDepth;
 	}
 }
 
@@ -270,11 +271,12 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 	const FVector FootLPos = FootL.IsValid() ? CS.GetComponentSpaceTransform(FootL).GetLocation() : FVector::ZeroVector;
 	const FVector FootRPos = FootR.IsValid() ? CS.GetComponentSpaceTransform(FootR).GetLocation() : FVector::ZeroVector;
 
-	// 1) Pouso: quadril desce
-	if (Inputs.LandAlpha > 0.01f && Pelvis.IsValid())
+	// 1) Pouso e corrida ninja: quadril desce
+	const float CrouchDepth = LandCrouchDepth * Inputs.LandAlpha + SprintCrouchDepth * Inputs.SprintAlpha;
+	if (CrouchDepth > 0.1f && Pelvis.IsValid())
 	{
 		FTransform T = CS.GetComponentSpaceTransform(Pelvis);
-		T.AddToTranslation(-Up * LandCrouchDepth * Inputs.LandAlpha);
+		T.AddToTranslation(-Up * CrouchDepth);
 		const FBoneTransform Changed[] = { FBoneTransform(Pelvis, T) };
 		CS.LocalBlendCSBoneTransforms(Changed, 1.f);
 	}
@@ -288,7 +290,7 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 
 	// 3) Pernas: no pouso os pés ficam no lugar (joelhos dobram); no ar encolhem
 	const float Lift = AirLegLift * Inputs.LookDownAlpha;
-	if (Inputs.LandAlpha > 0.01f || Lift > 0.1f)
+	if (CrouchDepth > 0.1f || Lift > 0.1f)
 	{
 		SolveLimb(ThighL, CalfL, FootL, FootLPos + Up * Lift, Forward);
 		SolveLimb(ThighR, CalfR, FootR, FootRPos + Up * Lift, Forward);

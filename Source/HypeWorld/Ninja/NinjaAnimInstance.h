@@ -59,6 +59,7 @@ private:
 	float LandSpineAngle = 0.f;
 	float SprintExtraLean = 0.f;
 	float SprintArmsDrop = 0.f;
+	float SprintCrouchDepth = 0.f;
 };
 
 /** Classe-mãe do Animation Blueprint do ninja (ABP_Ninja). */
@@ -124,6 +125,10 @@ public:
 	/** Quanto os braços apontam para baixo na corrida ninja (0 = horizontais para trás, 1 = bem para baixo). */
 	UPROPERTY(EditAnywhere, Category="Ninja|Corrida")
 	float SprintArmsDrop = 0.05f;
+
+	/** Quanto o quadril desce na corrida ninja (cm): joelhos mais dobrados, corpo mais baixo. */
+	UPROPERTY(EditAnywhere, Category="Ninja|Corrida")
+	float SprintCrouchDepth = 16.f;
 
 	/** Rapidez com que a mão vai até a parede / volta. */
 	UPROPERTY(EditAnywhere, Category="Ninja|Parede")
