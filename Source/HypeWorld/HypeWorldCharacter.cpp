@@ -263,9 +263,12 @@ void AHypeWorldCharacter::UpdateLean(float DeltaSeconds)
 	{
 		// Descobre de que lado está a parede (funciona também nos outros jogadores)
 		FHitResult Hit;
-		const float WallSide = NinjaMovement->TraceForWall(GetActorRightVector(), Hit) ? 1.f : -1.f;
-		TargetLean = WallSide * WallRunLean;              // positivo = topo vai para a esquerda
-		TargetWallOffset = WallSide * WallRunMeshOffset;  // pés encostam na parede
+		float WallSide = 0.f;
+		if (NinjaMovement->FindWallBeside(Hit, WallSide))
+		{
+			TargetLean = WallSide * WallRunLean;              // positivo = topo vai para a esquerda
+			TargetWallOffset = WallSide * WallRunMeshOffset;  // pés encostam na parede
+		}
 	}
 	else if (NinjaMovement->IsMovingOnGround())
 	{

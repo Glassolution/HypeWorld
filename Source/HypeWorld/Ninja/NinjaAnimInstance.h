@@ -20,6 +20,7 @@ struct FNinjaPoseInputs
 	float WallHandAlpha = 0.f;					// 0..1 mão na parede
 	float WallSide = 1.f;						// +1 parede à direita, -1 à esquerda
 	FVector WallHandTargetCS = FVector::ZeroVector;
+	FVector WallNormalCS = FVector::ZeroVector;	// aponta para fora da parede
 
 	float LookDownAlpha = 0.f;					// 0..1 olhando o chão / pernas se preparando para pousar
 	float LandAlpha = 0.f;						// 0..1 agachamento do pouso
@@ -41,6 +42,9 @@ protected:
 private:
 
 	void ApplyNinjaPose(FPoseContext& Output) const;
+
+	/** Abre os dedos de uma mão (puxa para a pose de referência, que é a mão aberta). */
+	void OpenHand(FCompactPose& Pose, bool bRight, float Alpha) const;
 
 	FNinjaPoseInputs Inputs;
 	float LandCrouchDepth = 0.f;

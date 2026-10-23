@@ -19,6 +19,20 @@ float UNinjaMovementComponent::GetMaxSpeed() const
 	return Super::GetMaxSpeed();
 }
 
+FRotator UNinjaMovementComponent::ComputeOrientToMovementRotation(const FRotator& CurrentRotation, float DeltaTime, FRotator& DeltaRotation) const
+{
+	// Na parede o corpo olha ao longo da parede, não para onde o controle aponta (senão ele vira de cara para a parede).
+	if (IsWallRunning())
+	{
+		const FVector AlongWall = (Velocity - WallNormal * FVector::DotProduct(Velocity, WallNormal)).GetSafeNormal2D();
+		if (!AlongWall.IsNearlyZero())
+		{
+			return AlongWall.Rotation();
+		}
+	}
+	return Super::ComputeOrientToMovementRotation(CurrentRotation, DeltaTime, DeltaRotation);
+}
+
 bool UNinjaMovementComponent::CanAttemptJump() const
 {
 	// O padrão só deixa pular no chão ou no ar; aqui também deixamos pular da parede.
@@ -195,6 +209,22 @@ bool UNinjaMovementComponent::TraceForWall(const FVector& Direction, FHitResult&
 	return bHit && FMath::Abs(OutHit.ImpactNormal.Z) < 0.3f;
 }
 
+bool UNinjaMovementComponent::FindWallBeside(FHitResult& OutHit, float& OutSide) const
+{
+	if (!CharacterOwner)
+	{
+		return false;
+	}
+	const FVector Right = CharacterOwner->GetActorRightVector();
+	if (!TraceForWall(Right, OutHit) && !TraceForWall(-Right, OutHit))
+	{
+		return false;
+	}
+	// O lado vem da direção da parede, não de qual traço acertou.
+	OutSide = FVector::DotProduct(Right, -OutHit.ImpactNormal) >= 0.f ? 1.f : -1.f;
+	return true;
+}
+
 bool UNinjaMovementComponent::TryStartWallRun()
 {
 	// Precisa estar no ar, segurando a corrida ninja, com velocidade e direção.
@@ -214,9 +244,9 @@ bool UNinjaMovementComponent::TryStartWallRun()
 			continue;
 		}
 
-		// A parede precisa estar ao lado (não de frente) para dar para correr nela.
+		// A parede precisa estar ao lado (até 60° do paralelo), não de frente.
 		const FVector Normal = Hit.ImpactNormal.GetSafeNormal2D();
-		if (FMath::Abs(FVector::DotProduct(MoveDir, Normal)) > 0.7f)
+		if (FMath::Abs(FVector::DotProduct(MoveDir, Normal)) > 0.5f)
 		{
 			continue;
 		}

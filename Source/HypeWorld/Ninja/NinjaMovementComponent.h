@@ -85,9 +85,13 @@ public:
 	/** Procura uma parede quase vertical na direção indicada (horizontal). */
 	bool TraceForWall(const FVector& Direction, FHitResult& OutHit) const;
 
+	/** Acha a parede ao lado do personagem. OutSide: +1 parede à direita, -1 à esquerda. */
+	bool FindWallBeside(FHitResult& OutHit, float& OutSide) const;
+
 	// ---------- UCharacterMovementComponent ----------
 
 	virtual float GetMaxSpeed() const override;
+	virtual FRotator ComputeOrientToMovementRotation(const FRotator& CurrentRotation, float DeltaTime, FRotator& DeltaRotation) const override;
 	virtual bool CanAttemptJump() const override;
 	virtual bool DoJump(bool bReplayingMoves, float DeltaTime) override;
 	virtual void UpdateFromCompressedFlags(uint8 Flags) override;
