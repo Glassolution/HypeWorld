@@ -93,6 +93,32 @@ void UNinjaAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	const float SprintTarget = (Move->IsMovingOnGround() && (Move->IsSprinting() || Velocity.Size2D() > SprintPoseMinSpeed)) ? 1.f : 0.f;
 	PoseInputs.SprintAlpha = FMath::FInterpTo(PoseInputs.SprintAlpha, SprintTarget, DeltaSeconds, 6.f);
 
+	// Cada pisada: o pé mais baixo é o de apoio, o corpo balança para ele; as mãos seguem atrasadas e "flutuam" no sobe e desce
+	float SwayTarget = 0.f;
+	float ArmBobTarget = 0.f;
+	if (PoseInputs.SprintAlpha > 0.01f)
+	{
+		const FVector Up = PoseInputs.UpCS;
+		const FVector FootL = Mesh->GetSocketTransform(FName("foot_l"), RTS_Component).GetLocation();
+		const FVector FootR = Mesh->GetSocketTransform(FName("foot_r"), RTS_Component).GetLocation();
+		SwayTarget = FMath::Clamp(FVector::DotProduct(FootL - FootR, Up) / 12.f, -1.f, 1.f);
+		const float PelvisHeight = FVector::DotProduct(Mesh->GetSocketTransform(FName("pelvis"), RTS_Component).GetLocation(), Up);
+		if (!bTrackingPelvis)
+		{
+			PelvisHeightSmooth = PelvisHeight;
+			bTrackingPelvis = true;
+		}
+		PelvisHeightSmooth = FMath::FInterpTo(PelvisHeightSmooth, PelvisHeight, DeltaSeconds, 6.f);
+		ArmBobTarget = FMath::Clamp(PelvisHeightSmooth - PelvisHeight, -8.f, 8.f);
+	}
+	else
+	{
+		bTrackingPelvis = false;
+	}
+	PoseInputs.StepSway = FMath::FInterpTo(PoseInputs.StepSway, SwayTarget, DeltaSeconds, 10.f);
+	PoseInputs.ArmSway = FMath::FInterpTo(PoseInputs.ArmSway, PoseInputs.StepSway, DeltaSeconds, 5.f);
+	PoseInputs.ArmBob = FMath::FInterpTo(PoseInputs.ArmBob, ArmBobTarget, DeltaSeconds, 20.f);
+
 	// --- Concentrando chakra: base aberta e mãos juntas no peito ---
 	const AHypeWorldCharacter* Ninja = Cast<AHypeWorldCharacter>(Char);
 	const float ChargeTarget = (Ninja && Ninja->IsChargingChakra()) ? 1.f : 0.f;
@@ -175,6 +201,9 @@ void FNinjaAnimInstanceProxy::PreUpdate(UAnimInstance* InAnimInstance, float Del
 		SprintExtraLean = Ninja->SprintExtraLean;
 		SprintArmsDrop = Ninja->SprintArmsDrop;
 		SprintArmsInward = Ninja->SprintArmsInward;
+		SprintStepSway = Ninja->SprintStepSway;
+		SprintHandFloat = Ninja->SprintHandFloat;
+		SprintFootStraight = Ninja->SprintFootStraight;
 		SprintCrouchDepth = Ninja->SprintCrouchDepth;
 		SprintArmLock = Ninja->SprintArmLock;
 		SprintStraighten = Ninja->SprintStraighten;
@@ -343,6 +372,10 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 			T.AddToTranslation(-Horizontal * 0.8f * Inputs.ChargeAlpha);
 			T.AddToTranslation(Up * FMath::Sin(Inputs.Time * 2.2f) * 0.8f * Inputs.ChargeAlpha);
 		}
+		if (Inputs.SprintAlpha > 0.01f)
+		{
+			T.AddToTranslation(Right * Inputs.StepSway * SprintStepSway * 0.5f * Inputs.SprintAlpha);   // corrida ninja: quadril vai para cima do pé de apoio
+		}
 		const FBoneTransform Changed[] = { FBoneTransform(Pelvis, T) };
 		CS.LocalBlendCSBoneTransforms(Changed, 1.f);
 	}
@@ -385,6 +418,10 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 		RotateBone(Bone(TEXT("thigh_r")), BendAxis, -SprintLean * 0.5f);
 	}
 	RotateBone(Spine01, BendAxis, SprintLean * 0.2f);
+	const FVector RollAxis = FVector::CrossProduct(Up, Right).GetSafeNormal();   // ângulo positivo = topo vai para a direita
+	const float StepRoll = SprintStepSway * Inputs.StepSway * Inputs.SprintAlpha;  // a cada pisada o tronco cai para o pé de apoio
+	RotateBone(Spine01, RollAxis, StepRoll * 0.5f);
+	RotateBone(Spine03, RollAxis, StepRoll * 0.5f);
 	RotateBone(Spine03, BendAxis, SpineDegrees * 0.5f + SprintLean * 0.15f);
 	RotateBone(Spine05, BendAxis, SpineDegrees * 0.5f + SprintLean * 0.15f);
 	RotateBone(Neck, BendAxis, LookDownHeadAngle * Inputs.LookDownAlpha * 0.4f);
@@ -436,6 +473,20 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 			const float Keep = bRight ? 7.f : -7.f;   // sobra um pouco de largura (não cruza os pés)
 			const FVector Target = FootPos - Right * (Lateral - Keep) * SprintFootNarrow * Inputs.SprintAlpha;
 			SolveLimb(bRight ? ThighR : ThighL, bRight ? CalfR : CalfL, Foot, Target, Forward);
+
+			// Pé reto: a ponta aponta para onde ele corre (só gira no chão, sem mudar a pisada)
+			const FCompactPoseBoneIndex Ball = Bone(bRight ? TEXT("ball_r") : TEXT("ball_l"));
+			if (Ball.IsValid() && SprintFootStraight > 0.f)
+			{
+				const FVector Toe = CS.GetComponentSpaceTransform(Ball).GetLocation() - CS.GetComponentSpaceTransform(Foot).GetLocation();
+				const FVector ToeFlat = Toe - Up * FVector::DotProduct(Toe, Up);
+				if (ToeFlat.Size() > Toe.Size() * 0.3f)
+				{
+					const FVector ToeDir = ToeFlat.GetSafeNormal();
+					const float Yaw = FMath::RadiansToDegrees(FMath::Atan2(FVector::DotProduct(FVector::CrossProduct(ToeDir, Forward), Up), FVector::DotProduct(ToeDir, Forward)));
+					RotateBone(Foot, Up, FMath::Clamp(Yaw, -30.f, 30.f) * SprintFootStraight * Inputs.SprintAlpha);
+				}
+			}
 		}
 
 		AimBone(Spine01, Spine03, Up, Inputs.SprintAlpha * SprintStraighten);
@@ -443,9 +494,30 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 		AimBone(Neck, Head, (Forward * 0.5f + Up).GetSafeNormal(), Inputs.SprintAlpha * 0.6f);   // tronco deitado, cabeça erguida olhando para onde vai
 	}
 
-	// 4) Corrida ninja: braços esticados para trás e para cima (mãos abaixo da cabeça), fechados no eixo do corpo, palmas para baixo
+	// 4) Corrida ninja: braços esticados para trás e para cima (mãos abaixo da cabeça), retos, palmas para cima.
+	//    Seguem o balanço e a torção do peito, e as mãos flutuam um pouco atrasadas a cada pisada.
 	if (Inputs.SprintAlpha > 0.01f)
 	{
+		FQuat ChestTurn = FQuat::Identity;
+		const FCompactPoseBoneIndex ShoulderL = Bone(TEXT("upperarm_l")), ShoulderR = Bone(TEXT("upperarm_r"));
+		if (ShoulderL.IsValid() && ShoulderR.IsValid())
+		{
+			auto Across = [&CS, ShoulderL, ShoulderR]()
+			{
+				return (CS.GetComponentSpaceTransform(ShoulderR).GetLocation() - CS.GetComponentSpaceTransform(ShoulderL).GetLocation()).GetSafeNormal();
+			};
+			// Com as mãos para trás os ombros quase não torcem: desfaz boa parte da torção da animação (que vinha do balanço dos braços)
+			const FVector AcrossNow = Across();
+			const float ChestYaw = FMath::RadiansToDegrees(FMath::Atan2(FVector::DotProduct(AcrossNow, Forward), FVector::DotProduct(AcrossNow, Right)));
+			RotateBone(Spine05, Up, -ChestYaw * 0.6f * Inputs.SprintAlpha);
+			// As mãos acompanham só o balanço de lado do tronco (não a torção)
+			const FVector Roll = Across() - Forward * FVector::DotProduct(Across(), Forward);
+			if (!Roll.IsNearlyZero())
+			{
+				ChestTurn = FQuat::Slerp(FQuat::Identity, FQuat::FindBetweenNormals(Right, Roll.GetSafeNormal()), 0.6f);
+			}
+		}
+		const FVector PalmWanted = ChestTurn.RotateVector(Up);
 		for (const bool bRight : { true, false })
 		{
 			const FCompactPoseBoneIndex Clavicle = Bone(bRight ? TEXT("clavicle_r") : TEXT("clavicle_l"));
@@ -458,24 +530,38 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 			if (Clavicle.IsValid() && Upper.IsValid())
 			{
 				const FVector ClavDir = (CS.GetComponentSpaceTransform(Upper).GetLocation() - CS.GetComponentSpaceTransform(Clavicle).GetLocation()).GetSafeNormal();
-				AimBone(Clavicle, Upper, (ClavDir - Forward * 0.3f).GetSafeNormal(), Inputs.SprintAlpha * 0.6f);
+				AimBone(Clavicle, Upper, (ClavDir - Forward * 0.3f).GetSafeNormal(), Inputs.SprintAlpha * 0.4f);
 			}
-			AimBone(Upper, Lower, (-Forward - Up * SprintArmsDrop - Side * SprintArmsInward).GetSafeNormal(), Inputs.SprintAlpha * SprintArmLock);   // sobra um pouco do balanço da animação
+			const FVector ArmDir = ChestTurn.RotateVector(-Forward - Up * SprintArmsDrop - Side * SprintArmsInward).GetSafeNormal()
+				+ (Right * Inputs.ArmSway * 0.06f + Up * Inputs.ArmBob * 0.03f) * SprintHandFloat;
+			AimBone(Upper, Lower, ArmDir.GetSafeNormal(), Inputs.SprintAlpha * SprintArmLock);   // sobra um pouco do balanço da animação
 			if (Upper.IsValid() && Lower.IsValid())
 			{
 				const FVector UpperDir = (CS.GetComponentSpaceTransform(Lower).GetLocation() - CS.GetComponentSpaceTransform(Upper).GetLocation()).GetSafeNormal();
 				AimBone(Lower, Hand, UpperDir, Inputs.SprintAlpha * 0.85f);   // antebraço quase reto, cotovelo solto
 			}
 
-			// Palma para baixo, dedos seguindo o antebraço
+			// Palma para cima: primeiro gira o braço inteiro no próprio eixo (o punho não torce), depois acerta a mão
 			const int32 HandSide = bRight ? 1 : 0;
-			if (Hand.IsValid() && Lower.IsValid() && !HandPalmLocal[HandSide].IsNearlyZero())
+			if (Hand.IsValid() && Lower.IsValid() && Upper.IsValid() && !HandPalmLocal[HandSide].IsNearlyZero())
 			{
+				{
+					const FTransform HandNow = CS.GetComponentSpaceTransform(Hand);
+					const FVector ArmAxis = (HandNow.GetLocation() - CS.GetComponentSpaceTransform(Upper).GetLocation()).GetSafeNormal();
+					const FVector PalmNow = HandNow.GetRotation().RotateVector(HandPalmLocal[HandSide]);
+					const FVector A = (PalmNow - ArmAxis * FVector::DotProduct(PalmNow, ArmAxis)).GetSafeNormal();
+					const FVector B = (PalmWanted - ArmAxis * FVector::DotProduct(PalmWanted, ArmAxis)).GetSafeNormal();
+					if (!A.IsNearlyZero() && !B.IsNearlyZero())
+					{
+						const float Twist = FMath::Atan2(FVector::DotProduct(FVector::CrossProduct(A, B), ArmAxis), FVector::DotProduct(A, B));
+						RotateBone(Upper, ArmAxis, FMath::RadiansToDegrees(Twist) * 0.7f * Inputs.SprintAlpha);
+					}
+				}
 				FTransform HandT = CS.GetComponentSpaceTransform(Hand);
 				const FQuat HandRot = HandT.GetRotation();
 				const FVector ForearmDir = (HandT.GetLocation() - CS.GetComponentSpaceTransform(Lower).GetLocation()).GetSafeNormal();
 				const FMatrix HandBasis = FRotationMatrix::MakeFromXZ(HandRot.RotateVector(HandFingersLocal[HandSide]), HandRot.RotateVector(HandPalmLocal[HandSide]));
-				const FMatrix Wanted = FRotationMatrix::MakeFromXZ(ForearmDir, -Up);
+				const FMatrix Wanted = FRotationMatrix::MakeFromXZ(ForearmDir, PalmWanted);
 				HandT.SetRotation(FQuat::Slerp(HandRot, Wanted.ToQuat() * HandBasis.ToQuat().Inverse() * HandRot, Inputs.SprintAlpha));
 				const FBoneTransform Changed[] = { FBoneTransform(Hand, HandT) };
 				CS.LocalBlendCSBoneTransforms(Changed, 1.f);

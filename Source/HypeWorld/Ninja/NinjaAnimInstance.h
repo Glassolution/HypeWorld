@@ -25,6 +25,9 @@ struct FNinjaPoseInputs
 	float LookDownAlpha = 0.f;					// 0..1 olhando o chão / pernas se preparando para pousar
 	float LandAlpha = 0.f;						// 0..1 agachamento do pouso
 	float SprintAlpha = 0.f;					// 0..1 pose da corrida ninja (braços esticados para trás)
+	float StepSway = 0.f;						// -1..1 pé de apoio na corrida ninja (+1 = direito no chão)
+	float ArmSway = 0.f;						// StepSway atrasado: as mãos seguem o corpo depois
+	float ArmBob = 0.f;							// cm que as mãos ficam para trás no sobe e desce do corpo (flutuam)
 	float ChargeAlpha = 0.f;					// 0..1 pose de concentrar chakra (base larga, mãos juntas no peito)
 	float Time = 0.f;							// relógio da animação (respiração)
 };
@@ -62,6 +65,9 @@ private:
 	float SprintExtraLean = 0.f;
 	float SprintArmsDrop = 0.f;
 	float SprintArmsInward = 0.f;
+	float SprintStepSway = 0.f;
+	float SprintHandFloat = 0.f;
+	float SprintFootStraight = 0.f;
 	float SprintCrouchDepth = 0.f;
 	float SprintArmLock = 0.f;
 	float SprintStraighten = 0.f;
@@ -144,7 +150,19 @@ public:
 
 	/** Quanto os braços fecham para o centro das costas na corrida ninja (0 = retos para trás, 0,5 = mãos perto da coluna). */
 	UPROPERTY(EditAnywhere, Category="Ninja|Corrida")
-	float SprintArmsInward = 0.3f;
+	float SprintArmsInward = 0.f;
+
+	/** Quanto o tronco balança para o lado do pé que pisa, a cada passada da corrida ninja (graus). */
+	UPROPERTY(EditAnywhere, Category="Ninja|Corrida")
+	float SprintStepSway = 5.f;
+
+	/** Quanto as mãos flutuam atrasadas no balanço e no sobe e desce do corpo (0 = presas, 1 = normal). */
+	UPROPERTY(EditAnywhere, Category="Ninja|Corrida")
+	float SprintHandFloat = 1.f;
+
+	/** Quanto as pontas dos pés apontam para onde ele corre (0 = como a animação, 1 = retas). */
+	UPROPERTY(EditAnywhere, Category="Ninja|Corrida")
+	float SprintFootStraight = 0.8f;
 
 	/** Quanto o quadril desce na corrida ninja (cm). 0 = pernas livres como na animação (passada natural). */
 	UPROPERTY(EditAnywhere, Category="Ninja|Corrida")
@@ -220,6 +238,8 @@ private:
 	float FullDirection = 0.f;
 
 	bool bWasInAir = false;
+	bool bTrackingPelvis = false;
+	float PelvisHeightSmooth = 0.f;
 	float LastVelocityZ = 0.f;
 	float LandStrength = 0.f;
 	float LandTime = 0.f;
