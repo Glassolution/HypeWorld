@@ -296,7 +296,7 @@ void AHypeWorldCharacter::UpdateRunAnimRate()
 	float Rate = 1.f;
 	if ((NinjaMovement->IsMovingOnGround() || NinjaMovement->IsWallRunning()) && RunAnimNaturalSpeed > 0.f)
 	{
-		Rate = FMath::Clamp(GetVelocity().Size2D() / RunAnimNaturalSpeed, 1.f, 2.f);
+		Rate = FMath::Clamp(GetVelocity().Size2D() / RunAnimNaturalSpeed, 1.f, FMath::Max(1.f, MaxRunAnimRate));
 	}
 	GetMesh()->GlobalAnimRateScale = Rate;
 }

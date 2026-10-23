@@ -91,6 +91,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
 	float RunAnimNaturalSpeed = 600.f;
 
+	/** Quanto a animação de corrida pode ser acelerada no máximo (2,7x = corrida de 4,5 m/s chega a ~12 m/s) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
+	float MaxRunAnimRate = 2.7f;
+
 public:
 
 	/** Constructor */
