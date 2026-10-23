@@ -193,6 +193,36 @@ void AHypeWorldCharacter::Tick(float DeltaSeconds)
 
 	UpdateLean(DeltaSeconds);
 	UpdateRunAnimRate();
+	UpdateIdleBreak(DeltaSeconds);
+}
+
+void AHypeWorldCharacter::UpdateIdleBreak(float DeltaSeconds)
+{
+	UNinjaMovementComponent* NinjaMovement = GetNinjaMovement();
+	if (!NinjaMovement || !IdleBreakMontage)
+	{
+		return;
+	}
+
+	// Parado no chão (pela velocidade, então funciona também nos outros jogadores)
+	const bool bStill = NinjaMovement->IsMovingOnGround() && GetVelocity().SizeSquared2D() < 9.f;
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (!bStill)
+	{
+		IdleTime = 0.f;
+		if (AnimInstance && AnimInstance->Montage_IsPlaying(IdleBreakMontage))
+		{
+			StopAnimMontage(IdleBreakMontage);   // mexeu: interrompe suavemente
+		}
+		return;
+	}
+
+	IdleTime += DeltaSeconds;
+	if (IdleTime >= IdleBreakDelay && AnimInstance && !AnimInstance->IsAnyMontagePlaying())
+	{
+		PlayAnimMontage(IdleBreakMontage);
+		IdleTime = 0.f;   // conta de novo a partir de agora
+	}
 }
 
 void AHypeWorldCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PreviousCustomMode)

@@ -71,6 +71,14 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
 	UAnimMontage* WallRunMontage;
 
+	/** Animação que toca de vez em quando se ficar parado (olhar em volta) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
+	UAnimMontage* IdleBreakMontage;
+
+	/** Segundos parado até tocar a animação de olhar em volta */
+	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
+	float IdleBreakDelay = 30.f;
+
 	/** Inclinação máxima ao fazer curva correndo (graus) */
 	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
 	float MaxTurnLean = 15.f;
@@ -166,6 +174,11 @@ private:
 
 	/** Acelera a animação de corrida quando o boneco vai mais rápido que ela, para os pés não "patinarem" */
 	void UpdateRunAnimRate();
+
+	/** Conta o tempo parado e toca a animação de olhar em volta depois de IdleBreakDelay */
+	void UpdateIdleBreak(float DeltaSeconds);
+
+	float IdleTime = 0.f;
 
 	FRotator BaseMeshRotation = FRotator::ZeroRotator;
 	FVector BaseMeshLocation = FVector::ZeroVector;

@@ -9,6 +9,19 @@
 #include "Animation/BoneReference.h"
 #include "BonePose.h"
 #include "TwoBoneIK.h"
+#include "Animation/AnimSequenceBase.h"
+#include "Animation/AnimationPoseData.h"
+
+namespace
+{
+	const TCHAR* GFingerBones[] = {
+		TEXT("thumb_01"), TEXT("thumb_02"), TEXT("thumb_03"),
+		TEXT("index_metacarpal"), TEXT("index_01"), TEXT("index_02"), TEXT("index_03"),
+		TEXT("middle_metacarpal"), TEXT("middle_01"), TEXT("middle_02"), TEXT("middle_03"),
+		TEXT("ring_metacarpal"), TEXT("ring_01"), TEXT("ring_02"), TEXT("ring_03"),
+		TEXT("pinky_metacarpal"), TEXT("pinky_01"), TEXT("pinky_02"), TEXT("pinky_03"),
+	};
+}
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Jogo (thread principal): decide o que a pose deve fazer
@@ -124,6 +137,7 @@ void FNinjaAnimInstanceProxy::PreUpdate(UAnimInstance* InAnimInstance, float Del
 	if (const UNinjaAnimInstance* Ninja = Cast<UNinjaAnimInstance>(InAnimInstance))
 	{
 		Inputs = Ninja->PoseInputs;
+		RelaxedHands = Ninja->RelaxedHandsPose;
 		LandCrouchDepth = Ninja->LandCrouchDepth;
 		LookDownSpineAngle = Ninja->LookDownSpineAngle;
 		LookDownHeadAngle = Ninja->LookDownHeadAngle;
@@ -140,6 +154,7 @@ bool FNinjaAnimInstanceProxy::Evaluate_WithRoot(FPoseContext& Output, FAnimNode_
 	EvaluateAnimationNode_WithRoot(Output, InRootNode);
 	if (InRootNode == GetRootNode())
 	{
+		ApplyRelaxedHands(Output);
 		ApplyNinjaPose(Output);
 	}
 	return true;
@@ -344,16 +359,8 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 
 void FNinjaAnimInstanceProxy::OpenHand(FCompactPose& Pose, bool bRight, float Alpha) const
 {
-	static const TCHAR* Fingers[] = {
-		TEXT("thumb_01"), TEXT("thumb_02"), TEXT("thumb_03"),
-		TEXT("index_metacarpal"), TEXT("index_01"), TEXT("index_02"), TEXT("index_03"),
-		TEXT("middle_metacarpal"), TEXT("middle_01"), TEXT("middle_02"), TEXT("middle_03"),
-		TEXT("ring_metacarpal"), TEXT("ring_01"), TEXT("ring_02"), TEXT("ring_03"),
-		TEXT("pinky_metacarpal"), TEXT("pinky_01"), TEXT("pinky_02"), TEXT("pinky_03"),
-	};
-
 	const FBoneContainer& Bones = Pose.GetBoneContainer();
-	for (const TCHAR* Finger : Fingers)
+	for (const TCHAR* Finger : GFingerBones)
 	{
 		FBoneReference Ref(FName(*FString::Printf(TEXT("%s_%s"), Finger, bRight ? TEXT("r") : TEXT("l"))));
 		Ref.Initialize(Bones);
@@ -362,6 +369,34 @@ void FNinjaAnimInstanceProxy::OpenHand(FCompactPose& Pose, bool bRight, float Al
 		{
 			FTransform& Local = Pose[Index];
 			Local.SetRotation(FQuat::Slerp(Local.GetRotation(), Pose.GetRefPose(Index).GetRotation(), Alpha));
+		}
+	}
+}
+
+void FNinjaAnimInstanceProxy::ApplyRelaxedHands(FPoseContext& Output) const
+{
+	if (!RelaxedHands)
+	{
+		return;
+	}
+
+	// Calcula a pose da animação de mão relaxada e copia só a rotação dos dedos
+	FPoseContext Relaxed(Output);
+	FAnimationPoseData RelaxedData(Relaxed);
+	RelaxedHands->GetAnimationPose(RelaxedData, FAnimExtractContext(0.0));
+
+	const FBoneContainer& Bones = Output.Pose.GetBoneContainer();
+	for (const TCHAR* Side : { TEXT("l"), TEXT("r") })
+	{
+		for (const TCHAR* Finger : GFingerBones)
+		{
+			FBoneReference Ref(FName(*FString::Printf(TEXT("%s_%s"), Finger, Side)));
+			Ref.Initialize(Bones);
+			const FCompactPoseBoneIndex Index = Ref.GetCompactPoseIndex(Bones);
+			if (Index.IsValid())
+			{
+				Output.Pose[Index].SetRotation(Relaxed.Pose[Index].GetRotation());
+			}
 		}
 	}
 }

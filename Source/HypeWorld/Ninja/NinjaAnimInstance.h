@@ -44,10 +44,14 @@ private:
 
 	void ApplyNinjaPose(FPoseContext& Output) const;
 
+	/** Copia os dedos de uma animação de mão relaxada (as do Mixamo não convertem bem os dedos). */
+	void ApplyRelaxedHands(FPoseContext& Output) const;
+
 	/** Abre os dedos de uma mão (puxa para a pose de referência, que é a mão aberta). */
 	void OpenHand(FCompactPose& Pose, bool bRight, float Alpha) const;
 
 	FNinjaPoseInputs Inputs;
+	const UAnimSequenceBase* RelaxedHands = nullptr;
 	float LandCrouchDepth = 0.f;
 	float LookDownSpineAngle = 0.f;
 	float LookDownHeadAngle = 0.f;
@@ -68,6 +72,10 @@ class HYPEWORLD_API UNinjaAnimInstance : public UAnimInstance
 public:
 
 	// ---------- Ajustes (editáveis no Animation Blueprint, em Class Defaults) ----------
+
+	/** Animação de onde vêm os dedos relaxados (MM_Idle do manequim). Vazio = dedos da própria animação. */
+	UPROPERTY(EditAnywhere, Category="Ninja|Mãos")
+	UAnimSequenceBase* RelaxedHandsPose = nullptr;
 
 	/** Distância do chão (cm) em que ele começa a olhar para baixo e preparar o pouso. */
 	UPROPERTY(EditAnywhere, Category="Ninja|Pouso")
