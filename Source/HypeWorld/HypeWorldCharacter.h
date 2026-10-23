@@ -390,6 +390,15 @@ private:
 
 	float IdleTime = 0.f;
 
+	/** Último toque no Shift (para detectar o toque duplo) */
+	float LastSprintTapTime = -100.f;
+
+public:
+	/** Janela do toque duplo no Shift para a corrida ninja (s) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Movimento")
+	float SprintDoubleTapWindow = 0.3f;
+private:
+
 	/** Gira para o inimigo mais próximo à frente (mira automática suave do combate) */
 	void FaceNearestEnemy();
 

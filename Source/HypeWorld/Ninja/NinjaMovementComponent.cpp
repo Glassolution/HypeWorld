@@ -14,7 +14,7 @@
 float UNinjaMovementComponent::GetMaxAcceleration() const
 {
 	// Já correndo e acelerando para a corrida ninja: aceleração menor (transição suave)
-	if (bWantsToSprint && IsMovingOnGround() && Velocity.Size2D() >= MaxWalkSpeed * 0.95f)
+	if (bWantsToSprint && IsMovingOnGround() && Velocity.Size2D() >= RunSpeed * 0.95f)
 	{
 		return SprintAcceleration;
 	}
@@ -41,6 +41,10 @@ float UNinjaMovementComponent::GetMaxSpeed() const
 	if (bWantsToSprint && (MovementMode == MOVE_Walking || MovementMode == MOVE_NavWalking || MovementMode == MOVE_Falling))
 	{
 		return SprintSpeed;
+	}
+	if (bWantsToRun && (MovementMode == MOVE_Walking || MovementMode == MOVE_NavWalking || MovementMode == MOVE_Falling))
+	{
+		return RunSpeed;
 	}
 	return Super::GetMaxSpeed();
 }
@@ -92,6 +96,7 @@ void UNinjaMovementComponent::UpdateFromCompressedFlags(uint8 Flags)
 	bWantsToSprint = (Flags & FSavedMove_Character::FLAG_Custom_0) != 0;
 	bWantsToDash = (Flags & FSavedMove_Character::FLAG_Custom_1) != 0;
 	bWantsToFocus = (Flags & FSavedMove_Character::FLAG_Custom_2) != 0;
+	bWantsToRun = (Flags & FSavedMove_Character::FLAG_Custom_3) != 0;
 }
 
 FNetworkPredictionData_Client* UNinjaMovementComponent::GetPredictionData_Client() const
@@ -203,7 +208,7 @@ void UNinjaMovementComponent::EndDash()
 	// Seguindo a animação, o dash já termina freando: mantém a velocidade final dela. Sem animação, sai correndo.
 	if (!DashRootMotionAnim)
 	{
-		Velocity = DashDirection * (bWantsToSprint ? SprintSpeed : MaxWalkSpeed);
+		Velocity = DashDirection * (bWantsToSprint ? SprintSpeed : (bWantsToRun ? RunSpeed : MaxWalkSpeed));
 	}
 	ExitToWalkingOrFalling();
 }
@@ -283,7 +288,7 @@ bool UNinjaMovementComponent::FindWallBeside(FHitResult& OutHit, float& OutSide)
 bool UNinjaMovementComponent::TryStartWallRun()
 {
 	// Precisa estar no ar, segurando a corrida ninja, com velocidade e direção.
-	if (!bWantsToSprint || WallRunCooldownLeft > 0.f || Velocity.Size2D() < WallRunMinSpeed || Acceleration.IsNearlyZero())
+	if (!(bWantsToSprint || bWantsToRun) || WallRunCooldownLeft > 0.f || Velocity.Size2D() < WallRunMinSpeed || Acceleration.IsNearlyZero())
 	{
 		return false;
 	}
@@ -333,7 +338,7 @@ void UNinjaMovementComponent::PhysWallRun(float DeltaTime, int32 Iterations)
 
 	FHitResult WallHit;
 	const bool bStillOnWall = TraceForWall(-WallNormal, WallHit);
-	if (!bWantsToSprint || WallRunTimeLeft <= 0.f || !bStillOnWall)
+	if (!(bWantsToSprint || bWantsToRun) || WallRunTimeLeft <= 0.f || !bStillOnWall)
 	{
 		UE_LOG(LogHypeWorld, Verbose, TEXT("Fim da corrida na parede: correndo=%d tempo_restante=%.2f parede=%d"),
 			bWantsToSprint, WallRunTimeLeft, bStillOnWall);
@@ -380,6 +385,7 @@ void FSavedMove_Ninja::Clear()
 	bSavedWantsToSprint = false;
 	bSavedWantsToDash = false;
 	bSavedWantsToFocus = false;
+	bSavedWantsToRun = false;
 	bSavedAirDashUsed = false;
 	SavedDashTimeLeft = 0.f;
 	SavedDashCooldownLeft = 0.f;
@@ -404,6 +410,10 @@ uint8 FSavedMove_Ninja::GetCompressedFlags() const
 	{
 		Flags |= FLAG_Custom_2;
 	}
+	if (bSavedWantsToRun)
+	{
+		Flags |= FLAG_Custom_3;
+	}
 	return Flags;
 }
 
@@ -416,6 +426,7 @@ void FSavedMove_Ninja::SetMoveFor(ACharacter* C, float InDeltaTime, FVector cons
 		bSavedWantsToSprint = Move->bWantsToSprint;
 		bSavedWantsToDash = Move->bWantsToDash;
 		bSavedWantsToFocus = Move->bWantsToFocus;
+		bSavedWantsToRun = Move->bWantsToRun;
 		bSavedAirDashUsed = Move->bAirDashUsed;
 		SavedDashTimeLeft = Move->DashTimeLeft;
 		SavedDashCooldownLeft = Move->DashCooldownLeft;

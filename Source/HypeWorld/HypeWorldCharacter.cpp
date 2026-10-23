@@ -220,9 +220,13 @@ void AHypeWorldCharacter::DoJumpEnd()
 
 void AHypeWorldCharacter::DoSprintStart()
 {
+	// Shift uma vez (segurar) = correr; dois toques rápidos (segurar) = corrida ninja
 	if (UNinjaMovementComponent* NinjaMovement = GetNinjaMovement())
 	{
-		NinjaMovement->SetSprinting(true);
+		const float Now = GetWorld()->GetTimeSeconds();
+		NinjaMovement->SetRunning(true);
+		NinjaMovement->SetSprinting(Now - LastSprintTapTime <= SprintDoubleTapWindow);
+		LastSprintTapTime = Now;
 	}
 }
 
@@ -230,6 +234,7 @@ void AHypeWorldCharacter::DoSprintEnd()
 {
 	if (UNinjaMovementComponent* NinjaMovement = GetNinjaMovement())
 	{
+		NinjaMovement->SetRunning(false);
 		NinjaMovement->SetSprinting(false);
 	}
 }
