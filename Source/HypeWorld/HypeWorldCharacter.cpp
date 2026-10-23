@@ -11,8 +11,10 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "HypeWorld.h"
+#include "NinjaMovementComponent.h"
 
-AHypeWorldCharacter::AHypeWorldCharacter()
+AHypeWorldCharacter::AHypeWorldCharacter(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer.SetDefaultSubobjectClass<UNinjaMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
@@ -24,13 +26,17 @@ AHypeWorldCharacter::AHypeWorldCharacter()
 
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true;
-	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f);
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 720.0f, 0.0f);
 
 	// Note: For faster iteration times these variables, and many more, can be tweaked in the Character Blueprint
 	// instead of recompiling to adjust them
-	GetCharacterMovement()->JumpZVelocity = 500.f;
-	GetCharacterMovement()->AirControl = 0.35f;
-	GetCharacterMovement()->MaxWalkSpeed = 500.f;
+	// Ninja: pulo alto e rápido (gravidade maior), bom controle no ar, pulo duplo
+	GetCharacterMovement()->GravityScale = 1.6f;
+	GetCharacterMovement()->JumpZVelocity = 900.f;
+	GetCharacterMovement()->AirControl = 0.6f;
+	GetCharacterMovement()->MaxWalkSpeed = 600.f;
+	GetCharacterMovement()->MaxAcceleration = 3000.f;
+	JumpMaxCount = 2;
 	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
@@ -40,6 +46,8 @@ AHypeWorldCharacter::AHypeWorldCharacter()
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->TargetArmLength = 400.0f;
 	CameraBoom->bUsePawnControlRotation = true;
+	CameraBoom->bEnableCameraLag = true; // câmera "atrasa" um pouco, dá sensação de velocidade
+	CameraBoom->CameraLagSpeed = 12.f;
 
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
@@ -65,6 +73,11 @@ void AHypeWorldCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AHypeWorldCharacter::Look);
+
+		// Corrida ninja e dash
+		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &AHypeWorldCharacter::DoSprintStart);
+		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &AHypeWorldCharacter::DoSprintEnd);
+		EnhancedInputComponent->BindAction(DashAction, ETriggerEvent::Started, this, &AHypeWorldCharacter::DoDash);
 	}
 	else
 	{
@@ -130,4 +143,33 @@ void AHypeWorldCharacter::DoJumpEnd()
 {
 	// signal the character to stop jumping
 	StopJumping();
+}
+
+void AHypeWorldCharacter::DoSprintStart()
+{
+	if (UNinjaMovementComponent* NinjaMovement = GetNinjaMovement())
+	{
+		NinjaMovement->SetSprinting(true);
+	}
+}
+
+void AHypeWorldCharacter::DoSprintEnd()
+{
+	if (UNinjaMovementComponent* NinjaMovement = GetNinjaMovement())
+	{
+		NinjaMovement->SetSprinting(false);
+	}
+}
+
+void AHypeWorldCharacter::DoDash()
+{
+	if (UNinjaMovementComponent* NinjaMovement = GetNinjaMovement())
+	{
+		NinjaMovement->RequestDash();
+	}
+}
+
+UNinjaMovementComponent* AHypeWorldCharacter::GetNinjaMovement() const
+{
+	return Cast<UNinjaMovementComponent>(GetCharacterMovement());
 }

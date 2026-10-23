@@ -10,6 +10,7 @@
 class USpringArmComponent;
 class UCameraComponent;
 class UInputAction;
+class UNinjaMovementComponent;
 struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
@@ -49,10 +50,18 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Input")
 	UInputAction* MouseLookAction;
 
+	/** Corrida ninja (segurar) */
+	UPROPERTY(EditAnywhere, Category="Input")
+	UInputAction* SprintAction;
+
+	/** Dash (apertar) */
+	UPROPERTY(EditAnywhere, Category="Input")
+	UInputAction* DashAction;
+
 public:
 
 	/** Constructor */
-	AHypeWorldCharacter();	
+	AHypeWorldCharacter(const FObjectInitializer& ObjectInitializer);
 
 protected:
 
@@ -85,6 +94,18 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Input")
 	virtual void DoJumpEnd();
 
+	/** Começa a corrida ninja */
+	UFUNCTION(BlueprintCallable, Category="Input")
+	virtual void DoSprintStart();
+
+	/** Para a corrida ninja */
+	UFUNCTION(BlueprintCallable, Category="Input")
+	virtual void DoSprintEnd();
+
+	/** Pede um dash */
+	UFUNCTION(BlueprintCallable, Category="Input")
+	virtual void DoDash();
+
 public:
 
 	/** Returns CameraBoom subobject **/
@@ -92,5 +113,9 @@ public:
 
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	/** Componente de movimento ninja */
+	UFUNCTION(BlueprintPure, Category="Ninja")
+	UNinjaMovementComponent* GetNinjaMovement() const;
 };
 

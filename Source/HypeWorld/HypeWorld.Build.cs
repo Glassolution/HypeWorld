@@ -25,6 +25,7 @@ public class HypeWorld : ModuleRules
 
 		PublicIncludePaths.AddRange(new string[] {
 			"HypeWorld",
+			"HypeWorld/Ninja",
 			"HypeWorld/Variant_Platforming",
 			"HypeWorld/Variant_Platforming/Animation",
 			"HypeWorld/Variant_Combat",
