@@ -25,6 +25,7 @@ struct FNinjaPoseInputs
 	float LookDownAlpha = 0.f;					// 0..1 olhando o chão / pernas se preparando para pousar
 	float LandAlpha = 0.f;						// 0..1 agachamento do pouso
 	float SprintAlpha = 0.f;					// 0..1 pose da corrida ninja (braços esticados para trás)
+	float ChargeAlpha = 0.f;					// 0..1 pose de concentrar chakra (mãos juntas no peito)
 };
 
 USTRUCT()
@@ -60,6 +61,7 @@ private:
 	float SprintExtraLean = 0.f;
 	float SprintArmsDrop = 0.f;
 	float SprintCrouchDepth = 0.f;
+	float ChargeCrouchDepth = 0.f;
 };
 
 /** Classe-mãe do Animation Blueprint do ninja (ABP_Ninja). */
@@ -129,6 +131,10 @@ public:
 	/** Quanto o quadril desce na corrida ninja (cm): joelhos mais dobrados, corpo mais baixo. */
 	UPROPERTY(EditAnywhere, Category="Ninja|Corrida")
 	float SprintCrouchDepth = 16.f;
+
+	/** Quanto o quadril desce concentrando chakra (cm). */
+	UPROPERTY(EditAnywhere, Category="Ninja|Chakra")
+	float ChargeCrouchDepth = 14.f;
 
 	/** Rapidez com que a mão vai até a parede / volta. */
 	UPROPERTY(EditAnywhere, Category="Ninja|Parede")

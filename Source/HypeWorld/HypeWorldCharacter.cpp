@@ -14,6 +14,16 @@
 #include "NinjaMovementComponent.h"
 #include "Animation/AnimMontage.h"
 #include "Animation/AnimInstance.h"
+#include "AbilitySystemComponent.h"
+#include "Abilities/GameplayAbility.h"
+#include "NinjaAttributeSet.h"
+#include "NinjaEffects.h"
+#include "NinjaAbilities.h"
+#include "NinjaChakraAuraComponent.h"
+#include "NinjaDamageNumber.h"
+#include "Net/UnrealNetwork.h"
+#include "Engine/OverlapResult.h"
+#include "TimerManager.h"
 
 AHypeWorldCharacter::AHypeWorldCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UNinjaMovementComponent>(ACharacter::CharacterMovementComponentName))
@@ -66,6 +76,18 @@ AHypeWorldCharacter::AHypeWorldCharacter(const FObjectInitializer& ObjectInitial
 	FollowCamera->bUsePawnControlRotation = false;
 	FollowCamera->SetRelativeRotation(FRotator(-8.f, 0.f, 0.f));
 
+	// Combate: sistema de habilidades no próprio personagem (replicação "Mixed": o dono recebe tudo, os outros o essencial)
+	AbilitySystem = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystem"));
+	AbilitySystem->SetIsReplicated(true);
+	AbilitySystem->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
+	Attributes = CreateDefaultSubobject<UNinjaAttributeSet>(TEXT("Attributes"));
+
+	ChakraAura = CreateDefaultSubobject<UNinjaChakraAuraComponent>(TEXT("ChakraAura"));
+	ChakraAura->SetupAttachment(RootComponent);
+
+	ComboAbility = UGA_NinjaMeleeCombo::StaticClass();
+	ChargeChakraAbility = UGA_NinjaChargeChakra::StaticClass();
+
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 }
@@ -90,6 +112,11 @@ void AHypeWorldCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &AHypeWorldCharacter::DoSprintStart);
 		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &AHypeWorldCharacter::DoSprintEnd);
 		EnhancedInputComponent->BindAction(DashAction, ETriggerEvent::Started, this, &AHypeWorldCharacter::DoDash);
+
+		// Combate
+		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &AHypeWorldCharacter::DoAttackPressed);
+		EnhancedInputComponent->BindAction(ChargeChakraAction, ETriggerEvent::Started, this, &AHypeWorldCharacter::DoChargePressed);
+		EnhancedInputComponent->BindAction(ChargeChakraAction, ETriggerEvent::Completed, this, &AHypeWorldCharacter::DoChargeReleased);
 	}
 	else
 	{
@@ -130,6 +157,12 @@ void AHypeWorldCharacter::DoMove(float Right, float Forward)
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
 		FVector Wish = ForwardDirection * Forward + RightDirection * Right;
+
+		// Atacando ou carregando chakra: não anda (o golpe já empurra para a frente)
+		if (IsAttacking() || bChargingChakra)
+		{
+			return;
+		}
 
 		// Correndo rápido: A/D viram em arco (limita o ângulo em relação à direção atual), para o boneco
 		// não sair correndo de lado na frente da câmera. Para trás (S) continua valendo: freia e vira.
@@ -215,6 +248,15 @@ void AHypeWorldCharacter::BeginPlay()
 	BaseMeshLocation = GetMesh()->GetRelativeLocation();
 	LastYaw = GetActorRotation().Yaw;
 	DefaultRotationRate = GetCharacterMovement()->RotationRate.Yaw;
+
+	// GAS: dono e avatar são o próprio personagem; habilidades são dadas pelo servidor
+	AbilitySystem->InitAbilityActorInfo(this, this);
+	if (HasAuthority())
+	{
+		if (ComboAbility) { AbilitySystem->GiveAbility(FGameplayAbilitySpec(ComboAbility, 1, INDEX_NONE, this)); }
+		if (ChargeChakraAbility) { AbilitySystem->GiveAbility(FGameplayAbilitySpec(ChargeChakraAbility, 1, INDEX_NONE, this)); }
+	}
+	AbilitySystem->GetGameplayAttributeValueChangeDelegate(UNinjaAttributeSet::GetHealthAttribute()).AddUObject(this, &AHypeWorldCharacter::OnHealthChanged);
 }
 
 void AHypeWorldCharacter::Tick(float DeltaSeconds)
@@ -438,4 +480,285 @@ void AHypeWorldCharacter::HandleMoveStart(const FVector& MoveAcceleration)
 		Move->RotationRate.Yaw = FMath::Abs(Angle) / TurnDuration;   // corpo gira no ritmo da animação
 		TurnTimeLeft = TurnDuration;
 	}
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Combate
+// ---------------------------------------------------------------------------------------------------------------------
+
+UAbilitySystemComponent* AHypeWorldCharacter::GetAbilitySystemComponent() const
+{
+	return AbilitySystem;
+}
+
+void AHypeWorldCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	AbilitySystem->InitAbilityActorInfo(this, this);   // atualiza o controle dono (servidor)
+}
+
+void AHypeWorldCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AHypeWorldCharacter, bChargingChakra);
+}
+
+bool AHypeWorldCharacter::IsAttacking() const
+{
+	const FGameplayAbilitySpec* Spec = ComboAbility ? AbilitySystem->FindAbilitySpecFromClass(ComboAbility) : nullptr;
+	return Spec && Spec->IsActive();
+}
+
+void AHypeWorldCharacter::DoAttackPressed()
+{
+	if (bKnockedOut || bChargingChakra)
+	{
+		return;
+	}
+	if (IsAttacking())
+	{
+		// Durante o combo: guarda o clique para emendar o próximo golpe (aqui e no servidor)
+		CachedAttackInputTime = GetWorld()->GetTimeSeconds();
+		if (!HasAuthority())
+		{
+			ServerCacheAttackInput();
+		}
+		return;
+	}
+	AbilitySystem->TryActivateAbilityByClass(ComboAbility);
+}
+
+void AHypeWorldCharacter::ServerCacheAttackInput_Implementation()
+{
+	CachedAttackInputTime = GetWorld()->GetTimeSeconds();
+}
+
+void AHypeWorldCharacter::BeginCombo()
+{
+	ComboIndex = 0;
+	CachedAttackInputTime = -100.f;
+	FaceNearestEnemy();
+	Lunge();
+}
+
+void AHypeWorldCharacter::CheckCombo()
+{
+	// Chamado pelo AnimNotify no fim de cada golpe: se o jogador clicou a tempo, emenda o próximo
+	if (!IsAttacking() || GetWorld()->GetTimeSeconds() - CachedAttackInputTime > ComboInputWindow)
+	{
+		return;
+	}
+	CachedAttackInputTime = -100.f;
+	if (ComboIndex + 1 < ComboSectionNames.Num())
+	{
+		++ComboIndex;
+		FaceNearestEnemy();
+		Lunge();
+		AbilitySystem->CurrentMontageJumpToSection(ComboSectionNames[ComboIndex]);
+	}
+}
+
+void AHypeWorldCharacter::DoAttackTrace(FName DamageSourceBone)
+{
+	// Só o servidor decide o acerto e o dano (todos veem o resultado pela vida replicada)
+	if (!HasAuthority())
+	{
+		return;
+	}
+
+	const FVector Start = GetActorLocation() + GetActorForwardVector() * 30.f;
+	const FVector End = Start + GetActorForwardVector() * MeleeReach;
+	FCollisionQueryParams Params(SCENE_QUERY_STAT(NinjaMelee), false, this);
+	FCollisionObjectQueryParams Objects;
+	Objects.AddObjectTypesToQuery(ECC_Pawn);
+
+	TArray<FHitResult> Hits;
+	GetWorld()->SweepMultiByObjectType(Hits, Start, End, FQuat::Identity, Objects, FCollisionShape::MakeSphere(MeleeRadius), Params);
+
+	TSet<AActor*> Done;
+	const float Damage = ComboDamage.IsValidIndex(ComboIndex) ? ComboDamage[ComboIndex] : 25.f;
+	bool bHitSomething = false;
+	for (const FHitResult& Hit : Hits)
+	{
+		AHypeWorldCharacter* Target = Cast<AHypeWorldCharacter>(Hit.GetActor());
+		if (!Target || Done.Contains(Target) || Target->bKnockedOut)
+		{
+			continue;
+		}
+		Done.Add(Target);
+
+		// Desvio: quem está no dash fica invulnerável
+		UNinjaMovementComponent* TargetMove = Target->GetNinjaMovement();
+		if (TargetMove && TargetMove->IsDashing())
+		{
+			continue;
+		}
+
+		UAbilitySystemComponent* TargetASC = Target->GetAbilitySystemComponent();
+		FGameplayEffectContextHandle Context = AbilitySystem->MakeEffectContext();
+		Context.AddHitResult(Hit);
+		FGameplayEffectSpecHandle Spec = AbilitySystem->MakeOutgoingSpec(UGE_NinjaDamage::StaticClass(), 1.f, Context);
+		Spec.Data->SetSetByCallerMagnitude(NinjaSetByCaller::Damage, Damage);
+		AbilitySystem->ApplyGameplayEffectSpecToTarget(*Spec.Data.Get(), TargetASC);
+
+		// Empurrãozinho para trás no último golpe
+		if (ComboIndex == ComboSectionNames.Num() - 1)
+		{
+			Target->LaunchCharacter(GetActorForwardVector() * 700.f + FVector(0.f, 0.f, 250.f), true, true);
+		}
+		bHitSomething = true;
+	}
+
+	if (bHitSomething)
+	{
+		Attributes->SetChakra(FMath::Min(Attributes->GetChakra() + ChakraPerHit, Attributes->GetMaxChakra()));
+	}
+}
+
+void AHypeWorldCharacter::FaceNearestEnemy()
+{
+	TArray<FOverlapResult> Overlaps;
+	FCollisionQueryParams Params(SCENE_QUERY_STAT(NinjaSoftLock), false, this);
+	GetWorld()->OverlapMultiByObjectType(Overlaps, GetActorLocation(), FQuat::Identity, FCollisionObjectQueryParams(ECC_Pawn), FCollisionShape::MakeSphere(SoftLockRange), Params);
+
+	// Prefere o alvo mais perto da direção que o jogador está olhando (câmera)
+	const FVector Look = GetController() ? GetController()->GetControlRotation().Vector().GetSafeNormal2D() : GetActorForwardVector();
+	AActor* Best = nullptr;
+	float BestScore = -1.f;
+	for (const FOverlapResult& O : Overlaps)
+	{
+		AHypeWorldCharacter* Other = Cast<AHypeWorldCharacter>(O.GetActor());
+		if (!Other || Other == this || Other->bKnockedOut)
+		{
+			continue;
+		}
+		const FVector To = (Other->GetActorLocation() - GetActorLocation()).GetSafeNormal2D();
+		const float Facing = FVector::DotProduct(Look, To);
+		if (Facing < 0.25f)
+		{
+			continue;
+		}
+		const float Score = Facing - (Other->GetActorLocation() - GetActorLocation()).Size2D() / SoftLockRange * 0.5f;
+		if (Score > BestScore)
+		{
+			BestScore = Score;
+			Best = Other;
+		}
+	}
+	if (Best)
+	{
+		SetActorRotation(FRotator(0.f, (Best->GetActorLocation() - GetActorLocation()).Rotation().Yaw, 0.f));
+	}
+	else if (GetController())
+	{
+		SetActorRotation(FRotator(0.f, Look.Rotation().Yaw, 0.f));
+	}
+}
+
+void AHypeWorldCharacter::Lunge()
+{
+	if (GetCharacterMovement()->IsMovingOnGround())
+	{
+		LaunchCharacter(GetActorForwardVector() * AttackLunge, true, false);
+	}
+}
+
+void AHypeWorldCharacter::HitStop()
+{
+	CustomTimeDilation = 0.05f;
+	GetWorldTimerManager().SetTimer(HitStopTimer, [this]() { CustomTimeDilation = 1.f; }, HitStopDuration, false);
+}
+
+void AHypeWorldCharacter::OnHealthChanged(const FOnAttributeChangeData& Data)
+{
+	const float Delta = Data.NewValue - Data.OldValue;
+	if (Delta < -0.5f)
+	{
+		const FVector Head = GetActorLocation() + FVector(0.f, 0.f, GetSimpleCollisionHalfHeight() + 10.f);
+		ANinjaDamageNumber::Spawn(GetWorld(), Head, FString::FromInt(FMath::RoundToInt(-Delta)),
+			-Delta >= 50.f ? FLinearColor(1.f, 0.55f, 0.1f) : FLinearColor(1.f, 0.95f, 0.75f), -Delta >= 50.f ? 46.f : 36.f);
+		ANinjaHitFlash::Spawn(GetWorld(), GetActorLocation() + FVector(0.f, 0.f, 25.f), HitFlashMaterial, FLinearColor(1.f, 0.85f, 0.5f));
+		HitStop();
+
+		if (Data.NewValue <= 0.f)
+		{
+			OnKnockedOut();
+		}
+		else if (HitReactMontages.Num() > 0)
+		{
+			if (bChargingChakra && HasAuthority())
+			{
+				AbilitySystem->CancelAbilities();   // levar golpe interrompe a carga de chakra
+			}
+			PlayAnimMontage(HitReactMontages[FMath::RandRange(0, HitReactMontages.Num() - 1)], 1.3f);
+		}
+	}
+	else if (Delta > 0.5f && bKnockedOut && Data.NewValue > 0.f)
+	{
+		// Voltou (respawn do boneco de treino)
+		bKnockedOut = false;
+		StopAnimMontage(KnockoutMontage);
+	}
+}
+
+void AHypeWorldCharacter::OnKnockedOut()
+{
+	bKnockedOut = true;
+	if (HasAuthority())
+	{
+		AbilitySystem->CancelAbilities();
+	}
+	if (KnockoutMontage)
+	{
+		PlayAnimMontage(KnockoutMontage);
+	}
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Carregar chakra
+// ---------------------------------------------------------------------------------------------------------------------
+
+bool AHypeWorldCharacter::CanChargeChakra() const
+{
+	return !bKnockedOut && !IsAttacking() && GetCharacterMovement()->IsMovingOnGround();
+}
+
+void AHypeWorldCharacter::DoChargePressed()
+{
+	AbilitySystem->TryActivateAbilityByClass(ChargeChakraAbility);
+}
+
+void AHypeWorldCharacter::DoChargeReleased()
+{
+	if (FGameplayAbilitySpec* Spec = ChargeChakraAbility ? AbilitySystem->FindAbilitySpecFromClass(ChargeChakraAbility) : nullptr)
+	{
+		if (Spec->IsActive())
+		{
+			AbilitySystem->CancelAbilityHandle(Spec->Handle);
+		}
+	}
+}
+
+void AHypeWorldCharacter::SetChargingChakra(bool bCharging)
+{
+	bChargingChakra = bCharging;
+	OnRep_ChargingChakra();
+}
+
+void AHypeWorldCharacter::OnRep_ChargingChakra()
+{
+	if (ChakraAura)
+	{
+		ChakraAura->SetAuraActive(bChargingChakra);
+	}
+}
+
+float AHypeWorldCharacter::GetHealth() const
+{
+	return Attributes ? Attributes->GetHealth() : 0.f;
+}
+
+float AHypeWorldCharacter::GetChakra() const
+{
+	return Attributes ? Attributes->GetChakra() : 0.f;
 }

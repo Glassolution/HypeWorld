@@ -15,6 +15,8 @@
 #include "GameFramework/Pawn.h"
 #include "GameFramework/PlayerController.h"
 #include "Styling/CoreStyle.h"
+#include "HypeWorldCharacter.h"
+#include "NinjaAttributeSet.h"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Peças de estilo (cores, pincéis, fontes) — o layout foi pensado em 1920x1080; a Unreal escala para outras telas
@@ -238,13 +240,14 @@ void UNinjaHUDWidget::BuildLayout()
 	Place(MakeText(TEXT("E"), 15.f), TopRight, MapCenter + FVector2D(112, 0), FVector2D::ZeroVector, Center);
 
 	// --- Baixo esquerdo: atalhos ---
-	const TCHAR* HintKeys[] = { TEXT("M"), TEXT("I"), TEXT("J") };
-	const TCHAR* HintLabels[] = { TEXT("Mapa"), TEXT("Inventário"), TEXT("Missões") };
-	for (int32 i = 0; i < 3; ++i)
+	const TCHAR* HintKeys[] = { TEXT("LMB"), TEXT("C"), TEXT("Ctrl"), TEXT("M"), TEXT("I"), TEXT("J") };
+	const TCHAR* HintLabels[] = { TEXT("Atacar"), TEXT("Carregar chakra"), TEXT("Desviar"), TEXT("Mapa"), TEXT("Inventário"), TEXT("Missões") };
+	for (int32 i = 0; i < 6; ++i)
 	{
-		const float Y = -164.f + i * 46.f;
-		Place(MakeKey(HintKeys[i], 15.f), BottomLeft, FVector2D(64, Y), FVector2D(32, 32));
-		Place(MakeText(HintLabels[i], 17.f, SoftWhite), BottomLeft, FVector2D(110, Y + 16.f), FVector2D::ZeroVector, FVector2D(0.f, 0.5f));
+		const float Y = -302.f + i * 46.f;
+		const float KeyWidth = FCString::Strlen(HintKeys[i]) > 1 ? 52.f : 32.f;
+		Place(MakeKey(HintKeys[i], 13.f), BottomLeft, FVector2D(64, Y), FVector2D(KeyWidth, 32));
+		Place(MakeText(HintLabels[i], 17.f, SoftWhite), BottomLeft, FVector2D(76 + KeyWidth, Y + 16.f), FVector2D::ZeroVector, FVector2D(0.f, 0.5f));
 	}
 
 	// --- Baixo centro: os 4 poderes ---
@@ -368,6 +371,22 @@ void UNinjaHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 	UpdateMinimap(InDeltaTime);
+
+	// Vida e chakra de verdade (atributos do GAS, replicados)
+	if (const AHypeWorldCharacter* Ninja = Cast<AHypeWorldCharacter>(GetOwningPlayerPawn()))
+	{
+		if (const UNinjaAttributeSet* A = Ninja->GetAttributes())
+		{
+			if (A->GetHealth() != Health || A->GetMaxHealth() != HealthMax)
+			{
+				SetHealth(A->GetHealth(), A->GetMaxHealth());
+			}
+			if (A->GetChakra() != Chakra || A->GetMaxChakra() != ChakraMax)
+			{
+				SetChakra(A->GetChakra(), A->GetMaxChakra());
+			}
+		}
+	}
 }
 
 void UNinjaHUDWidget::UpdateMinimap(float DeltaTime)

@@ -5,6 +5,9 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
+#include "AbilitySystemInterface.h"
+#include "GameplayEffectTypes.h"
+#include "CombatAttacker.h"
 #include "HypeWorldCharacter.generated.h"
 
 class USpringArmComponent;
@@ -12,6 +15,11 @@ class UCameraComponent;
 class UInputAction;
 class UNinjaMovementComponent;
 class UAnimMontage;
+class UAbilitySystemComponent;
+class UNinjaAttributeSet;
+class UNinjaChakraAuraComponent;
+class UGameplayAbility;
+class UMaterialInterface;
 struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
@@ -21,7 +29,7 @@ DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
  *  Implements a controllable orbiting camera
  */
 UCLASS(abstract)
-class AHypeWorldCharacter : public ACharacter
+class AHypeWorldCharacter : public ACharacter, public IAbilitySystemInterface, public ICombatAttacker
 {
 	GENERATED_BODY()
 
@@ -32,6 +40,18 @@ class AHypeWorldCharacter : public ACharacter
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
+
+	/** Sistema de habilidades (GAS): vida, chakra, golpes e jutsus */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
+	UAbilitySystemComponent* AbilitySystem;
+
+	/** Vida e chakra */
+	UPROPERTY()
+	UNinjaAttributeSet* Attributes;
+
+	/** Aura de chakra (aparece ao carregar) */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
+	UNinjaChakraAuraComponent* ChakraAura;
 	
 protected:
 
@@ -58,6 +78,14 @@ protected:
 	/** Dash (apertar) */
 	UPROPERTY(EditAnywhere, Category="Input")
 	UInputAction* DashAction;
+
+	/** Atacar (combo corpo a corpo) */
+	UPROPERTY(EditAnywhere, Category="Input")
+	UInputAction* AttackAction;
+
+	/** Carregar chakra (segurar) */
+	UPROPERTY(EditAnywhere, Category="Input")
+	UInputAction* ChargeChakraAction;
 
 	/** Animação do dash */
 	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
@@ -137,13 +165,130 @@ protected:
 
 public:
 
+	// ---------- Combate ----------
+
+	/** Montagem do combo (seções Melee01..03 com os AnimNotifies de golpe e de combo) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
+	UAnimMontage* ComboMontage;
+
+	/** Nomes das seções do combo, em ordem */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
+	TArray<FName> ComboSectionNames = { FName("Melee01"), FName("Melee02"), FName("Melee03") };
+
+	/** Velocidade do combo (maior = golpes mais rápidos) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
+	float ComboPlayRate = 1.35f;
+
+	/** Dano de cada golpe do combo (o último é o mais forte) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
+	TArray<float> ComboDamage = { 28.f, 32.f, 55.f };
+
+	/** Chakra ganho por golpe acertado */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
+	float ChakraPerHit = 4.f;
+
+	/** Alcance e raio do golpe (cm) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
+	float MeleeReach = 130.f;
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
+	float MeleeRadius = 55.f;
+
+	/** Quanto o personagem avança a cada golpe (cm/s de impulso) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
+	float AttackLunge = 450.f;
+
+	/** Distância máxima para mirar sozinho no inimigo mais próximo ao atacar (cm) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
+	float SoftLockRange = 600.f;
+
+	/** Tempo em que o clique de ataque continua valendo para emendar o próximo golpe (s) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
+	float ComboInputWindow = 0.6f;
+
+	/** Pausa no impacto (s) — dá peso ao golpe */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
+	float HitStopDuration = 0.06f;
+
+	/** Reação ao levar golpe */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
+	TArray<UAnimMontage*> HitReactMontages;
+
+	/** Animação de nocaute */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
+	UAnimMontage* KnockoutMontage;
+
+	/** Material do flash de impacto */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
+	UMaterialInterface* HitFlashMaterial;
+
+	/** Habilidades dadas ao nascer */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
+	TSubclassOf<UGameplayAbility> ComboAbility;
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
+	TSubclassOf<UGameplayAbility> ChargeChakraAbility;
+
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	UNinjaAttributeSet* GetAttributes() const { return Attributes; }
+
+	// ICombatAttacker (chamados pelos AnimNotifies da montagem de combo)
+	virtual void DoAttackTrace(FName DamageSourceBone) override;
+	virtual void CheckCombo() override;
+	virtual void CheckChargedAttack() override {}
+
+	/** Começo do combo (chamado pela habilidade) */
+	void BeginCombo();
+
+	UFUNCTION(BlueprintPure, Category="Ninja|Combate")
+	bool IsChargingChakra() const { return bChargingChakra; }
+
+	UFUNCTION(BlueprintPure, Category="Ninja|Combate")
+	float GetHealth() const;
+
+	UFUNCTION(BlueprintPure, Category="Ninja|Combate")
+	float GetChakra() const;
+
+	/** Botão de ataque (combo) */
+	UFUNCTION(BlueprintCallable, Category="Input")
+	void DoAttackPressed();
+
+	/** Começa / para de carregar chakra */
+	UFUNCTION(BlueprintCallable, Category="Input")
+	void DoChargePressed();
+	UFUNCTION(BlueprintCallable, Category="Input")
+	void DoChargeReleased();
+	bool CanChargeChakra() const;
+	void SetChargingChakra(bool bCharging);
+
+	/** Está no meio de um ataque (movimento travado) */
+	UFUNCTION(BlueprintPure, Category="Ninja|Combate")
+	bool IsAttacking() const;
+
 	/** Constructor */
 	AHypeWorldCharacter(const FObjectInitializer& ObjectInitializer);
 
 protected:
 
 	virtual void BeginPlay() override;
+	virtual void PossessedBy(AController* NewController) override;
 	virtual void Tick(float DeltaSeconds) override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	/** Vida mudou (em todas as máquinas): número de dano, flash, reação, nocaute */
+	virtual void OnHealthChanged(const FOnAttributeChangeData& Data);
+
+	/** Nocauteado (vida zero) */
+	virtual void OnKnockedOut();
+
+	UFUNCTION(Server, Reliable)
+	void ServerCacheAttackInput();
+
+	UFUNCTION()
+	void OnRep_ChargingChakra();
+
+	UPROPERTY(ReplicatedUsing=OnRep_ChargingChakra)
+	bool bChargingChakra = false;
+
+	bool bKnockedOut = false;
 	virtual void OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PreviousCustomMode = 0) override;
 
 	/** Initialize input action bindings */
@@ -225,6 +370,19 @@ private:
 	void UpdateIdleBreak(float DeltaSeconds);
 
 	float IdleTime = 0.f;
+
+	/** Gira para o inimigo mais próximo à frente (mira automática suave do combate) */
+	void FaceNearestEnemy();
+
+	/** Pequeno avanço a cada golpe */
+	void Lunge();
+
+	/** Congela a animação por um instante (impacto) */
+	void HitStop();
+
+	int32 ComboIndex = 0;
+	float CachedAttackInputTime = -100.f;
+	FTimerHandle HitStopTimer;
 
 	FRotator BaseMeshRotation = FRotator::ZeroRotator;
 	FVector BaseMeshLocation = FVector::ZeroVector;

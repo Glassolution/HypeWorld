@@ -18,7 +18,10 @@ public class HypeWorld : ModuleRules
 			"StateTreeModule",
 			"GameplayStateTreeModule",
 			"UMG",
-			"Slate"
+			"Slate",
+			"GameplayAbilities",
+			"GameplayTags",
+			"GameplayTasks"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { "AnimationCore", "SlateCore" });
@@ -27,6 +30,7 @@ public class HypeWorld : ModuleRules
 			"HypeWorld",
 			"HypeWorld/Ninja",
 			"HypeWorld/UI",
+			"HypeWorld/Combat",
 			"HypeWorld/Variant_Platforming",
 			"HypeWorld/Variant_Platforming/Animation",
 			"HypeWorld/Variant_Combat",

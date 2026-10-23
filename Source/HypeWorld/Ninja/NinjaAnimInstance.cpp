@@ -2,6 +2,7 @@
 
 #include "NinjaAnimInstance.h"
 #include "NinjaMovementComponent.h"
+#include "HypeWorldCharacter.h"
 #include "GameFramework/Character.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
@@ -89,6 +90,11 @@ void UNinjaAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	const float SprintTarget = (Move->IsMovingOnGround() && Velocity.Size2D() > SprintPoseMinSpeed) ? 1.f : 0.f;
 	PoseInputs.SprintAlpha = FMath::FInterpTo(PoseInputs.SprintAlpha, SprintTarget, DeltaSeconds, 6.f);
 
+	// --- Concentrando chakra: base aberta e mãos juntas no peito ---
+	const AHypeWorldCharacter* Ninja = Cast<AHypeWorldCharacter>(Char);
+	const float ChargeTarget = (Ninja && Ninja->IsChargingChakra()) ? 1.f : 0.f;
+	PoseInputs.ChargeAlpha = FMath::FInterpTo(PoseInputs.ChargeAlpha, ChargeTarget, DeltaSeconds, 8.f);
+
 	// --- Pouso: agacha proporcional à velocidade da queda ---
 	if (bWasInAir && Move->IsMovingOnGround())
 	{
@@ -146,6 +152,7 @@ void FNinjaAnimInstanceProxy::PreUpdate(UAnimInstance* InAnimInstance, float Del
 		SprintExtraLean = Ninja->SprintExtraLean;
 		SprintArmsDrop = Ninja->SprintArmsDrop;
 		SprintCrouchDepth = Ninja->SprintCrouchDepth;
+		ChargeCrouchDepth = Ninja->ChargeCrouchDepth;
 	}
 }
 
@@ -163,7 +170,7 @@ bool FNinjaAnimInstanceProxy::Evaluate_WithRoot(FPoseContext& Output, FAnimNode_
 
 void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 {
-	if (Inputs.WallHandAlpha < 0.01f && Inputs.LookDownAlpha < 0.01f && Inputs.LandAlpha < 0.01f && Inputs.SprintAlpha < 0.01f)
+	if (Inputs.WallHandAlpha < 0.01f && Inputs.LookDownAlpha < 0.01f && Inputs.LandAlpha < 0.01f && Inputs.SprintAlpha < 0.01f && Inputs.ChargeAlpha < 0.01f)
 	{
 		return;
 	}
@@ -272,7 +279,7 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 	const FVector FootRPos = FootR.IsValid() ? CS.GetComponentSpaceTransform(FootR).GetLocation() : FVector::ZeroVector;
 
 	// 1) Pouso e corrida ninja: quadril desce
-	const float CrouchDepth = LandCrouchDepth * Inputs.LandAlpha + SprintCrouchDepth * Inputs.SprintAlpha;
+	const float CrouchDepth = LandCrouchDepth * Inputs.LandAlpha + SprintCrouchDepth * Inputs.SprintAlpha + ChargeCrouchDepth * Inputs.ChargeAlpha;
 	if (CrouchDepth > 0.1f && Pelvis.IsValid())
 	{
 		FTransform T = CS.GetComponentSpaceTransform(Pelvis);
@@ -314,7 +321,27 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 		}
 	}
 
-	// 5) Braços na parede: um apoia na parede, o outro abre para trás para equilibrar
+	// 5) Concentrando chakra: mãos juntas na frente do peito (selo), cotovelos para fora, cabeça baixa
+	if (Inputs.ChargeAlpha > 0.01f && Spine05.IsValid())
+	{
+		RotateBone(Head, BendAxis, 10.f * Inputs.ChargeAlpha);
+		const FVector Chest = CS.GetComponentSpaceTransform(Spine05).GetLocation() + Forward * 28.f - Up * 12.f;
+		for (const bool bRight : { true, false })
+		{
+			const FCompactPoseBoneIndex Upper = Bone(bRight ? TEXT("upperarm_r") : TEXT("upperarm_l"));
+			const FCompactPoseBoneIndex Lower = Bone(bRight ? TEXT("lowerarm_r") : TEXT("lowerarm_l"));
+			const FCompactPoseBoneIndex Hand = Bone(bRight ? TEXT("hand_r") : TEXT("hand_l"));
+			const FVector Side = bRight ? Right : -Right;
+			if (Hand.IsValid())
+			{
+				const FVector Current = CS.GetComponentSpaceTransform(Hand).GetLocation();
+				const FVector Target = Chest + Side * 4.f;
+				SolveLimb(Upper, Lower, Hand, FMath::Lerp(Current, Target, Inputs.ChargeAlpha), (Side - Up * 0.4f).GetSafeNormal());
+			}
+		}
+	}
+
+	// 6) Braços na parede: um apoia na parede, o outro abre para trás para equilibrar
 	if (Inputs.WallHandAlpha > 0.01f)
 	{
 		const FCompactPoseBoneIndex WallUpper = Bone(bWallRight ? TEXT("upperarm_r") : TEXT("upperarm_l"));
