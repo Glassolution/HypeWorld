@@ -21,7 +21,7 @@ public class HypeWorld : ModuleRules
 			"Slate"
 		});
 
-		PrivateDependencyModuleNames.AddRange(new string[] { });
+		PrivateDependencyModuleNames.AddRange(new string[] { "AnimationCore" });
 
 		PublicIncludePaths.AddRange(new string[] {
 			"HypeWorld",
