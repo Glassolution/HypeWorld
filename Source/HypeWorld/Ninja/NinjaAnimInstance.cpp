@@ -219,6 +219,7 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 	};
 
 	const FCompactPoseBoneIndex Pelvis = Bone(TEXT("pelvis"));
+	const FCompactPoseBoneIndex Spine01 = Bone(TEXT("spine_01"));
 	const FCompactPoseBoneIndex Spine03 = Bone(TEXT("spine_03"));
 	const FCompactPoseBoneIndex Spine05 = Bone(TEXT("spine_05"));
 	const FCompactPoseBoneIndex Neck = Bone(TEXT("neck_01"));
@@ -365,7 +366,6 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 		Square(TEXT("upperarm_l"), TEXT("upperarm_r"), Spine05, Inputs.ChargeAlpha * 0.5f); // peito acompanha pela metade
 
 		// Coluna ereta: cada trecho aponta mais para cima, sem rigidez total
-		const FCompactPoseBoneIndex Spine01 = Bone(TEXT("spine_01"));
 		AimBone(Spine01, Spine03, Up, Inputs.ChargeAlpha * ChargeStraighten);
 		AimBone(Spine03, Spine05, Up, Inputs.ChargeAlpha * ChargeStraighten);
 		AimBone(Spine05, Neck, Up, Inputs.ChargeAlpha * ChargeStraighten * 0.8f);
@@ -373,10 +373,19 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 	}
 
 	// 2) Tronco e cabeça curvam para frente (olhar o chão / absorver o pouso)
-	const float SpineDegrees = LookDownSpineAngle * Inputs.LookDownAlpha + LandSpineAngle * Inputs.LandAlpha + SprintExtraLean * Inputs.SprintAlpha
+	const float SpineDegrees = LookDownSpineAngle * Inputs.LookDownAlpha + LandSpineAngle * Inputs.LandAlpha
 		+ (ChargeLean + FMath::Sin(Inputs.Time * 2.2f) * 1.0f) * Inputs.ChargeAlpha;   // concentrando: tronco entra no selo, respirando
-	RotateBone(Spine03, BendAxis, SpineDegrees * 0.5f);
-	RotateBone(Spine05, BendAxis, SpineDegrees * 0.5f);
+	// Corrida ninja: o tronco inteiro deita a partir do quadril (as coxas desfazem o giro do quadril, a passada fica igual)
+	const float SprintLean = SprintExtraLean * Inputs.SprintAlpha;
+	if (SprintLean > 0.1f)
+	{
+		RotateBone(Pelvis, BendAxis, SprintLean * 0.4f);
+		RotateBone(Bone(TEXT("thigh_l")), BendAxis, -SprintLean * 0.4f);
+		RotateBone(Bone(TEXT("thigh_r")), BendAxis, -SprintLean * 0.4f);
+	}
+	RotateBone(Spine01, BendAxis, SprintLean * 0.25f);
+	RotateBone(Spine03, BendAxis, SpineDegrees * 0.5f + SprintLean * 0.2f);
+	RotateBone(Spine05, BendAxis, SpineDegrees * 0.5f + SprintLean * 0.15f);
 	RotateBone(Neck, BendAxis, LookDownHeadAngle * Inputs.LookDownAlpha * 0.4f);
 	RotateBone(Head, BendAxis, LookDownHeadAngle * Inputs.LookDownAlpha * 0.6f);
 
@@ -428,10 +437,9 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 			SolveLimb(bRight ? ThighR : ThighL, bRight ? CalfR : CalfL, Foot, Target, Forward);
 		}
 
-		const FCompactPoseBoneIndex Spine01 = Bone(TEXT("spine_01"));
 		AimBone(Spine01, Spine03, Up, Inputs.SprintAlpha * SprintStraighten);
 		AimBone(Spine03, Spine05, Up, Inputs.SprintAlpha * SprintStraighten * 0.6f);
-		AimBone(Neck, Head, (Forward * 0.5f + Up).GetSafeNormal(), Inputs.SprintAlpha * 0.4f);   // olhar para onde vai
+		AimBone(Neck, Head, (Forward * 0.5f + Up).GetSafeNormal(), Inputs.SprintAlpha * 0.6f);   // tronco deitado, cabeça erguida olhando para onde vai
 	}
 
 	// 4) Corrida ninja: os dois braços esticados para trás, um pouco abertos (como nas referências)

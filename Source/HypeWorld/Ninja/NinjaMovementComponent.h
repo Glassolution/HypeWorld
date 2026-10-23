@@ -40,10 +40,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Corrida")
 	float RunStrafeSpeed = 380.f;
 
-	/** Corrida ninja de lado (strafe). */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Corrida")
-	float SprintStrafeSpeed = 680.f;
-
 	/** Até que ângulo da câmera a corrida é feita de frente para a câmera (strafe); acima disso o corpo vira e corre. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Corrida")
 	float StrafeMaxAngle = 112.f;
@@ -133,7 +129,7 @@ public:
 	UFUNCTION(BlueprintPure, Category="Ninja")
 	bool IsRunning() const { return bWantsToRun && !bWantsToSprint && IsMovingOnGround(); }
 
-	/** Correndo (Shift 1x ou 2x) para frente/lado em relação à câmera: corpo de frente para a câmera, pernas em strafe. */
+	/** Correndo (Shift 1x) para frente/lado em relação à câmera: corpo de frente para a câmera, pernas em strafe. Na corrida ninja o corpo sempre vira para onde corre. */
 	UFUNCTION(BlueprintPure, Category="Ninja")
 	bool IsStrafeRunning() const;
 

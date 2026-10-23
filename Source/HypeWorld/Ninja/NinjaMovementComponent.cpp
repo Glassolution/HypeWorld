@@ -33,7 +33,7 @@ float UNinjaMovementComponent::GetMaxSpeed() const
 	if (IsStrafeRunning())
 	{
 		const float Side = GetSidewaysAmount();
-		return bWantsToSprint ? FMath::Lerp(SprintSpeed, SprintStrafeSpeed, Side) : FMath::Lerp(RunSpeed, RunStrafeSpeed, Side);
+		return FMath::Lerp(RunSpeed, RunStrafeSpeed, Side);
 	}
 
 	// Andando: de costas para a câmera (frente/lado/costas); de costas é mais devagar
@@ -58,7 +58,7 @@ float UNinjaMovementComponent::GetMaxSpeed() const
 
 bool UNinjaMovementComponent::IsStrafeRunning() const
 {
-	if (!(bWantsToRun || bWantsToSprint) || !IsMovingOnGround() || !CharacterOwner || Acceleration.SizeSquared2D() < UE_KINDA_SMALL_NUMBER)
+	if (!bWantsToRun || bWantsToSprint || !IsMovingOnGround() || !CharacterOwner || Acceleration.SizeSquared2D() < UE_KINDA_SMALL_NUMBER)
 	{
 		return false;
 	}

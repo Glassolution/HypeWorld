@@ -137,7 +137,7 @@ public:
 	UPROPERTY(EditAnywhere, Category="Ninja|Corrida")
 	float SprintExtraLean = 0.f;
 
-	/** Quanto os braços apontam para baixo na corrida ninja (0 = horizontais para trás, 1 = bem para baixo). */
+	/** Quanto os braços apontam para baixo na corrida ninja (0 = horizontais para trás, 1 = bem para baixo, negativo = acima da horizontal). */
 	UPROPERTY(EditAnywhere, Category="Ninja|Corrida")
 	float SprintArmsDrop = 0.05f;
 

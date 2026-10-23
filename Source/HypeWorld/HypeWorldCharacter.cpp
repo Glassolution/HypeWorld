@@ -448,9 +448,12 @@ void AHypeWorldCharacter::UpdateCameraFollow(float DeltaSeconds)
 	}
 
 	const FVector Velocity2D = GetVelocity().GetSafeNormal2D() * GetVelocity().Size2D();
-	// Correndo de lado ou na direção da câmera (de frente para ela) a câmera não persegue — senão o strafe vira círculo
+	// Correndo de lado ou na direção da câmera (de frente para ela) a câmera não persegue — senão o strafe vira círculo.
+	// Só A/D (sem W) também não: o ninja vira e corre de lado na tela, em linha reta.
+	const FVector Input2D = NinjaMovement->GetCurrentAcceleration().GetSafeNormal2D();
+	const bool bSidewaysInput = !Input2D.IsNearlyZero() && FMath::Abs(FMath::FindDeltaAngleDegrees(PC->GetControlRotation().Yaw, Input2D.Rotation().Yaw)) > 60.f;
 	const bool bTowardCamera = FMath::Abs(FMath::FindDeltaAngleDegrees(PC->GetControlRotation().Yaw, Velocity2D.Rotation().Yaw)) > 100.f;
-	const bool bFast = Velocity2D.Size() > CameraFollowMinSpeed && !NinjaMovement->IsWallRunning() && !NinjaMovement->IsStrafeRunning() && !bTowardCamera;
+	const bool bFast = Velocity2D.Size() > CameraFollowMinSpeed && !NinjaMovement->IsWallRunning() && !NinjaMovement->IsStrafeRunning() && !bTowardCamera && !bSidewaysInput;
 	const bool bMouseIdle = GetWorld()->GetTimeSeconds() - LastLookInputTime > CameraFollowDelay;
 	if (!bFast || !bMouseIdle)
 	{
