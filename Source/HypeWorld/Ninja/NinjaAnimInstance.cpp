@@ -204,6 +204,7 @@ void FNinjaAnimInstanceProxy::PreUpdate(UAnimInstance* InAnimInstance, float Del
 	if (const UNinjaAnimInstance* Ninja = Cast<UNinjaAnimInstance>(InAnimInstance))
 	{
 		Inputs = Ninja->PoseInputs;
+		bProceduralPose = Ninja->bProceduralPose;
 		RelaxedHands = Ninja->RelaxedHandsPose;
 		FistHands = Ninja->FistHandsPose;
 		FistPoseTime = Ninja->FistPoseTime;
@@ -241,7 +242,7 @@ bool FNinjaAnimInstanceProxy::Evaluate_WithRoot(FPoseContext& Output, FAnimNode_
 {
 	// Primeiro a animação normal (gráfico do Animation Blueprint), depois os retoques.
 	EvaluateAnimationNode_WithRoot(Output, InRootNode);
-	if (InRootNode == GetRootNode())
+	if (InRootNode == GetRootNode() && bProceduralPose)
 	{
 		ApplyRelaxedHands(Output);
 		ApplyNinjaPose(Output);

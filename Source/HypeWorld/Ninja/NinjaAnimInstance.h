@@ -59,6 +59,7 @@ private:
 	void OpenHand(FCompactPose& Pose, bool bRight, float Alpha, bool bOnlyIndexAndMiddle = false) const;
 
 	FNinjaPoseInputs Inputs;
+	bool bProceduralPose = true;
 	const UAnimSequenceBase* RelaxedHands = nullptr;
 	const UAnimSequenceBase* FistHands = nullptr;
 	float FistPoseTime = 0.f;
@@ -102,6 +103,11 @@ class HYPEWORLD_API UNinjaAnimInstance : public UAnimInstance
 public:
 
 	// ---------- Ajustes (editáveis no Animation Blueprint, em Class Defaults) ----------
+
+	/** Liga/desliga TODOS os retoques por código (dedos, corrida ninja, parede, pouso, chakra, defesa, punho, braços abertos).
+	 *  Desligado = o boneco mostra só as animações do gráfico, como vieram. */
+	UPROPERTY(EditAnywhere, Category="Ninja")
+	bool bProceduralPose = true;
 
 	/** Animação de onde vêm os dedos relaxados (MM_Idle do manequim). Vazio = dedos da própria animação. */
 	UPROPERTY(EditAnywhere, Category="Ninja|Mãos")
