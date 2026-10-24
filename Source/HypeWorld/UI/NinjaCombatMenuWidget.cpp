@@ -105,6 +105,8 @@ void UNinjaCombatMenuWidget::BuildLayout()
 	CategoryButtons.Reset();
 	StyleButtons.Reset();
 	ToggleButtons.Reset();
+	PassiveButtons.Reset();
+	PassiveButtonIds.Reset();
 
 	// Ícones desenhados por código: estrela de 4 pontas (título), seta para baixo (categorias), cadeado (estilo com arma)
 	if (!StarTexture)
@@ -191,7 +193,7 @@ void UNinjaCombatMenuWidget::BuildLayout()
 
 	// =================================================== Esquerda: menu de combate ===================================================
 	const FVector2D L(125.f, 78.f);
-	const float LW = 470.f, LH = 880.f;
+	const float LW = 470.f, LH = 910.f;
 	Place(MakeImage(Rounded(Panel, 14.f)), TopLeft, L, FVector2D(LW, LH));
 
 	Place(Icon(StarTexture, White), TopLeft, L + FVector2D(88.f, 58.f), FVector2D(38.f, 38.f), Center);
@@ -204,9 +206,9 @@ void UNinjaCombatMenuWidget::BuildLayout()
 	CloseButton = MakeButton(nullptr);
 	Place(CloseButton, TopLeft, L + FVector2D(LW - 38.f, 36.f), FVector2D(40.f, 40.f), Center);
 
-	static const TCHAR* Categories[] = { TEXT("Naturezas"), TEXT("Kekkei Genkai"), TEXT("Clã"), TEXT("Taijutsu"), TEXT("Jutsus Especiais"), TEXT("Especializações") };
-	const float RowH = 62.f, StyleH = 46.f;   // compacto: Taijutsu aberto com 7 estilos cabe no painel
-	float Y = L.Y + 112.f;
+	static const TCHAR* Categories[] = { TEXT("Naturezas"), TEXT("Kekkei Genkai"), TEXT("Clã"), TEXT("Taijutsu"), TEXT("Passivas"), TEXT("Jutsus Especiais"), TEXT("Especializações") };
+	const float RowH = 58.f, StyleH = 46.f;   // compacto: Taijutsu aberto com 7 estilos cabe no painel
+	float Y = L.Y + 104.f;
 	for (int32 i = 0; i < UE_ARRAY_COUNT(Categories); ++i)
 	{
 		const bool bOpen = OpenCategory == i;
@@ -262,6 +264,37 @@ void UNinjaCombatMenuWidget::BuildLayout()
 					Y += StyleH;
 				}
 				Y += 8.f;
+			}
+			else if (i == 4)
+			{
+				// Passivas aprendidas (infusão de chakra, do clã...): interruptor liga/desliga
+				int32 Shown = 0;
+				for (const FNinjaPassiveInfo& Passive : Ninja ? Ninja->Passives : TArray<FNinjaPassiveInfo>())
+				{
+					if (!Passive.bLearned)
+					{
+						continue;
+					}
+					const bool bOn = Ninja->IsPassiveEnabled(Passive.Id);
+					Place(MakeText(Passive.Name.ToString(), 15.f, White, TEXT("Bold")), TopLeft, FVector2D(L.X + 62.f, Y + 15.f), FVector2D::ZeroVector, FVector2D(0.f, 0.5f));
+					Place(MakeText(FString::Printf(TEXT("%s • %s"), *Passive.Origin.ToString(), *Passive.Description.ToString()), 11.f, Dim, TEXT("Italic")),
+						TopLeft, FVector2D(L.X + 62.f, Y + 33.f), FVector2D::ZeroVector, FVector2D(0.f, 0.5f));
+					const FVector2D Switch(L.X + LW - 86.f, Y + 23.f);
+					Place(MakeImage(Rounded(bOn ? FLinearColor(0.25f, 0.6f, 0.95f, 1.f) : FLinearColor(0.16f, 0.16f, 0.18f, 1.f), 0.f, FLinearColor(1.f, 1.f, 1.f, 0.15f), 1.f, true)),
+						TopLeft, Switch, FVector2D(44.f, 22.f), FVector2D(0.f, 0.5f));
+					Place(MakeImage(Rounded(White, 0.f, FLinearColor::Transparent, 0.f, true)), TopLeft, Switch + FVector2D(bOn ? 33.f : 11.f, 0.f), FVector2D(16.f, 16.f), Center);
+					UButton* Toggle = MakeButton(&PassiveButtons);
+					PassiveButtonIds.Add(uint8(Passive.Id));
+					Place(Toggle, TopLeft, FVector2D(L.X + 44.f, Y + 3.f), FVector2D(LW - 88.f, StyleH - 6.f));
+					Y += StyleH;
+					++Shown;
+				}
+				if (Shown == 0)
+				{
+					Place(MakeText(TEXT("Nenhuma passiva aprendida ainda"), 14.f, Dim, TEXT("Italic")), TopLeft, FVector2D(L.X + 58.f, Y + 14.f), FVector2D::ZeroVector, FVector2D(0.f, 0.5f));
+					Y += 36.f;
+				}
+				Y += 6.f;
 			}
 			else
 			{
@@ -377,6 +410,15 @@ void UNinjaCombatMenuWidget::HandleClick()
 			{
 				Feedback = FText::FromString(FString::Printf(TEXT("Segure uma %s para usar este estilo"), *UEnum::GetDisplayValueAsText(Style->RequiredWeapon).ToString()));
 			}
+			Refresh();
+			return;
+		}
+	}
+	for (int32 p = 0; p < PassiveButtons.Num(); ++p)
+	{
+		if (PassiveButtons[p] && PassiveButtons[p]->IsHovered() && Ninja && PassiveButtonIds.IsValidIndex(p))
+		{
+			Ninja->TogglePassive(ENinjaPassive(PassiveButtonIds[p]));
 			Refresh();
 			return;
 		}

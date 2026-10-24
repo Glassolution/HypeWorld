@@ -206,6 +206,8 @@ void UNinjaHUDWidget::BuildLayout()
 
 	SubstitutionText = MakeText(FString(), 15.f, FLinearColor(0.85f, 0.85f, 0.78f));
 	Place(SubstitutionText, TopLeft, FVector2D(198, 176), FVector2D::ZeroVector, FVector2D(0.f, 0.5f));
+	ChakraFeetText = MakeText(FString(), 15.f, ChakraBlue);
+	Place(ChakraFeetText, TopLeft, FVector2D(198, 200), FVector2D::ZeroVector, FVector2D(0.f, 0.5f));
 
 	// --- Missão ---
 	FSlateBrush QuestBand = Fade;
@@ -259,6 +261,14 @@ void UNinjaHUDWidget::BuildLayout()
 	ComboText->SetShadowColorAndOpacity(FLinearColor(0.f, 0.f, 0.f, 0.8f));
 	ComboText->SetVisibility(ESlateVisibility::Collapsed);
 	Place(ComboText, FVector2D(1.f, 0.5f), FVector2D(-90.f, -40.f), FVector2D::ZeroVector, FVector2D(1.f, 0.5f));
+
+	// --- Centro embaixo: barra do super pulo (segurando Espaço com a infusão de chakra) ---
+	SuperJumpText = MakeText(TEXT("PULO DE CHAKRA"), 15.f, White, TEXT("Bold"));
+	SuperJumpText->SetVisibility(ESlateVisibility::Collapsed);
+	Place(SuperJumpText, FVector2D(0.5f, 1.f), FVector2D(0.f, -262.f), FVector2D::ZeroVector, FVector2D(0.5f, 0.5f));
+	SuperJumpBar = MakeBar(FLinearColor(0.35f, 0.75f, 1.f, 1.f));
+	SuperJumpBar->SetVisibility(ESlateVisibility::Collapsed);
+	Place(SuperJumpBar, FVector2D(0.5f, 1.f), FVector2D(0.f, -236.f), FVector2D(360.f, 16.f), FVector2D(0.5f, 0.5f));
 
 	// --- Baixo centro: os 4 poderes ---
 	const TCHAR* AbilityKeyLetters[] = { TEXT("Q"), TEXT("E"), TEXT("R"), TEXT("T") };
@@ -395,6 +405,20 @@ void UNinjaHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 			{
 				SetChakra(A->GetChakra(), A->GetMaxChakra());
 			}
+		}
+		const int32 FeetOn = Ninja->IsPassiveEnabled(ENinjaPassive::ChakraFeet) ? 1 : 0;
+		if (ChakraFeetText && FeetOn != ShownChakraFeet && Ninja->HasLearnedPassive(ENinjaPassive::ChakraFeet))
+		{
+			ShownChakraFeet = FeetOn;
+			ChakraFeetText->SetText(FText::FromString(FeetOn ? TEXT("Infusão de chakra: ligada (V)") : TEXT("Infusão de chakra: desligada (V)")));
+			ChakraFeetText->SetColorAndOpacity(FSlateColor(FeetOn ? NinjaHUD::ChakraBlue : FLinearColor(0.55f, 0.55f, 0.58f)));
+		}
+		if (SuperJumpBar)
+		{
+			const ESlateVisibility Show = Ninja->IsChargingSuperJump() ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Collapsed;
+			SuperJumpBar->SetVisibility(Show);
+			SuperJumpText->SetVisibility(Show);
+			SuperJumpBar->SetPercent(Ninja->GetSuperJumpCharge());
 		}
 		if (SubstitutionText && Ninja->GetSubstitutionCharges() != ShownSubstitutions)
 		{

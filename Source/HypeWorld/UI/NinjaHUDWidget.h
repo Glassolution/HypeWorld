@@ -78,6 +78,10 @@ private:
 	UPROPERTY() TObjectPtr<UTextBlock> QuestStepText;
 	UPROPERTY() TObjectPtr<UTextBlock> ComboText;
 	UPROPERTY() TObjectPtr<UTextBlock> SubstitutionText;
+	UPROPERTY() TObjectPtr<UTextBlock> ChakraFeetText;
+	UPROPERTY() TObjectPtr<UProgressBar> SuperJumpBar;
+	UPROPERTY() TObjectPtr<UTextBlock> SuperJumpText;
+	int32 ShownChakraFeet = -1;
 	int32 ShownSubstitutions = -1;
 	UPROPERTY() TObjectPtr<UImage> MinimapImage;
 	UPROPERTY() TObjectPtr<UImage> MinimapArrow;

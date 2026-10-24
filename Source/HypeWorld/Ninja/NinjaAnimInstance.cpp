@@ -57,6 +57,14 @@ void UNinjaAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		PoseInputs.BattleTime = BattleTime;
 	}
 
+	// Velocidade no espaço da gravidade: na parede/teto o "chão" é a parede (as animações de andar/correr seguem)
+	{
+		const FQuat ToGravity = FQuat::FindBetweenNormals(Move->GetGravityDirection(), FVector::DownVector);
+		SurfaceVelocity = ToGravity.RotateVector(Char->GetVelocity());
+		SurfaceSpeed = FVector(SurfaceVelocity.X, SurfaceVelocity.Y, 0.f).Size();
+		bHasAcceleration = !Move->GetCurrentAcceleration().IsNearlyZero();
+	}
+
 	const FVector Vel2D = Char->GetVelocity().GetSafeNormal2D();
 	FullDirection = Vel2D.IsNearlyZero() ? 0.f : FMath::FindDeltaAngleDegrees(Char->GetActorRotation().Yaw, Vel2D.Rotation().Yaw);
 
@@ -194,6 +202,34 @@ void UNinjaAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 void UNinjaAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeThreadSafeUpdateAnimation(DeltaSeconds);
+
+	// Variáveis do Anim Blueprint (as próprias dele, não as do C++): velocidade relativa à gravidade
+	for (TFieldIterator<FProperty> It(GetClass(), EFieldIterationFlags::None); It; ++It)
+	{
+		FProperty* Prop = *It;
+		if (Prop->GetOwnerClass() == UNinjaAnimInstance::StaticClass())
+		{
+			continue;
+		}
+		// ABP_Ninja: GroundSpeed (double), Velocity (FVector), ShouldMove (bool) — calculados pelo Blueprint com o "chão" horizontal
+		const FString Name = Prop->GetName();
+		if (Name == TEXT("ShouldMove"))
+		{
+			if (FBoolProperty* B = CastField<FBoolProperty>(Prop)) { B->SetPropertyValue_InContainer(this, SurfaceSpeed > 3.f && bHasAcceleration); }
+		}
+		else if (Name.Contains(TEXT("Speed")))
+		{
+			if (FDoubleProperty* D = CastField<FDoubleProperty>(Prop)) { D->SetPropertyValue_InContainer(this, SurfaceSpeed); }
+			else if (FFloatProperty* F = CastField<FFloatProperty>(Prop)) { F->SetPropertyValue_InContainer(this, SurfaceSpeed); }
+		}
+		else if (Name == TEXT("Velocity"))
+		{
+			if (FStructProperty* S = CastField<FStructProperty>(Prop); S && S->Struct == TBaseStructure<FVector>::Get())
+			{
+				*S->ContainerPtrToValuePtr<FVector>(this) = SurfaceVelocity;
+			}
+		}
+	}
 
 	// Roda depois do gráfico de eventos do Blueprint: troca a direção limitada pela completa
 	static const FName DirectionName(TEXT("Direction"));

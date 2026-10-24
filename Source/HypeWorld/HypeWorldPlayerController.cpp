@@ -10,6 +10,9 @@
 #include "NinjaHUDWidget.h"
 #include "NinjaCombatMenuWidget.h"
 #include "Components/Widget.h"
+#include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Camera/PlayerCameraManager.h"
 #include "Widgets/Input/SVirtualJoystick.h"
 
 void AHypeWorldPlayerController::BeginPlay()
@@ -121,5 +124,41 @@ void AHypeWorldPlayerController::ToggleCombatMenu()
 	{
 		SetInputMode(FInputModeGameOnly());
 		ResetIgnoreLookInput();
+	}
+}
+
+void AHypeWorldPlayerController::UpdateRotation(float DeltaTime)
+{
+	// Igual ao padrão, mas trabalhando "no espaço da gravidade" do personagem (receita da Epic para gravidade personalizada):
+	// a rotação da câmera é convertida para um mundo onde a gravidade aponta para baixo, recebe o mouse e volta.
+	FVector Gravity = FVector::DownVector;
+	if (const ACharacter* PlayerCharacter = Cast<ACharacter>(GetPawn()))
+	{
+		if (const UCharacterMovementComponent* Move = PlayerCharacter->GetCharacterMovement())
+		{
+			Gravity = Move->GetGravityDirection();
+		}
+	}
+
+	FRotator ViewRotation = GetControlRotation();
+	if (!LastFrameGravity.IsZero() && !LastFrameGravity.Equals(Gravity))
+	{
+		// A gravidade mudou (grudou numa parede): gira a câmera junto, sem tranco
+		ViewRotation = (FQuat::FindBetweenNormals(LastFrameGravity, Gravity) * ViewRotation.Quaternion()).Rotator();
+	}
+	LastFrameGravity = Gravity;
+
+	const FQuat ToGravity = FQuat::FindBetweenNormals(Gravity, FVector::DownVector);
+	FRotator Relative = (ToGravity * ViewRotation.Quaternion()).Rotator();
+	FRotator DeltaRot(RotationInput);
+	if (PlayerCameraManager)
+	{
+		PlayerCameraManager->ProcessViewRotation(DeltaTime, Relative, DeltaRot);
+		Relative.Roll = 0.f;
+		SetControlRotation((ToGravity.Inverse() * Relative.Quaternion()).Rotator());
+	}
+	if (APawn* const P = GetPawnOrSpectator())
+	{
+		P->FaceRotation(GetControlRotation(), DeltaTime);
 	}
 }

@@ -107,8 +107,8 @@ void AHypeWorldCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
 		
 		// Jumping
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &AHypeWorldCharacter::DoJumpStart);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &AHypeWorldCharacter::DoJumpEnd);
 
 		// Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AHypeWorldCharacter::Move);
@@ -131,6 +131,10 @@ void AHypeWorldCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 		if (CombatMenuAction)
 		{
 			EnhancedInputComponent->BindAction(CombatMenuAction, ETriggerEvent::Started, this, &AHypeWorldCharacter::DoCombatMenu);
+		}
+		if (ChakraFeetAction)
+		{
+			EnhancedInputComponent->BindAction(ChakraFeetAction, ETriggerEvent::Started, this, &AHypeWorldCharacter::DoToggleChakraFeet);
 		}
 	}
 	else
@@ -161,20 +165,22 @@ void AHypeWorldCharacter::DoMove(float Right, float Forward)
 {
 	if (GetController() != nullptr)
 	{
-		// find out which way is forward
-		const FRotator Rotation = GetController()->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
+		// find out which way is forward — relativo à gravidade do personagem (na parede/teto o "chão" muda)
+		const FVector Gravity = GetCharacterMovement()->GetGravityDirection();
+		const FQuat ToGravity = FQuat::FindBetweenNormals(Gravity, FVector::DownVector);
+		const FRotator GravityRelative = (ToGravity * GetController()->GetControlRotation().Quaternion()).Rotator();
+		const FQuat YawRotation = ToGravity.Inverse() * FRotator(0.f, GravityRelative.Yaw, 0.f).Quaternion();
 
 		// get forward vector
-		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		const FVector ForwardDirection = YawRotation.GetAxisX();
 
 		// get right vector 
-		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		const FVector RightDirection = YawRotation.GetAxisY();
 
 		FVector Wish = ForwardDirection * Forward + RightDirection * Right;
 
-		// Carregando chakra ou atordoado: não anda. Atacando: só ajusta um pouco a direção (o golpe já empurra para a frente)
-		if (bChargingChakra || IsStunned())
+		// Carregando chakra / super pulo ou atordoado: não anda. Atacando: só ajusta um pouco a direção (o golpe já empurra para a frente)
+		if (bChargingChakra || bChargingSuperJump || IsStunned())
 		{
 			return;
 		}
@@ -187,7 +193,7 @@ void AHypeWorldCharacter::DoMove(float Right, float Forward)
 		// Correndo rápido: A/D viram em arco (limita o ângulo em relação à direção atual), para o boneco
 		// não sair correndo de lado na frente da câmera. Para trás (S) continua valendo: freia e vira.
 		const FVector VelocityDir = GetVelocity().GetSafeNormal2D();
-		if (GetVelocity().Size2D() > CameraFollowMinSpeed && GetCharacterMovement()->IsMovingOnGround() && !Wish.IsNearlyZero())
+		if (!GetCharacterMovement()->HasCustomGravity() && GetVelocity().Size2D() > CameraFollowMinSpeed && GetCharacterMovement()->IsMovingOnGround() && !Wish.IsNearlyZero())
 		{
 			const float WishSize = FMath::Min(Wish.Size(), 1.f);
 			const FVector WishDir = Wish.GetSafeNormal2D();
@@ -199,8 +205,8 @@ void AHypeWorldCharacter::DoMove(float Right, float Forward)
 			}
 		}
 
-		// add movement 
-		AddMovementInput(Wish.GetSafeNormal2D(), FMath::Min(Wish.Size(), 1.f));
+		// add movement (no plano do chão atual: na parede/teto o "chão" não é horizontal)
+		AddMovementInput(GetCharacterMovement()->ProjectToGravityFloor(Wish).GetSafeNormal(), FMath::Min(Wish.Size(), 1.f));
 	}
 }
 
@@ -221,13 +227,34 @@ void AHypeWorldCharacter::DoLook(float Yaw, float Pitch)
 
 void AHypeWorldCharacter::DoJumpStart()
 {
-	// signal the character to jump
+	// Infusão de chakra nos pés, no chão: segurar carrega o super pulo; um toque rápido ainda é o pulo normal (decidido ao soltar)
+	if (CanStartSuperJump())
+	{
+		bJumpKeyHeld = true;
+		JumpHoldTime = 0.f;
+		return;
+	}
 	Jump();
 }
 
 void AHypeWorldCharacter::DoJumpEnd()
 {
-	// signal the character to stop jumping
+	if (bJumpKeyHeld)
+	{
+		bJumpKeyHeld = false;
+		if (bChargingSuperJump)
+		{
+			ReleaseSuperJump();
+		}
+		else
+		{
+			// Toque rápido: pulo normal (o "soltar" vem um instante depois, senão o pulo nem começa)
+			Jump();
+			FTimerHandle Handle;
+			GetWorldTimerManager().SetTimer(Handle, this, &ACharacter::StopJumping, 0.1f, false);
+		}
+		return;
+	}
 	StopJumping();
 }
 
@@ -302,6 +329,17 @@ void AHypeWorldCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	SubstitutionCharges = MaxSubstitutions;
+	if (HasAuthority())
+	{
+		for (const FNinjaPassiveInfo& Passive : Passives)
+		{
+			if (Passive.bLearned && Passive.bEnabledByDefault)
+			{
+				EnabledPassives |= 1u << uint32(Passive.Id);
+			}
+		}
+	}
+	OnRep_EnabledPassives();   // brilho nos pés + colisão com a água conforme a infusão
 	BaseMeshRotation = GetMesh()->GetRelativeRotation();
 	BaseMeshLocation = GetMesh()->GetRelativeLocation();
 	LastYaw = GetActorRotation().Yaw;
@@ -326,6 +364,7 @@ void AHypeWorldCharacter::Tick(float DeltaSeconds)
 	UpdateRunAnimRate();
 	UpdateIdleBreak(DeltaSeconds);
 	UpdateDoubleJump();
+	UpdateSuperJump(DeltaSeconds);
 	UpdateAutoRun(DeltaSeconds);
 	UpdateTurnInPlace(DeltaSeconds);
 	UpdateCameraFollow(DeltaSeconds);
@@ -451,6 +490,10 @@ void AHypeWorldCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, 
 	if (PrevMovementMode == MOVE_Falling && !NinjaMovement->IsFalling() && DoubleJumpMontage)
 	{
 		StopAnimMontage(DoubleJumpMontage);
+	}
+	if (PrevMovementMode == MOVE_Falling && !NinjaMovement->IsFalling() && SuperJumpLaunchMontage)
+	{
+		StopAnimMontage(SuperJumpLaunchMontage);
 	}
 	if (bWasWallRunning && !NinjaMovement->IsWallRunning())
 	{
@@ -601,7 +644,7 @@ void AHypeWorldCharacter::UpdateRunAnimRate()
 	}
 
 	float Rate = 1.f;
-	const float Speed = GetVelocity().Size2D();
+	const float Speed = GetSurfaceSpeed();   // na parede/teto também (velocidade ao longo do "chão" atual)
 	if (NinjaMovement->IsWallRunning() && RunAnimNaturalSpeed > 0.f)
 	{
 		Rate = FMath::Clamp(Speed / RunAnimNaturalSpeed, 1.f, FMath::Max(1.f, MaxRunAnimRate));
@@ -633,7 +676,7 @@ void AHypeWorldCharacter::UpdateCameraFollow(float DeltaSeconds)
 {
 	AController* PC = GetController();
 	UNinjaMovementComponent* NinjaMovement = GetNinjaMovement();
-	if (!IsLocallyControlled() || !PC || !NinjaMovement)
+	if (!IsLocallyControlled() || !PC || !NinjaMovement || NinjaMovement->HasCustomGravity())
 	{
 		return;
 	}
@@ -737,6 +780,8 @@ void AHypeWorldCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	DOREPLIFETIME_CONDITION(AHypeWorldCharacter, SubstitutionCharges, COND_OwnerOnly);
 	DOREPLIFETIME_CONDITION(AHypeWorldCharacter, FightingStyleIndex, COND_SkipOwner);
 	DOREPLIFETIME(AHypeWorldCharacter, EquippedWeapon);
+	DOREPLIFETIME(AHypeWorldCharacter, EnabledPassives);
+	DOREPLIFETIME_CONDITION(AHypeWorldCharacter, bChargingSuperJump, COND_SkipOwner);
 	DOREPLIFETIME(AHypeWorldCharacter, bInvulnerable);
 }
 
@@ -1664,5 +1709,210 @@ void AHypeWorldCharacter::DoCombatMenu()
 	if (AHypeWorldPlayerController* PC = Cast<AHypeWorldPlayerController>(GetController()))
 	{
 		PC->ToggleCombatMenu();
+	}
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Passivas e infusão de chakra nos pés (super pulo; andar na parede/teto/água fica no componente de movimento)
+// ---------------------------------------------------------------------------------------------------------------------
+
+bool AHypeWorldCharacter::HasLearnedPassive(ENinjaPassive Passive) const
+{
+	return Passives.ContainsByPredicate([Passive](const FNinjaPassiveInfo& Info) { return Info.Id == Passive && Info.bLearned; });
+}
+
+void AHypeWorldCharacter::SetPassiveEnabled(ENinjaPassive Passive, bool bEnabled)
+{
+	if (!HasLearnedPassive(Passive) || IsPassiveEnabled(Passive) == bEnabled)
+	{
+		return;
+	}
+	const uint32 Bit = 1u << uint32(Passive);
+	EnabledPassives = bEnabled ? (EnabledPassives | Bit) : (EnabledPassives & ~Bit);
+	OnRep_EnabledPassives();
+	if (!HasAuthority())
+	{
+		ServerSetPassiveEnabled(Passive, bEnabled);
+	}
+	if (IsLocallyControlled())
+	{
+		const FVector Head = GetActorLocation() + FVector(0.f, 0.f, GetSimpleCollisionHalfHeight() + 30.f);
+		ANinjaDamageNumber::Spawn(GetWorld(), Head, bEnabled ? TEXT("INFUSÃO DE CHAKRA: LIGADA") : TEXT("INFUSÃO DE CHAKRA: DESLIGADA"),
+			bEnabled ? FLinearColor(0.45f, 0.8f, 1.f) : FLinearColor(0.6f, 0.6f, 0.65f), 24.f);
+	}
+}
+
+void AHypeWorldCharacter::ServerSetPassiveEnabled_Implementation(ENinjaPassive Passive, bool bEnabled)
+{
+	SetPassiveEnabled(Passive, bEnabled);
+}
+
+void AHypeWorldCharacter::OnRep_EnabledPassives()
+{
+	UpdateChakraFeetVisual();
+	if (UNinjaMovementComponent* NinjaMovement = GetNinjaMovement())
+	{
+		NinjaMovement->OnChakraFeetChanged(IsPassiveEnabled(ENinjaPassive::ChakraFeet));
+	}
+}
+
+void AHypeWorldCharacter::DoToggleChakraFeet()
+{
+	TogglePassive(ENinjaPassive::ChakraFeet);
+}
+
+void AHypeWorldCharacter::UpdateChakraFeetVisual()
+{
+	// Brilho azul nos pés com a infusão ligada (todo mundo vê: vem da passiva replicada)
+	const bool bOn = IsPassiveEnabled(ENinjaPassive::ChakraFeet);
+	if (bOn && ChakraFeetGlow.Num() == 0 && ChakraFeetMaterial)
+	{
+		UStaticMesh* Sphere = LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Sphere.Sphere"));
+		for (const TCHAR* Foot : { TEXT("foot_l"), TEXT("foot_r") })
+		{
+			UStaticMeshComponent* Glow = NewObject<UStaticMeshComponent>(this);
+			Glow->SetStaticMesh(Sphere);
+			Glow->SetMaterial(0, ChakraFeetMaterial);
+			Glow->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			Glow->SetCastShadow(false);
+			Glow->SetupAttachment(GetMesh(), FName(Foot));
+			Glow->SetRelativeScale3D(FVector(0.13f, 0.07f, 0.13f));   // esfera de 100 cm -> brilho pequeno no pé
+			Glow->RegisterComponent();
+			ChakraFeetGlow.Add(Glow);
+		}
+	}
+	for (UStaticMeshComponent* Glow : ChakraFeetGlow)
+	{
+		if (Glow)
+		{
+			Glow->SetVisibility(bOn);
+		}
+	}
+}
+
+float AHypeWorldCharacter::GetSurfaceSpeed() const
+{
+	return GetCharacterMovement()->ProjectToGravityFloor(GetVelocity()).Size();
+}
+
+bool AHypeWorldCharacter::CanStartSuperJump() const
+{
+	return IsPassiveEnabled(ENinjaPassive::ChakraFeet) && GetCharacterMovement()->IsMovingOnGround() && CanAct() && !IsAttacking() && !bChargingChakra;
+}
+
+void AHypeWorldCharacter::UpdateSuperJump(float DeltaSeconds)
+{
+	if (!IsLocallyControlled() || !bJumpKeyHeld)
+	{
+		return;
+	}
+	// Saiu do chão, apanhou ou desligou a infusão: cancela (sem pular)
+	if (!GetCharacterMovement()->IsMovingOnGround() || !CanAct() || !IsPassiveEnabled(ENinjaPassive::ChakraFeet))
+	{
+		bJumpKeyHeld = false;
+		if (bChargingSuperJump)
+		{
+			bChargingSuperJump = false;
+			SuperJumpCharge = 0.f;
+			OnRep_ChargingSuperJump();
+			if (!HasAuthority())
+			{
+				ServerSetChargingSuperJump(false);
+			}
+		}
+		return;
+	}
+	JumpHoldTime += DeltaSeconds;
+	if (!bChargingSuperJump && JumpHoldTime >= SuperJumpHoldThreshold)
+	{
+		bChargingSuperJump = true;
+		OnRep_ChargingSuperJump();
+		if (!HasAuthority())
+		{
+			ServerSetChargingSuperJump(true);
+		}
+	}
+	if (bChargingSuperJump)
+	{
+		SuperJumpCharge = FMath::Clamp((JumpHoldTime - SuperJumpHoldThreshold) / FMath::Max(SuperJumpChargeTime, 0.05f), 0.f, 1.f);
+	}
+}
+
+void AHypeWorldCharacter::ReleaseSuperJump()
+{
+	// Para a frente (para onde a câmera olha, no plano do chão atual) e para cima: mais carga = mais longe e mais alto
+	const float A = SuperJumpCharge;
+	const FVector Up = -GetCharacterMovement()->GetGravityDirection();
+	FVector Forward = GetCharacterMovement()->ProjectToGravityFloor(GetControlRotation().Vector()).GetSafeNormal();
+	if (Forward.IsNearlyZero())
+	{
+		Forward = GetActorForwardVector();
+	}
+	const FVector LaunchVelocity = Forward * FMath::Lerp(SuperJumpForwardSpeed.X, SuperJumpForwardSpeed.Y, A) + Up * FMath::Lerp(SuperJumpUpSpeed.X, SuperJumpUpSpeed.Y, A);
+
+	bChargingSuperJump = false;
+	SuperJumpCharge = 0.f;
+	OnRep_ChargingSuperJump();
+	SetActorRotation(FRotationMatrix::MakeFromXZ(Forward, Up).Rotator());
+	if (SuperJumpLaunchMontage)
+	{
+		PlayAnimMontage(SuperJumpLaunchMontage);
+	}
+	GetNinjaMovement()->bInSuperJump = true;
+	LaunchCharacter(LaunchVelocity, true, true);
+	if (!HasAuthority())
+	{
+		ServerSuperJump(LaunchVelocity);
+	}
+	else
+	{
+		MulticastSuperJumpLaunch();
+	}
+}
+
+void AHypeWorldCharacter::ServerSetChargingSuperJump_Implementation(bool bCharging)
+{
+	bChargingSuperJump = bCharging && CanStartSuperJump();
+	OnRep_ChargingSuperJump();
+}
+
+void AHypeWorldCharacter::ServerSuperJump_Implementation(FVector_NetQuantize10 LaunchVelocity)
+{
+	// Servidor confere: infusão ligada, e nunca mais forte que a barra cheia
+	if (!IsPassiveEnabled(ENinjaPassive::ChakraFeet) || !CanAct())
+	{
+		return;
+	}
+	const float MaxSpeed = FVector2D(SuperJumpForwardSpeed.Y, SuperJumpUpSpeed.Y).Size() * 1.05f;
+	bChargingSuperJump = false;
+	OnRep_ChargingSuperJump();
+	GetNinjaMovement()->bInSuperJump = true;
+	LaunchCharacter(LaunchVelocity.GetClampedToMaxSize(MaxSpeed), true, true);
+	MulticastSuperJumpLaunch();
+}
+
+void AHypeWorldCharacter::MulticastSuperJumpLaunch_Implementation()
+{
+	// Os outros jogadores veem o salto (quem pulou já tocou a animação)
+	if (!IsLocallyControlled() && SuperJumpLaunchMontage)
+	{
+		PlayAnimMontage(SuperJumpLaunchMontage);
+	}
+}
+
+void AHypeWorldCharacter::OnRep_ChargingSuperJump()
+{
+	if (!SuperJumpChargeMontage)
+	{
+		return;
+	}
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (bChargingSuperJump && AnimInstance && !AnimInstance->Montage_IsPlaying(SuperJumpChargeMontage))
+	{
+		PlayAnimMontage(SuperJumpChargeMontage);
+	}
+	else if (!bChargingSuperJump)
+	{
+		StopAnimMontage(SuperJumpChargeMontage);
 	}
 }

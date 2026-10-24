@@ -290,6 +290,11 @@ private:
 	float BattleAlpha = 0.f;
 	float BattleTime = 0.f;
 
+	/** Velocidade relativa à gravidade (na parede/teto o "chão" é a parede) — escrita nas variáveis do Anim Blueprint */
+	FVector SurfaceVelocity = FVector::ZeroVector;
+	float SurfaceSpeed = 0.f;
+	bool bHasAcceleration = false;
+
 	/** Base de luta em uso: a do estilo de luta do personagem, ou BattleIdlePose */
 	UPROPERTY()
 	TObjectPtr<UAnimSequenceBase> ActiveBattleIdle;

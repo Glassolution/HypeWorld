@@ -6,6 +6,8 @@
 #include "HypeWorld.h"
 #include "HypeWorldCharacter.h"
 #include "Animation/AnimSequenceBase.h"
+#include "NinjaPassives.h"
+#include "Components/CapsuleComponent.h"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Regras gerais
@@ -86,6 +88,16 @@ FRotator UNinjaMovementComponent::ComputeOrientToMovementRotation(const FRotator
 			return AlongWall.Rotation();
 		}
 	}
+	// Na parede/teto: o giro normal da engine (relativo à gravidade)
+	if (HasCustomGravity())
+	{
+		return Super::ComputeOrientToMovementRotation(CurrentRotation, DeltaTime, DeltaRotation);
+	}
+	// Carregando o super pulo: o corpo vira para onde a câmera olha (é para lá que ele salta)
+	if (const AHypeWorldCharacter* Ninja = Cast<AHypeWorldCharacter>(CharacterOwner); Ninja && Ninja->IsChargingSuperJump())
+	{
+		return FRotator(0.f, CharacterOwner->GetControlRotation().Yaw, 0.f);
+	}
 	// Dash de lado/de costas: o corpo continua de frente para a câmera
 	if (IsDashing() && bDashStrafe)
 	{
@@ -116,6 +128,17 @@ bool UNinjaMovementComponent::CanAttemptJump() const
 
 bool UNinjaMovementComponent::DoJump(bool bReplayingMoves, float DeltaTime)
 {
+	// Pulo saindo da parede/teto: empurra para longe dela (e um pouco para cima) e volta a gravidade normal
+	if (HasCustomGravity() && IsMovingOnGround() && CharacterOwner && CharacterOwner->CanJump())
+	{
+		const FVector Away = -GetGravityDirection();
+		Velocity = ProjectToGravityFloor(Velocity) + Away * SurfaceJumpOffSpeed;
+		ResetGravity();
+		Velocity.Z = FMath::Max(Velocity.Z, SurfaceJumpOffSpeed * 0.6f);
+		SurfaceAttachBlock = 0.35f;
+		SetMovementMode(MOVE_Falling);
+		return true;
+	}
 	if (IsWallRunning() && CharacterOwner && CharacterOwner->CanJump())
 	{
 		// Pulo de parede: mantém a velocidade ao longo da parede, empurra para fora e para cima.
@@ -166,9 +189,20 @@ void UNinjaMovementComponent::UpdateCharacterStateBeforeMovement(float DeltaSeco
 		}
 	}
 
-	if (IsFalling())
+	if (IsFalling() && !IsChakraFeetActive())
 	{
-		TryStartWallRun();
+		TryStartWallRun();   // com a infusão o personagem anda na parede de verdade (gravidade), não corre de lado
+	}
+
+	// Parede/teto: no ar com a gravidade da superfície por um instante = saiu pela borda -> gravidade normal
+	SurfaceAttachBlock = FMath::Max(0.f, SurfaceAttachBlock - DeltaSeconds);
+	if (HasCustomGravity())
+	{
+		SurfaceAirTime = IsFalling() ? SurfaceAirTime + DeltaSeconds : 0.f;
+		if (SurfaceAirTime > SurfaceLostTime || !IsChakraFeetActive())
+		{
+			ResetGravity();
+		}
 	}
 
 	// Virada ao sair do lugar (só visual; não roda ao refazer movimentos depois de correção do servidor)
@@ -192,10 +226,11 @@ void UNinjaMovementComponent::OnMovementModeChanged(EMovementMode PreviousMoveme
 {
 	Super::OnMovementModeChanged(PreviousMovementMode, PreviousCustomMode);
 
-	// Tocou o chão: libera o dash no ar de novo.
+	// Tocou o chão: libera o dash no ar de novo e acaba o voo do super pulo.
 	if (MovementMode == MOVE_Walking || MovementMode == MOVE_NavWalking)
 	{
 		bAirDashUsed = false;
+		bInSuperJump = false;
 	}
 }
 
@@ -221,11 +256,11 @@ bool UNinjaMovementComponent::CanDash() const
 
 void UNinjaMovementComponent::StartDash()
 {
-	// Vai para onde o jogador está apontando o movimento; sem direção, vai para frente.
-	DashDirection = Acceleration.GetSafeNormal2D();
+	// Vai para onde o jogador está apontando o movimento; sem direção, vai para frente (no plano do chão atual: parede/teto também)
+	DashDirection = ProjectToGravityFloor(Acceleration).GetSafeNormal();
 	if (DashDirection.IsNearlyZero())
 	{
-		DashDirection = UpdatedComponent->GetForwardVector().GetSafeNormal2D();
+		DashDirection = ProjectToGravityFloor(UpdatedComponent->GetForwardVector()).GetSafeNormal();
 	}
 
 	if (!IsMovingOnGround())
@@ -235,7 +270,7 @@ void UNinjaMovementComponent::StartDash()
 
 	// Tecla para o lado/para trás em relação à câmera (no chão): o corpo fica de frente para a câmera e o dash vai de lado/de costas
 	bDashStrafe = false;
-	if (IsMovingOnGround() && CharacterOwner && !Acceleration.IsNearlyZero())
+	if (IsMovingOnGround() && !HasCustomGravity() && CharacterOwner && !Acceleration.IsNearlyZero())
 	{
 		const float ControlYaw = CharacterOwner->GetControlRotation().Yaw;
 		if (FMath::Abs(FMath::FindDeltaAngleDegrees(ControlYaw, DashDirection.Rotation().Yaw)) > DashStrafeAngle)
@@ -508,4 +543,84 @@ void FSavedMove_Ninja::PrepMoveFor(ACharacter* C)
 		Move->WallRunCooldownLeft = SavedWallRunCooldownLeft;
 		Move->WallNormal = SavedWallNormal;
 	}
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Infusão de chakra nos pés: parede, teto e água
+// ---------------------------------------------------------------------------------------------------------------------
+
+bool UNinjaMovementComponent::IsChakraFeetActive() const
+{
+	const AHypeWorldCharacter* Ninja = Cast<AHypeWorldCharacter>(CharacterOwner);
+	return Ninja && Ninja->IsPassiveEnabled(ENinjaPassive::ChakraFeet);
+}
+
+void UNinjaMovementComponent::OnChakraFeetChanged(bool bEnabled)
+{
+	// Água: com a infusão a superfície bloqueia (pisa em cima); sem ela, passa e nada
+	if (CharacterOwner && CharacterOwner->GetCapsuleComponent())
+	{
+		CharacterOwner->GetCapsuleComponent()->SetCollisionResponseToChannel(WaterChannel, bEnabled ? ECR_Block : ECR_Overlap);
+	}
+	if (!bEnabled && HasCustomGravity())
+	{
+		ResetGravity();   // desligou na parede/teto: cai
+	}
+}
+
+void UNinjaMovementComponent::ResetGravity()
+{
+	SetGravityDirection(DefaultGravityDirection);
+	SurfaceAirTime = 0.f;
+	if (IsMovingOnGround())
+	{
+		SetMovementMode(MOVE_Falling);   // o chão de antes (parede/teto) não serve mais
+	}
+}
+
+void UNinjaMovementComponent::HandleImpact(const FHitResult& Hit, float TimeSlice, const FVector& MoveDelta)
+{
+	Super::HandleImpact(Hit, TimeSlice, MoveDelta);
+	TryAttachToSurface(Hit);
+}
+
+bool UNinjaMovementComponent::TryAttachToSurface(const FHitResult& Hit)
+{
+	// Com a infusão, indo contra uma parede/teto (não um chão), ela vira o chão: a gravidade passa a apontar para ela
+	if (!IsChakraFeetActive() || SurfaceAttachBlock > 0.f || !Hit.bBlockingHit || !(IsMovingOnGround() || IsFalling() || IsDashing()))
+	{
+		return false;
+	}
+	if (Cast<APawn>(Hit.GetActor()))
+	{
+		return false;
+	}
+	const FVector Normal = Hit.ImpactNormal.GetSafeNormal();
+	const FVector Up = -GetGravityDirection();
+	if (FVector::DotProduct(Normal, Up) > 0.7f)
+	{
+		return false;   // já é chão para a gravidade atual
+	}
+	const FVector Wish = Acceleration.IsNearlyZero() ? Velocity : Acceleration;
+	if (FVector::DotProduct(Wish.GetSafeNormal(), -Normal) < 0.35f)
+	{
+		return false;   // só quando está indo de encontro à superfície (tecla apertada para ela / pulando nela)
+	}
+	SetGravityDirection(-Normal);
+	Velocity = FVector::VectorPlaneProject(Velocity, Normal);
+	SurfaceAirTime = 0.f;
+	if (IsDashing())
+	{
+		DashDirection = ProjectToGravityFloor(DashDirection).GetSafeNormal();
+	}
+	return true;
+}
+
+void UNinjaMovementComponent::ApplyVelocityBraking(float DeltaTime, float Friction, float BrakingDeceleration)
+{
+	if (bInSuperJump && IsFalling())
+	{
+		return;   // o personagem tem atrito de frenagem separado (BrakingFriction) que valeria também no ar
+	}
+	Super::ApplyVelocityBraking(DeltaTime, Friction, BrakingDeceleration);
 }

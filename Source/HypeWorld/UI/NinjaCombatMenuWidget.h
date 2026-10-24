@@ -48,6 +48,8 @@ private:
 	UPROPERTY() TArray<TObjectPtr<UButton>> CategoryButtons;
 	UPROPERTY() TArray<TObjectPtr<UButton>> StyleButtons;
 	UPROPERTY() TArray<TObjectPtr<UButton>> ToggleButtons;
+	UPROPERTY() TArray<TObjectPtr<UButton>> PassiveButtons;
+	TArray<uint8> PassiveButtonIds;
 	UPROPERTY() TObjectPtr<UTexture2D> StarTexture;
 	UPROPERTY() TObjectPtr<UTexture2D> ChevronTexture;
 	UPROPERTY() TObjectPtr<UTexture2D> LockTexture;

@@ -10,6 +10,7 @@
 #include "CombatAttacker.h"
 #include "NinjaCombatTypes.h"
 #include "NinjaFightingStyle.h"
+#include "NinjaPassives.h"
 #include "HypeWorldCharacter.generated.h"
 
 class USpringArmComponent;
@@ -100,6 +101,10 @@ protected:
 	/** Abre/fecha o menu de combate (Tab) */
 	UPROPERTY(EditAnywhere, Category="Input")
 	UInputAction* CombatMenuAction;
+
+	/** Liga/desliga a infusão de chakra nos pés (passiva) */
+	UPROPERTY(EditAnywhere, Category="Input")
+	UInputAction* ChakraFeetAction;
 
 	/** Animação do dash (usada quando DashVariants não tem nada para a direção) */
 	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
@@ -409,6 +414,60 @@ public:
 	/** Base de luta do estilo atual (vazio = a padrão do Anim Blueprint) */
 	UAnimSequenceBase* GetBattleIdlePose() const;
 
+	// ---------- Passivas (menu de combate → Passivas, ou tecla própria) ----------
+
+	/** Passivas que o personagem tem (aprendidas, do clã...) — o menu lista estas */
+	UPROPERTY(EditAnywhere, Category="Ninja|Passivas")
+	TArray<FNinjaPassiveInfo> Passives;
+
+	UFUNCTION(BlueprintPure, Category="Ninja|Passivas")
+	bool IsPassiveEnabled(ENinjaPassive Passive) const { return (EnabledPassives & (1u << uint32(Passive))) != 0; }
+
+	/** Liga/desliga uma passiva aprendida (replicado) */
+	UFUNCTION(BlueprintCallable, Category="Ninja|Passivas")
+	void SetPassiveEnabled(ENinjaPassive Passive, bool bEnabled);
+
+	UFUNCTION(BlueprintCallable, Category="Ninja|Passivas")
+	void TogglePassive(ENinjaPassive Passive) { SetPassiveEnabled(Passive, !IsPassiveEnabled(Passive)); }
+
+	bool HasLearnedPassive(ENinjaPassive Passive) const;
+
+	// ---------- Infusão de chakra nos pés: super pulo carregado (segurar Espaço) ----------
+
+	/** Segurar Espaço mais que isto (s) começa a carregar o super pulo (menos = pulo normal) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Infusão")
+	float SuperJumpHoldThreshold = 0.16f;
+
+	/** Tempo para encher a barra do super pulo (s) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Infusão")
+	float SuperJumpChargeTime = 1.5f;
+
+	/** Velocidade para a frente e para cima com a barra vazia (X) e cheia (Y), em cm/s */
+	UPROPERTY(EditAnywhere, Category="Ninja|Infusão")
+	FVector2D SuperJumpForwardSpeed = FVector2D(700.f, 1900.f);
+	UPROPERTY(EditAnywhere, Category="Ninja|Infusão")
+	FVector2D SuperJumpUpSpeed = FVector2D(1100.f, 2000.f);
+
+	/** Agachado carregando (início + loop) e o salto (impulso → voo → descida) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
+	UAnimMontage* SuperJumpChargeMontage;
+	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
+	UAnimMontage* SuperJumpLaunchMontage;
+
+	/** Material do brilho de chakra nos pés (infusão ligada) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Infusão")
+	UMaterialInterface* ChakraFeetMaterial;
+
+	UFUNCTION(BlueprintPure, Category="Ninja|Infusão")
+	bool IsChargingSuperJump() const { return bChargingSuperJump; }
+
+	/** 0..1 quanto da barra do super pulo está cheia */
+	UFUNCTION(BlueprintPure, Category="Ninja|Infusão")
+	float GetSuperJumpCharge() const { return SuperJumpCharge; }
+
+	/** Velocidade ao longo do chão atual (na parede/teto também) — para as animações */
+	float GetSurfaceSpeed() const;
+
 	/** Atordoado por um golpe */
 	UFUNCTION(BlueprintPure, Category="Ninja|Combate")
 	bool IsStunned() const;
@@ -485,6 +544,35 @@ protected:
 	void DoSubstitution();
 	UFUNCTION(NetMulticast, Reliable)
 	void MulticastSubstitution(FVector_NetQuantize From, FVector_NetQuantize To);
+
+	UPROPERTY(ReplicatedUsing=OnRep_EnabledPassives)
+	uint32 EnabledPassives = 0;
+	UFUNCTION()
+	void OnRep_EnabledPassives();
+	UFUNCTION(Server, Reliable)
+	void ServerSetPassiveEnabled(ENinjaPassive Passive, bool bEnabled);
+	void DoToggleChakraFeet();
+	void UpdateChakraFeetVisual();
+	UPROPERTY()
+	TArray<TObjectPtr<UStaticMeshComponent>> ChakraFeetGlow;
+
+	// Super pulo
+	bool bJumpKeyHeld = false;
+	float JumpHoldTime = 0.f;
+	float SuperJumpCharge = 0.f;
+	UPROPERTY(ReplicatedUsing=OnRep_ChargingSuperJump)
+	bool bChargingSuperJump = false;
+	UFUNCTION()
+	void OnRep_ChargingSuperJump();
+	UFUNCTION(Server, Reliable)
+	void ServerSetChargingSuperJump(bool bCharging);
+	UFUNCTION(Server, Reliable)
+	void ServerSuperJump(FVector_NetQuantize10 LaunchVelocity);
+	UFUNCTION(NetMulticast, Unreliable)
+	void MulticastSuperJumpLaunch();
+	void UpdateSuperJump(float DeltaSeconds);
+	void ReleaseSuperJump();
+	bool CanStartSuperJump() const;
 
 	UPROPERTY(Replicated)
 	int32 FightingStyleIndex = 0;

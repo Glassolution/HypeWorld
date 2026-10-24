@@ -105,6 +105,31 @@ public:
 	float DashStrafeAngle = 50.f;
 
 	FVector GetDashDirection() const { return DashDirection; }
+
+	// ---------- Infusão de chakra nos pés: andar na parede, no teto e na água ----------
+
+	/** Canal de colisão da superfície da água (criado em DefaultEngine.ini como "Agua"): com a infusão o personagem pisa nela */
+	static constexpr ECollisionChannel WaterChannel = ECC_GameTraceChannel1;
+
+	/** Infusão ligada/desligada (chamado pelo personagem): colisão com a água e soltar da parede */
+	void OnChakraFeetChanged(bool bEnabled);
+
+	bool IsChakraFeetActive() const;
+
+	/** Andando na parede/teto: ao ficar no ar com a gravidade da parede por este tempo (s), volta a gravidade normal (saiu pela borda) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Infusão")
+	float SurfaceLostTime = 0.3f;
+
+	/** Pulando da parede/teto: empurrão para longe dela e para cima (cm/s) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Infusão")
+	float SurfaceJumpOffSpeed = 650.f;
+
+	UFUNCTION(BlueprintPure, Category="Ninja")
+	bool IsOnChakraSurface() const { return HasCustomGravity(); }
+
+	/** No voo do super pulo: sem frenagem nem atrito no ar (senão o embalo para a frente morre); acaba ao pousar */
+	bool bInSuperJump = false;
+	virtual void ApplyVelocityBraking(float DeltaTime, float Friction, float BrakingDeceleration) override;
 	bool IsDashStrafe() const { return bDashStrafe; }
 	float GetDashFacingYaw() const { return DashFacingYaw; }
 
@@ -198,6 +223,11 @@ protected:
 
 private:
 	bool bDashStrafe = false;		// dash de lado/de costas (corpo de frente para a câmera)
+	float SurfaceAirTime = 0.f;		// no ar com a gravidade da parede/teto
+	float SurfaceAttachBlock = 0.f;	// depois de pular da parede, não gruda de novo logo
+	bool TryAttachToSurface(const FHitResult& Hit);
+	void ResetGravity();
+	virtual void HandleImpact(const FHitResult& Hit, float TimeSlice = 0.f, const FVector& MoveDelta = FVector::ZeroVector) override;
 	float DashFacingYaw = 0.f;
 
 	void PhysDash(float DeltaTime, int32 Iterations);

@@ -68,6 +68,11 @@ protected:
 	/** Gameplay initialization */
 	virtual void BeginPlay() override;
 
+	/** Câmera relativa à gravidade do personagem: andando na parede/teto o "para cima" da câmera acompanha */
+	virtual void UpdateRotation(float DeltaTime) override;
+
+	FVector LastFrameGravity = FVector::ZeroVector;
+
 	/** Input mapping context setup */
 	virtual void SetupInputComponent() override;
 
