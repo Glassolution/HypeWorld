@@ -414,10 +414,24 @@ void AHypeWorldCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, 
 	const bool bWasDashing = PrevMovementMode == MOVE_Custom && PreviousCustomMode == NMOVE_Dash;
 	const bool bWasWallRunning = PrevMovementMode == MOVE_Custom && PreviousCustomMode == NMOVE_WallRun;
 
-	// Saiu de um modo: para a animação dele
+	// Saiu de um modo: para a animação dele (o dash termina pela seção "End" da montagem, se ela tiver: aterrissagem)
 	if (bWasDashing && !NinjaMovement->IsDashing() && DashMontage)
 	{
-		StopAnimMontage(DashMontage);
+		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+		static const FName EndSection("End");
+		if (AnimInstance && AnimInstance->Montage_IsPlaying(DashMontage) && DashMontage->IsValidSectionName(EndSection))
+		{
+			AnimInstance->Montage_JumpToSection(EndSection, DashMontage);
+		}
+		else
+		{
+			StopAnimMontage(DashMontage);
+		}
+	}
+	// Pousou: o mortal do pulo duplo (que segura a pose de descida) dá lugar ao pouso
+	if (PrevMovementMode == MOVE_Falling && !NinjaMovement->IsFalling() && DoubleJumpMontage)
+	{
+		StopAnimMontage(DoubleJumpMontage);
 	}
 	if (bWasWallRunning && !NinjaMovement->IsWallRunning())
 	{

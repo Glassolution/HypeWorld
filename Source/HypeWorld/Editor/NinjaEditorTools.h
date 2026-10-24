@@ -34,4 +34,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Ninja|Editor")
 	static bool BuildSequenceMontage(UAnimMontage* Montage, const TArray<UAnimSequenceBase*>& Animations, const TArray<float>& Starts,
 		const TArray<float>& Ends, float BlendIn, float BlendOut, bool bLoopLast, bool bHoldLastPose);
+
+	/** Igual à BuildSequenceMontage, com seções nomeadas: SectionNames[i] (vazio = continua a seção anterior) começa no
+	 *  trecho i. Cada seção segue para a próxima seção nomeada, menos as de LoopSections (repetem sozinhas). Uma seção depois
+	 *  de uma que repete só é alcançada por salto no código (ex.: "End" do dash). */
+	UFUNCTION(BlueprintCallable, Category="Ninja|Editor")
+	static bool BuildSectionMontage(UAnimMontage* Montage, const TArray<UAnimSequenceBase*>& Animations, const TArray<float>& Starts,
+		const TArray<float>& Ends, const TArray<FName>& SectionNames, const TArray<FName>& LoopSections, float BlendIn, float BlendOut, bool bHoldLastPose);
 };

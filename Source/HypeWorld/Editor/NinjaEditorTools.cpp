@@ -157,3 +157,38 @@ bool UNinjaEditorTools::BuildSequenceMontage(UAnimMontage* Montage, const TArray
 	return false;
 #endif
 }
+
+bool UNinjaEditorTools::BuildSectionMontage(UAnimMontage* Montage, const TArray<UAnimSequenceBase*>& Animations, const TArray<float>& Starts,
+	const TArray<float>& Ends, const TArray<FName>& SectionNames, const TArray<FName>& LoopSections, float BlendIn, float BlendOut, bool bHoldLastPose)
+{
+#if WITH_EDITOR
+	// Monta os trechos como a BuildSequenceMontage (sem loop) e depois refaz as seções
+	if (SectionNames.Num() != Animations.Num() || !BuildSequenceMontage(Montage, Animations, Starts, Ends, BlendIn, BlendOut, false, bHoldLastPose))
+	{
+		return false;
+	}
+	const FAnimTrack& Track = Montage->SlotAnimTracks[0].AnimTrack;
+	Montage->CompositeSections.Reset();
+	TArray<FName> Order;
+	for (int32 i = 0; i < SectionNames.Num(); ++i)
+	{
+		const FName Name = (i == 0 && SectionNames[i].IsNone()) ? FName("Default") : SectionNames[i];
+		if (!Name.IsNone())
+		{
+			Montage->AddAnimCompositeSection(Name, Track.AnimSegments[i].StartPos);
+			Order.Add(Name);
+		}
+	}
+	for (int32 i = 0; i < Order.Num(); ++i)
+	{
+		FCompositeSection& Section = Montage->GetAnimCompositeSection(Montage->GetSectionIndex(Order[i]));
+		Section.NextSectionName = LoopSections.Contains(Order[i]) ? Order[i] : (Order.IsValidIndex(i + 1) ? Order[i + 1] : NAME_None);
+	}
+	Montage->RefreshCacheData();
+	Montage->PostEditChange();
+	Montage->MarkPackageDirty();
+	return true;
+#else
+	return false;
+#endif
+}
