@@ -317,6 +317,64 @@ public:
 	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
 	float BattleModeDuration = 6.f;
 
+	// ---------- PvP justo: travamento, limite de combo e fuga ----------
+
+	/** Pode agir (atacar, carregar chakra, jutsus)? Atordoado ou nocauteado não. Jutsus novos devem bloquear com a tag Ninja.State.Stunned. */
+	UFUNCTION(BlueprintPure, Category="Ninja|Combate")
+	bool CanAct() const { return !bKnockedOut && !IsStunned(); }
+
+	/** Golpes seguidos que o mesmo alvo pode levar: no último ele é arremessado e fica invulnerável (fim do combo) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Fuga")
+	int32 MaxComboHits = 7;
+
+	/** Tempo máximo apanhando sem parar (s): passou disso, o próximo golpe arremessa e quebra o combo */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Fuga")
+	float MaxComboTime = 3.5f;
+
+	/** Cada golpe seguido atordoa menos: atordoamento x (Decay ^ golpes anteriores), nunca abaixo de MinHitstunScale */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Fuga")
+	float HitstunDecay = 0.9f;
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Fuga")
+	float MinHitstunScale = 0.45f;
+
+	/** Cada golpe seguido tira menos vida (-8% por golpe, nunca abaixo de 50%) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Fuga")
+	float ComboDamageDecay = 0.08f;
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Fuga")
+	float MinComboDamageScale = 0.5f;
+
+	/** Invulnerável depois de ter o combo quebrado (arremessado pelo limite) (s) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Fuga")
+	float ComboBreakInvulnerability = 1.2f;
+
+	/** Substituição (Q apanhando): cargas, recarga de cada uma (s), distância do teleporte (cm) e invulnerabilidade (s) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Fuga")
+	int32 MaxSubstitutions = 2;
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Fuga")
+	float SubstitutionRecharge = 8.f;
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Fuga")
+	float SubstitutionDistance = 350.f;
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Fuga")
+	float SubstitutionInvulnerability = 0.5f;
+
+	/** Golpeando: passo automático para a frente no começo de cada golpe (s) — as animações do pack não andam sozinhas */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
+	float AttackLungeTime = 0.22f;
+
+	/** Substituição: apanhando, some numa nuvem e reaparece longe de quem bateu (gasta 1 carga) */
+	UFUNCTION(BlueprintCallable, Category="Ninja|Combate")
+	void TrySubstitution();
+
+	UFUNCTION(BlueprintPure, Category="Ninja|Combate")
+	int32 GetSubstitutionCharges() const { return SubstitutionCharges; }
+
+	/** Invulnerável (quebra de combo ou substituição): golpes passam direto */
+	UFUNCTION(BlueprintPure, Category="Ninja|Combate")
+	bool IsInvulnerable() const { return bInvulnerable; }
+
+	/** Golpes seguidos que este personagem está levando agora (servidor) */
+	int32 GetTakenComboHits() const { return TakenComboHits; }
+
 	/** Atordoado por um golpe */
 	UFUNCTION(BlueprintPure, Category="Ninja|Combate")
 	bool IsStunned() const;
@@ -385,7 +443,31 @@ protected:
 
 	/** Reação de quem apanhou, em todas as máquinas */
 	UFUNCTION(NetMulticast, Reliable)
-	void MulticastHitReaction(ENinjaHitReaction Reaction, FVector_NetQuantizeNormal FromDirection);
+	void MulticastHitReaction(ENinjaHitReaction Reaction, FVector_NetQuantizeNormal FromDirection, bool bComboBreak);
+
+	// Fuga do combo (servidor decide)
+	UFUNCTION(Server, Reliable)
+	void ServerSubstitution();
+	void DoSubstitution();
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastSubstitution(FVector_NetQuantize From, FVector_NetQuantize To);
+
+	UPROPERTY(Replicated)
+	int32 SubstitutionCharges = 2;
+	float SubstitutionRechargeTime = 0.f;
+	UPROPERTY(Replicated)
+	bool bInvulnerable = false;
+	float InvulnerableUntil = -100.f;
+	int32 TakenComboHits = 0;
+	float TakenComboStart = 0.f;
+	float LastTakenHitTime = -100.f;
+	TWeakObjectPtr<AActor> LastAttacker;
+	float AttackStartTime = -100.f;
+
+	void UpdateCombatState(float DeltaSeconds);
+
+	/** Alguém colado à frente (a menos de AttackBodySpacing): golpe não avança */
+	bool HasBodyAhead() const;
 
 	UFUNCTION(Server, Reliable)
 	void ServerSetGuarding(bool bNewGuarding);

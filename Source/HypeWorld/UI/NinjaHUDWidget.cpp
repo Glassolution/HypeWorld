@@ -204,6 +204,9 @@ void UNinjaHUDWidget::BuildLayout()
 	ChakraText = MakeText(FString(), 16.f);
 	Place(ChakraText, TopLeft, FVector2D(198, 142), FVector2D::ZeroVector, FVector2D(0.f, 0.5f));
 
+	SubstitutionText = MakeText(FString(), 15.f, FLinearColor(0.85f, 0.85f, 0.78f));
+	Place(SubstitutionText, TopLeft, FVector2D(198, 176), FVector2D::ZeroVector, FVector2D(0.f, 0.5f));
+
 	// --- Missão ---
 	FSlateBrush QuestBand = Fade;
 	QuestBand.TintColor = FSlateColor(FLinearColor(0.f, 0.f, 0.f, 0.60f));
@@ -240,8 +243,8 @@ void UNinjaHUDWidget::BuildLayout()
 	Place(MakeText(TEXT("E"), 15.f), TopRight, MapCenter + FVector2D(112, 0), FVector2D::ZeroVector, Center);
 
 	// --- Baixo esquerdo: atalhos ---
-	const TCHAR* HintKeys[] = { TEXT("LMB"), TEXT("F"), TEXT("RMB"), TEXT("C"), TEXT("Ctrl"), TEXT("M"), TEXT("I"), TEXT("J") };
-	const TCHAR* HintLabels[] = { TEXT("Atacar"), TEXT("Golpe forte"), TEXT("Defender"), TEXT("Carregar chakra"), TEXT("Desviar"), TEXT("Mapa"), TEXT("Inventário"), TEXT("Missões") };
+	const TCHAR* HintKeys[] = { TEXT("LMB"), TEXT("F"), TEXT("RMB"), TEXT("C"), TEXT("Q"), TEXT("M"), TEXT("I"), TEXT("J") };
+	const TCHAR* HintLabels[] = { TEXT("Atacar"), TEXT("Golpe forte"), TEXT("Modo batalha / defender"), TEXT("Carregar chakra"), TEXT("Dash / Substituição"), TEXT("Mapa"), TEXT("Inventário"), TEXT("Missões") };
 	for (int32 i = 0; i < 8; ++i)
 	{
 		const float Y = -394.f + i * 46.f;
@@ -392,6 +395,12 @@ void UNinjaHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 			{
 				SetChakra(A->GetChakra(), A->GetMaxChakra());
 			}
+		}
+		if (SubstitutionText && Ninja->GetSubstitutionCharges() != ShownSubstitutions)
+		{
+			ShownSubstitutions = Ninja->GetSubstitutionCharges();
+			SubstitutionText->SetText(FText::FromString(FString::Printf(TEXT("Substituição %d/%d"), ShownSubstitutions, Ninja->MaxSubstitutions)));
+			SubstitutionText->SetColorAndOpacity(FSlateColor(ShownSubstitutions > 0 ? FLinearColor(0.85f, 0.85f, 0.78f) : FLinearColor(0.6f, 0.3f, 0.25f)));
 		}
 		if (ComboText)
 		{

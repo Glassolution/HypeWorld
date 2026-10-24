@@ -25,6 +25,11 @@
 #include "Engine/OverlapResult.h"
 #include "AnimNotify_DoAttackTrace.h"
 #include "TimerManager.h"
+#include "Engine/StaticMeshActor.h"
+#include "Engine/StaticMesh.h"
+#include "Components/StaticMeshComponent.h"
+#include "Materials/MaterialInstanceDynamic.h"
+#include "NinjaCombatTypes.h"
 
 AHypeWorldCharacter::AHypeWorldCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UNinjaMovementComponent>(ACharacter::CharacterMovementComponentName))
@@ -273,6 +278,7 @@ void AHypeWorldCharacter::DoDash()
 {
 	if (IsStunned())
 	{
+		TrySubstitution();   // apanhando: o botão do dash vira a fuga (substituição)
 		return;
 	}
 	if (UNinjaMovementComponent* NinjaMovement = GetNinjaMovement())
@@ -290,6 +296,7 @@ void AHypeWorldCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	SubstitutionCharges = MaxSubstitutions;
 	BaseMeshRotation = GetMesh()->GetRelativeRotation();
 	BaseMeshLocation = GetMesh()->GetRelativeLocation();
 	LastYaw = GetActorRotation().Yaw;
@@ -319,6 +326,7 @@ void AHypeWorldCharacter::Tick(float DeltaSeconds)
 	UpdateCameraFollow(DeltaSeconds);
 	UpdateGuard();
 	UpdateBattleMode();
+	UpdateCombatState(DeltaSeconds);
 
 	// Aura: no máximo de chakra (carregando) vira a explosão — usa os atributos replicados, então todos veem igual
 	if (ChakraAura && Attributes)
@@ -714,6 +722,8 @@ void AHypeWorldCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	DOREPLIFETIME(AHypeWorldCharacter, bChargingChakra);
 	DOREPLIFETIME_CONDITION(AHypeWorldCharacter, bGuarding, COND_SkipOwner);
 	DOREPLIFETIME_CONDITION(AHypeWorldCharacter, bBattleMode, COND_SkipOwner);
+	DOREPLIFETIME_CONDITION(AHypeWorldCharacter, SubstitutionCharges, COND_OwnerOnly);
+	DOREPLIFETIME(AHypeWorldCharacter, bInvulnerable);
 }
 
 bool AHypeWorldCharacter::IsAttacking() const
@@ -857,6 +867,7 @@ void AHypeWorldCharacter::BeginAttack(int32 AttackId)
 	CurrentAttackId = AttackId;
 	LastChainAttackId = INDEX_NONE;
 	LastBattleTime = GetWorld()->GetTimeSeconds();
+	AttackStartTime = LastBattleTime;
 	AttackHitIndex = 0;
 	bComboWindowOpen = false;
 
@@ -913,31 +924,36 @@ FTransform AHypeWorldCharacter::ProcessAttackRootMotion(const FTransform& InRoot
 	float Advance = FVector::DotProduct(InRootMotion.GetTranslation(), CompForward) * Attack->RootMotionScale;
 
 	// Corpo a corpo: com alguém logo à frente o golpe para de avançar (só física — não mira nem puxa ninguém)
-	if (Advance > 0.f)
+	if (Advance > 0.f && HasBodyAhead())
 	{
-		TArray<FOverlapResult> Overlaps;
-		const float Range = GetSimpleCollisionRadius() * 2.f + AttackBodySpacing;
-		FCollisionQueryParams Params(SCENE_QUERY_STAT(NinjaAttackSpacing), false, this);
-		GetWorld()->OverlapMultiByObjectType(Overlaps, GetActorLocation(), FQuat::Identity, FCollisionObjectQueryParams(ECC_Pawn), FCollisionShape::MakeSphere(Range), Params);
-		for (const FOverlapResult& O : Overlaps)
-		{
-			const AHypeWorldCharacter* Other = Cast<AHypeWorldCharacter>(O.GetActor());
-			if (!Other || Other == this)
-			{
-				continue;
-			}
-			const FVector To = Other->GetActorLocation() - GetActorLocation();
-			const float Gap = To.Size2D() - GetSimpleCollisionRadius() - Other->GetSimpleCollisionRadius();
-			if (Gap < AttackBodySpacing && FVector::DotProduct(To.GetSafeNormal2D(), GetActorForwardVector()) > 0.5f)
-			{
-				Advance = 0.f;
-				break;
-			}
-		}
+		Advance = 0.f;
 	}
 	FTransform Result = InRootMotion;
 	Result.SetTranslation(CompForward * Advance);
 	return Result;
+}
+
+bool AHypeWorldCharacter::HasBodyAhead() const
+{
+	TArray<FOverlapResult> Overlaps;
+	const float Range = GetSimpleCollisionRadius() * 2.f + AttackBodySpacing;
+	FCollisionQueryParams Params(SCENE_QUERY_STAT(NinjaAttackSpacing), false, this);
+	GetWorld()->OverlapMultiByObjectType(Overlaps, GetActorLocation(), FQuat::Identity, FCollisionObjectQueryParams(ECC_Pawn), FCollisionShape::MakeSphere(Range), Params);
+	for (const FOverlapResult& O : Overlaps)
+	{
+		const AHypeWorldCharacter* Other = Cast<AHypeWorldCharacter>(O.GetActor());
+		if (!Other || Other == this)
+		{
+			continue;
+		}
+		const FVector To = Other->GetActorLocation() - GetActorLocation();
+		const float Gap = To.Size2D() - GetSimpleCollisionRadius() - Other->GetSimpleCollisionRadius();
+		if (Gap < AttackBodySpacing && FVector::DotProduct(To.GetSafeNormal2D(), GetActorForwardVector()) > 0.5f)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 void AHypeWorldCharacter::CheckCombo()
@@ -995,7 +1011,7 @@ void AHypeWorldCharacter::DoAttackTrace(FName DamageSourceBone)
 
 		// Desvio: quem está no dash fica invulnerável
 		const UNinjaMovementComponent* TargetMove = Target->GetNinjaMovement();
-		if (TargetMove && TargetMove->IsDashing())
+		if ((TargetMove && TargetMove->IsDashing()) || Target->IsInvulnerable())
 		{
 			continue;
 		}
@@ -1052,6 +1068,39 @@ void AHypeWorldCharacter::ApplyHit(AHypeWorldCharacter* Target, const FNinjaAtta
 		Launch = 0.f;
 	}
 
+	// Anti-combo infinito: golpes seguidos no mesmo alvo atordoam e tiram menos; no limite ele é arremessado e fica invulnerável
+	bool bComboBreak = false;
+	if (Reaction != ENinjaHitReaction::Block)
+	{
+		const float Now = GetWorld()->GetTimeSeconds();
+		if (Now < Target->InvulnerableUntil)
+		{
+			return;
+		}
+		const bool bInCombo = Target->IsStunned() || Now - Target->LastTakenHitTime < 0.35f;
+		if (!bInCombo)
+		{
+			Target->TakenComboHits = 0;
+			Target->TakenComboStart = Now;
+		}
+		Target->TakenComboHits++;
+		Target->LastTakenHitTime = Now;
+		Target->LastAttacker = this;
+		const int32 Previous = Target->TakenComboHits - 1;
+		Stun *= FMath::Max(MinHitstunScale, FMath::Pow(HitstunDecay, float(Previous)));
+		Damage *= FMath::Max(MinComboDamageScale, 1.f - ComboDamageDecay * Previous);
+		if (Target->TakenComboHits >= MaxComboHits || Now - Target->TakenComboStart >= MaxComboTime)
+		{
+			bComboBreak = true;
+			Reaction = ENinjaHitReaction::Knockback;
+			Knockback = FMath::Max(Knockback, 750.f);
+			Launch = FMath::Max(Launch, 350.f);
+			Stun = FMath::Max(Stun, 0.6f);
+			Target->InvulnerableUntil = Now + ComboBreakInvulnerability;
+			Target->TakenComboHits = 0;
+		}
+	}
+
 	UAbilitySystemComponent* TargetASC = Target->GetAbilitySystemComponent();
 
 	// Levar golpe (sem defender) interrompe o que ele estava fazendo: combo, carga de chakra
@@ -1077,10 +1126,10 @@ void AHypeWorldCharacter::ApplyHit(AHypeWorldCharacter* Target, const FNinjaAtta
 	{
 		Target->LaunchCharacter(Push * Knockback + FVector(0.f, 0.f, Launch), true, Launch > 0.f);
 	}
-	Target->MulticastHitReaction(Reaction, -Push);
+	Target->MulticastHitReaction(Reaction, -Push, bComboBreak);
 }
 
-void AHypeWorldCharacter::MulticastHitReaction_Implementation(ENinjaHitReaction Reaction, FVector_NetQuantizeNormal FromDirection)
+void AHypeWorldCharacter::MulticastHitReaction_Implementation(ENinjaHitReaction Reaction, FVector_NetQuantizeNormal FromDirection, bool bComboBreak)
 {
 	if (bKnockedOut)
 	{
@@ -1103,6 +1152,10 @@ void AHypeWorldCharacter::MulticastHitReaction_Implementation(ENinjaHitReaction 
 	if (Reaction == ENinjaHitReaction::GuardBreak)
 	{
 		ANinjaDamageNumber::Spawn(GetWorld(), Head, TEXT("DEFESA QUEBRADA"), FLinearColor(1.f, 0.45f, 0.15f), 32.f);
+	}
+	if (bComboBreak)
+	{
+		ANinjaDamageNumber::Spawn(GetWorld(), Head + FVector(0.f, 0.f, 25.f), TEXT("COMBO QUEBRADO"), FLinearColor(0.55f, 0.85f, 1.f), 30.f);
 	}
 	UAnimMontage* Montage = nullptr;
 	if (Reaction != ENinjaHitReaction::Light && HeavyHitReactMontage)
@@ -1287,5 +1340,127 @@ void AHypeWorldCharacter::DoFocusEnd()
 	if (UNinjaMovementComponent* NinjaMovement = GetNinjaMovement())
 	{
 		NinjaMovement->SetFocusing(false);
+	}
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// PvP justo: fuga do combo (substituição), invulnerabilidade, passo do golpe, fim da animação de apanhar
+// ---------------------------------------------------------------------------------------------------------------------
+
+void AHypeWorldCharacter::UpdateCombatState(float DeltaSeconds)
+{
+	const float Now = GetWorld()->GetTimeSeconds();
+	if (HasAuthority())
+	{
+		bInvulnerable = Now < InvulnerableUntil;
+		// Recarga da substituição: uma carga por vez
+		if (SubstitutionCharges < MaxSubstitutions)
+		{
+			SubstitutionRechargeTime += DeltaSeconds;
+			if (SubstitutionRechargeTime >= SubstitutionRecharge)
+			{
+				SubstitutionRechargeTime = 0.f;
+				SubstitutionCharges++;
+			}
+		}
+	}
+
+	// Golpeando: passo para a frente no começo de cada golpe (para quem apanha não sair do alcance), menos com alguém colado
+	if (IsLocallyControlled() && IsAttacking() && Now - AttackStartTime < AttackLungeTime && GetCharacterMovement()->IsMovingOnGround() && !HasBodyAhead())
+	{
+		AddMovementInput(GetActorForwardVector(), 1.f);
+	}
+
+	// Acabou o atordoamento: a animação de apanhar sai assim que ele se mexe (não fica "preso" na reação)
+	if (!IsStunned() && GetVelocity().SizeSquared2D() > 40.f * 40.f && GetCharacterMovement()->IsMovingOnGround())
+	{
+		if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
+		{
+			const UAnimMontage* Current = AnimInstance->GetCurrentActiveMontage();
+			if (Current && (Current == HeavyHitReactMontage || HitReactMontages.Contains(Current)))
+			{
+				AnimInstance->Montage_Stop(0.2f, Current);
+			}
+		}
+	}
+}
+
+void AHypeWorldCharacter::TrySubstitution()
+{
+	if (!IsStunned() || bKnockedOut || SubstitutionCharges <= 0)
+	{
+		return;
+	}
+	if (HasAuthority())
+	{
+		DoSubstitution();
+	}
+	else
+	{
+		ServerSubstitution();
+	}
+}
+
+void AHypeWorldCharacter::ServerSubstitution_Implementation()
+{
+	DoSubstitution();
+}
+
+void AHypeWorldCharacter::DoSubstitution()
+{
+	// Servidor confere de novo: só apanhando, com carga
+	if (!IsStunned() || bKnockedOut || SubstitutionCharges <= 0)
+	{
+		return;
+	}
+	SubstitutionCharges--;
+	AbilitySystem->RemoveActiveEffectsWithGrantedTags(FGameplayTagContainer(TAG_Ninja_State_Stunned));
+	AbilitySystem->CancelAbilities();
+	InvulnerableUntil = GetWorld()->GetTimeSeconds() + SubstitutionInvulnerability;
+	bInvulnerable = true;
+	TakenComboHits = 0;
+
+	// Reaparece longe de quem bateu (sem ninguém: para trás), de frente para ele
+	const FVector From = GetActorLocation();
+	FVector Away = -GetActorForwardVector();
+	if (const AActor* Attacker = LastAttacker.Get())
+	{
+		Away = (From - Attacker->GetActorLocation()).GetSafeNormal2D();
+	}
+	Away = Away.IsNearlyZero() ? -GetActorForwardVector() : Away;
+	GetCharacterMovement()->StopMovementImmediately();
+	TeleportTo(From + Away * SubstitutionDistance, FRotator(0.f, (-Away).Rotation().Yaw, 0.f), false, false);
+	MulticastSubstitution(From, GetActorLocation());
+}
+
+void AHypeWorldCharacter::MulticastSubstitution_Implementation(FVector_NetQuantize From, FVector_NetQuantize To)
+{
+	StopAnimMontage();   // sai da animação de apanhar na hora
+	const FLinearColor Smoke(0.85f, 0.85f, 0.8f);
+	ANinjaHitFlash::Spawn(GetWorld(), FVector(From) + FVector(0.f, 0.f, 30.f), HitFlashMaterial, Smoke);
+	ANinjaHitFlash::Spawn(GetWorld(), FVector(To) + FVector(0.f, 0.f, 30.f), HitFlashMaterial, Smoke);
+	ANinjaDamageNumber::Spawn(GetWorld(), FVector(From) + FVector(0.f, 0.f, 110.f), TEXT("SUBSTITUIÇÃO"), FLinearColor(0.9f, 0.9f, 0.8f), 30.f);
+
+	// O tronco que fica no lugar (só visual, cai e some)
+	if (UStaticMesh* Cylinder = LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Cylinder.Cylinder")))
+	{
+		FActorSpawnParameters Params;
+		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		if (AStaticMeshActor* Log = GetWorld()->SpawnActor<AStaticMeshActor>(FVector(From) + FVector(0.f, 0.f, 10.f), FRotator(0.f, GetActorRotation().Yaw, 75.f), Params))
+		{
+			Log->SetMobility(EComponentMobility::Movable);
+			UStaticMeshComponent* LogMesh = Log->GetStaticMeshComponent();
+			LogMesh->SetStaticMesh(Cylinder);
+			LogMesh->SetWorldScale3D(FVector(0.35f, 0.35f, 1.3f));
+			LogMesh->SetCollisionProfileName(TEXT("PhysicsActor"));
+			LogMesh->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+			UMaterialInterface* ShapeMaterial = LoadObject<UMaterialInterface>(nullptr, TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
+			if (UMaterialInstanceDynamic* Wood = LogMesh->CreateDynamicMaterialInstance(0, ShapeMaterial))
+			{
+				Wood->SetVectorParameterValue(TEXT("Color"), FLinearColor(0.32f, 0.18f, 0.08f));
+			}
+			LogMesh->SetSimulatePhysics(true);
+			Log->SetLifeSpan(2.f);
+		}
 	}
 }
