@@ -104,6 +104,14 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
 	UAnimMontage* WallJumpMontage;
 
+	/** Animação do segundo pulo (no ar) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
+	UAnimMontage* DoubleJumpMontage;
+
+	/** Animação em loop enquanto carrega chakra */
+	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
+	UAnimMontage* ChargeChakraMontage;
+
 	/** Animação em loop enquanto corre na parede */
 	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
 	UAnimMontage* WallRunMontage;
@@ -476,6 +484,11 @@ private:
 	void UpdateIdleBreak(float DeltaSeconds);
 
 	float IdleTime = 0.f;
+
+	/** Detecta o pulo duplo pela velocidade (vale também para os outros jogadores na rede) e toca a animação */
+	void UpdateDoubleJump();
+	bool bWasFalling = false;
+	float DoubleJumpLastVelZ = 0.f;
 
 	/** Último toque no Shift (para detectar o toque duplo) */
 	float LastSprintTapTime = -100.f;

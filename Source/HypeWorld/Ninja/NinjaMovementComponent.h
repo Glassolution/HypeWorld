@@ -145,8 +145,13 @@ public:
 	/** 0 = movendo para a frente do corpo, 1 = totalmente de lado. */
 	float GetSidewaysAmount() const;
 
+	/** Andando sem o botão direito, o corpo fica de costas para a câmera (strafe). Desligado = o corpo vira para onde anda
+	 *  (para animações que só têm andar para a frente, como o pack Anime Ninja). */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Foco")
+	bool bWalkFacesCamera = true;
+
 	UFUNCTION(BlueprintPure, Category="Ninja")
-	bool IsFocusing() const { return (bWantsToFocus || !bWantsToRun) && !bWantsToSprint && IsMovingOnGround(); }   // andando (ou botão direito): de costas para a câmera
+	bool IsFocusing() const { return (bWantsToFocus || (bWalkFacesCamera && !bWantsToRun)) && !bWantsToSprint && IsMovingOnGround(); }   // andando (ou botão direito): de costas para a câmera
 
 	UFUNCTION(BlueprintPure, Category="Ninja")
 	bool IsSprinting() const { return bWantsToSprint && IsMovingOnGround(); }

@@ -287,6 +287,7 @@ void AHypeWorldCharacter::Tick(float DeltaSeconds)
 	UpdateLean(DeltaSeconds);
 	UpdateRunAnimRate();
 	UpdateIdleBreak(DeltaSeconds);
+	UpdateDoubleJump();
 	UpdateTurnInPlace(DeltaSeconds);
 	UpdateCameraFollow(DeltaSeconds);
 	UpdateGuard();
@@ -325,6 +326,22 @@ void AHypeWorldCharacter::UpdateIdleBreak(float DeltaSeconds)
 		PlayAnimMontage(IdleBreakMontage);
 		IdleTime = 0.f;   // conta de novo a partir de agora
 	}
+}
+
+void AHypeWorldCharacter::UpdateDoubleJump()
+{
+	// No ar nos dois quadros e a velocidade para cima saltou de repente = pulo duplo (o pulo do chão e o da parede
+	// começam fora do modo "caindo"; arremesso por golpe vem com atordoamento e não conta)
+	const UCharacterMovementComponent* Move = GetCharacterMovement();
+	const bool bFalling = Move->IsFalling();
+	const float VelocityZ = GetVelocity().Z;
+	if (bFalling && bWasFalling && DoubleJumpMontage && !IsStunned() && !IsAttacking()
+		&& VelocityZ - DoubleJumpLastVelZ > Move->JumpZVelocity * 0.5f)
+	{
+		PlayAnimMontage(DoubleJumpMontage);
+	}
+	bWasFalling = bFalling;
+	DoubleJumpLastVelZ = VelocityZ;
 }
 
 void AHypeWorldCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PreviousCustomMode)
@@ -1154,6 +1171,18 @@ void AHypeWorldCharacter::OnRep_ChargingChakra()
 	if (ChakraAura)
 	{
 		ChakraAura->SetAuraActive(bChargingChakra);
+	}
+	if (ChargeChakraMontage)
+	{
+		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+		if (bChargingChakra && AnimInstance && !AnimInstance->Montage_IsPlaying(ChargeChakraMontage))
+		{
+			PlayAnimMontage(ChargeChakraMontage);
+		}
+		else if (!bChargingChakra)
+		{
+			StopAnimMontage(ChargeChakraMontage);
+		}
 	}
 }
 

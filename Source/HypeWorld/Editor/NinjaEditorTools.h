@@ -27,4 +27,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Ninja|Editor")
 	static bool BuildAttackMontage(UAnimMontage* Montage, UAnimSequenceBase* Animation, float StartTime, float EndTime,
 		const TArray<float>& HitTimes, float ComboTime, float BlendIn, float BlendOut);
+
+	/** Montagem com vários trechos em sequência (Animations[i] de Starts[i] a Ends[i]; End < 0 = até o fim).
+	 *  bLoopLast = o último trecho repete sozinho (seção "Loop" que aponta para ela mesma).
+	 *  bHoldLastPose = não volta sozinha para a animação de base no fim (fica na última pose até alguém parar). */
+	UFUNCTION(BlueprintCallable, Category="Ninja|Editor")
+	static bool BuildSequenceMontage(UAnimMontage* Montage, const TArray<UAnimSequenceBase*>& Animations, const TArray<float>& Starts,
+		const TArray<float>& Ends, float BlendIn, float BlendOut, bool bLoopLast, bool bHoldLastPose);
 };

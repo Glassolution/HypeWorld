@@ -90,3 +90,70 @@ bool UNinjaEditorTools::BuildAttackMontage(UAnimMontage* Montage, UAnimSequenceB
 	return false;
 #endif
 }
+
+bool UNinjaEditorTools::BuildSequenceMontage(UAnimMontage* Montage, const TArray<UAnimSequenceBase*>& Animations, const TArray<float>& Starts,
+	const TArray<float>& Ends, float BlendIn, float BlendOut, bool bLoopLast, bool bHoldLastPose)
+{
+#if WITH_EDITOR
+	if (!Montage || Animations.Num() == 0 || Starts.Num() != Animations.Num() || Ends.Num() != Animations.Num())
+	{
+		return false;
+	}
+	Montage->Modify();
+	if (Montage->SlotAnimTracks.Num() == 0)
+	{
+		Montage->SlotAnimTracks.AddDefaulted();
+		Montage->SlotAnimTracks[0].SlotName = FAnimSlotGroup::DefaultSlotName;
+	}
+	FAnimTrack& Track = Montage->SlotAnimTracks[0].AnimTrack;
+	Track.AnimSegments.Reset();
+	float Position = 0.f;
+	float LastStart = 0.f;
+	for (int32 i = 0; i < Animations.Num(); ++i)
+	{
+		UAnimSequenceBase* Animation = Animations[i];
+		if (!Animation)
+		{
+			return false;
+		}
+		FAnimSegment Segment;
+		Segment.SetAnimReference(Animation, true);
+		Segment.AnimStartTime = FMath::Clamp(Starts[i], 0.f, Animation->GetPlayLength());
+		Segment.AnimEndTime = Ends[i] < 0.f ? Animation->GetPlayLength() : FMath::Clamp(Ends[i], Segment.AnimStartTime + 0.01f, Animation->GetPlayLength());
+		Segment.AnimPlayRate = 1.f;
+		Segment.LoopingCount = 1;
+		Segment.StartPos = Position;
+		Track.AnimSegments.Add(Segment);
+		LastStart = Position;
+		Position += Segment.AnimEndTime - Segment.AnimStartTime;
+	}
+	Montage->SetCompositeLength(Position);
+
+	Montage->CompositeSections.Reset();
+	Montage->AddAnimCompositeSection(FName("Default"), 0.f);
+	if (bLoopLast)
+	{
+		const FName Loop("Loop");
+		if (LastStart > 0.f)
+		{
+			Montage->AddAnimCompositeSection(Loop, LastStart);
+			Montage->GetAnimCompositeSection(Montage->GetSectionIndex(FName("Default"))).NextSectionName = Loop;
+			Montage->GetAnimCompositeSection(Montage->GetSectionIndex(Loop)).NextSectionName = Loop;
+		}
+		else
+		{
+			Montage->GetAnimCompositeSection(0).NextSectionName = FName("Default");
+		}
+	}
+	Montage->Notifies.Reset();
+	Montage->BlendIn.SetBlendTime(BlendIn);
+	Montage->BlendOut.SetBlendTime(BlendOut);
+	Montage->bEnableAutoBlendOut = !bHoldLastPose;
+	Montage->RefreshCacheData();
+	Montage->PostEditChange();
+	Montage->MarkPackageDirty();
+	return true;
+#else
+	return false;
+#endif
+}
