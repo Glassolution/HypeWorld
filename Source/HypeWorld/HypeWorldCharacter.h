@@ -626,6 +626,8 @@ protected:
 	bool CanStartSuperJump() const;
 	/** Para de segurar/carregar o super pulo sem pular */
 	void CancelSuperJumpCharge();
+	/** Espaço apertado agora (jogador local) */
+	bool bSpaceHeld = false;
 
 	UPROPERTY(Replicated)
 	int32 FightingStyleIndex = 0;

@@ -227,24 +227,25 @@ void AHypeWorldCharacter::DoLook(float Yaw, float Pitch)
 
 void AHypeWorldCharacter::DoJumpStart()
 {
-	// No meio do combo (golpeando ou logo depois), no chão: Espaço = lançador (joga o adversário para cima e sobe junto)
-	if (CanAct() && GetCharacterMovement()->IsMovingOnGround() && IsInComboContext())
+	bSpaceHeld = true;
+	// Modo de batalha, no chão: Espaço não pula. S (para trás em relação à câmera) + Espaço = mortal para trás;
+	// senão = lançador (joga o adversário para cima e sobe junto), também no meio do combo (entra no lugar do próximo golpe)
+	if (IsInBattleMode() && GetCharacterMovement()->IsMovingOnGround())
 	{
+		if (CanAct() && !IsAttacking() && GetController())
+		{
+			const FVector Accel = GetCharacterMovement()->GetCurrentAcceleration().GetSafeNormal2D();
+			const FVector CamFwd = GetControlRotation().Vector().GetSafeNormal2D();
+			if (!Accel.IsNearlyZero() && FVector::DotProduct(Accel, CamFwd) < -0.5f)
+			{
+				DoBackflipJump();
+				return;
+			}
+		}
 		const UNinjaFightingStyle* Style = GetFightingStyle();
 		if (Style && Style->Launchers.Num() > 0)
 		{
 			StartAttack(ENinjaAttackInput::Launcher);
-			return;
-		}
-	}
-	// Modo de batalha + S (para trás em relação à câmera) + Espaço: super pulo para cima e para trás com mortal
-	if (CanAct() && IsInBattleMode() && GetCharacterMovement()->IsMovingOnGround() && !IsAttacking() && GetController())
-	{
-		const FVector Accel = GetCharacterMovement()->GetCurrentAcceleration().GetSafeNormal2D();
-		const FVector CamFwd = GetControlRotation().Vector().GetSafeNormal2D();
-		if (!Accel.IsNearlyZero() && FVector::DotProduct(Accel, CamFwd) < -0.5f)
-		{
-			DoBackflipJump();
 			return;
 		}
 	}
@@ -260,6 +261,7 @@ void AHypeWorldCharacter::DoJumpStart()
 
 void AHypeWorldCharacter::DoJumpEnd()
 {
+	bSpaceHeld = false;
 	if (bJumpKeyHeld)
 	{
 		bJumpKeyHeld = false;
@@ -1011,20 +1013,23 @@ void AHypeWorldCharacter::StartAttack(ENinjaAttackInput Input)
 	{
 		return;   // menu de combate aberto: o clique é do menu
 	}
-	// Segurando Espaço no chão (com a infusão, o Espaço segurado ainda não pulou) + ataque = lançador: começa o combo aéreo.
-	// O super pulo que estava carregando é cancelado (soltar o Espaço depois não pula)
-	if (Input == ENinjaAttackInput::Light && bJumpKeyHeld && GetCharacterMovement()->IsMovingOnGround())
+	// Modo de batalha, no chão, segurando Espaço + ataque = lançador (começa o combo aéreo)
+	if (Input == ENinjaAttackInput::Light && bSpaceHeld && IsInBattleMode() && GetCharacterMovement()->IsMovingOnGround())
 	{
 		const UNinjaFightingStyle* Style = GetFightingStyle();
 		if (Style && Style->Launchers.Num() > 0)
 		{
-			CancelSuperJumpCharge();
 			Input = ENinjaAttackInput::Launcher;
 		}
 	}
 	if (IsAttacking() && !bComboWindowOpen)
 	{
-		// No meio do golpe: guarda o clique; ele vale quando a janela do próximo golpe abrir (CheckCombo)
+		// No meio do golpe: guarda o clique; ele vale quando a janela do próximo golpe abrir (CheckCombo).
+		// Lançador guardado tem prioridade: cliques depois dele não o apagam
+		if (BufferedInput == ENinjaAttackInput::Launcher && Input != ENinjaAttackInput::Launcher)
+		{
+			return;
+		}
 		BufferedInput = Input;
 		CachedAttackInputTime = GetWorld()->GetTimeSeconds();
 		return;
