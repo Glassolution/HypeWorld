@@ -40,6 +40,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Corrida")
 	float RunStrafeSpeed = 380.f;
 
+	/** Trotando para trás (de frente para a câmera): não existe corrida de costas, é um andar de costas acelerado */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Corrida")
+	float RunBackSpeed = 220.f;
+
 	/** Até que ângulo da câmera a corrida é feita de frente para a câmera (strafe); acima disso o corpo vira e corre. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Corrida")
 	float StrafeMaxAngle = 112.f;

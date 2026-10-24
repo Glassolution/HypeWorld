@@ -35,7 +35,9 @@ float UNinjaMovementComponent::GetMaxSpeed() const
 	if (IsStrafeRunning())
 	{
 		const float Side = GetSidewaysAmount();
-		return FMath::Lerp(RunSpeed, RunStrafeSpeed, Side);
+		const FVector Facing = UpdatedComponent ? ProjectToGravityFloor(UpdatedComponent->GetForwardVector()).GetSafeNormal() : FVector::ForwardVector;
+		const float Back = FMath::Clamp(-FVector::DotProduct(Facing, ProjectToGravityFloor(Acceleration).GetSafeNormal()), 0.f, 1.f);
+		return FMath::Lerp(FMath::Lerp(RunSpeed, RunStrafeSpeed, Side), RunBackSpeed, Back);
 	}
 
 	// Andando: de costas para a câmera (frente/lado/costas); de costas é mais devagar

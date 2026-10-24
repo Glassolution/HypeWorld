@@ -662,11 +662,16 @@ void AHypeWorldCharacter::UpdateRunAnimRate()
 				break;
 			}
 		}
-		// Correndo de lado: a velocidade natural muda com a direção (strafe esquerda/direita)
-		const FVector VelDir = GetVelocity().GetSafeNormal2D();
-		const float Side = FVector::CrossProduct(GetActorForwardVector().GetSafeNormal2D(), VelDir).Z;   // + direita, - esquerda
-		const float SideNatural = Side >= 0.f ? RunStrafeRightNatural : RunStrafeLeftNatural;
-		Natural = FMath::Lerp(Natural, FMath::Min(Natural, SideNatural), FMath::Abs(Side));
+		// De lado/de costas (corpo de frente para a câmera): cada direção tem a sua animação, com passo de tamanho diferente.
+		// A velocidade natural é a mistura das direções, com o mesmo peso que o blend space dá a cada uma.
+		const FVector VelDir = GetCharacterMovement()->ProjectToGravityFloor(GetVelocity()).GetSafeNormal();
+		const FVector Facing = GetCharacterMovement()->ProjectToGravityFloor(GetActorForwardVector()).GetSafeNormal();
+		const float Fwd = FVector::DotProduct(Facing, VelDir);
+		const float Side = FVector::DotProduct(FVector::CrossProduct(Facing, VelDir), -GetCharacterMovement()->GetGravityDirection());   // + direita, - esquerda
+		const bool bRunningSide = Speed >= StrafeRunMinSpeed;
+		const float SideNatural = bRunningSide ? (Side >= 0.f ? RunStrafeRightNatural : RunStrafeLeftNatural) : WalkStrafeNatural;
+		const float WFwd = FMath::Max(0.f, Fwd), WBack = FMath::Max(0.f, -Fwd), WSide = FMath::Abs(Side);
+		Natural = (WFwd * Natural + WSide * SideNatural + WBack * WalkBackNatural) / FMath::Max(WFwd + WSide + WBack, 0.01f);
 		Rate = FMath::Clamp(Speed / FMath::Max(1.f, Natural), 1.f, FMath::Max(1.f, MaxRunAnimRate));
 	}
 	GetMesh()->GlobalAnimRateScale = FMath::FInterpTo(GetMesh()->GlobalAnimRateScale, Rate, GetWorld()->GetDeltaSeconds(), 10.f);
@@ -687,7 +692,9 @@ void AHypeWorldCharacter::UpdateCameraFollow(float DeltaSeconds)
 	const FVector Input2D = NinjaMovement->GetCurrentAcceleration().GetSafeNormal2D();
 	const bool bSidewaysInput = !Input2D.IsNearlyZero() && FMath::Abs(FMath::FindDeltaAngleDegrees(PC->GetControlRotation().Yaw, Input2D.Rotation().Yaw)) > 60.f;
 	const bool bTowardCamera = FMath::Abs(FMath::FindDeltaAngleDegrees(PC->GetControlRotation().Yaw, Velocity2D.Rotation().Yaw)) > 100.f;
-	const bool bFast = Velocity2D.Size() > CameraFollowMinSpeed && !NinjaMovement->IsWallRunning() && !NinjaMovement->IsStrafeRunning() && !bTowardCamera && !bSidewaysInput;
+	// Corrida ninja: o corpo vira para onde corre e a câmera SEMPRE volta para as costas (A/D fazem curva; S dá a volta)
+	const bool bSprintFollow = NinjaMovement->IsSprinting() && Velocity2D.Size() > CameraFollowMinSpeed && !NinjaMovement->IsWallRunning();
+	const bool bFast = bSprintFollow || (Velocity2D.Size() > CameraFollowMinSpeed && !NinjaMovement->IsWallRunning() && !NinjaMovement->IsStrafeRunning() && !NinjaMovement->IsFocusing() && !bTowardCamera && !bSidewaysInput);
 	const bool bMouseIdle = GetWorld()->GetTimeSeconds() - LastLookInputTime > CameraFollowDelay;
 	// Golpeando (e logo depois): a câmera é só do jogador — o avanço do golpe não pode girá-la (pareceria mira travada)
 	const bool bFighting = IsAttacking() || GetWorld()->GetTimeSeconds() - LastAttackEndTime < 0.6f;
@@ -699,7 +706,8 @@ void AHypeWorldCharacter::UpdateCameraFollow(float DeltaSeconds)
 	// Gira só o yaw da câmera em direção à direção da corrida, mais forte quanto mais rápido
 	FRotator Control = PC->GetControlRotation();
 	const float SpeedFactor = FMath::Clamp(Velocity2D.Size() / 1200.f, 0.3f, 1.f);
-	Control.Yaw = FMath::FInterpTo(Control.Yaw, Control.Yaw + FMath::FindDeltaAngleDegrees(Control.Yaw, Velocity2D.Rotation().Yaw), DeltaSeconds, CameraFollowSpeed * SpeedFactor);
+	const float TargetYaw = bSprintFollow ? GetActorRotation().Yaw : Velocity2D.Rotation().Yaw;   // corrida ninja: atrás do corpo
+	Control.Yaw = FMath::FInterpTo(Control.Yaw, Control.Yaw + FMath::FindDeltaAngleDegrees(Control.Yaw, TargetYaw), DeltaSeconds, CameraFollowSpeed * SpeedFactor);
 	PC->SetControlRotation(Control);
 }
 

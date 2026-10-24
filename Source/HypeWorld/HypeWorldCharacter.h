@@ -215,6 +215,16 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
 	float RunAnimMinSpeed = 300.f;
 
+	/** Velocidade natural do passo lateral e do andar de costas (o corpo fica de frente para a câmera andando) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
+	float WalkStrafeNatural = 164.f;
+	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
+	float WalkBackNatural = 107.f;
+
+	/** Abaixo desta velocidade, de lado/de costas conta como andar (acima, corrida lateral) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
+	float StrafeRunMinSpeed = 250.f;
+
 	/** Quanto a animação de corrida pode ser acelerada no máximo (2,7x = corrida de 4,5 m/s chega a ~12 m/s) */
 	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
 	float MaxRunAnimRate = 2.7f;
