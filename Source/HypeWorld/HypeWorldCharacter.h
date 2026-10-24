@@ -21,6 +21,7 @@ class UAnimMontage;
 class UAbilitySystemComponent;
 class UNinjaAttributeSet;
 class UNinjaChakraAuraComponent;
+class UNinjaChakraFeetComponent;
 class UGameplayAbility;
 class UMaterialInterface;
 struct FInputActionValue;
@@ -55,6 +56,10 @@ class AHypeWorldCharacter : public ACharacter, public IAbilitySystemInterface, p
 	/** Aura de chakra (aparece ao carregar) */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	UNinjaChakraAuraComponent* ChakraAura;
+
+	/** Chamas de chakra nos pés (Infusão de Chakra nos pés ligada) */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
+	UNinjaChakraFeetComponent* ChakraFeetFx;
 	
 protected:
 
@@ -106,6 +111,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Input")
 	UInputAction* ChakraFeetAction;
 
+	/** Alt: liga/desliga o andar (o padrão é trotar) */
+	UPROPERTY(EditAnywhere, Category="Input")
+	UInputAction* WalkToggleAction;
+
 	/** Animação do dash (usada quando DashVariants não tem nada para a direção) */
 	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
 	UAnimMontage* DashMontage;
@@ -113,6 +122,13 @@ protected:
 	/** Dashes por direção em relação à câmera (frente, trás, esquerda, direita, no ar), com variações que se alternam */
 	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
 	FNinjaDashSet DashVariants;
+
+	/** Saindo do dash andando/correndo: quanto tempo (segundos de verdade) a animação do dash leva para dar lugar à locomoção */
+	UPROPERTY(EditAnywhere, Category="Ninja|Animação", meta=(ClampMin=0.05))
+	float DashExitBlendTime = 0.35f;
+
+	/** Some com a montagem do dash suave, emendando o voo na aterrissagem (nunca no Loop, que é outra animação) */
+	void BlendOutDashMontage(UAnimMontage* Montage);
 
 	/** Animação do pulo de parede */
 	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
@@ -161,6 +177,10 @@ protected:
 	/** Correndo rápido, A/D viram em arco: no máximo este ângulo em relação à direção atual (graus) */
 	UPROPERTY(EditAnywhere, Category="Ninja|Movimento")
 	float SprintSteerAngle = 35.f;
+
+	/** W duas vezes seguidas liga a corrida ninja: tempo máximo entre os dois toques (segundos) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Movimento")
+	float DoubleTapSprintWindow = 0.3f;
 
 	/** Rapidez de giro do corpo correndo rápido (graus/s): menor = curva mais aberta */
 	UPROPERTY(EditAnywhere, Category="Ninja|Movimento")
@@ -417,11 +437,18 @@ public:
 
 	/** Modo de batalha + S + Espaço: super pulo para cima e para trás com mortal (para atacar/soltar jutsus do ar) */
 	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Aéreo")
-	float BackflipUpSpeed = 1500.f;
+	float BackflipUpSpeed = 1300.f;
 	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Aéreo")
-	float BackflipBackSpeed = 280.f;   // sem frenagem no ar: ~4 m para trás
+	float BackflipBackSpeed = 240.f;   // sem frenagem no ar: ~8 m para trás
 	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Aéreo")
 	UAnimMontage* BackflipMontage;
+	/** Modo de batalha, no chão: segurar Espaço por isto (s) = lançador (combo aéreo); toque rápido = pulo normal */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Aéreo")
+	float LauncherHoldTime = 0.2f;
+	/** Gravidade do mortal (× a do personagem): X = subindo, Y = flutuando no topo/descendo, Z = queda máxima (cm/s).
+	 *  Pouca gravidade no topo = fica "levitando" no alto para atacar ou se reposicionar */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Aéreo")
+	FVector BackflipGravity = FVector(0.55f, 0.15f, 550.f);
 
 	/** Golpeando: passo automático para a frente no começo de cada golpe (s) — as animações do pack não andam sozinhas */
 	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
@@ -496,9 +523,19 @@ public:
 
 	/** Velocidade para a frente e para cima com a barra vazia (X) e cheia (Y), em cm/s */
 	UPROPERTY(EditAnywhere, Category="Ninja|Infusão")
-	FVector2D SuperJumpForwardSpeed = FVector2D(700.f, 1900.f);
+	FVector2D SuperJumpForwardSpeed = FVector2D(700.f, 1300.f);
 	UPROPERTY(EditAnywhere, Category="Ninja|Infusão")
-	FVector2D SuperJumpUpSpeed = FVector2D(1100.f, 2000.f);
+	FVector2D SuperJumpUpSpeed = FVector2D(800.f, 1300.f);
+	/** Mirando para o céu: velocidade só para cima (vazia X, cheia Y). Entre olhar reto e para cima mistura os dois */
+	UPROPERTY(EditAnywhere, Category="Ninja|Infusão")
+	FVector2D SuperJumpVerticalSpeed = FVector2D(1200.f, 1900.f);
+	/** Inclinação da câmera (graus) em que o salto começa a virar vertical (X) e fica totalmente vertical (Y) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Infusão")
+	FVector2D SuperJumpVerticalPitch = FVector2D(10.f, 55.f);
+	/** Gravidade do super pulo (× a do personagem): X = subindo, Y = no topo/descendo, Z = queda máxima (cm/s).
+	 *  Igual em X e Y = arco de catapulta "no espaço": sai empurrado para a frente e cai longe, sem frear */
+	UPROPERTY(EditAnywhere, Category="Ninja|Infusão")
+	FVector SuperJumpGravity = FVector(0.35f, 0.35f, 900.f);
 
 	/** Agachado carregando (início + loop) e o salto (impulso → voo → descida) */
 	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
@@ -632,6 +669,12 @@ protected:
 	void CancelSuperJumpCharge();
 	/** Espaço apertado agora (jogador local) */
 	bool bSpaceHeld = false;
+	/** Modo de batalha: Espaço apertado, esperando para saber se é toque (pulo) ou segurar (lançador) */
+	bool bLauncherHoldPending = false;
+	float LauncherHoldElapsed = 0.f;
+	void UpdateLauncherHold(float DeltaSeconds);
+	/** Pulo normal de um toque rápido (o "soltar" vem um instante depois, senão o pulo nem começa) */
+	void TapJump();
 
 	UPROPERTY(Replicated)
 	int32 FightingStyleIndex = 0;
@@ -702,6 +745,11 @@ protected:
 	void UpdateAutoRun(float DeltaSeconds);
 	float AutoRunStopTime = 0.f;
 
+	/** W duas vezes = corrida ninja (o W chega como eixo: um toque novo = W apertado depois de um quadro sem ele) */
+	void CheckForwardDoubleTap(float Forward);
+	uint64 LastForwardFrame = 0;
+	float LastForwardTapTime = -100.f;
+
 	UFUNCTION()
 	void OnRep_ChargingChakra();
 
@@ -743,11 +791,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Input")
 	virtual void DoJumpEnd();
 
-	/** Shift (clique): andar -> trote -> corrida ninja -> andar (corrida automática, não precisa segurar) */
+	/** Shift (clique): trote <-> corrida ninja (o trote é o padrão; não precisa segurar) */
 	UFUNCTION(BlueprintCallable, Category="Input")
 	virtual void DoSprintStart();
 
-	/** Volta a andar (desliga a corrida automática) */
+	/** Alt (clique): andar <-> trote */
+	UFUNCTION(BlueprintCallable, Category="Input")
+	virtual void DoWalkToggle();
+
+	/** Sai da corrida ninja e volta ao trote */
 	UFUNCTION(BlueprintCallable, Category="Input")
 	virtual void DoSprintEnd();
 

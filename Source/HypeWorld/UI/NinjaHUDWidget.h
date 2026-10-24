@@ -8,6 +8,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "NinjaJutsuSlotWidget.h"
 #include "NinjaHUDWidget.generated.h"
 
 class UCanvasPanel;
@@ -29,7 +30,7 @@ public:
 	UPROPERTY(EditAnywhere, Category="HUD|Imagens")
 	UTexture2D* PortraitTexture = nullptr;
 
-	/** Ícones dos jutsus nos slots (recortados em círculo); slots sem ícone ficam vazios. */
+	/** Ícones antigos dos jutsus (dos slots de antes da arte do Felipe; não usados pelos slots atuais) */
 	UPROPERTY(EditAnywhere, Category="HUD|Imagens")
 	TArray<UTexture2D*> AbilityIcons;
 
@@ -42,12 +43,17 @@ public:
 	UPROPERTY(EditAnywhere, Category="HUD|Bloco de vida")
 	UObject* HudFont = nullptr;
 
+	/** Nome no bloco de vida. Vazio = nome do jogador na rede (no Mac, o nome do computador). Até existir o criador de
+	 *  personagem, é o mesmo para todos os jogadores */
+	UPROPERTY(EditAnywhere, Category="HUD|Bloco de vida")
+	FString DisplayName;
+
 	/** O bloco de vida usa as medidas da imagem do Felipe (px da imagem normal); LifeBlockScale = px de tela (1920x1080) por px
 	 *  da imagem. Posição = canto de baixo à esquerda do bloco, a partir do canto de baixo à esquerda da tela */
 	UPROPERTY(EditAnywhere, Category="HUD|Bloco de vida")
 	FVector2D LifeBlockPosition = FVector2D(24.f, -22.f);
 	UPROPERTY(EditAnywhere, Category="HUD|Bloco de vida")
-	float LifeBlockScale = 0.245f;
+	float LifeBlockScale = 0.18f;
 
 	/** Peças recortadas das imagens do Felipe (Tools/hud/recortar_bloco_vida.py): base (retrato, anel sem o arco, caixa de voz),
 	 *  selo de nível, barras cheia/vazia (vida; chakra cinza fora da batalha e azul na batalha), moeda e os 2 ícones da batalha */
@@ -79,11 +85,39 @@ public:
 
 	/** Quantos slots de jutsu a barra tem */
 	UPROPERTY(EditAnywhere, Category="HUD|Jutsus")
-	int32 JutsuSlotCount = 5;
+	int32 JutsuSlotCount = 6;
 
-	/** Quanto os slots descem fora do modo de batalha (px; o slot tem 62 — sobra só a pontinha) */
+	/** O jutsu de cada slot (arte recortada do PNG do Felipe, cor temática, custo de chakra). Vazio = slots vazios */
 	UPROPERTY(EditAnywhere, Category="HUD|Jutsus")
-	float JutsuHiddenOffset = 78.f;
+	TArray<FNinjaJutsuSlotData> JutsuSlotData;
+
+	/** Diâmetro do círculo da arte do slot (px em 1080p; a escala de DPI da interface ajusta outras resoluções; a moldura
+	 *  e a etiqueta passam dele), espaço a mais entre os centros (centro a centro = Size + Gap) e margem de baixo (fração da
+	 *  altura da tela, até a ponta da etiqueta) */
+	UPROPERTY(EditAnywhere, Category="HUD|Jutsus")
+	float JutsuSlotSize = 50.f;
+	UPROPERTY(EditAnywhere, Category="HUD|Jutsus")
+	float JutsuSlotGap = 24.f;
+	UPROPERTY(EditAnywhere, Category="HUD|Jutsus")
+	float JutsuBottomMargin = 0.04f;
+
+	/** Estados dos slots (ligar quando os jutsus existirem) */
+	UFUNCTION(BlueprintCallable, Category="HUD|Jutsus") void SetSelectedJutsu(int32 Index);
+	UFUNCTION(BlueprintCallable, Category="HUD|Jutsus") void SetJutsuCooldown(int32 Index, float Remaining, float Duration);
+	UFUNCTION(BlueprintCallable, Category="HUD|Jutsus") void SetJutsuHasChakra(int32 Index, bool bHasChakra);
+	UFUNCTION(BlueprintCallable, Category="HUD|Jutsus") void SetJutsuNumber(int32 Index, int32 Number);
+	UFUNCTION(BlueprintCallable, Category="HUD|Jutsus") void PlayJutsuUsed(int32 Index);
+
+	/** Quanto os slots descem fora do modo de batalha (px; sobra só a pontinha) */
+	UPROPERTY(EditAnywhere, Category="HUD|Jutsus")
+	float JutsuHiddenOffset = 110.f;
+
+	/** Barrinha vertical do super pulo (referência do Felipe): tamanho (px) e posição em relação à cabeça do personagem
+	 *  na tela (px; + = direita / baixo) */
+	UPROPERTY(EditAnywhere, Category="HUD")
+	FVector2D SuperJumpBarSize = FVector2D(6.f, 70.f);
+	UPROPERTY(EditAnywhere, Category="HUD")
+	FVector2D SuperJumpBarOffset = FVector2D(80.f, 0.f);
 
 	UFUNCTION(BlueprintCallable, Category="HUD")
 	void SetHealth(float Current, float Max);
@@ -135,11 +169,14 @@ private:
 	float K() const { return LifeBlockScale; }
 	UPROPERTY() TObjectPtr<UTextBlock> ComboText;
 	UPROPERTY() TObjectPtr<UProgressBar> SuperJumpBar;
-	UPROPERTY() TObjectPtr<UTextBlock> SuperJumpText;
+	UPROPERTY() TObjectPtr<UCanvasPanelSlot> SuperJumpSlot;
+	UPROPERTY() TObjectPtr<UImage> SuperJumpGlow;
+	UPROPERTY() TObjectPtr<UCanvasPanelSlot> SuperJumpGlowSlot;
 	UPROPERTY() TArray<TObjectPtr<UImage>> SubstitutionPips;
 
 	/** Slots de jutsu (e as cargas da substituição): sobem e descem juntos com o modo de batalha */
 	UPROPERTY() TArray<TObjectPtr<UCanvasPanelSlot>> JutsuSlots;
+	UPROPERTY() TArray<TObjectPtr<UNinjaJutsuSlotWidget>> JutsuSlotWidgets;
 	TArray<FVector2D> JutsuSlotBase;
 	float JutsuOffset = 78.f;
 

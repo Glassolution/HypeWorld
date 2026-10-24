@@ -20,6 +20,7 @@
 #include "NinjaEffects.h"
 #include "NinjaAbilities.h"
 #include "NinjaChakraAuraComponent.h"
+#include "NinjaChakraFeetComponent.h"
 #include "NinjaDamageNumber.h"
 #include "Net/UnrealNetwork.h"
 #include "Engine/OverlapResult.h"
@@ -93,6 +94,8 @@ AHypeWorldCharacter::AHypeWorldCharacter(const FObjectInitializer& ObjectInitial
 
 	ChakraAura = CreateDefaultSubobject<UNinjaChakraAuraComponent>(TEXT("ChakraAura"));
 	ChakraAura->SetupAttachment(RootComponent);
+	ChakraFeetFx = CreateDefaultSubobject<UNinjaChakraFeetComponent>(TEXT("ChakraFeetFx"));
+	ChakraFeetFx->SetupAttachment(RootComponent);
 
 	ComboAbility = UGA_NinjaMeleeCombo::StaticClass();
 	ChargeChakraAbility = UGA_NinjaChargeChakra::StaticClass();
@@ -132,6 +135,10 @@ void AHypeWorldCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 		{
 			EnhancedInputComponent->BindAction(CombatMenuAction, ETriggerEvent::Started, this, &AHypeWorldCharacter::DoCombatMenu);
 		}
+		if (WalkToggleAction)
+		{
+			EnhancedInputComponent->BindAction(WalkToggleAction, ETriggerEvent::Started, this, &AHypeWorldCharacter::DoWalkToggle);
+		}
 		if (ChakraFeetAction)
 		{
 			EnhancedInputComponent->BindAction(ChakraFeetAction, ETriggerEvent::Started, this, &AHypeWorldCharacter::DoToggleChakraFeet);
@@ -147,6 +154,8 @@ void AHypeWorldCharacter::Move(const FInputActionValue& Value)
 {
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
+
+	CheckForwardDoubleTap(MovementVector.Y);
 
 	// route the input
 	DoMove(MovementVector.X, MovementVector.Y);
@@ -229,8 +238,8 @@ void AHypeWorldCharacter::DoLook(float Yaw, float Pitch)
 void AHypeWorldCharacter::DoJumpStart()
 {
 	bSpaceHeld = true;
-	// Modo de batalha, no chão: Espaço não pula. S (para trás em relação à câmera) + Espaço = mortal para trás;
-	// senão = lançador (joga o adversário para cima e sobe junto), também no meio do combo (entra no lugar do próximo golpe)
+	// Modo de batalha, no chão: S (para trás em relação à câmera) + Espaço = mortal para trás; toque rápido = pulo normal;
+	// segurar (LauncherHoldTime) = lançador (joga o adversário para cima e sobe junto), também no meio do combo
 	if (IsInBattleMode() && GetCharacterMovement()->IsMovingOnGround())
 	{
 		if (CanAct() && !IsAttacking() && GetController())
@@ -246,11 +255,12 @@ void AHypeWorldCharacter::DoJumpStart()
 		const UNinjaFightingStyle* Style = GetFightingStyle();
 		if (Style && Style->Launchers.Num() > 0)
 		{
-			StartAttack(ENinjaAttackInput::Launcher);
+			bLauncherHoldPending = true;   // decide no UpdateLauncherHold (segurou) ou no DoJumpEnd (soltou antes)
+			LauncherHoldElapsed = 0.f;
 			return;
 		}
 	}
-	// Infusão de chakra nos pés, no chão: segurar carrega o super pulo; um toque rápido ainda é o pulo normal (decidido ao soltar)
+	// No chão (fora do modo de batalha): segurar carrega o super pulo; um toque rápido ainda é o pulo normal (decidido ao soltar)
 	if (CanStartSuperJump())
 	{
 		bJumpKeyHeld = true;
@@ -263,6 +273,16 @@ void AHypeWorldCharacter::DoJumpStart()
 void AHypeWorldCharacter::DoJumpEnd()
 {
 	bSpaceHeld = false;
+	if (bLauncherHoldPending)
+	{
+		// Modo de batalha: soltou antes de virar lançador = pulo normal (golpeando, o pulo não sai — igual a antes)
+		bLauncherHoldPending = false;
+		if (!IsAttacking())
+		{
+			TapJump();
+		}
+		return;
+	}
 	if (bJumpKeyHeld)
 	{
 		bJumpKeyHeld = false;
@@ -272,35 +292,92 @@ void AHypeWorldCharacter::DoJumpEnd()
 		}
 		else
 		{
-			// Toque rápido: pulo normal (o "soltar" vem um instante depois, senão o pulo nem começa)
-			Jump();
-			FTimerHandle Handle;
-			GetWorldTimerManager().SetTimer(Handle, this, &ACharacter::StopJumping, 0.1f, false);
+			TapJump();
 		}
 		return;
 	}
 	StopJumping();
 }
 
+void AHypeWorldCharacter::TapJump()
+{
+	Jump();
+	FTimerHandle Handle;
+	GetWorldTimerManager().SetTimer(Handle, this, &ACharacter::StopJumping, 0.1f, false);
+}
+
+void AHypeWorldCharacter::UpdateLauncherHold(float DeltaSeconds)
+{
+	if (!bLauncherHoldPending)
+	{
+		return;
+	}
+	// Saiu do chão ou do modo de batalha segurando: desiste (sem pular)
+	if (!GetCharacterMovement()->IsMovingOnGround() || !IsInBattleMode())
+	{
+		bLauncherHoldPending = false;
+		return;
+	}
+	LauncherHoldElapsed += DeltaSeconds;
+	if (LauncherHoldElapsed >= LauncherHoldTime)
+	{
+		bLauncherHoldPending = false;
+		StartAttack(ENinjaAttackInput::Launcher);
+	}
+}
+
 void AHypeWorldCharacter::DoSprintStart()
 {
-	// Corrida automática (não precisa segurar): cada clique no Shift troca andar -> trote -> corrida ninja -> andar.
-	// Parando, a corrida ninja volta para o trote; o trote continua (UpdateAutoRun).
+	// O padrão é trotar (sem segurar nada). Shift troca trote <-> corrida ninja; andando, o Shift já vai para a corrida ninja.
+	// Parando, a corrida ninja volta para o trote (UpdateAutoRun).
 	if (UNinjaMovementComponent* NinjaMovement = GetNinjaMovement())
 	{
 		if (NinjaMovement->WantsToSprint())
 		{
 			DoSprintEnd();
 		}
-		else if (NinjaMovement->WantsToRun())
-		{
-			NinjaMovement->SetSprinting(true);
-		}
 		else
 		{
 			NinjaMovement->SetRunning(true);
+			NinjaMovement->SetSprinting(true);
 		}
 	}
+}
+
+void AHypeWorldCharacter::DoWalkToggle()
+{
+	if (UNinjaMovementComponent* NinjaMovement = GetNinjaMovement())
+	{
+		const bool bWalk = NinjaMovement->WantsToRun() || NinjaMovement->WantsToSprint();
+		NinjaMovement->SetSprinting(false);
+		NinjaMovement->SetRunning(!bWalk);
+	}
+}
+
+void AHypeWorldCharacter::CheckForwardDoubleTap(float Forward)
+{
+	if (Forward < 0.5f)
+	{
+		return;
+	}
+	// Move chega todo quadro enquanto alguma direção está apertada: se no quadro anterior o W não estava, é um toque novo
+	const bool bNewTap = GFrameCounter > LastForwardFrame + 1;
+	LastForwardFrame = GFrameCounter;
+	if (!bNewTap)
+	{
+		return;
+	}
+	const float Now = GetWorld()->GetTimeSeconds();
+	UNinjaMovementComponent* NinjaMovement = GetNinjaMovement();
+	if (NinjaMovement && Now - LastForwardTapTime <= DoubleTapSprintWindow && !NinjaMovement->WantsToSprint())
+	{
+		// Mesmo estado do Shift na corrida ninja (trote + corrida ninja ligados); parar volta ao trote (UpdateAutoRun)
+		NinjaMovement->SetRunning(true);
+		NinjaMovement->SetSprinting(true);
+		LastForwardTapTime = -100.f;   // um terceiro toque não conta como outro duplo
+		return;
+	}
+	LastForwardTapTime = Now;
 }
 
 void AHypeWorldCharacter::UpdateAutoRun(float DeltaSeconds)
@@ -327,8 +404,8 @@ void AHypeWorldCharacter::DoSprintEnd()
 {
 	if (UNinjaMovementComponent* NinjaMovement = GetNinjaMovement())
 	{
-		NinjaMovement->SetRunning(false);
 		NinjaMovement->SetSprinting(false);
+		NinjaMovement->SetRunning(true);
 	}
 }
 
@@ -391,6 +468,7 @@ void AHypeWorldCharacter::Tick(float DeltaSeconds)
 	UpdateIdleBreak(DeltaSeconds);
 	UpdateDoubleJump();
 	UpdateSuperJump(DeltaSeconds);
+	UpdateLauncherHold(DeltaSeconds);
 	UpdateAutoRun(DeltaSeconds);
 	UpdateTurnInPlace(DeltaSeconds);
 	UpdateCameraFollow(DeltaSeconds);
@@ -398,10 +476,17 @@ void AHypeWorldCharacter::Tick(float DeltaSeconds)
 	UpdateBattleMode();
 	UpdateCombatState(DeltaSeconds);
 
-	// Aura: no máximo de chakra (carregando) vira a explosão — usa os atributos replicados, então todos veem igual
+	// Aura: nível de carga e "no máximo" pelos atributos replicados, então todos veem igual
 	if (ChakraAura && Attributes)
 	{
 		ChakraAura->SetAuraFull(bChargingChakra && Attributes->GetChakra() >= Attributes->GetMaxChakra() - 0.5f);
+		ChakraAura->SetChargeLevel(Attributes->GetChakra() / FMath::Max(Attributes->GetMaxChakra(), 1.f));
+	}
+	// Chakra nos pés: mais forte grudado na parede/teto, correndo, e no voo do super pulo
+	if (ChakraFeetFx && GetNinjaMovement())
+	{
+		const UNinjaMovementComponent* Move = GetNinjaMovement();
+		ChakraFeetFx->SetIntensity(Move->IsOnChakraSurface() || Move->bInSuperJump ? 1.f : (Move->IsSprinting() ? 0.85f : 0.6f));
 	}
 }
 
@@ -509,7 +594,7 @@ void AHypeWorldCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, 
 		}
 		else
 		{
-			StopAnimMontage(EndingDash);
+			BlendOutDashMontage(EndingDash);
 		}
 	}
 	// Pousou: o mortal do pulo duplo (que segura a pose de descida) dá lugar ao pouso
@@ -670,6 +755,13 @@ void AHypeWorldCharacter::UpdateRunAnimRate()
 	UNinjaMovementComponent* NinjaMovement = GetNinjaMovement();
 	if (!NinjaMovement)
 	{
+		return;
+	}
+
+	// Dash: a montagem toca no tempo certo (a taxa da corrida/andar acelerava o voo, que passava do ponto e estalava)
+	if (NinjaMovement->IsDashing())
+	{
+		GetMesh()->GlobalAnimRateScale = 1.f;
 		return;
 	}
 
@@ -1026,6 +1118,7 @@ void AHypeWorldCharacter::StartAttack(ENinjaAttackInput Input)
 		if (Style && Style->Launchers.Num() > 0)
 		{
 			Input = ENinjaAttackInput::Launcher;
+			bLauncherHoldPending = false;   // já virou lançador: soltar o Espaço depois não pula
 		}
 	}
 	if (IsAttacking() && !bComboWindowOpen)
@@ -1662,7 +1755,7 @@ void AHypeWorldCharacter::UpdateCombatState(float DeltaSeconds)
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 		if (AnimInstance && AnimInstance->Montage_IsPlaying(ActiveDashMontage) && AnimInstance->Montage_GetCurrentSection(ActiveDashMontage) == FName("End"))
 		{
-			AnimInstance->Montage_Stop(0.25f, ActiveDashMontage);
+			BlendOutDashMontage(ActiveDashMontage);
 		}
 	}
 
@@ -1811,6 +1904,25 @@ UAnimSequenceBase* AHypeWorldCharacter::GetBattleIdlePose() const
 	return Style ? Style->BattleIdle.Get() : nullptr;
 }
 
+void AHypeWorldCharacter::BlendOutDashMontage(UAnimMontage* Montage)
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (!Montage || !AnimInstance || !AnimInstance->Montage_IsPlaying(Montage))
+	{
+		return;
+	}
+	// Enquanto some, a montagem continua tocando: o voo tem que seguir para a aterrissagem (mesma animação, emenda sem salto).
+	// Se seguisse para o Loop (outra animação), a pose trocava de uma vez no meio da transição = o "pulo".
+	static const FName EndSection("End");
+	const FName Current = AnimInstance->Montage_GetCurrentSection(Montage);
+	if (Current != EndSection && Montage->IsValidSectionName(EndSection))
+	{
+		AnimInstance->Montage_SetNextSection(Current, EndSection, Montage);
+	}
+	// O tempo da mistura corre na velocidade da animação (andando ela vai a 2x): compensa para durar DashExitBlendTime de verdade
+	AnimInstance->Montage_Stop(DashExitBlendTime * FMath::Max(GetMesh()->GlobalAnimRateScale, 0.1f), Montage);
+}
+
 UAnimMontage* AHypeWorldCharacter::PickDashMontage(EMovementMode PrevMovementMode)
 {
 	// Direção do dash em relação a para onde o corpo olha (no dash de lado/de costas o corpo fica de frente para a câmera)
@@ -1886,12 +1998,7 @@ void AHypeWorldCharacter::SetPassiveEnabled(ENinjaPassive Passive, bool bEnabled
 	{
 		ServerSetPassiveEnabled(Passive, bEnabled);
 	}
-	if (IsLocallyControlled())
-	{
-		const FVector Head = GetActorLocation() + FVector(0.f, 0.f, GetSimpleCollisionHalfHeight() + 30.f);
-		ANinjaDamageNumber::Spawn(GetWorld(), Head, bEnabled ? TEXT("INFUSÃO DE CHAKRA: LIGADA") : TEXT("INFUSÃO DE CHAKRA: DESLIGADA"),
-			bEnabled ? FLinearColor(0.45f, 0.8f, 1.f) : FLinearColor(0.6f, 0.6f, 0.65f), 24.f);
-	}
+	// Sem texto na tela ao ligar/desligar (pedido do Felipe): o efeito nos pés já mostra
 }
 
 void AHypeWorldCharacter::ServerSetPassiveEnabled_Implementation(ENinjaPassive Passive, bool bEnabled)
@@ -1915,30 +2022,10 @@ void AHypeWorldCharacter::DoToggleChakraFeet()
 
 void AHypeWorldCharacter::UpdateChakraFeetVisual()
 {
-	// Brilho azul nos pés com a infusão ligada (todo mundo vê: vem da passiva replicada)
-	const bool bOn = IsPassiveEnabled(ENinjaPassive::ChakraFeet);
-	if (bOn && ChakraFeetGlow.Num() == 0 && ChakraFeetMaterial)
+	// Chamas de chakra nos pés com a infusão ligada (todo mundo vê: vem da passiva replicada)
+	if (ChakraFeetFx)
 	{
-		UStaticMesh* Sphere = LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Sphere.Sphere"));
-		for (const TCHAR* Foot : { TEXT("foot_l"), TEXT("foot_r") })
-		{
-			UStaticMeshComponent* Glow = NewObject<UStaticMeshComponent>(this);
-			Glow->SetStaticMesh(Sphere);
-			Glow->SetMaterial(0, ChakraFeetMaterial);
-			Glow->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-			Glow->SetCastShadow(false);
-			Glow->SetupAttachment(GetMesh(), FName(Foot));
-			Glow->SetRelativeScale3D(FVector(0.13f, 0.07f, 0.13f));   // esfera de 100 cm -> brilho pequeno no pé
-			Glow->RegisterComponent();
-			ChakraFeetGlow.Add(Glow);
-		}
-	}
-	for (UStaticMeshComponent* Glow : ChakraFeetGlow)
-	{
-		if (Glow)
-		{
-			Glow->SetVisibility(bOn);
-		}
+		ChakraFeetFx->SetFeetActive(IsPassiveEnabled(ENinjaPassive::ChakraFeet));
 	}
 }
 
@@ -1949,7 +2036,8 @@ float AHypeWorldCharacter::GetSurfaceSpeed() const
 
 bool AHypeWorldCharacter::CanStartSuperJump() const
 {
-	return IsPassiveEnabled(ENinjaPassive::ChakraFeet) && GetCharacterMovement()->IsMovingOnGround() && CanAct() && !IsAttacking() && !bChargingChakra;
+	// Pulo carregado vale sempre (fora do modo de batalha); não depende mais da infusão nos pés (pedido do Felipe)
+	return GetCharacterMovement()->IsMovingOnGround() && CanAct() && !IsAttacking() && !bChargingChakra;
 }
 
 void AHypeWorldCharacter::UpdateSuperJump(float DeltaSeconds)
@@ -1958,8 +2046,8 @@ void AHypeWorldCharacter::UpdateSuperJump(float DeltaSeconds)
 	{
 		return;
 	}
-	// Saiu do chão, apanhou ou desligou a infusão: cancela (sem pular)
-	if (!GetCharacterMovement()->IsMovingOnGround() || !CanAct() || !IsPassiveEnabled(ENinjaPassive::ChakraFeet))
+	// Saiu do chão ou apanhou: cancela (sem pular)
+	if (!GetCharacterMovement()->IsMovingOnGround() || !CanAct())
 	{
 		CancelSuperJumpCharge();
 		return;
@@ -1990,7 +2078,12 @@ void AHypeWorldCharacter::ReleaseSuperJump()
 	{
 		Forward = GetActorForwardVector();
 	}
-	const FVector LaunchVelocity = Forward * FMath::Lerp(SuperJumpForwardSpeed.X, SuperJumpForwardSpeed.Y, A) + Up * FMath::Lerp(SuperJumpUpSpeed.X, SuperJumpUpSpeed.Y, A);
+	// Mira: câmera olhando para o céu = salto reto para cima; olhando para a frente/lados = arco para a frente
+	const float Pitch = FMath::RadiansToDegrees(FMath::Asin(FMath::Clamp(FVector::DotProduct(GetControlRotation().Vector(), Up), -1.f, 1.f)));
+	const float Vertical = FMath::SmoothStep((float)SuperJumpVerticalPitch.X, (float)SuperJumpVerticalPitch.Y, Pitch);
+	const float ForwardSpeed = FMath::Lerp(SuperJumpForwardSpeed.X, SuperJumpForwardSpeed.Y, A) * (1.f - Vertical);
+	const float UpSpeed = FMath::Lerp(FMath::Lerp(SuperJumpUpSpeed.X, SuperJumpUpSpeed.Y, A), FMath::Lerp(SuperJumpVerticalSpeed.X, SuperJumpVerticalSpeed.Y, A), Vertical);
+	const FVector LaunchVelocity = Forward * ForwardSpeed + Up * UpSpeed;
 
 	bChargingSuperJump = false;
 	SuperJumpCharge = 0.f;
@@ -2001,7 +2094,7 @@ void AHypeWorldCharacter::ReleaseSuperJump()
 		PlayAnimMontage(SuperJumpLaunchMontage);
 	}
 	GetNinjaMovement()->bInSuperJump = true;
-	GetNinjaMovement()->bFloatJump = true;
+	GetNinjaMovement()->StartFloatJump(SuperJumpGravity.X, SuperJumpGravity.Y, SuperJumpGravity.Z);
 	LaunchCharacter(LaunchVelocity, true, true);
 	if (!HasAuthority())
 	{
@@ -2021,16 +2114,16 @@ void AHypeWorldCharacter::ServerSetChargingSuperJump_Implementation(bool bChargi
 
 void AHypeWorldCharacter::ServerSuperJump_Implementation(FVector_NetQuantize10 LaunchVelocity)
 {
-	// Servidor confere: infusão ligada, e nunca mais forte que a barra cheia
-	if (!IsPassiveEnabled(ENinjaPassive::ChakraFeet) || !CanAct())
+	// Servidor confere: nunca mais forte que a barra cheia
+	if (!CanAct())
 	{
 		return;
 	}
-	const float MaxSpeed = FVector2D(SuperJumpForwardSpeed.Y, SuperJumpUpSpeed.Y).Size() * 1.05f;
+	const float MaxSpeed = FMath::Max(FVector2D(SuperJumpForwardSpeed.Y, SuperJumpUpSpeed.Y).Size(), SuperJumpVerticalSpeed.Y) * 1.05f;
 	bChargingSuperJump = false;
 	OnRep_ChargingSuperJump();
 	GetNinjaMovement()->bInSuperJump = true;
-	GetNinjaMovement()->bFloatJump = true;
+	GetNinjaMovement()->StartFloatJump(SuperJumpGravity.X, SuperJumpGravity.Y, SuperJumpGravity.Z);
 	LaunchCharacter(LaunchVelocity.GetClampedToMaxSize(MaxSpeed), true, true);
 	MulticastSuperJumpLaunch();
 }
@@ -2096,7 +2189,7 @@ void AHypeWorldCharacter::DoBackflipJump()
 	}
 	GetNinjaMovement()->bInSuperJump = true;   // sem frenagem no ar (senão o embalo para trás some)
 	GetNinjaMovement()->bInBackflip = true;
-	GetNinjaMovement()->bFloatJump = true;
+	GetNinjaMovement()->StartFloatJump(BackflipGravity.X, BackflipGravity.Y, BackflipGravity.Z);
 	LaunchCharacter(LaunchVelocity, true, true);
 	if (!HasAuthority())
 	{
@@ -2116,7 +2209,7 @@ void AHypeWorldCharacter::ServerBackflipJump_Implementation(FVector_NetQuantize1
 	}
 	GetNinjaMovement()->bInSuperJump = true;
 	GetNinjaMovement()->bInBackflip = true;
-	GetNinjaMovement()->bFloatJump = true;
+	GetNinjaMovement()->StartFloatJump(BackflipGravity.X, BackflipGravity.Y, BackflipGravity.Z);
 	LaunchCharacter(LaunchVelocity.GetClampedToMaxSize(FVector2D(BackflipBackSpeed, BackflipUpSpeed).Size() * 1.05f), true, true);
 	MulticastBackflip();
 }

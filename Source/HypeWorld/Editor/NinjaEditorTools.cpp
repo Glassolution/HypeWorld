@@ -8,6 +8,19 @@
 #include "AnimNotify_CheckCombo.h"
 #include "Engine/Font.h"
 #include "Engine/FontFace.h"
+#include "Engine/World.h"
+#include "Landscape.h"
+#include "LandscapeInfo.h"
+#include "LandscapeLayerInfoObject.h"
+#include "LandscapeEditTypes.h"
+#include "Materials/MaterialInterface.h"
+#include "UObject/Package.h"
+#include "AssetRegistry/AssetRegistryModule.h"
+#if WITH_EDITOR
+#include "ActorFactories/ActorFactory.h"
+#include "Builders/CubeBuilder.h"
+#include "Engine/BlockingVolume.h"
+#endif
 
 bool UNinjaEditorTools::RebuildBlendSpace(UBlendSpace* BlendSpace)
 {
@@ -220,5 +233,114 @@ bool UNinjaEditorTools::BuildCompositeFont(UFont* Font, const TArray<FName>& Fac
 	return true;
 #else
 	return false;
+#endif
+}
+
+ULandscapeLayerInfoObject* UNinjaEditorTools::CreateLandscapeLayerInfo(const FString& PackagePath, FName LayerName, bool bWeightBlended)
+{
+#if WITH_EDITOR
+	const FString AssetName = FPackageName::GetLongPackageAssetName(PackagePath);
+	if (ULandscapeLayerInfoObject* Existing = LoadObject<ULandscapeLayerInfoObject>(nullptr, *(PackagePath + TEXT(".") + AssetName), nullptr, LOAD_NoWarn | LOAD_Quiet))
+	{
+		return Existing;
+	}
+	UPackage* Package = CreatePackage(*PackagePath);
+	ULandscapeLayerInfoObject* LayerInfo = NewObject<ULandscapeLayerInfoObject>(Package, FName(*AssetName), RF_Public | RF_Standalone | RF_Transactional);
+	LayerInfo->SetLayerName(LayerName, false);
+	LayerInfo->SetBlendMethod(bWeightBlended ? ELandscapeTargetLayerBlendMethod::FinalWeightBlending : ELandscapeTargetLayerBlendMethod::None, false);
+	FAssetRegistryModule::AssetCreated(LayerInfo);
+	Package->MarkPackageDirty();
+	return LayerInfo;
+#else
+	return nullptr;
+#endif
+}
+
+ALandscape* UNinjaEditorTools::CreateLandscape(UObject* WorldContextObject, FVector Location, FVector Scale, int32 ComponentsX, int32 ComponentsY,
+	int32 QuadsPerSection, const TArray<int32>& Heights, UMaterialInterface* Material, const TArray<ULandscapeLayerInfoObject*>& Layers,
+	const TArray<uint8>& Weights)
+{
+#if WITH_EDITOR
+	UWorld* World = GEngine ? GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull) : nullptr;
+	const int32 SizeX = ComponentsX * QuadsPerSection + 1;
+	const int32 SizeY = ComponentsY * QuadsPerSection + 1;
+	const int32 Count = SizeX * SizeY;
+	if (!World || Heights.Num() != Count || Weights.Num() != Count * Layers.Num())
+	{
+		UE_LOG(LogTemp, Error, TEXT("CreateLandscape: dados com tamanho errado (alturas %d, esperado %d; pesos %d, esperado %d)"),
+			Heights.Num(), Count, Weights.Num(), Count * Layers.Num());
+		return nullptr;
+	}
+
+	TArray<uint16> HeightData;
+	HeightData.SetNumUninitialized(Count);
+	for (int32 i = 0; i < Count; ++i)
+	{
+		HeightData[i] = uint16(FMath::Clamp(Heights[i], 0, 65535));
+	}
+	TArray<FLandscapeImportLayerInfo> LayerInfos;
+	for (int32 l = 0; l < Layers.Num(); ++l)
+	{
+		if (!Layers[l])
+		{
+			return nullptr;
+		}
+		FLandscapeImportLayerInfo& Info = LayerInfos.Emplace_GetRef(Layers[l]->GetLayerName());
+		Info.LayerInfo = Layers[l];
+		Info.LayerData.Append(Weights.GetData() + l * Count, Count);
+	}
+	TMap<FGuid, TArray<uint16>> HeightDataPerLayers;
+	TMap<FGuid, TArray<FLandscapeImportLayerInfo>> LayerDataPerLayers;
+	HeightDataPerLayers.Add(FGuid(), MoveTemp(HeightData));
+	LayerDataPerLayers.Add(FGuid(), LayerInfos);
+
+	ALandscape* Landscape = World->SpawnActor<ALandscape>(Location, FRotator::ZeroRotator);
+	Landscape->LandscapeMaterial = Material;
+	Landscape->SetActorRelativeScale3D(Scale);
+	Landscape->Import(FGuid::NewGuid(), 0, 0, SizeX - 1, SizeY - 1, 1, QuadsPerSection, HeightDataPerLayers, TEXT(""), LayerDataPerLayers,
+		ELandscapeImportAlphamapType::Additive, TArrayView<const FLandscapeLayer>());
+
+	ULandscapeInfo* LandscapeInfo = Landscape->GetLandscapeInfo();
+	if (LandscapeInfo)
+	{
+		LandscapeInfo->UpdateLayerInfoMap(Landscape);
+		for (ULandscapeLayerInfoObject* LayerInfo : Layers)
+		{
+			Landscape->AddTargetLayer(LayerInfo->GetLayerName(), FLandscapeTargetLayerSettings(LayerInfo));
+			const int32 Index = LandscapeInfo->GetLayerInfoIndex(LayerInfo->GetLayerName());
+			if (Index != INDEX_NONE)
+			{
+				LandscapeInfo->Layers[Index].LayerInfoObj = LayerInfo;
+			}
+		}
+	}
+	Landscape->PostEditChange();
+	return Landscape;
+#else
+	return nullptr;
+#endif
+}
+
+AActor* UNinjaEditorTools::SpawnBlockingBox(UObject* WorldContextObject, FVector Location, FRotator Rotation, FVector Size)
+{
+#if WITH_EDITOR
+	UWorld* World = GEngine ? GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull) : nullptr;
+	if (!World)
+	{
+		return nullptr;
+	}
+	ABlockingVolume* Volume = World->SpawnActor<ABlockingVolume>(Location, Rotation);
+	if (!Volume)
+	{
+		return nullptr;
+	}
+	UCubeBuilder* Builder = NewObject<UCubeBuilder>();
+	Builder->X = Size.X;
+	Builder->Y = Size.Y;
+	Builder->Z = Size.Z;
+	UActorFactory::CreateBrushForVolumeActor(Volume, Builder);
+	return Volume;
+#else
+	return nullptr;
 #endif
 }

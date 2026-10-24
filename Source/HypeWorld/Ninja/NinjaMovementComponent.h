@@ -101,6 +101,26 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Dash")
 	float DashCooldown = 0.8f;
 
+	/** Sem animação: o dash sai forte e vai assentando — velocidade no início e no fim (× DashSpeed) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Dash")
+	float DashStartBoost = 1.35f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Dash")
+	float DashEndSpeedFraction = 0.85f;
+
+	/** Dash no ar: velocidade que sobra no fim (× DashSpeed) e um pequeno impulso para cima — o embalo continua até pousar */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Dash")
+	float AirDashExitSpeedFraction = 0.75f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Dash")
+	float AirDashExitUpSpeed = 200.f;
+
+	/** Dash no chão: velocidade no fim (× DashSpeed); o atrito do chão vai desacelerando suave a partir dela */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Dash")
+	float GroundDashExitSpeedFraction = 0.45f;
+
+	/** Pousar rápido (embalo do dash/pulo) apertando direção liga a corrida ninja: o movimento continua sem parar */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Dash")
+	bool bLandIntoSprint = true;
+
 	/** Duração real do dash (segue a animação quando houver uma). */
 	float GetDashDuration() const;
 
@@ -135,16 +155,19 @@ public:
 	bool bInSuperJump = false;
 	/** No mortal para trás: o corpo continua de frente para a câmera (não vira para onde a tecla aponta); acaba ao pousar */
 	bool bInBackflip = false;
-	/** Voo planado (super pulo e mortal para trás): sobe normal; perto do topo a gravidade vai caindo até FloatFallGravityScale
-	 *  e a queda não passa de FloatMaxFallSpeed — ele segue para a frente flutuando e desce devagar. Acaba ao pousar */
+	/** Embalo no ar (depois do dash no ar): sem frenagem até pousar */
+	bool bAirMomentum = false;
+	/** Voo planado (super pulo e mortal para trás), com gravidade própria de cada salto (o personagem escolhe):
+	 *  subindo = gravidade × RiseScale; perto do topo vai virando × FallScale; a queda não passa de MaxFallSpeed.
+	 *  Acaba ao pousar */
+	void StartFloatJump(float RiseScale, float FallScale, float MaxFallSpeed);
 	bool bFloatJump = false;
-	UPROPERTY(EditAnywhere, Category="Ninja|Voo planado")
-	float FloatFallGravityScale = 0.3f;
-	UPROPERTY(EditAnywhere, Category="Ninja|Voo planado")
-	float FloatMaxFallSpeed = 600.f;
 	/** Subindo mais devagar que isso (cm/s), a gravidade começa a suavizar (transição para a flutuação, sem tranco no topo) */
 	UPROPERTY(EditAnywhere, Category="Ninja|Voo planado")
 	float FloatBlendSpeed = 500.f;
+	float FloatRiseGravityScale = 1.f;
+	float FloatFallGravityScale = 0.3f;
+	float FloatMaxFallSpeed = 600.f;
 	virtual void ApplyVelocityBraking(float DeltaTime, float Friction, float BrakingDeceleration) override;
 	bool IsDashStrafe() const { return bDashStrafe; }
 	float GetDashFacingYaw() const { return DashFacingYaw; }
@@ -273,13 +296,14 @@ private:
 	bool bWantsToSprint = false;
 	bool bWantsToDash = false;
 	bool bWantsToFocus = false;
-	bool bWantsToRun = false;
+	bool bWantsToRun = true;		// o padrão é trotar; Alt liga/desliga o andar
 
 	// Estado do movimento (também guardado em FSavedMove_Ninja para refazer movimentos após correção do servidor)
 	float DashTimeLeft = 0.f;
 	float DashCooldownLeft = 0.f;
 	FVector DashDirection = FVector::ForwardVector;
 	bool bAirDashUsed = false;
+	float DashEntrySpeed = 0.f;		// velocidade de quando o dash começou (o dash nunca deixa mais lento)
 
 	float WallRunTimeLeft = 0.f;
 	float WallRunCooldownLeft = 0.f;

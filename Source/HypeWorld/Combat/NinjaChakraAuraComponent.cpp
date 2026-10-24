@@ -1,4 +1,4 @@
-// Aura de chakra estilo anime: chama desenhada carregando, explosão de espinhos no máximo.
+// Aura de chakra estilo anime: fogo de energia desenhado em volta do corpo (a mesma carregando e no máximo).
 
 #include "NinjaChakraAuraComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -95,13 +95,9 @@ void UNinjaChakraAuraComponent::SetAuraFull(bool bFull)
 		return;
 	}
 	bWantFull = bFull;
-	if (bFull)
+	if (bFull && FullBurstSound && bWantActive)
 	{
-		FullTime = 0.f;
-		if (FullBurstSound && bWantActive)
-		{
-			UGameplayStatics::PlaySoundAtLocation(this, FullBurstSound, GetComponentLocation());
-		}
+		UGameplayStatics::PlaySoundAtLocation(this, FullBurstSound, GetComponentLocation());
 	}
 	if (bWantActive)
 	{
@@ -127,6 +123,12 @@ void UNinjaChakraAuraComponent::PlayLoop(USoundBase* Sound)
 void UNinjaChakraAuraComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	// A chama desenha sem teste de profundidade (o chão não corta a base); o material usa o Custom Depth do corpo
+	// para o personagem continuar na frente dela
+	if (const ACharacter* Character = Cast<ACharacter>(GetOwner()))
+	{
+		Character->GetMesh()->SetRenderCustomDepth(true);
+	}
 	BuildAura();
 	SetPartsVisible(false);
 }
@@ -196,23 +198,24 @@ void UNinjaChakraAuraComponent::BuildAura()
 		}
 	}
 
-	// 2) Chama desenhada (carregando) e 3) coroa de espinhos (máximo): planos virados para a câmera
+	// 2) Chama desenhada: plano virado para a câmera atrás do corpo + camada da frente (outra semente, só contornos)
 	FlameMID = MakeMID(FlameMaterial);
 	Flame = MakeStatic(Plane, FlameMID, true);
-	BurstMID = MakeMID(BurstMaterial);
-	Burst = MakeStatic(Plane, BurstMID, true);
+	FrontFlameMID = MakeMID(FlameMaterial);
+	if (FrontFlameMID)
+	{
+		FrontFlameMID->SetScalarParameterValue(TEXT("FrontLayer"), 1.f);
+		FrontFlameMID->SetScalarParameterValue(TEXT("Seed"), 37.f);
+		FrontFlame = MakeStatic(Plane, FrontFlameMID, true);
+	}
 
-	// 4) Brilho azul no chão e 5) raios no chão (máximo)
+	// 3) Brilho no chão
 	Ground = MakeStatic(Plane, MakeMID(GroundMaterial), false);
 	Ground->SetRelativeLocation(FVector(0.f, 0.f, FeetZ + 1.f));
 	Ground->SetRelativeScale3D(FVector(4.f, 4.f, 1.f));
-	BoltMID = MakeMID(BoltMaterial);
-	Bolts = MakeStatic(Plane, BoltMID, false);
-	Bolts->SetRelativeLocation(FVector(0.f, 0.f, FeetZ + 2.f));
-	Bolts->SetRelativeScale3D(FVector(9.f, 9.f, 1.f));
 
-	// 6) Faíscas subindo
-	if (Sphere)
+	// 4) Faíscas subindo
+	if (Sphere && SparkCount > 0)
 	{
 		SparkMesh = NewObject<UInstancedStaticMeshComponent>(Owner);
 		SparkMesh->SetStaticMesh(Sphere);
@@ -237,16 +240,16 @@ void UNinjaChakraAuraComponent::BuildAura()
 		}
 	}
 
-	// 7) Luz azul
+	// 5) Luz azul
 	Light = NewObject<UPointLightComponent>(Owner);
 	Light->SetupAttachment(this);
-	Light->SetLightColor(ChakraColor);
+	Light->SetLightColor(LightColor);
 	Light->SetIntensity(0.f);
 	Light->SetAttenuationRadius(600.f);
 	Light->SetCastShadows(false);
 	Light->RegisterComponent();
 
-	// 8) Som em laço (carregando / no máximo)
+	// 6) Som em laço (carregando / no máximo)
 	LoopAudio = NewObject<UAudioComponent>(Owner);
 	LoopAudio->SetupAttachment(this);
 	LoopAudio->bAutoActivate = false;
@@ -255,7 +258,7 @@ void UNinjaChakraAuraComponent::BuildAura()
 
 void UNinjaChakraAuraComponent::SetPartsVisible(bool bVisible)
 {
-	for (USceneComponent* Part : TArray<USceneComponent*>{ Shell, Flame, Burst, Ground, Bolts, SparkMesh, Light })
+	for (USceneComponent* Part : TArray<USceneComponent*>{ Shell, Flame, FrontFlame, Ground, SparkMesh, Light })
 	{
 		if (Part)
 		{
@@ -264,18 +267,23 @@ void UNinjaChakraAuraComponent::SetPartsVisible(bool bVisible)
 	}
 }
 
-void UNinjaChakraAuraComponent::FaceCamera(UStaticMeshComponent* Plane, const FVector2D& Size, float BottomZ, float BackOffset) const
+void UNinjaChakraAuraComponent::FaceCamera(UStaticMeshComponent* Plane, const FVector2D& Size, float BottomZ, float BackOffset, float FrontReach) const
 {
 	// Plano de pé (só gira no eixo vertical), de frente para a câmera de quem está olhando, um pouco atrás do personagem
 	const APlayerCameraManager* Cam = UGameplayStatics::GetPlayerCameraManager(this, 0);
 	const FVector Center = GetComponentLocation();
-	FVector ToCam = Cam ? (Cam->GetCameraLocation() - Center) : GetOwner()->GetActorForwardVector();
+	const FVector Bottom = Center + FVector(0.f, 0.f, BottomZ);
+	FVector ToCam = Cam ? (Cam->GetCameraLocation() - Bottom) : GetOwner()->GetActorForwardVector();
+	// A base desce seguindo a linha câmera -> chão: na tela ela fica no chão FrontReach cm à frente dos pés (cobre o pé de
+	// trás da pose), mesmo o plano estando BackOffset cm atrás do corpo
+	const float HorizDist = FVector(ToCam.X, ToCam.Y, 0.f).Size();
+	const float Drop = HorizDist > 1.f ? ToCam.Z / HorizDist * (BackOffset + FrontReach) : 0.f;
 	ToCam.Z = 0.f;
 	ToCam = ToCam.GetSafeNormal(UE_SMALL_NUMBER, FVector::ForwardVector);
 	// Plano da engine: 100x100 cm em X/Y, frente = +Z. Frente -> câmera, X do plano -> para cima.
 	Plane->SetWorldRotation(FRotationMatrix::MakeFromZX(ToCam, FVector::UpVector).Rotator());
 	Plane->SetWorldScale3D(FVector(Size.Y / 100.f, Size.X / 100.f, 1.f));
-	Plane->SetWorldLocation(FVector(Center.X, Center.Y, Center.Z + BottomZ + Size.Y * 0.5f) - ToCam * BackOffset);
+	Plane->SetWorldLocation(Bottom + FVector(0.f, 0.f, Size.Y * 0.5f - Drop) - ToCam * BackOffset);
 }
 
 void UNinjaChakraAuraComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -287,45 +295,51 @@ void UNinjaChakraAuraComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	{
 		return;
 	}
-	Alpha = FMath::FInterpConstantTo(Alpha, Target, DeltaTime, FadeSpeed);
-	FullAlpha = FMath::FInterpConstantTo(FullAlpha, bWantFull ? 1.f : 0.f, DeltaTime, bWantFull ? 8.f : 3.f);
-	FullTime += DeltaTime;
+	// Ligando: cresce de baixo para cima em GrowTime; desligando: se parte em pedaços em DissolveTime
+	Alpha = FMath::FInterpConstantTo(Alpha, Target, DeltaTime, 1.f / FMath::Max(bWantActive ? GrowTime : DissolveTime, 0.01f));
 	Time += DeltaTime;
 
 	const float FeetZ = GetOwner() ? -GetOwner()->GetSimpleCollisionHalfHeight() : -90.f;
-	const float Pulse = 0.9f + 0.1f * FMath::Sin(Time * 9.f);
-
-	// Estouro ao encher: a explosão cresce rápido e passa um pouco do tamanho, depois assenta
-	const float Pop = 1.f + 0.25f * FMath::Exp(-FullTime * 6.f) * FMath::Sin(FMath::Min(FullTime * 14.f, PI));
-	const float BurstScale = FMath::Lerp(0.55f, 1.f, FullAlpha) * Pop;
+	// Sem pulsar (Felipe: chakra FLUI, não pulsa): tamanho, luz e brilho constantes; o movimento é só o do material
+	const float Grow = bWantActive ? FMath::SmoothStep(0.f, 1.f, Alpha) : 1.f;
+	const float Dissolve = bWantActive ? 0.f : 1.f - Alpha;
+	const float Shown = bWantActive ? 1.f : FMath::Min(Alpha * 3.f, 1.f);   // os pedaços somem no fim do Dissolve
+	const float Bright = Shown * (0.85f + 0.3f * ChargeLevel);
 
 	for (UMaterialInstanceDynamic* MID : MIDs)
 	{
-		MID->SetScalarParameterValue(TEXT("Intensity"), Alpha * Pulse);
+		MID->SetScalarParameterValue(TEXT("Intensity"), Alpha);
 	}
-	// A chama some quando a explosão aparece (a explosão a substitui)
-	if (FlameMID) { FlameMID->SetScalarParameterValue(TEXT("Intensity"), Alpha * (1.f - FullAlpha)); }
-	if (BurstMID) { BurstMID->SetScalarParameterValue(TEXT("Intensity"), Alpha * FullAlpha); }
-	if (BoltMID) { BoltMID->SetScalarParameterValue(TEXT("Intensity"), Alpha * FullAlpha); }
+	for (UMaterialInstanceDynamic* MID : { FlameMID.Get(), FrontFlameMID.Get() })
+	{
+		if (MID)
+		{
+			MID->SetScalarParameterValue(TEXT("Intensity"), Bright);
+			MID->SetScalarParameterValue(TEXT("Grow"), Grow);
+			MID->SetScalarParameterValue(TEXT("Dissolve"), Dissolve);
+			MID->SetScalarParameterValue(TEXT("ChargeLevel"), ChargeLevel);
+			MID->SetScalarParameterValue(TEXT("Aspect"), FlameSize.X / FMath::Max(FlameSize.Y, 1.f));   // o desenho não estica com o tamanho
+		}
+	}
 
-	if (Flame) { FaceCamera(Flame, FlameSize, FeetZ - 10.f, 40.f); }
-	if (Burst) { FaceCamera(Burst, BurstSize * BurstScale, FeetZ - 60.f * BurstScale, 60.f); }
-	if (Bolts) { Bolts->AddRelativeRotation(FRotator(0.f, 25.f * DeltaTime, 0.f)); }
+	const FVector2D Size = FlameSize;
+	if (Flame) { FaceCamera(Flame, Size, FeetZ + FlameBottomOffset, FlameBackOffset, FlameFrontReach); }
+	if (FrontFlame) { FaceCamera(FrontFlame, Size * FrontLayerScale, FeetZ + FlameBottomOffset, -FrontLayerOffset, FlameFrontReach); }
 
 	if (Light)
 	{
-		Light->SetIntensity(LightIntensity * Alpha * (1.f + 1.5f * FullAlpha) * (0.8f + 0.2f * FMath::Sin(Time * 13.f)));
+		Light->SetIntensity(LightIntensity * Alpha * (0.7f + 0.3f * ChargeLevel));
 	}
 
-	// Faíscas: sobem em espiral e renascem embaixo (no máximo, mais rápidas e mais abertas)
+	// Faíscas: sobem em espiral e renascem embaixo
 	if (SparkMesh)
 	{
-		const float Spread = 1.f + FullAlpha * 1.2f;
+		const float Spread = 1.f;
 		for (int32 i = 0; i < Sparks.Num(); ++i)
 		{
 			FSpark& S = Sparks[i];
-			S.Height += S.Speed * (1.f + FullAlpha) * DeltaTime;
-			S.Angle += DeltaTime * (1.5f + 3.f * FullAlpha);
+			S.Height += S.Speed * DeltaTime;
+			S.Angle += DeltaTime * 1.5f;
 			if (S.Height > 320.f)
 			{
 				S.Height = 0.f;

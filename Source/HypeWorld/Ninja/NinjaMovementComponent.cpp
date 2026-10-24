@@ -236,12 +236,27 @@ void UNinjaMovementComponent::OnMovementModeChanged(EMovementMode PreviousMoveme
 	// Tocou o chão: libera o dash no ar de novo e acaba o voo do super pulo e a suspensão do combo aéreo.
 	if (MovementMode == MOVE_Walking || MovementMode == MOVE_NavWalking)
 	{
+		// Pousou rápido apertando direção: já cai na corrida ninja (pulo/dash emendam na corrida)
+		if (bLandIntoSprint && PreviousMovementMode == MOVE_Falling && !Acceleration.IsNearlyZero() && ProjectToGravityFloor(Velocity).Size() > RunSpeed)
+		{
+			bWantsToRun = true;
+			bWantsToSprint = true;
+		}
+		bAirMomentum = false;
 		bAirDashUsed = false;
 		bInSuperJump = false;
 		bInBackflip = false;
 		bFloatJump = false;
 		AirSuspendUntil = -1.f;
 	}
+}
+
+void UNinjaMovementComponent::StartFloatJump(float RiseScale, float FallScale, float MaxFallSpeed)
+{
+	bFloatJump = true;
+	FloatRiseGravityScale = RiseScale;
+	FloatFallGravityScale = FallScale;
+	FloatMaxFallSpeed = MaxFallSpeed;
 }
 
 void UNinjaMovementComponent::SuspendInAir(float Duration)
@@ -262,10 +277,10 @@ float UNinjaMovementComponent::GetGravityZ() const
 	}
 	if (bFloatJump && IsFalling())
 	{
-		// Velocidade vertical (relativa à gravidade): subindo forte = gravidade cheia; perto do topo vai suavizando;
-		// chegando na queda máxima a gravidade some (cai em velocidade constante, devagar)
+		// Velocidade vertical (relativa à gravidade): subindo forte = gravidade de subida; perto do topo vai virando a de
+		// queda; chegando na queda máxima a gravidade some (cai em velocidade constante, devagar)
 		const float Vz = FVector::DotProduct(Velocity, -GetGravityDirection());
-		float Scale = FMath::Lerp(FloatFallGravityScale, 1.f, FMath::Clamp(Vz / FloatBlendSpeed, 0.f, 1.f));
+		float Scale = FMath::Lerp(FloatFallGravityScale, FloatRiseGravityScale, FMath::Clamp(Vz / FloatBlendSpeed, 0.f, 1.f));
 		Scale *= FMath::Clamp((Vz + FloatMaxFallSpeed) / 150.f, 0.f, 1.f);
 		return Super::GetGravityZ() * Scale;
 	}
@@ -318,6 +333,7 @@ void UNinjaMovementComponent::StartDash()
 			MoveUpdatedComponent(FVector::ZeroVector, FRotator(0.f, ControlYaw, 0.f).Quaternion(), false);
 		}
 	}
+	DashEntrySpeed = ProjectToGravityFloor(Velocity).Size();
 	DashTimeLeft = GetDashDuration();
 	DashCooldownLeft = DashCooldown;
 	SetMovementMode(MOVE_Custom, NMOVE_Dash);
@@ -331,11 +347,22 @@ float UNinjaMovementComponent::GetDashDuration() const
 void UNinjaMovementComponent::EndDash()
 {
 	DashTimeLeft = 0.f;
-	// Correndo: sai do dash já na velocidade da corrida (a estrela emenda na corrida sem parar).
-	// Sem correr: com animação mantém a velocidade final dela (freia junto); sem animação, sai andando.
+	const float RunStateSpeed = bWantsToSprint ? SprintSpeed : (bWantsToRun ? RunSpeed : MaxWalkSpeed);
+	FFindFloorResult Floor;
+	FindFloor(UpdatedComponent->GetComponentLocation(), Floor, false);
+	if (!Floor.IsWalkableFloor())
+	{
+		// No ar: o embalo do dash continua (sem frenagem até pousar) e sobe um pouco, para emendar pulo/queda sem "travar"
+		const float ExitSpeed = FMath::Max3(RunStateSpeed, DashSpeed * AirDashExitSpeedFraction, DashEntrySpeed);
+		Velocity = DashDirection * ExitSpeed - GetGravityDirection() * AirDashExitUpSpeed;
+		bAirMomentum = true;
+		SetMovementMode(MOVE_Falling);
+		return;
+	}
+	// No chão: correndo sai na velocidade da corrida; senão sai rápido e o atrito desacelera suave (sem parada seca)
 	if (bWantsToSprint || bWantsToRun || !DashRootMotionAnim)
 	{
-		Velocity = DashDirection * (bWantsToSprint ? SprintSpeed : (bWantsToRun ? RunSpeed : MaxWalkSpeed));
+		Velocity = DashDirection * FMath::Max(RunStateSpeed, DashRootMotionAnim ? 0.f : DashSpeed * GroundDashExitSpeedFraction);
 	}
 	ExitToWalkingOrFalling();
 }
@@ -352,7 +379,9 @@ void UNinjaMovementComponent::PhysDash(float DeltaTime, int32 Iterations)
 	const float Elapsed = GetDashDuration() - DashTimeLeft;
 	DashTimeLeft -= StepTime;
 
-	float Speed = DashSpeed;
+	// Sai forte e assenta (sem animação); nunca mais lento do que o personagem já vinha
+	const float Progress = FMath::Clamp(Elapsed / FMath::Max(GetDashDuration(), 0.01f), 0.f, 1.f);
+	float Speed = FMath::Max(DashSpeed * FMath::Lerp(DashStartBoost, DashEndSpeedFraction, FMath::SmoothStep(0.f, 1.f, Progress)), DashEntrySpeed);
 	if (DashRootMotionAnim && StepTime > 0.f)
 	{
 		// Quanto a animação anda neste pedaço de tempo = quanto o personagem anda (pés e corpo sincronizados)
@@ -656,7 +685,8 @@ bool UNinjaMovementComponent::TryAttachToSurface(const FHitResult& Hit)
 
 void UNinjaMovementComponent::ApplyVelocityBraking(float DeltaTime, float Friction, float BrakingDeceleration)
 {
-	if (bInSuperJump && IsFalling())
+	// No ar não freia: no voo do super pulo, no embalo do dash, ou segurando uma direção (o embalo do pulo/corrida continua)
+	if (IsFalling() && (bInSuperJump || bAirMomentum || !Acceleration.IsNearlyZero()))
 	{
 		return;   // o personagem tem atrito de frenagem separado (BrakingFriction) que valeria também no ar
 	}

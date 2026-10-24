@@ -11,6 +11,9 @@ class UAnimMontage;
 class UAnimSequenceBase;
 class UFont;
 class UFontFace;
+class ULandscapeLayerInfoObject;
+class UMaterialInterface;
+class ALandscape;
 
 UCLASS()
 class HYPEWORLD_API UNinjaEditorTools : public UBlueprintFunctionLibrary
@@ -48,4 +51,21 @@ public:
 	 *  uma entrada da fonte padrão, carregada em tempo de jogo. */
 	UFUNCTION(BlueprintCallable, Category="Ninja|Editor")
 	static bool BuildCompositeFont(UFont* Font, const TArray<FName>& FaceNames, const TArray<UFontFace*>& Faces);
+
+	/** Cria (ou reaproveita) o asset de camada de landscape (LayerInfo) em PackagePath (ex.: /Game/Maps/Tutorial/Camadas/LI_Grama).
+	 *  bWeightBlended = camada visual que divide o peso com as outras; false = máscara independente (só para o PCG ler). */
+	UFUNCTION(BlueprintCallable, Category="Ninja|Editor")
+	static ULandscapeLayerInfoObject* CreateLandscapeLayerInfo(const FString& PackagePath, FName LayerName, bool bWeightBlended);
+
+	/** Cria um landscape no mundo (o Python não alcança o Import): ComponentsX x ComponentsY componentes de QuadsPerSection
+	 *  quads (1 seção cada), canto em Location, escala Scale. Heights = (ComponentsX*Quads+1) x (ComponentsY*Quads+1) valores
+	 *  0..65535 (32768 = altura 0), linha a linha em X. Weights = um bloco do mesmo tamanho por camada, na ordem de Layers. */
+	UFUNCTION(BlueprintCallable, Category="Ninja|Editor", meta=(WorldContext="WorldContextObject"))
+	static ALandscape* CreateLandscape(UObject* WorldContextObject, FVector Location, FVector Scale, int32 ComponentsX, int32 ComponentsY,
+		int32 QuadsPerSection, const TArray<int32>& Heights, UMaterialInterface* Material, const TArray<ULandscapeLayerInfoObject*>& Layers,
+		const TArray<uint8>& Weights);
+
+	/** Blocking Volume em forma de caixa (Size = tamanho total em cm), invisível, bloqueia o jogador */
+	UFUNCTION(BlueprintCallable, Category="Ninja|Editor", meta=(WorldContext="WorldContextObject"))
+	static AActor* SpawnBlockingBox(UObject* WorldContextObject, FVector Location, FRotator Rotation, FVector Size);
 };

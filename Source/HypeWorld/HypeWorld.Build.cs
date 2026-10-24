@@ -24,7 +24,11 @@ public class HypeWorld : ModuleRules
 			"GameplayTasks"
 		});
 
-		PrivateDependencyModuleNames.AddRange(new string[] { "AnimationCore", "SlateCore" });
+		PrivateDependencyModuleNames.AddRange(new string[] { "AnimationCore", "SlateCore", "Landscape" });
+		if (Target.bBuildEditor)
+		{
+			PrivateDependencyModuleNames.Add("UnrealEd");   // ferramentas de editor (NinjaEditorTools: Blocking Volume)
+		}
 
 		PublicIncludePaths.AddRange(new string[] {
 			"HypeWorld",

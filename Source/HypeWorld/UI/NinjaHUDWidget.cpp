@@ -9,7 +9,9 @@
 #include "Components/HorizontalBoxSlot.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
+#include "Blueprint/WidgetLayoutLibrary.h"
 #include "Engine/Texture2D.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/Pawn.h"
 #include "GameFramework/PlayerState.h"
 #include "Styling/CoreStyle.h"
@@ -202,27 +204,31 @@ void UNinjaHUDWidget::BuildLayout()
 	// =========================== Centro de baixo: slots de jutsu (descem fora do modo de batalha) ===========================
 	JutsuSlots.Reset();
 	JutsuSlotBase.Reset();
+	JutsuSlotWidgets.Reset();
+	// Arte de cada slot: recortes do PNG do Felipe (Tools/editor/montar_slots_jutsu.py liga no WBP). Sem dados = slots vazios
+	const TArray<FNinjaJutsuSlotData>& SlotData = JutsuSlotData;
+	// Linha centrada embaixo, como na imagem: Size = diâmetro do círculo da arte; a moldura e a etiqueta passam dele
+	// (etiqueta até ~0,93 x Size abaixo do centro do círculo; moldura até ~0,72 x Size em volta)
 	const int32 Count = FMath::Max(1, JutsuSlotCount);
-	const float Size = 62.f, Gap = 14.f;
-	const float StartX = -(Count - 1) * (Size + Gap) * 0.5f;
+	const float Size = JutsuSlotSize;
+	const float StartX = -(Count - 1) * (Size + JutsuSlotGap) * 0.5f;
+	const float CenterY = -(JutsuBottomMargin * 1080.f + Size * 0.93f);
 	for (int32 i = 0; i < Count; ++i)
 	{
-		const FVector2D Pos(StartX + i * (Size + Gap), -58.f);
-		UTexture2D* IconTex = AbilityIcons.IsValidIndex(i) ? AbilityIcons[i] : nullptr;
-		UImage* Back = MakeImage(Rounded(FLinearColor(0.05f, 0.05f, 0.06f, 0.82f), 0.f, FLinearColor(1.f, 1.f, 1.f, 0.35f), 2.f, true));
-		JutsuSlots.Add(Place(Back, BottomCenter, Pos, FVector2D(Size, Size), Center));
+		const FVector2D Pos(StartX + i * (Size + JutsuSlotGap), CenterY);
+		UNinjaJutsuSlotWidget* SlotWidget = CreateWidget<UNinjaJutsuSlotWidget>(this, UNinjaJutsuSlotWidget::StaticClass());
+		SlotWidget->Setup(SlotData.IsValidIndex(i) ? SlotData[i] : FNinjaJutsuSlotData(), Size,
+			HudFontInfo(TEXT("ExtraBold"), Size * 0.38f), HudFontInfo(TEXT("ExtraBold"), Size * 0.46f));
+		SlotWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		JutsuSlotWidgets.Add(SlotWidget);
+		JutsuSlots.Add(Place(SlotWidget, BottomCenter, Pos, UNinjaJutsuSlotWidget::BoxSizeFor(Size), UNinjaJutsuSlotWidget::DiscAlignment()));
 		JutsuSlotBase.Add(Pos);
-		if (IconTex)
-		{
-			JutsuSlots.Add(Place(MakeImage(CircleImage(IconTex)), BottomCenter, Pos, FVector2D(Size - 8.f, Size - 8.f), Center));
-			JutsuSlotBase.Add(Pos);
-		}
 	}
 	// Cargas da substituição (Q apanhando): duas pílulas em cima da barra, sobem junto com ela
 	SubstitutionPips.Reset();
 	for (int32 k = 0; k < 2; ++k)
 	{
-		const FVector2D Pos(-12.f + k * 24.f, -104.f);
+		const FVector2D Pos(-12.f + k * 24.f, CenterY - Size * 0.72f - 12.f);   // acima da moldura
 		UImage* Pip = MakeImage(Rounded(White, 0.f, FLinearColor::Transparent, 0.f, true));
 		SubstitutionPips.Add(Pip);
 		JutsuSlots.Add(Place(Pip, BottomCenter, Pos, FVector2D(18.f, 6.f), Center));
@@ -230,13 +236,46 @@ void UNinjaHUDWidget::BuildLayout()
 	}
 	JutsuOffset = JutsuHiddenOffset;
 
-	// =========================== Barra do super pulo (só carregando) e contador de golpes ===========================
-	SuperJumpText = MakeText(TEXT("PULO DE CHAKRA"), 14.f);
-	SuperJumpText->SetVisibility(ESlateVisibility::Collapsed);
-	Place(SuperJumpText, BottomCenter, FVector2D(0.f, -168.f), FVector2D::ZeroVector, Center);
-	SuperJumpBar = MakeBar(FLinearColor(0.35f, 0.75f, 1.f, 1.f), 4.f);
+	// =========================== Barrinha do super pulo (só carregando) e contador de golpes ===========================
+	// Vertical e fina, ao lado da cabeça do personagem (segue ele na tela): vidro escuro translúcido com contorno claro,
+	// energia azul em degradê (mais clara em cima) e um brilho suave atrás que cresce com a carga e pulsa quando enche
+	SuperJumpGlow = MakeImage(FSlateBrush());
+	{
+		FSlateBrush Glow;
+		Glow.SetResourceObject(MakeTexture(64, [](float U, float V)
+		{
+			const float DX = (U - 0.5f) / 0.5f, DY = (V - 0.5f) / 0.5f;   // elipse que ocupa a imagem inteira
+			return FMath::Pow(FMath::Clamp(1.f - FMath::Sqrt(DX * DX + DY * DY), 0.f, 1.f), 2.f);
+		}));
+		Glow.TintColor = FSlateColor(FLinearColor(0.15f, 0.55f, 1.f, 1.f));
+		SuperJumpGlow->SetBrush(Glow);
+	}
+	SuperJumpGlow->SetVisibility(ESlateVisibility::Collapsed);
+	SuperJumpGlowSlot = Place(SuperJumpGlow, FVector2D::ZeroVector, FVector2D::ZeroVector, SuperJumpBarSize * FVector2D(6.f, 1.5f), FVector2D(0.5f, 0.5f));
+
+	SuperJumpBar = WidgetTree->ConstructWidget<UProgressBar>();
+	{
+		FProgressBarStyle Style;
+		Style.SetBackgroundImage(Rounded(FLinearColor(0.01f, 0.03f, 0.08f, 0.35f), SuperJumpBarSize.X * 0.5f, FLinearColor(0.75f, 0.9f, 1.f, 0.55f), 1.f));
+		FSlateBrush Fill = Rounded(White, SuperJumpBarSize.X * 0.5f);   // cantos = metade da LARGURA (o "redondo" da Slate usa a altura e vira losango)
+		Fill.SetResourceObject(MakeTextureRGBA(8, 128, [](float U, float V)
+		{
+			const float H = 1.f - V;   // 0 embaixo, 1 em cima
+			const FLinearColor Deep(0.02f, 0.18f, 1.f), Mid(0.1f, 0.6f, 1.f), Top(0.75f, 0.95f, 1.f);
+			FLinearColor C = H < 0.6f ? FMath::Lerp(Deep, Mid, H / 0.6f) : FMath::Lerp(Mid, Top, (H - 0.6f) / 0.4f);
+			const float Core = 1.f - FMath::Abs(U - 0.5f) * 1.2f;   // miolo mais claro que as beiradas
+			C = FMath::Lerp(C, FLinearColor::White, 0.25f * Core * Core);
+			C.A = 0.55f + 0.3f * H;
+			return C;
+		}));
+		Style.SetFillImage(Fill);
+		Style.SetMarqueeImage(Fill);
+		SuperJumpBar->SetWidgetStyle(Style);
+		SuperJumpBar->SetFillColorAndOpacity(White);
+		SuperJumpBar->SetBarFillType(EProgressBarFillType::BottomToTop);
+	}
 	SuperJumpBar->SetVisibility(ESlateVisibility::Collapsed);
-	Place(SuperJumpBar, BottomCenter, FVector2D(0.f, -146.f), FVector2D(320.f, 12.f), Center);
+	SuperJumpSlot = Place(SuperJumpBar, FVector2D::ZeroVector, FVector2D::ZeroVector, SuperJumpBarSize, FVector2D(0.5f, 1.f));
 
 	ComboText = MakeText(TEXT(""), 40.f, FLinearColor(1.f, 0.62f, 0.15f));
 	ComboText->SetVisibility(ESlateVisibility::Collapsed);
@@ -305,7 +344,7 @@ void UNinjaHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	// Nome do jogador (o da partida)
 	if (const APlayerState* PS = Ninja->GetPlayerState())
 	{
-		const FString Name = PS->GetPlayerName().IsEmpty() ? TEXT("Ninja") : PS->GetPlayerName();
+		const FString Name = !DisplayName.IsEmpty() ? DisplayName : PS->GetPlayerName().IsEmpty() ? TEXT("Ninja") : PS->GetPlayerName();
 		if (Name != ShownName && NameText)
 		{
 			ShownName = Name;
@@ -340,6 +379,11 @@ void UNinjaHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 			JutsuSlots[i]->SetPosition(JutsuSlotBase[i] + FVector2D(0.f, JutsuOffset));
 		}
 	}
+	for (UNinjaJutsuSlotWidget* SlotWidget : JutsuSlotWidgets)
+	{
+		SlotWidget->SetHasChakra(Chakra >= SlotWidget->GetNumber());   // número da etiqueta = custo de chakra
+		SlotWidget->TickSlot(InDeltaTime);
+	}
 	const float Raised = 1.f - FMath::Clamp(JutsuOffset / FMath::Max(JutsuHiddenOffset, 1.f), 0.f, 1.f);
 	for (UImage* Pip : SubstitutionPips)
 	{
@@ -354,13 +398,29 @@ void UNinjaHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 		}
 	}
 
-	// Super pulo carregando
-	if (SuperJumpBar)
+	// Super pulo carregando: barrinha ao lado da cabeça do personagem na tela
+	if (SuperJumpBar && SuperJumpSlot)
 	{
-		const ESlateVisibility Show = Ninja->IsChargingSuperJump() ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Collapsed;
-		SuperJumpBar->SetVisibility(Show);
-		SuperJumpText->SetVisibility(Show);
-		SuperJumpBar->SetPercent(Ninja->GetSuperJumpCharge());
+		FVector2D HeadOnScreen;
+		// Osso da cabeça (agachado carregando, o topo da cápsula fica bem acima dela)
+		const FVector Head = Ninja->GetMesh()->GetSocketLocation(TEXT("head")) + Ninja->GetActorUpVector() * 20.f;
+		const bool bShow = Ninja->IsChargingSuperJump()
+			&& UWidgetLayoutLibrary::ProjectWorldLocationToWidgetPosition(GetOwningPlayer(), Head, HeadOnScreen, false);
+		SuperJumpBar->SetVisibility(bShow ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Collapsed);
+		SuperJumpGlow->SetVisibility(SuperJumpBar->GetVisibility());
+		if (bShow)
+		{
+			const float Charge = Ninja->GetSuperJumpCharge();
+			const float Time = GetWorld()->GetRealTimeSeconds();
+			const float Pulse = Charge >= 1.f ? 0.5f + 0.5f * FMath::Sin(Time * 12.f) : 0.f;   // cheia: pisca rápido
+			SuperJumpSlot->SetPosition(HeadOnScreen + SuperJumpBarOffset);
+			SuperJumpBar->SetPercent(Charge);
+			SuperJumpBar->SetFillColorAndOpacity(FMath::Lerp(FLinearColor::White, FLinearColor(1.6f, 1.8f, 2.f, 1.f), Pulse));
+			// O brilho fica atrás da parte cheia e cresce com a carga
+			SuperJumpGlowSlot->SetPosition(HeadOnScreen + SuperJumpBarOffset - FVector2D(0.f, SuperJumpBarSize.Y * Charge * 0.5f));
+			SuperJumpGlowSlot->SetSize(FVector2D(SuperJumpBarSize.X * (5.f + 2.f * Pulse), SuperJumpBarSize.Y * (0.35f + 1.f * Charge)));
+			SuperJumpGlow->SetRenderOpacity(0.35f + 0.5f * Charge + 0.15f * Pulse);
+		}
 	}
 
 	// Contador de golpes seguidos
@@ -570,4 +630,44 @@ FString UNinjaHUDWidget::FormatThousands(int32 Value)
 		Digits.InsertAt(i, TEXT(','));
 	}
 	return Value < 0 ? TEXT("-") + Digits : Digits;
+}
+
+void UNinjaHUDWidget::SetSelectedJutsu(int32 Index)
+{
+	for (int32 i = 0; i < JutsuSlotWidgets.Num(); ++i)
+	{
+		JutsuSlotWidgets[i]->SetSelected(i == Index);
+	}
+}
+
+void UNinjaHUDWidget::SetJutsuCooldown(int32 Index, float Remaining, float Duration)
+{
+	if (JutsuSlotWidgets.IsValidIndex(Index))
+	{
+		JutsuSlotWidgets[Index]->SetCooldown(Remaining, Duration);
+	}
+}
+
+void UNinjaHUDWidget::SetJutsuHasChakra(int32 Index, bool bHasChakra)
+{
+	if (JutsuSlotWidgets.IsValidIndex(Index))
+	{
+		JutsuSlotWidgets[Index]->SetHasChakra(bHasChakra);
+	}
+}
+
+void UNinjaHUDWidget::SetJutsuNumber(int32 Index, int32 Number)
+{
+	if (JutsuSlotWidgets.IsValidIndex(Index))
+	{
+		JutsuSlotWidgets[Index]->SetNumber(Number);
+	}
+}
+
+void UNinjaHUDWidget::PlayJutsuUsed(int32 Index)
+{
+	if (JutsuSlotWidgets.IsValidIndex(Index))
+	{
+		JutsuSlotWidgets[Index]->PlayUsed();
+	}
 }
