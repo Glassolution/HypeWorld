@@ -290,6 +290,12 @@ void AHypeWorldCharacter::Tick(float DeltaSeconds)
 	UpdateTurnInPlace(DeltaSeconds);
 	UpdateCameraFollow(DeltaSeconds);
 	UpdateGuard();
+
+	// Aura: no máximo de chakra (carregando) vira a explosão — usa os atributos replicados, então todos veem igual
+	if (ChakraAura && Attributes)
+	{
+		ChakraAura->SetAuraFull(bChargingChakra && Attributes->GetChakra() >= Attributes->GetMaxChakra() - 0.5f);
+	}
 }
 
 void AHypeWorldCharacter::UpdateIdleBreak(float DeltaSeconds)
