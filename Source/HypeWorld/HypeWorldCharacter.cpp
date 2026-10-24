@@ -476,8 +476,7 @@ void AHypeWorldCharacter::UpdateAcrobatics(float DeltaSeconds)
 
 bool AHypeWorldCharacter::IsSpreadingArms() const
 {
-	const UNinjaMovementComponent* NinjaMovement = GetNinjaMovement();
-	return (NinjaMovement && NinjaMovement->IsDashing()) || bAirArmsSpread;
+	return bAirArmsSpread;   // no dash os braços são da animação da estrela
 }
 
 void AHypeWorldCharacter::UpdateRunAnimRate()

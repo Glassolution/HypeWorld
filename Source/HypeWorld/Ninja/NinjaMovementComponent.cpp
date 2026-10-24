@@ -240,8 +240,9 @@ float UNinjaMovementComponent::GetDashDuration() const
 void UNinjaMovementComponent::EndDash()
 {
 	DashTimeLeft = 0.f;
-	// Seguindo a animação, o dash já termina freando: mantém a velocidade final dela. Sem animação, sai correndo.
-	if (!DashRootMotionAnim)
+	// Correndo: sai do dash já na velocidade da corrida (a estrela emenda na corrida sem parar).
+	// Sem correr: com animação mantém a velocidade final dela (freia junto); sem animação, sai andando.
+	if (bWantsToSprint || bWantsToRun || !DashRootMotionAnim)
 	{
 		Velocity = DashDirection * (bWantsToSprint ? SprintSpeed : (bWantsToRun ? RunSpeed : MaxWalkSpeed));
 	}
@@ -264,8 +265,11 @@ void UNinjaMovementComponent::PhysDash(float DeltaTime, int32 Iterations)
 	if (DashRootMotionAnim && StepTime > 0.f)
 	{
 		// Quanto a animação anda neste pedaço de tempo = quanto o personagem anda (pés e corpo sincronizados)
-		const FTransform Motion = DashRootMotionAnim->ExtractRootMotionFromRange(Elapsed * DashAnimRate, (Elapsed + StepTime) * DashAnimRate, FAnimExtractContext());
+		const double From = DashAnimStart + Elapsed * DashAnimRate;
+		const FTransform Motion = DashRootMotionAnim->ExtractRootMotionFromRange(From, From + StepTime * DashAnimRate, FAnimExtractContext());
 		Speed = Motion.GetTranslation().Size2D() * DashDistanceScale / StepTime;
+		const float EntrySpeed = bWantsToSprint ? SprintSpeed : (bWantsToRun ? RunSpeed : MaxWalkSpeed);
+		Speed = FMath::Max(Speed, EntrySpeed * DashMinSpeedFraction);
 	}
 	Velocity = DashDirection * Speed;
 

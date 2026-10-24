@@ -443,7 +443,7 @@ public:
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
-	/** Braços abertos no ar (dash e segundo pulo) — usado pela pose do ABP */
+	/** Braços abertos no ar (segundo pulo) — usado pela pose do ABP */
 	bool IsSpreadingArms() const;
 
 	/** Componente de movimento ninja */

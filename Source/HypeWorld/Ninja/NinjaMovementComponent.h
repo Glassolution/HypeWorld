@@ -68,13 +68,22 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Dash")
 	float DashAnimRate = 1.2f;
 
-	/** Até que segundo da animação o dash anda; o resto da animação é só a aterrissagem. */
+	/** Segundo da animação em que o dash começa (para usar só um trecho dela, ex.: a estrela sem a corrida antes). */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Dash")
+	float DashAnimStart = 0.f;
+
+	/** Quantos segundos da animação (a partir de DashAnimStart) o dash anda; o resto da animação é só a aterrissagem. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Dash")
 	float DashAnimMoveEnd = 0.75f;
 
 	/** Fração da distância da animação que o dash percorre (MM_Dash anda ~8,8 m; 0,7 = ~6,2 m). */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Dash")
 	float DashDistanceScale = 0.7f;
+
+	/** Com animação: o dash nunca fica mais lento que esta fração da velocidade de quem entra nele (correndo = corrida).
+	 *  Quem dá uma estrela correndo não freia — mantém o embalo mesmo onde a animação anda devagar. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Dash")
+	float DashMinSpeedFraction = 0.75f;
 
 	/** Sem animação: velocidade constante do dash. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Dash")
