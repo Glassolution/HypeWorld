@@ -9,6 +9,8 @@
 class UBlendSpace;
 class UAnimMontage;
 class UAnimSequenceBase;
+class UFont;
+class UFontFace;
 
 UCLASS()
 class HYPEWORLD_API UNinjaEditorTools : public UBlueprintFunctionLibrary
@@ -41,4 +43,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Ninja|Editor")
 	static bool BuildSectionMontage(UAnimMontage* Montage, const TArray<UAnimSequenceBase*>& Animations, const TArray<float>& Starts,
 		const TArray<float>& Ends, const TArray<FName>& SectionNames, const TArray<FName>& LoopSections, float BlendIn, float BlendOut, bool bHoldLastPose);
+
+	/** Monta uma fonte composta (o Python não alcança o Typeface): cada face (ex.: "ExtraBold" -> Montserrat-ExtraBold) vira
+	 *  uma entrada da fonte padrão, carregada em tempo de jogo. */
+	UFUNCTION(BlueprintCallable, Category="Ninja|Editor")
+	static bool BuildCompositeFont(UFont* Font, const TArray<FName>& FaceNames, const TArray<UFontFace*>& Faces);
 };

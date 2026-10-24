@@ -6,6 +6,8 @@
 #include "Animation/Skeleton.h"
 #include "AnimNotify_DoAttackTrace.h"
 #include "AnimNotify_CheckCombo.h"
+#include "Engine/Font.h"
+#include "Engine/FontFace.h"
 
 bool UNinjaEditorTools::RebuildBlendSpace(UBlendSpace* BlendSpace)
 {
@@ -187,6 +189,34 @@ bool UNinjaEditorTools::BuildSectionMontage(UAnimMontage* Montage, const TArray<
 	Montage->RefreshCacheData();
 	Montage->PostEditChange();
 	Montage->MarkPackageDirty();
+	return true;
+#else
+	return false;
+#endif
+}
+
+bool UNinjaEditorTools::BuildCompositeFont(UFont* Font, const TArray<FName>& FaceNames, const TArray<UFontFace*>& Faces)
+{
+#if WITH_EDITOR
+	if (!Font || FaceNames.Num() != Faces.Num() || Faces.Num() == 0)
+	{
+		return false;
+	}
+	Font->Modify();
+	Font->FontCacheType = EFontCacheType::Runtime;
+	FCompositeFont& Composite = Font->GetMutableInternalCompositeFont();
+	Composite.DefaultTypeface.Fonts.Reset();
+	for (int32 i = 0; i < Faces.Num(); ++i)
+	{
+		if (!Faces[i])
+		{
+			return false;
+		}
+		FTypefaceEntry& Entry = Composite.DefaultTypeface.Fonts.AddDefaulted_GetRef();
+		Entry.Name = FaceNames[i];
+		Entry.Font = FFontData(Faces[i]);
+	}
+	Font->MarkPackageDirty();
 	return true;
 #else
 	return false;

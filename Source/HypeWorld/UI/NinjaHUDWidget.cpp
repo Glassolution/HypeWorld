@@ -110,6 +110,35 @@ namespace NinjaHUD
 	}
 }
 
+namespace NinjaLife
+{
+	// Medidas em px da imagem normal do Felipe (Tools/hud/bloco_vida_layout.json, gerado por Tools/hud/recortar_bloco_vida.py)
+	const FVector2D Origin(92.f, 123.f);	// canto de cima à esquerda do bloco
+	const FVector2D Size(1813.f, 582.f);	// até o fim da barra de vida (x 1905) e dos ícones (y 705)
+	const FBox2D Base(FVector2D(92.f, 123.f), FVector2D(1876.f, 690.f));
+	const FBox2D Badge(FVector2D(253.f, 502.f), FVector2D(445.f, 692.f));
+	const FVector2D BadgeCenter(348.5f, 597.5f);
+	const FVector2D RingCenter(348.8f, 374.f);
+	const float RingInner = 197.5f, RingOuter = 248.5f;
+	const float RingStartDeg = 18.f, RingEndDeg = 342.f;	// 0 = embaixo, cresce pela esquerda; o arco começa e termina no selo
+	const FColor RingColor(125, 217, 254);
+	const FBox2D Health(FVector2D(596.f, 237.f), FVector2D(1905.f, 389.f));
+	const FBox2D Chakra(FVector2D(590.f, 403.f), FVector2D(1437.f, 530.f));
+	const FBox2D Coin(FVector2D(566.f, 576.f), FVector2D(683.f, 689.f));
+	const FBox2D Icons[2] = { FBox2D(FVector2D(573.f, 561.5f), FVector2D(728.f, 703.5f)), FBox2D(FVector2D(733.f, 561.5f), FVector2D(888.f, 703.5f)) };
+	const FBox2D IconBars[2] = { FBox2D(FVector2D(590.f, 679.5f), FVector2D(711.f, 690.5f)), FBox2D(FVector2D(751.f, 679.5f), FVector2D(872.f, 690.5f)) };
+	const FColor IconBarColors[2] = { FColor(250, 113, 134), FColor(186, 251, 252) };
+	// Textos: ponto de apoio (px da imagem) e tamanho da fonte (px da imagem; altura das maiúsculas ~0,7 disso)
+	const FVector2D NamePos(605.f, 172.f);			const float NameSize = 117.f;
+	const FVector2D HealthPos(678.f, 312.f);		const float HealthSize = 116.f, HealthMaxSize = 72.f;
+	const FVector2D ChakraPos(1385.f, 469.f);		const float ChakraSize = 83.f;		// direita do texto
+	const FVector2D ChakraBattlePos(1371.f, 462.f);	const float ChakraBattleSize = 76.f;
+	const FColor ChakraBattleText(27, 68, 105);
+	const float LevelSize = 145.f;
+	const FVector2D CoinTextPos(712.f, 632.f);		const float CoinSize = 100.f;
+	const FColor RaisedShadow(150, 150, 162);		// "relevo" cinza embaixo do nome e das moedas
+}
+
 TSharedRef<SWidget> UNinjaHUDWidget::RebuildWidget()
 {
 	// O layout é criado por código na primeira vez (no editor de widget fica vazio; aparece no Play)
@@ -172,21 +201,6 @@ void UNinjaHUDWidget::BuildLayout()
 		return Bar;
 	};
 
-	// Espiral do chakra (ícone da barra de chakra) e moeda
-	SwirlTexture = MakeTexture(18, [](float U, float V)
-	{
-		const FVector2f P(U - 0.5f, V - 0.5f);
-		const float R = P.Size() * 2.f;
-		if (R > 0.95f)
-		{
-			return 0.f;
-		}
-		const float Ang = FMath::Atan2(P.Y, P.X);
-		const float Turns = R * 2.2f - Ang / (2.f * PI);   // espiral de Arquimedes
-		const float D = FMath::Abs(Turns - FMath::RoundToFloat(Turns));
-		return D < 0.16f ? 1.f : 0.f;
-	});
-
 	BuildLifeBlock(Canvas);
 
 	// =========================== Centro de baixo: slots de jutsu (descem fora do modo de batalha) ===========================
@@ -239,7 +253,7 @@ void UNinjaHUDWidget::SetHealth(float Current, float Max)
 	HealthMax = Max;
 	if (HealthFill)
 	{
-		SetFill(HealthFill, HealthTexture, Max > 0.f ? Current / Max : 0.f, 327.f, FLinearColor::White);   // a cor já está na textura
+		SetFill(HealthFill, HealthFullTexture, Max > 0.f ? Current / Max : 0.f, NinjaLife::Health.GetSize().X * K(), FLinearColor::White);
 		HealthText->SetText(FText::AsNumber(FMath::RoundToInt(Current)));
 		HealthMaxText->SetText(FText::FromString(FString::Printf(TEXT("/%d"), FMath::RoundToInt(Max))));
 	}
@@ -251,9 +265,12 @@ void UNinjaHUDWidget::SetChakra(float Current, float Max)
 	ChakraMax = Max;
 	if (ChakraFill)
 	{
+		// Fora da batalha: barra cinza com "%"; na batalha: barra azul com "atual / máximo"
+		const bool bBattle = ShownBattle == 1;
 		const float Percent = Max > 0.f ? Current / Max : 0.f;
-		SetFill(ChakraFill, ChakraTexture, Percent, 205.f, FLinearColor(1.f, 1.f, 1.f, 0.9f));
-		ChakraText->SetText(FText::FromString(FString::Printf(TEXT("%d%%"), FMath::RoundToInt(Percent * 100.f))));
+		SetFill(ChakraFill, bBattle ? ChakraBattleFullTexture : ChakraFullTexture, Percent, NinjaLife::Chakra.GetSize().X * K(), FLinearColor::White);
+		ChakraText->SetText(FText::FromString(bBattle ? FString::Printf(TEXT("%d / %d"), FMath::RoundToInt(Current), FMath::RoundToInt(Max))
+			: FString::Printf(TEXT("%d%%"), FMath::RoundToInt(Percent * 100.f))));
 	}
 }
 
@@ -308,6 +325,33 @@ void UNinjaHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	if (!FMath::IsNearlyEqual(ExperiencePercent, ShownXp, 0.002f))
 	{
 		UpdateXpRing();
+	}
+
+	// Bloco de vida: visual de batalha (chakra azul, ícones) ou normal (chakra cinza, moedas)
+	const bool bBattle = Ninja->IsInBattleMode();
+	if (int32(bBattle) != ShownBattle)
+	{
+		ApplyBattleLook(bBattle);
+	}
+	if (bBattle && BattleIconBars.Num() == 2)
+	{
+		// [0] substituição: cargas; [1] infusão de chakra: ligada = cheia, carregando o super pulo = a carga
+		const float Fill[2] = {
+			Ninja->MaxSubstitutions > 0 ? float(Ninja->GetSubstitutionCharges()) / Ninja->MaxSubstitutions : 0.f,
+			!Ninja->IsPassiveEnabled(ENinjaPassive::ChakraFeet) ? 0.f : (Ninja->IsChargingSuperJump() ? Ninja->GetSuperJumpCharge() : 1.f) };
+		for (int32 i = 0; i < 2; ++i)
+		{
+			if (!ShownIconFill.IsValidIndex(i) || !FMath::IsNearlyEqual(ShownIconFill[i], Fill[i], 0.005f))
+			{
+				ShownIconFill.SetNum(2);
+				ShownIconFill[i] = Fill[i];
+				if (UCanvasPanelSlot* BarSlot = Cast<UCanvasPanelSlot>(BattleIconBars[i]->Slot))
+				{
+					BarSlot->SetSize(FVector2D(BattleIconBarWidth[i] * FMath::Clamp(Fill[i], 0.f, 1.f), BarSlot->GetSize().Y));
+				}
+				BattleIconBars[i]->SetVisibility(Fill[i] > 0.005f ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Hidden);
+			}
+		}
 	}
 
 	// Slots de jutsu: sobem no modo de batalha, descem (só a pontinha) fora dele
@@ -373,27 +417,64 @@ void UNinjaHUDWidget::SetFill(UImage* Fill, UTexture2D* Texture, float Percent, 
 
 void UNinjaHUDWidget::UpdateXpRing()
 {
-	// Anel de XP: 124 px de diâmetro externo, 7 px de espessura, sem contorno. Preenchido #8CC6EE começando embaixo,
-	// subindo pela esquerda, topo e descendo pela direita; o resto é trilho #2B2B2B a 80% (abertura embaixo, no selo de nível)
+	// Arco de XP no anel do retrato (o trilho escuro já está na imagem base): mesmo raio e cor do arco da imagem do Felipe,
+	// começando logo depois do selo, subindo pela esquerda, topo e descendo pela direita até o outro lado do selo
+	using namespace NinjaLife;
 	ShownXp = ExperiencePercent;
 	const float P = FMath::Clamp(ExperiencePercent, 0.f, 1.f);
-	RingTexture = NinjaHUD::MakeTextureRGBA(124, 124, [P](float U, float V)
+	const int32 Px = FMath::Clamp(FMath::CeilToInt(RingOuter * 2.f * K() * 1.5f), 32, 1024);   // 1,5x o tamanho na tela
+	const float Inner = RingInner / RingOuter;
+	const float EndDeg = RingStartDeg + (RingEndDeg - RingStartDeg) * P;
+	const FLinearColor Arc(RingColor.R / 255.f, RingColor.G / 255.f, RingColor.B / 255.f, 1.f);
+	RingTexture = NinjaHUD::MakeTextureRGBA(Px, Px, [Inner, EndDeg, Arc, P](float U, float V)
 	{
 		const FVector2f D(U - 0.5f, V - 0.5f);
 		const float R = D.Size() * 2.f;
-		if (R < 1.f - 14.f / 124.f || R > 1.f)
-		{
-			return FLinearColor(0.f, 0.f, 0.f, 0.f);
-		}
-		float Ang = FMath::Atan2(-D.X, D.Y) / (2.f * PI);   // 0 = embaixo, cresce pela esquerda, topo, direita
-		Ang = Ang < 0.f ? Ang + 1.f : Ang;
-		return Ang <= P ? FLinearColor(140.f / 255.f, 198.f / 255.f, 238.f / 255.f, 1.f) : FLinearColor(43.f / 255.f, 43.f / 255.f, 43.f / 255.f, 0.8f);
+		float Ang = FMath::RadiansToDegrees(FMath::Atan2(-D.X, D.Y));
+		Ang = Ang < 0.f ? Ang + 360.f : Ang;
+		const bool bOn = P > 0.f && R >= Inner && R <= 1.f && Ang >= RingStartDeg && Ang <= EndDeg;
+		return bOn ? Arc : FLinearColor(0.f, 0.f, 0.f, 0.f);
 	});
 	if (XpRing)
 	{
 		FSlateBrush Brush;
 		Brush.SetResourceObject(RingTexture);
 		XpRing->SetBrush(Brush);
+	}
+}
+
+void UNinjaHUDWidget::ApplyBattleLook(bool bBattle)
+{
+	using namespace NinjaLife;
+	ShownBattle = bBattle ? 1 : 0;
+	if (ChakraEmpty)
+	{
+		FSlateBrush Brush;
+		Brush.SetResourceObject(bBattle ? ChakraBattleEmptyTexture : ChakraEmptyTexture);
+		ChakraEmpty->SetBrush(Brush);
+	}
+	if (ChakraText)
+	{
+		ChakraText->SetFont(HudFontInfo(TEXT("ExtraBold"), (bBattle ? ChakraBattleSize : ChakraSize) * K()));
+		ChakraText->SetColorAndOpacity(FSlateColor(bBattle ? FLinearColor::FromSRGBColor(ChakraBattleText) : FLinearColor::White));
+		ChakraText->SetShadowColorAndOpacity(FLinearColor(0.f, 0.f, 0.f, bBattle ? 0.f : 0.35f));
+		if (UCanvasPanelSlot* TextSlot = Cast<UCanvasPanelSlot>(ChakraText->Slot))
+		{
+			TextSlot->SetPosition(((bBattle ? ChakraBattlePos : ChakraPos) - Origin) * K());
+		}
+	}
+	for (UWidget* W : CoinWidgets)
+	{
+		W->SetVisibility(bBattle ? ESlateVisibility::Collapsed : ESlateVisibility::HitTestInvisible);
+	}
+	for (UWidget* W : BattleIconWidgets)
+	{
+		W->SetVisibility(bBattle ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Collapsed);
+	}
+	ShownIconFill.Reset();
+	if (ChakraMax >= 0.f)
+	{
+		SetChakra(Chakra, ChakraMax);
 	}
 }
 
@@ -410,191 +491,122 @@ FSlateFontInfo UNinjaHUDWidget::HudFontInfo(const TCHAR* Face, float SizePx) con
 
 void UNinjaHUDWidget::BuildLifeBlock(UCanvasPanel* Root)
 {
-	using namespace NinjaHUD;
+	using namespace NinjaLife;
 
-	// Painel 548x254 com as coordenadas exatas da referência (origem no canto de cima à esquerda), escalado inteiro
+	// Painel com as medidas da imagem do Felipe (px da imagem x LifeBlockScale = px na tela), preso no canto de baixo à esquerda
 	UCanvasPanel* Block = WidgetTree->ConstructWidget<UCanvasPanel>(UCanvasPanel::StaticClass(), TEXT("BlocoDeVida"));
 	UCanvasPanelSlot* BlockSlot = Root->AddChildToCanvas(Block);
 	BlockSlot->SetAnchors(FAnchors(0.f, 1.f));
-	BlockSlot->SetAlignment(FVector2D::ZeroVector);
+	BlockSlot->SetAlignment(FVector2D(0.f, 1.f));
 	BlockSlot->SetPosition(LifeBlockPosition);
-	BlockSlot->SetSize(FVector2D(548.f, 254.f));
-	Block->SetRenderTransformPivot(FVector2D::ZeroVector);
-	Block->SetRenderScale(FVector2D(LifeBlockScale, LifeBlockScale));
+	BlockSlot->SetSize(Size * K());
 
-	auto Put = [Block](UWidget* Widget, float X, float Y, float W, float H, FVector2D Alignment = FVector2D::ZeroVector)
+	auto PutRect = [this, Block](UWidget* Widget, const FBox2D& Rect)
+	{
+		UCanvasPanelSlot* PanelSlot = Block->AddChildToCanvas(Widget);
+		PanelSlot->SetAnchors(FAnchors(0.f, 0.f));
+		PanelSlot->SetPosition((Rect.Min - Origin) * K());
+		PanelSlot->SetSize(Rect.GetSize() * K());
+		return PanelSlot;
+	};
+	auto PutAt = [this, Block](UWidget* Widget, const FVector2D& Point, const FVector2D& Alignment)
 	{
 		UCanvasPanelSlot* PanelSlot = Block->AddChildToCanvas(Widget);
 		PanelSlot->SetAnchors(FAnchors(0.f, 0.f));
 		PanelSlot->SetAlignment(Alignment);
-		PanelSlot->SetPosition(FVector2D(X, Y));
-		if (W <= 0.f)
-		{
-			PanelSlot->SetAutoSize(true);
-		}
-		else
-		{
-			PanelSlot->SetSize(FVector2D(W, H));
-		}
+		PanelSlot->SetPosition((Point - Origin) * K());
+		PanelSlot->SetAutoSize(true);
 		return PanelSlot;
 	};
-	auto Solid = [this](const FColor& SRGB, float Opacity, bool bCircle = false)
-	{
-		FLinearColor Color = FLinearColor::FromSRGBColor(SRGB);
-		Color.A = Opacity;
-		UImage* Image = WidgetTree->ConstructWidget<UImage>();
-		FSlateBrush Brush;
-		if (bCircle)
-		{
-			Brush = Rounded(Color, 0.f, FLinearColor::Transparent, 0.f, true);
-		}
-		else
-		{
-			Brush.TintColor = FSlateColor(Color);   // retângulo de cantos retos
-		}
-		Image->SetBrush(Brush);
-		return Image;
-	};
-	auto Textured = [this](UTexture2D* Texture, const FLinearColor& Tint)
+	auto Picture = [this](UTexture2D* Texture)
 	{
 		UImage* Image = WidgetTree->ConstructWidget<UImage>();
 		FSlateBrush Brush;
 		Brush.SetResourceObject(Texture);
-		Brush.TintColor = FSlateColor(Tint);
 		Image->SetBrush(Brush);
+		Image->SetVisibility(Texture ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Hidden);
 		return Image;
 	};
-	auto Text = [this](const FString& Words, const TCHAR* Face, float SizePx, bool bShadow)
+	auto Text = [this](const FString& Words, const TCHAR* Face, float SizeImagePx, const FLinearColor& Color, const FVector2D& ShadowOffset, const FLinearColor& Shadow)
 	{
 		UTextBlock* T = WidgetTree->ConstructWidget<UTextBlock>();
 		T->SetText(FText::FromString(Words));
-		T->SetFont(HudFontInfo(Face, SizePx));
-		T->SetColorAndOpacity(FSlateColor(FLinearColor::White));
-		if (bShadow)
-		{
-			T->SetShadowOffset(FVector2D(1.f, 1.f));
-			T->SetShadowColorAndOpacity(FLinearColor(0.f, 0.f, 0.f, 0.6f));
-		}
+		T->SetFont(HudFontInfo(Face, SizeImagePx * K()));
+		T->SetColorAndOpacity(FSlateColor(Color));
+		T->SetShadowOffset(ShadowOffset);
+		T->SetShadowColorAndOpacity(Shadow);
 		return T;
 	};
-	auto S = [](float R, float G, float B, float A = 1.f) { return FLinearColor(R / 255.f, G / 255.f, B / 255.f, A); };   // cor sRGB para a textura (textura é sRGB)
+	const FLinearColor Relief = FLinearColor::FromSRGBColor(RaisedShadow);
+	const FVector2D ReliefOffset(0.f, FMath::Max(1.f, 6.f * K()));
+	const FLinearColor SoftShadow(0.f, 0.f, 0.f, 0.35f);
 
-	// ---- Texturas (desenhadas por código) ----
-	auto Hash = [](int32 X, int32 Y) { uint32 H = uint32(X) * 374761393u + uint32(Y) * 668265263u; H = (H ^ (H >> 13)) * 1274126177u; return float(H & 0xFFFF) / 65535.f; };
-	auto Noise = [&Hash](float X, float Y)
-	{
-		const int32 IX = FMath::FloorToInt(X), IY = FMath::FloorToInt(Y);
-		const float FX = X - IX, FY = Y - IY, SX = FX * FX * (3.f - 2.f * FX), SY = FY * FY * (3.f - 2.f * FY);
-		return FMath::Lerp(FMath::Lerp(Hash(IX, IY), Hash(IX + 1, IY), SX), FMath::Lerp(Hash(IX, IY + 1), Hash(IX + 1, IY + 1), SX), SY);
-	};
-	// Vida: #E8335C com linhas finas onduladas "mármore/rachadura" #B8213F a ~40%, espalhadas na barra toda
-	HealthTexture = MakeTextureRGBA(327, 30, [&Noise, &S](float U, float V)
-	{
-		const float X = U * 10.9f, Y = V;   // proporção 327x30
-		const float Warp = Noise(X * 1.3f, Y * 2.f) * 2.2f + Noise(X * 3.1f + 7.f, Y * 4.f) * 0.7f;
-		const float Field = FMath::Abs(FMath::Sin(X * 2.1f + Y * 3.f + Warp * 3.f));
-		const float Line = FMath::Clamp(1.f - Field / 0.07f, 0.f, 1.f) * (0.55f + 0.45f * Noise(X * 2.f, 3.f));
-		return FMath::Lerp(S(232, 51, 92), S(184, 33, 63), Line * 0.4f);
-	});
-	// Chakra: cinza #6E6E6E com pincelada/pedra (variações #555 a #888), retangular
-	ChakraTexture = MakeTextureRGBA(205, 26, [&Noise, &S](float U, float V)
-	{
-		const float X = U * 7.9f, Y = V;
-		const float Grain = 0.6f * Noise(X * 1.5f, Y * 9.f) + 0.25f * Noise(X * 6.f, Y * 3.f) + 0.15f * Noise(X * 20.f, Y * 20.f);
-		const float Gray = FMath::Lerp(85.f, 136.f, Grain);   // #555..#888
-		return S(Gray, Gray, Gray);
-	});
-	// Ícones de traço fino: microfone e headphone; moeda (anel dourado, centro escuro)
-	MicTexture = MakeTexture(14, [](float U, float V)
-	{
-		const FVector2f P(U, V);
-		const float W = 0.075f;   // espessura do traço (~1 px)
-		const bool Capsule = (FMath::Abs(U - 0.5f) <= 0.15f && V >= 0.2f && V <= 0.45f) || FVector2f::Distance(P, FVector2f(0.5f, 0.2f)) <= 0.15f || FVector2f::Distance(P, FVector2f(0.5f, 0.45f)) <= 0.15f;
-		const float R = FVector2f::Distance(P, FVector2f(0.5f, 0.46f));
-		const bool Cup = V >= 0.46f && FMath::Abs(R - 0.27f) <= W * 0.5f;
-		const bool Stem = FMath::Abs(U - 0.5f) <= W * 0.5f && V >= 0.73f && V <= 0.88f;
-		const bool Base = FMath::Abs(U - 0.5f) <= 0.17f && FMath::Abs(V - 0.88f) <= W * 0.5f;
-		return (Capsule || Cup || Stem || Base) ? 1.f : 0.f;
-	});
-	HeadsetTexture = MakeTexture(14, [](float U, float V)
-	{
-		const FVector2f P(U, V);
-		const float R = FVector2f::Distance(P, FVector2f(0.5f, 0.55f));
-		const bool Band = V <= 0.58f && FMath::Abs(R - 0.36f) <= 0.04f;
-		auto Cup = [&P](float X) { return FMath::Abs(P.X - X) <= 0.09f && P.Y >= 0.55f && P.Y <= 0.86f; };
-		return (Band || Cup(0.17f) || Cup(0.83f)) ? 1.f : 0.f;
-	});
-	CoinTexture = MakeTextureRGBA(18, 18, [&S](float U, float V)
-	{
-		const float R = FVector2f(U - 0.5f, V - 0.5f).Size() * 2.f;
-		if (R > 1.f)
-		{
-			return FLinearColor(0.f, 0.f, 0.f, 0.f);
-		}
-		return R > 0.52f ? S(226, 179, 60) : S(58, 42, 10);
-	});
-
-	// ---- Camadas (de trás para frente): vida -> chakra -> caixa de voz -> avatar -> selo -> textos ----
-	// 4) Barra de vida 327x30 em (183,88): vazio #3A1A22 85%, preenchimento texturizado (recortado pela porcentagem)
-	Put(Solid(FColor(58, 26, 34), 0.85f), 183.f, 88.f, 327.f, 30.f);
-	HealthFill = WidgetTree->ConstructWidget<UImage>();
-	Put(HealthFill, 183.f, 88.f, 327.f, 30.f);
-
-	// 5) Barra de chakra 205x26 em (183,124): fundo #1E1E1E 75%, preenchimento pedra cinza 90%, espiral apagada
-	Put(Solid(FColor(30, 30, 30), 0.75f), 183.f, 124.f, 205.f, 26.f);
-	ChakraFill = WidgetTree->ConstructWidget<UImage>();
-	Put(ChakraFill, 183.f, 124.f, 205.f, 26.f);
-	FLinearColor SwirlTint = FLinearColor::FromSRGBColor(FColor(154, 154, 154));
-	SwirlTint.A = 0.4f;
-	SwirlIcon = Textured(SwirlTexture, SwirlTint);
-	Put(SwirlIcon, 205.f, 137.f, 18.f, 18.f, FVector2D(0.5f, 0.5f));
-
-	// 6) Caixa de voz 108x26 em (395,124): #141414 85%, microfone (433) e headphone (467) #E6E6E6 14 px
-	Put(Solid(FColor(20, 20, 20), 0.85f), 395.f, 124.f, 108.f, 26.f);
-	const FLinearColor IconTint = FLinearColor::FromSRGBColor(FColor(230, 230, 230));
-	Put(Textured(MicTexture, IconTint), 433.f, 137.f, 14.f, 14.f, FVector2D(0.5f, 0.5f));
-	Put(Textured(HeadsetTexture, IconTint), 467.f, 137.f, 14.f, 14.f, FVector2D(0.5f, 0.5f));
-
-	// 1) Avatar centrado em (117,130): anel de XP 124 px, fundo #1A1A1A e retrato em círculo de 100 px
+	// Camadas, de trás para frente: base (retrato, trilho do anel, caixa de voz) -> arco de XP -> selo + nível -> barras -> textos
+	PutRect(Picture(LifeBaseTexture), Base);
 	XpRing = WidgetTree->ConstructWidget<UImage>();
-	Put(XpRing, 117.f, 130.f, 124.f, 124.f, FVector2D(0.5f, 0.5f));
+	PutRect(XpRing.Get(), FBox2D(RingCenter - FVector2D(RingOuter), RingCenter + FVector2D(RingOuter)));
 	UpdateXpRing();
-	Put(Solid(FColor(26, 26, 26), 1.f, true), 117.f, 130.f, 100.f, 100.f, FVector2D(0.5f, 0.5f));
-	if (PortraitTexture)
-	{
-		UImage* Portrait = WidgetTree->ConstructWidget<UImage>();
-		Portrait->SetBrush(CircleImage(PortraitTexture));
-		Put(Portrait, 117.f, 130.f, 100.f, 100.f, FVector2D(0.5f, 0.5f));
-	}
+	PutRect(Picture(LevelBadgeTexture), Badge);
+	LevelText = Text(FString::FromInt(PlayerLevel), TEXT("ExtraBold"), LevelSize, FLinearColor::White, FVector2D::ZeroVector, FLinearColor::Transparent);
+	PutAt(LevelText.Get(), BadgeCenter, FVector2D(0.5f, 0.5f));
 
-	// 2) Selo de nível: círculo #111111 de 32 px em (118,186), texto ExtraBold 15
-	Put(Solid(FColor(17, 17, 17), 1.f, true), 118.f, 186.f, 32.f, 32.f, FVector2D(0.5f, 0.5f));
-	LevelText = Text(FString::FromInt(PlayerLevel), TEXT("ExtraBold"), 15.f, false);
-	Put(LevelText, 118.f, 186.f, 0.f, 0.f, FVector2D(0.5f, 0.5f));
+	// Vida: barra vazia (escurecida) inteira e a cheia recortada pela porcentagem
+	PutRect(Picture(HealthEmptyTexture), NinjaLife::Health);
+	HealthFill = Picture(HealthFullTexture);
+	PutRect(HealthFill.Get(), NinjaLife::Health);
 
-	// 3) Nome: x 181, topo em y 50, Bold 17, sombra 1 px
-	NameText = Text(TEXT("Ninja"), TEXT("Bold"), 17.f, true);
-	Put(NameText, 181.f, 50.f, 0.f, 0.f);
+	// Chakra: idem; as texturas trocam com o modo de batalha (ApplyBattleLook)
+	ChakraEmpty = Picture(ChakraEmptyTexture);
+	PutRect(ChakraEmpty.Get(), NinjaLife::Chakra);
+	ChakraFill = Picture(ChakraFullTexture);
+	PutRect(ChakraFill.Get(), NinjaLife::Chakra);
 
-	// Texto da vida: "750" ExtraBold 22 + "/750" Bold 13 na mesma linha de base, x 200, centrado na barra
-	HealthText = Text(TEXT("0"), TEXT("ExtraBold"), 22.f, true);
-	HealthMaxText = Text(TEXT("/0"), TEXT("Bold"), 13.f, true);
+	// Nome (com relevo cinza embaixo, como na imagem)
+	NameText = Text(TEXT("Ninja"), TEXT("ExtraBold"), NameSize, FLinearColor::White, ReliefOffset, Relief);
+	PutAt(NameText.Get(), NamePos, FVector2D(0.f, 0.5f));
+
+	// "750" grande + "/750" menor na mesma linha de base
+	HealthText = Text(TEXT("0"), TEXT("ExtraBold"), HealthSize, FLinearColor::White, FVector2D(0.f, 1.f), SoftShadow);
+	HealthMaxText = Text(TEXT("/0"), TEXT("Bold"), HealthMaxSize, FLinearColor::White, FVector2D(0.f, 1.f), SoftShadow);
 	UHorizontalBox* HpRow = WidgetTree->ConstructWidget<UHorizontalBox>();
 	HpRow->AddChildToHorizontalBox(HealthText)->SetVerticalAlignment(VAlign_Bottom);
 	UHorizontalBoxSlot* MaxSlot = HpRow->AddChildToHorizontalBox(HealthMaxText);
 	MaxSlot->SetVerticalAlignment(VAlign_Bottom);
-	MaxSlot->SetPadding(FMargin(0.f, 0.f, 0.f, 2.f));   // aproxima a linha de base (fontes de tamanhos diferentes)
-	Put(HpRow, 200.f, 103.f, 0.f, 0.f, FVector2D(0.f, 0.5f));
+	MaxSlot->SetPadding(FMargin(0.f, 0.f, 0.f, (HealthSize - HealthMaxSize) * 0.25f * K()));   // linhas de base juntas (descendentes diferentes)
+	PutAt(HpRow, HealthPos, FVector2D(0.f, 0.5f));
 
-	// Texto do chakra: ExtraBold 14, alinhado à direita com 10 px de margem (x 378)
-	ChakraText = Text(TEXT("100%"), TEXT("ExtraBold"), 14.f, false);
-	Put(ChakraText, 378.f, 137.f, 0.f, 0.f, FVector2D(1.f, 0.5f));
+	// Texto do chakra (alinhado à direita; posição, cor e tamanho trocam com o modo de batalha)
+	ChakraText = Text(TEXT("100%"), TEXT("ExtraBold"), ChakraSize, FLinearColor::White, FVector2D(0.f, 1.f), SoftShadow);
+	PutAt(ChakraText.Get(), ChakraPos, FVector2D(1.f, 0.5f));
 
-	// 7) Moedas: ícone 18 px em (181,187), texto Bold 15 em x 199
-	Put(Textured(CoinTexture, FLinearColor::White), 181.f, 187.f, 18.f, 18.f, FVector2D(0.5f, 0.5f));
-	CoinText = Text(FormatThousands(Coins), TEXT("Bold"), 15.f, false);
-	Put(CoinText, 199.f, 187.f, 0.f, 0.f, FVector2D(0.f, 0.5f));
+	// Linha de baixo fora da batalha: moeda + quantidade
+	CoinWidgets.Reset();
+	UImage* CoinImage = Picture(CoinIconTexture);
+	PutRect(CoinImage, Coin);
+	CoinText = Text(FormatThousands(Coins), TEXT("ExtraBold"), CoinSize, FLinearColor::White, ReliefOffset, Relief);
+	PutAt(CoinText.Get(), CoinTextPos, FVector2D(0.f, 0.5f));
 	ShownCoins = Coins;
+	CoinWidgets = { CoinImage, CoinText };
+
+	// Na batalha: os 2 ícones com a barrinha de baixo (o trilho já vem na imagem; o preenchimento é desenhado aqui)
+	BattleIconWidgets.Reset();
+	BattleIconBars.Reset();
+	BattleIconBarWidth.Reset();
+	for (int32 i = 0; i < 2; ++i)
+	{
+		UImage* Icon = Picture(BattleIconTextures.IsValidIndex(i) ? BattleIconTextures[i] : nullptr);
+		PutRect(Icon, Icons[i]);
+		UImage* Bar = WidgetTree->ConstructWidget<UImage>();
+		FSlateBrush BarBrush;
+		BarBrush.TintColor = FSlateColor(FLinearColor::FromSRGBColor(IconBarColors[i]));
+		Bar->SetBrush(BarBrush);
+		PutRect(Bar, IconBars[i]);
+		BattleIconWidgets.Append({ Icon, Bar });
+		BattleIconBars.Add(Bar);
+		BattleIconBarWidth.Add(IconBars[i].GetSize().X * K());
+	}
+	ShownBattle = -1;
+	ApplyBattleLook(false);
 }
 
 FString UNinjaHUDWidget::FormatThousands(int32 Value)
