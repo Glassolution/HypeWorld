@@ -32,6 +32,14 @@ public:
 	UPROPERTY(EditAnywhere, Category="HUD|Imagens")
 	TArray<UTexture2D*> AbilityIcons;
 
+	/** Experiência do nível atual (0..1) — o arco azul em volta do retrato. Placeholder até existir XP. */
+	UPROPERTY(EditAnywhere, Category="HUD")
+	float ExperiencePercent = 0.72f;
+
+	/** Moedas (placeholder até existir dinheiro) */
+	UPROPERTY(EditAnywhere, Category="HUD")
+	int32 Coins = 0;
+
 	/** Quantos slots de jutsu a barra tem */
 	UPROPERTY(EditAnywhere, Category="HUD|Jutsus")
 	int32 JutsuSlotCount = 5;
@@ -62,16 +70,26 @@ private:
 
 	void BuildLayout();
 
-	UPROPERTY() TObjectPtr<UProgressBar> HealthBar;
-	UPROPERTY() TObjectPtr<UProgressBar> ChakraBar;
 	UPROPERTY() TObjectPtr<UTextBlock> HealthText;
 	UPROPERTY() TObjectPtr<UTextBlock> HealthMaxText;
 	UPROPERTY() TObjectPtr<UTextBlock> ChakraText;
 	UPROPERTY() TObjectPtr<UTextBlock> LevelText;
 	UPROPERTY() TObjectPtr<UTextBlock> NameText;
 	UPROPERTY() TObjectPtr<UTextBlock> CoinText;
-	UPROPERTY() TObjectPtr<UWidget> InfusionBox;
-	UPROPERTY() TObjectPtr<UTextBlock> InfusionText;
+	UPROPERTY() TObjectPtr<UImage> HealthFill;
+	UPROPERTY() TObjectPtr<UImage> ChakraFill;
+	UPROPERTY() TObjectPtr<UImage> SwirlIcon;
+	UPROPERTY() TObjectPtr<UImage> XpRing;
+	UPROPERTY() TObjectPtr<UTexture2D> HealthTexture;
+	UPROPERTY() TObjectPtr<UTexture2D> ChakraTexture;
+	UPROPERTY() TObjectPtr<UTexture2D> RingTexture;
+	UPROPERTY() TObjectPtr<UTexture2D> MicTexture;
+	UPROPERTY() TObjectPtr<UTexture2D> HeadsetTexture;
+	UPROPERTY() TObjectPtr<UTexture2D> CoinTexture;
+	float ShownXp = -1.f;
+	/** Barras: a imagem de preenchimento é recortada (não esticada) conforme a porcentagem */
+	void SetFill(UImage* Fill, UTexture2D* Texture, float Percent, float Width, const FLinearColor& Tint);
+	void UpdateXpRing();
 	UPROPERTY() TObjectPtr<UTextBlock> ComboText;
 	UPROPERTY() TObjectPtr<UProgressBar> SuperJumpBar;
 	UPROPERTY() TObjectPtr<UTextBlock> SuperJumpText;
