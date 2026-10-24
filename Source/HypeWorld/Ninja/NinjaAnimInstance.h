@@ -32,6 +32,8 @@ struct FNinjaPoseInputs
 	float GuardAlpha = 0.f;						// 0..1 pose de defesa (antebraços na frente do rosto)
 	float FistAlpha = 0.f;						// 0..1 punhos fechados (golpes e defesa)
 	float ArmsSpreadAlpha = 0.f;				// 0..1 braços abertos (dash e segundo pulo)
+	float BattleAlpha = 0.f;					// 0..1 pose de luta parada (modo de batalha)
+	float BattleTime = 0.f;						// relógio da pose de luta (ela é um loop)
 	float Time = 0.f;							// relógio da animação (respiração)
 };
 
@@ -54,6 +56,10 @@ private:
 
 	/** Copia os dedos de uma animação de mão relaxada (as do Mixamo não convertem bem os dedos). */
 	void ApplyRelaxedHands(FPoseContext& Output) const;
+
+	/** Modo de batalha parado: mistura a pose de luta por cima do parado normal. */
+	void ApplyBattleIdle(FPoseContext& Output) const;
+	const UAnimSequenceBase* BattleIdle = nullptr;
 
 	/** Abre os dedos de uma mão (puxa para a pose de referência, que é a mão aberta). */
 	void OpenHand(FCompactPose& Pose, bool bRight, float Alpha, bool bOnlyIndexAndMiddle = false) const;
@@ -245,6 +251,19 @@ public:
 	UPROPERTY(EditAnywhere, Category="Ninja|Defesa")
 	float GuardHandSpread = 9.f;
 
+	/** Parado em modo de batalha (segurar botão direito / depois de bater ou apanhar): pose de luta em loop.
+	 *  Vazio = sem pose de luta (só o parado normal do gráfico). */
+	UPROPERTY(EditAnywhere, Category="Ninja|Batalha")
+	UAnimSequenceBase* BattleIdlePose = nullptr;
+
+	/** Rapidez para entrar/sair da pose de luta. */
+	UPROPERTY(EditAnywhere, Category="Ninja|Batalha")
+	float BattleBlendSpeed = 6.f;
+
+	/** Andando acima desta velocidade (cm/s) a pose de luta some (vale a animação de andar/correr). */
+	UPROPERTY(EditAnywhere, Category="Ninja|Batalha")
+	float BattleIdleMaxSpeed = 120.f;
+
 	/** Rapidez com que a mão vai até a parede / volta. */
 	UPROPERTY(EditAnywhere, Category="Ninja|Parede")
 	float WallHandBlendSpeed = 10.f;
@@ -268,4 +287,6 @@ private:
 	float LastVelocityZ = 0.f;
 	float LandStrength = 0.f;
 	float LandTime = 0.f;
+	float BattleAlpha = 0.f;
+	float BattleTime = 0.f;
 };

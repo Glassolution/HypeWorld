@@ -308,6 +308,15 @@ public:
 	UFUNCTION(BlueprintPure, Category="Ninja|Combate")
 	bool IsGuarding() const;
 
+	/** Modo de batalha: segurando o botão direito, golpeando, e por BattleModeDuration depois de bater ou apanhar.
+	 *  Parado em batalha = pose de luta; fora dela = parado normal. Replicado (todos veem igual). */
+	UFUNCTION(BlueprintPure, Category="Ninja|Combate")
+	bool IsInBattleMode() const { return bBattleMode; }
+
+	/** Quanto tempo o modo de batalha continua depois do último golpe dado ou levado (s) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
+	float BattleModeDuration = 6.f;
+
 	/** Atordoado por um golpe */
 	UFUNCTION(BlueprintPure, Category="Ninja|Combate")
 	bool IsStunned() const;
@@ -383,6 +392,11 @@ protected:
 
 	UPROPERTY(Replicated)
 	bool bGuarding = false;
+
+	UPROPERTY(Replicated)
+	bool bBattleMode = false;
+	float LastBattleTime = -100.f;
+	void UpdateBattleMode();
 
 	UFUNCTION()
 	void OnRep_ChargingChakra();

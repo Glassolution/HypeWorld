@@ -291,6 +291,7 @@ void AHypeWorldCharacter::Tick(float DeltaSeconds)
 	UpdateTurnInPlace(DeltaSeconds);
 	UpdateCameraFollow(DeltaSeconds);
 	UpdateGuard();
+	UpdateBattleMode();
 
 	// Aura: no máximo de chakra (carregando) vira a explosão — usa os atributos replicados, então todos veem igual
 	if (ChakraAura && Attributes)
@@ -326,6 +327,18 @@ void AHypeWorldCharacter::UpdateIdleBreak(float DeltaSeconds)
 		PlayAnimMontage(IdleBreakMontage);
 		IdleTime = 0.f;   // conta de novo a partir de agora
 	}
+}
+
+void AHypeWorldCharacter::UpdateBattleMode()
+{
+	// Quem decide: o servidor e o próprio jogador (resposta imediata); os outros recebem pela rede
+	if (!HasAuthority() && !IsLocallyControlled())
+	{
+		return;
+	}
+	const UNinjaMovementComponent* NinjaMovement = GetNinjaMovement();
+	const bool bHoldingFocus = NinjaMovement && NinjaMovement->IsFocusing();
+	bBattleMode = !bKnockedOut && (bGuarding || bHoldingFocus || IsAttacking() || GetWorld()->GetTimeSeconds() - LastBattleTime < BattleModeDuration);
 }
 
 void AHypeWorldCharacter::UpdateDoubleJump()
@@ -643,6 +656,7 @@ void AHypeWorldCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(AHypeWorldCharacter, bChargingChakra);
 	DOREPLIFETIME_CONDITION(AHypeWorldCharacter, bGuarding, COND_SkipOwner);
+	DOREPLIFETIME_CONDITION(AHypeWorldCharacter, bBattleMode, COND_SkipOwner);
 }
 
 bool AHypeWorldCharacter::IsAttacking() const
@@ -785,6 +799,7 @@ void AHypeWorldCharacter::BeginAttack(int32 AttackId)
 	}
 	CurrentAttackId = AttackId;
 	LastChainAttackId = INDEX_NONE;
+	LastBattleTime = GetWorld()->GetTimeSeconds();
 	AttackHitIndex = 0;
 	bComboWindowOpen = false;
 
@@ -1014,6 +1029,7 @@ void AHypeWorldCharacter::MulticastHitReaction_Implementation(ENinjaHitReaction 
 	{
 		return;
 	}
+	LastBattleTime = GetWorld()->GetTimeSeconds();   // apanhou: entra em modo de batalha
 	const FVector Head = GetActorLocation() + FVector(0.f, 0.f, GetSimpleCollisionHalfHeight() + 30.f);
 	if (Reaction == ENinjaHitReaction::Block)
 	{

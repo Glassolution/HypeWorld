@@ -40,6 +40,21 @@ void UNinjaAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		return;
 	}
 
+	// Modo de batalha parado: pose de luta (some ao andar e quando uma montagem — golpe, chakra, reação — toca)
+	{
+		const AHypeWorldCharacter* Ninja = Cast<AHypeWorldCharacter>(Char);
+		float Target = 0.f;
+		if (Ninja && BattleIdlePose && Ninja->IsInBattleMode() && Move->IsMovingOnGround())
+		{
+			Target = (1.f - FMath::Clamp(Char->GetVelocity().Size2D() / FMath::Max(1.f, BattleIdleMaxSpeed), 0.f, 1.f))
+				* (1.f - FMath::Clamp(GetSlotMontageGlobalWeight(FName("DefaultSlot")), 0.f, 1.f));
+		}
+		BattleAlpha = FMath::FInterpTo(BattleAlpha, Target, DeltaSeconds, BattleBlendSpeed);
+		BattleTime += DeltaSeconds;
+		PoseInputs.BattleAlpha = BattleAlpha;
+		PoseInputs.BattleTime = BattleTime;
+	}
+
 	const FVector Vel2D = Char->GetVelocity().GetSafeNormal2D();
 	FullDirection = Vel2D.IsNearlyZero() ? 0.f : FMath::FindDeltaAngleDegrees(Char->GetActorRotation().Yaw, Vel2D.Rotation().Yaw);
 
@@ -207,6 +222,7 @@ void FNinjaAnimInstanceProxy::PreUpdate(UAnimInstance* InAnimInstance, float Del
 		bProceduralPose = Ninja->bProceduralPose;
 		RelaxedHands = Ninja->RelaxedHandsPose;
 		FistHands = Ninja->FistHandsPose;
+		BattleIdle = Ninja->BattleIdlePose;
 		FistPoseTime = Ninja->FistPoseTime;
 		LandCrouchDepth = Ninja->LandCrouchDepth;
 		LookDownSpineAngle = Ninja->LookDownSpineAngle;
@@ -242,6 +258,10 @@ bool FNinjaAnimInstanceProxy::Evaluate_WithRoot(FPoseContext& Output, FAnimNode_
 {
 	// Primeiro a animação normal (gráfico do Animation Blueprint), depois os retoques.
 	EvaluateAnimationNode_WithRoot(Output, InRootNode);
+	if (InRootNode == GetRootNode())
+	{
+		ApplyBattleIdle(Output);
+	}
 	if (InRootNode == GetRootNode() && bProceduralPose)
 	{
 		ApplyRelaxedHands(Output);
@@ -766,5 +786,20 @@ void FNinjaAnimInstanceProxy::ApplyRelaxedHands(FPoseContext& Output) const
 					: Relaxed.Pose[Index].GetRotation());
 			}
 		}
+	}
+}
+
+void FNinjaAnimInstanceProxy::ApplyBattleIdle(FPoseContext& Output) const
+{
+	if (!BattleIdle || Inputs.BattleAlpha < 0.01f || BattleIdle->GetPlayLength() <= 0.f)
+	{
+		return;
+	}
+	FPoseContext Battle(Output);
+	FAnimationPoseData BattleData(Battle);
+	BattleIdle->GetAnimationPose(BattleData, FAnimExtractContext(double(FMath::Fmod(Inputs.BattleTime, BattleIdle->GetPlayLength()))));
+	for (const FCompactPoseBoneIndex Index : Output.Pose.ForEachBoneIndex())
+	{
+		Output.Pose[Index].BlendWith(Battle.Pose[Index], Inputs.BattleAlpha);
 	}
 }
