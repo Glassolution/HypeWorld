@@ -190,10 +190,11 @@ void AHypeWorldCharacter::DoMove(float Right, float Forward)
 			Wish = (GetActorForwardVector() * (1.f - AttackSteering) + Wish.GetSafeNormal() * AttackSteering).GetSafeNormal2D() * FMath::Min(Wish.Size(), 1.f);
 		}
 
-		// Correndo rápido: A/D viram em arco (limita o ângulo em relação à direção atual), para o boneco
-		// não sair correndo de lado na frente da câmera. Para trás (S) continua valendo: freia e vira.
+		// Corrida ninja: A/D viram em arco (limita o ângulo em relação à direção atual), para o boneco
+		// não sair correndo de lado na frente da câmera. Para trás (S) continua valendo: freia e vira na hora.
+		// O trote não entra aqui (corpo de frente para a câmera, passos laterais)
 		const FVector VelocityDir = GetVelocity().GetSafeNormal2D();
-		if (!GetCharacterMovement()->HasCustomGravity() && GetVelocity().Size2D() > CameraFollowMinSpeed && GetCharacterMovement()->IsMovingOnGround() && !Wish.IsNearlyZero())
+		if (!GetCharacterMovement()->HasCustomGravity() && GetNinjaMovement()->IsSprinting() && GetVelocity().Size2D() > CameraFollowMinSpeed && !Wish.IsNearlyZero())
 		{
 			const float WishSize = FMath::Min(Wish.Size(), 1.f);
 			const FVector WishDir = Wish.GetSafeNormal2D();
@@ -284,7 +285,7 @@ void AHypeWorldCharacter::DoJumpEnd()
 void AHypeWorldCharacter::DoSprintStart()
 {
 	// Corrida automática (não precisa segurar): cada clique no Shift troca andar -> trote -> corrida ninja -> andar.
-	// Ao parar de andar volta sozinho para o andar (UpdateAutoRun).
+	// Parando, a corrida ninja volta para o trote; o trote continua (UpdateAutoRun).
 	if (UNinjaMovementComponent* NinjaMovement = GetNinjaMovement())
 	{
 		if (NinjaMovement->WantsToSprint())
@@ -310,12 +311,14 @@ void AHypeWorldCharacter::UpdateAutoRun(float DeltaSeconds)
 		AutoRunStopTime = 0.f;
 		return;
 	}
-	// Parado no chão sem apertar direção por um instante: a corrida automática desliga
+	// Parado no chão sem apertar direção por um instante: a corrida ninja volta para o trote. O trote fica ligado
+	// (no PvP o jogador para e muda de lado o tempo todo); só o Shift o desliga
 	const bool bStopped = NinjaMovement->IsMovingOnGround() && NinjaMovement->GetCurrentAcceleration().IsNearlyZero() && GetVelocity().Size2D() < 20.f;
-	AutoRunStopTime = bStopped ? AutoRunStopTime + DeltaSeconds : 0.f;
+	AutoRunStopTime = bStopped && NinjaMovement->WantsToSprint() ? AutoRunStopTime + DeltaSeconds : 0.f;
 	if (AutoRunStopTime > 0.3f)
 	{
-		DoSprintEnd();
+		NinjaMovement->SetSprinting(false);
+		NinjaMovement->SetRunning(true);
 		AutoRunStopTime = 0.f;
 	}
 }
@@ -699,7 +702,7 @@ void AHypeWorldCharacter::UpdateRunAnimRate()
 		const float SideNatural = bRunningSide ? (Side >= 0.f ? RunStrafeRightNatural : RunStrafeLeftNatural) : WalkStrafeNatural;
 		const float WFwd = FMath::Max(0.f, Fwd), WBack = FMath::Max(0.f, -Fwd), WSide = FMath::Abs(Side);
 		Natural = (WFwd * Natural + WSide * SideNatural + WBack * WalkBackNatural) / FMath::Max(WFwd + WSide + WBack, 0.01f);
-		Rate = FMath::Clamp(Speed / FMath::Max(1.f, Natural), 1.f, FMath::Max(1.f, MaxRunAnimRate));
+		Rate = FMath::Clamp(Speed / FMath::Max(1.f, Natural), 0.8f, FMath::Max(1.f, MaxRunAnimRate));   // um pouco mais lenta também vale (trote)
 	}
 	GetMesh()->GlobalAnimRateScale = FMath::FInterpTo(GetMesh()->GlobalAnimRateScale, Rate, GetWorld()->GetDeltaSeconds(), 10.f);
 }
@@ -719,8 +722,10 @@ void AHypeWorldCharacter::UpdateCameraFollow(float DeltaSeconds)
 	const FVector Input2D = NinjaMovement->GetCurrentAcceleration().GetSafeNormal2D();
 	const bool bSidewaysInput = !Input2D.IsNearlyZero() && FMath::Abs(FMath::FindDeltaAngleDegrees(PC->GetControlRotation().Yaw, Input2D.Rotation().Yaw)) > 60.f;
 	const bool bTowardCamera = FMath::Abs(FMath::FindDeltaAngleDegrees(PC->GetControlRotation().Yaw, Velocity2D.Rotation().Yaw)) > 100.f;
-	// Corrida ninja: o corpo vira para onde corre e a câmera SEMPRE volta para as costas (A/D fazem curva; S dá a volta)
-	const bool bSprintFollow = NinjaMovement->IsSprinting() && Velocity2D.Size() > CameraFollowMinSpeed && !NinjaMovement->IsWallRunning();
+	// Corrida ninja: o corpo vira para onde corre e a câmera volta para as costas (A/D fazem curva). Com S ele vira na hora e
+	// corre na direção da câmera — aí a câmera não persegue (senão o "para trás" gira junto com ela e ele fica dando voltas)
+	const bool bTowardCameraSprint = FMath::Abs(FMath::FindDeltaAngleDegrees(PC->GetControlRotation().Yaw, GetActorRotation().Yaw)) > 120.f;
+	const bool bSprintFollow = NinjaMovement->IsSprinting() && Velocity2D.Size() > CameraFollowMinSpeed && !NinjaMovement->IsWallRunning() && !bTowardCameraSprint;
 	const bool bFast = bSprintFollow || (Velocity2D.Size() > CameraFollowMinSpeed && !NinjaMovement->IsWallRunning() && !NinjaMovement->IsStrafeRunning() && !NinjaMovement->IsFocusing() && !bTowardCamera && !bSidewaysInput);
 	const bool bMouseIdle = GetWorld()->GetTimeSeconds() - LastLookInputTime > CameraFollowDelay;
 	// Golpeando (e logo depois): a câmera é só do jogador — o avanço do golpe não pode girá-la (pareceria mira travada)
@@ -734,7 +739,8 @@ void AHypeWorldCharacter::UpdateCameraFollow(float DeltaSeconds)
 	FRotator Control = PC->GetControlRotation();
 	const float SpeedFactor = FMath::Clamp(Velocity2D.Size() / 1200.f, 0.3f, 1.f);
 	const float TargetYaw = bSprintFollow ? GetActorRotation().Yaw : Velocity2D.Rotation().Yaw;   // corrida ninja: atrás do corpo
-	Control.Yaw = FMath::FInterpTo(Control.Yaw, Control.Yaw + FMath::FindDeltaAngleDegrees(Control.Yaw, TargetYaw), DeltaSeconds, CameraFollowSpeed * SpeedFactor);
+	const float FollowSpeed = bSprintFollow ? SprintCameraFollowSpeed : CameraFollowSpeed * SpeedFactor;   // corrida ninja: acompanha as curvas rápidas
+	Control.Yaw = FMath::FInterpTo(Control.Yaw, Control.Yaw + FMath::FindDeltaAngleDegrees(Control.Yaw, TargetYaw), DeltaSeconds, FollowSpeed);
 	PC->SetControlRotation(Control);
 }
 

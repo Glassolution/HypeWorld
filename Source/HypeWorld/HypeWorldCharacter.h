@@ -154,6 +154,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Ninja|Câmera")
 	float CameraFollowDelay = 0.6f;
 
+	/** Corrida ninja: rapidez com que a câmera volta para as costas nas curvas */
+	UPROPERTY(EditAnywhere, Category="Ninja|Câmera")
+	float SprintCameraFollowSpeed = 8.f;
+
 	/** Correndo rápido, A/D viram em arco: no máximo este ângulo em relação à direção atual (graus) */
 	UPROPERTY(EditAnywhere, Category="Ninja|Movimento")
 	float SprintSteerAngle = 35.f;
