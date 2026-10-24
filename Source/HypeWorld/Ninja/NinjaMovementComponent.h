@@ -100,6 +100,14 @@ public:
 	/** Duração real do dash (segue a animação quando houver uma). */
 	float GetDashDuration() const;
 
+	/** Dash com a tecla mais que este ângulo fora da câmera (lado/trás): o corpo fica de frente para a câmera e o dash vai de lado/de costas */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Dash")
+	float DashStrafeAngle = 50.f;
+
+	FVector GetDashDirection() const { return DashDirection; }
+	bool IsDashStrafe() const { return bDashStrafe; }
+	float GetDashFacingYaw() const { return DashFacingYaw; }
+
 	/** Velocidade correndo na parede. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Parede")
 	float WallRunSpeed = 1100.f;
@@ -189,6 +197,8 @@ protected:
 	virtual void OnMovementModeChanged(EMovementMode PreviousMovementMode, uint8 PreviousCustomMode) override;
 
 private:
+	bool bDashStrafe = false;		// dash de lado/de costas (corpo de frente para a câmera)
+	float DashFacingYaw = 0.f;
 
 	void PhysDash(float DeltaTime, int32 Iterations);
 	void PhysWallRun(float DeltaTime, int32 Iterations);
@@ -254,4 +264,5 @@ public:
 	FNetworkPredictionData_Client_Ninja(const UCharacterMovementComponent& ClientMovement) : Super(ClientMovement) {}
 
 	virtual FSavedMovePtr AllocateNewMove() override { return FSavedMovePtr(new FSavedMove_Ninja()); }
+
 };

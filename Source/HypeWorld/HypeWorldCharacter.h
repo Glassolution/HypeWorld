@@ -9,6 +9,7 @@
 #include "GameplayEffectTypes.h"
 #include "CombatAttacker.h"
 #include "NinjaCombatTypes.h"
+#include "NinjaFightingStyle.h"
 #include "HypeWorldCharacter.generated.h"
 
 class USpringArmComponent;
@@ -96,9 +97,17 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Input")
 	UInputAction* FocusAction;
 
-	/** Animação do dash */
+	/** Abre/fecha o menu de combate (Tab) */
+	UPROPERTY(EditAnywhere, Category="Input")
+	UInputAction* CombatMenuAction;
+
+	/** Animação do dash (usada quando DashVariants não tem nada para a direção) */
 	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
 	UAnimMontage* DashMontage;
+
+	/** Dashes por direção em relação à câmera (frente, trás, esquerda, direita, no ar), com variações que se alternam */
+	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
+	FNinjaDashSet DashVariants;
 
 	/** Animação do pulo de parede */
 	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
@@ -375,6 +384,31 @@ public:
 	/** Golpes seguidos que este personagem está levando agora (servidor) */
 	int32 GetTakenComboHits() const { return TakenComboHits; }
 
+	// ---------- Estilos de luta (menu de combate) ----------
+
+	/** Estilos que o jogador pode escolher no menu (Taijutsu). O primeiro é o padrão. */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Estilos")
+	TArray<TObjectPtr<UNinjaFightingStyle>> FightingStyles;
+
+	/** Escolhe o estilo de luta (falha se ele exige uma arma que o personagem não está segurando) */
+	UFUNCTION(BlueprintCallable, Category="Ninja|Combate|Estilos")
+	bool SelectFightingStyle(int32 Index);
+
+	UFUNCTION(BlueprintPure, Category="Ninja|Combate|Estilos")
+	int32 GetFightingStyleIndex() const { return FightingStyleIndex; }
+
+	UFUNCTION(BlueprintPure, Category="Ninja|Combate|Estilos")
+	UNinjaFightingStyle* GetFightingStyle() const;
+
+	UFUNCTION(BlueprintPure, Category="Ninja|Combate|Estilos")
+	bool CanUseFightingStyle(const UNinjaFightingStyle* Style) const;
+
+	UFUNCTION(BlueprintPure, Category="Ninja|Combate|Estilos")
+	ENinjaWeapon GetEquippedWeapon() const { return EquippedWeapon; }
+
+	/** Base de luta do estilo atual (vazio = a padrão do Anim Blueprint) */
+	UAnimSequenceBase* GetBattleIdlePose() const;
+
 	/** Atordoado por um golpe */
 	UFUNCTION(BlueprintPure, Category="Ninja|Combate")
 	bool IsStunned() const;
@@ -451,6 +485,28 @@ protected:
 	void DoSubstitution();
 	UFUNCTION(NetMulticast, Reliable)
 	void MulticastSubstitution(FVector_NetQuantize From, FVector_NetQuantize To);
+
+	UPROPERTY(Replicated)
+	int32 FightingStyleIndex = 0;
+	UPROPERTY(Replicated)
+	ENinjaWeapon EquippedWeapon = ENinjaWeapon::None;
+	UFUNCTION(Server, Reliable)
+	void ServerSelectFightingStyle(int32 Index);
+
+	// Variedade: o último combo/finalizador/golpe sorteado (o próximo sorteio evita repetir)
+	mutable int32 LastComboString = INDEX_NONE;
+	mutable int32 LastFinisher = INDEX_NONE;
+	mutable int32 LastSprintAttack = INDEX_NONE;
+	mutable int32 LastAirAttack = INDEX_NONE;
+	static int32 PickVariant(int32 Num, int32 Last);
+
+	// Dash: montagem tocando agora e contador (escolhe a variação igual em todas as máquinas)
+	UPROPERTY()
+	TObjectPtr<UAnimMontage> ActiveDashMontage;
+	int32 DashCount = 0;
+	UAnimMontage* PickDashMontage(EMovementMode PrevMovementMode);
+
+	void DoCombatMenu();
 
 	UPROPERTY(Replicated)
 	int32 SubstitutionCharges = 2;

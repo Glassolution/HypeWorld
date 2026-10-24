@@ -8,6 +8,8 @@
 #include "Blueprint/UserWidget.h"
 #include "HypeWorld.h"
 #include "NinjaHUDWidget.h"
+#include "NinjaCombatMenuWidget.h"
+#include "Components/Widget.h"
 #include "Widgets/Input/SVirtualJoystick.h"
 
 void AHypeWorldPlayerController::BeginPlay()
@@ -75,4 +77,49 @@ bool AHypeWorldPlayerController::ShouldUseTouchControls() const
 {
 	// are we on a mobile platform? Should we force touch?
 	return SVirtualJoystick::ShouldDisplayTouchInterface() || bForceTouchControls;
+}
+
+bool AHypeWorldPlayerController::IsCombatMenuOpen() const
+{
+	return CombatMenu && CombatMenu->IsInViewport() && CombatMenu->GetVisibility() == ESlateVisibility::Visible;
+}
+
+void AHypeWorldPlayerController::ToggleCombatMenu()
+{
+	if (!IsLocalPlayerController())
+	{
+		return;
+	}
+	if (!CombatMenu)
+	{
+		CombatMenu = CreateWidget<UNinjaCombatMenuWidget>(this, UNinjaCombatMenuWidget::StaticClass());
+		if (!CombatMenu)
+		{
+			return;
+		}
+		CombatMenu->AddToPlayerScreen(10);
+		CombatMenu->SetVisibility(ESlateVisibility::Collapsed);
+		CombatMenu->OnCloseRequested.AddUObject(this, &AHypeWorldPlayerController::ToggleCombatMenu);
+	}
+	const bool bOpen = !IsCombatMenuOpen();
+	CombatMenu->SetVisibility(bOpen ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+	if (HUDWidget)
+	{
+		HUDWidget->SetVisibility(bOpen ? ESlateVisibility::Collapsed : ESlateVisibility::SelfHitTestInvisible);   // o HUD ficaria por baixo do menu
+	}
+	SetShowMouseCursor(bOpen);
+	if (bOpen)
+	{
+		CombatMenu->Refresh();
+		FInputModeGameAndUI Mode;
+		Mode.SetHideCursorDuringCapture(false);
+		Mode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+		SetInputMode(Mode);
+		SetIgnoreLookInput(true);
+	}
+	else
+	{
+		SetInputMode(FInputModeGameOnly());
+		ResetIgnoreLookInput();
+	}
 }

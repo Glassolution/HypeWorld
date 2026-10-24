@@ -86,6 +86,11 @@ FRotator UNinjaMovementComponent::ComputeOrientToMovementRotation(const FRotator
 			return AlongWall.Rotation();
 		}
 	}
+	// Dash de lado/de costas: o corpo continua de frente para a câmera
+	if (IsDashing() && bDashStrafe)
+	{
+		return FRotator(0.f, DashFacingYaw, 0.f);
+	}
 	// Golpeando: o corpo vira (rápido, limitado pelo RotationRate — sem estalo) para onde a câmera olhava no golpe
 	if (const AHypeWorldCharacter* Ninja = Cast<AHypeWorldCharacter>(CharacterOwner); Ninja && Ninja->IsAttacking())
 	{
@@ -226,6 +231,19 @@ void UNinjaMovementComponent::StartDash()
 	if (!IsMovingOnGround())
 	{
 		bAirDashUsed = true;
+	}
+
+	// Tecla para o lado/para trás em relação à câmera (no chão): o corpo fica de frente para a câmera e o dash vai de lado/de costas
+	bDashStrafe = false;
+	if (IsMovingOnGround() && CharacterOwner && !Acceleration.IsNearlyZero())
+	{
+		const float ControlYaw = CharacterOwner->GetControlRotation().Yaw;
+		if (FMath::Abs(FMath::FindDeltaAngleDegrees(ControlYaw, DashDirection.Rotation().Yaw)) > DashStrafeAngle)
+		{
+			bDashStrafe = true;
+			DashFacingYaw = ControlYaw;
+			MoveUpdatedComponent(FVector::ZeroVector, FRotator(0.f, ControlYaw, 0.f).Quaternion(), false);
+		}
 	}
 	DashTimeLeft = GetDashDuration();
 	DashCooldownLeft = DashCooldown;

@@ -43,8 +43,10 @@ void UNinjaAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	// Modo de batalha parado: pose de luta (some ao andar e quando uma montagem — golpe, chakra, reação — toca)
 	{
 		const AHypeWorldCharacter* Ninja = Cast<AHypeWorldCharacter>(Char);
+		UAnimSequenceBase* StylePose = Ninja ? Ninja->GetBattleIdlePose() : nullptr;
+		ActiveBattleIdle = StylePose ? StylePose : BattleIdlePose;
 		float Target = 0.f;
-		if (Ninja && BattleIdlePose && Ninja->IsInBattleMode() && Move->IsMovingOnGround())
+		if (Ninja && ActiveBattleIdle && Ninja->IsInBattleMode() && Move->IsMovingOnGround())
 		{
 			Target = (1.f - FMath::Clamp(Char->GetVelocity().Size2D() / FMath::Max(1.f, BattleIdleMaxSpeed), 0.f, 1.f))
 				* (1.f - FMath::Clamp(GetSlotMontageGlobalWeight(FName("DefaultSlot")), 0.f, 1.f));
@@ -222,7 +224,7 @@ void FNinjaAnimInstanceProxy::PreUpdate(UAnimInstance* InAnimInstance, float Del
 		bProceduralPose = Ninja->bProceduralPose;
 		RelaxedHands = Ninja->RelaxedHandsPose;
 		FistHands = Ninja->FistHandsPose;
-		BattleIdle = Ninja->BattleIdlePose;
+		BattleIdle = Ninja->ActiveBattleIdle ? Ninja->ActiveBattleIdle.Get() : Ninja->BattleIdlePose;
 		FistPoseTime = Ninja->FistPoseTime;
 		LandCrouchDepth = Ninja->LandCrouchDepth;
 		LookDownSpineAngle = Ninja->LookDownSpineAngle;

@@ -30,6 +30,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "NinjaCombatTypes.h"
+#include "HypeWorldPlayerController.h"
 
 AHypeWorldCharacter::AHypeWorldCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UNinjaMovementComponent>(ACharacter::CharacterMovementComponentName))
@@ -127,6 +128,10 @@ void AHypeWorldCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 		EnhancedInputComponent->BindAction(ChargeChakraAction, ETriggerEvent::Completed, this, &AHypeWorldCharacter::DoChargeReleased);
 		EnhancedInputComponent->BindAction(FocusAction, ETriggerEvent::Started, this, &AHypeWorldCharacter::DoFocusStart);
 		EnhancedInputComponent->BindAction(FocusAction, ETriggerEvent::Completed, this, &AHypeWorldCharacter::DoFocusEnd);
+		if (CombatMenuAction)
+		{
+			EnhancedInputComponent->BindAction(CombatMenuAction, ETriggerEvent::Started, this, &AHypeWorldCharacter::DoCombatMenu);
+		}
 	}
 	else
 	{
@@ -423,19 +428,23 @@ void AHypeWorldCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, 
 	const bool bWasWallRunning = PrevMovementMode == MOVE_Custom && PreviousCustomMode == NMOVE_WallRun;
 
 	// Saiu de um modo: para a animação dele (o dash termina pela seção "End" da montagem, se ela tiver: aterrissagem)
-	if (bWasDashing && !NinjaMovement->IsDashing() && DashMontage)
+	UAnimMontage* EndingDash = ActiveDashMontage ? ActiveDashMontage.Get() : DashMontage;
+	if (bWasDashing && !NinjaMovement->IsDashing() && EndingDash)
 	{
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 		static const FName EndSection("End");
 		// Saiu correndo do dash: volta direto à corrida (aterrissagem parada deslizaria)
 		const bool bKeepsRunning = NinjaMovement->IsMovingOnGround() && GetVelocity().Size2D() > NinjaMovement->MaxWalkSpeed * 1.5f;
-		if (!bKeepsRunning && AnimInstance && AnimInstance->Montage_IsPlaying(DashMontage) && DashMontage->IsValidSectionName(EndSection))
+		if (!bKeepsRunning && AnimInstance && AnimInstance->Montage_IsPlaying(EndingDash) && EndingDash->IsValidSectionName(EndSection))
 		{
-			AnimInstance->Montage_JumpToSection(EndSection, DashMontage);
+			if (AnimInstance->Montage_GetCurrentSection(EndingDash) != EndSection)
+			{
+				AnimInstance->Montage_JumpToSection(EndSection, EndingDash);
+			}
 		}
 		else
 		{
-			StopAnimMontage(DashMontage);
+			StopAnimMontage(EndingDash);
 		}
 	}
 	// Pousou: o mortal do pulo duplo (que segura a pose de descida) dá lugar ao pouso
@@ -460,7 +469,8 @@ void AHypeWorldCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, 
 	// Entrou num modo: toca a animação dele
 	if (NinjaMovement->IsDashing())
 	{
-		PlayAnimMontage(DashMontage, NinjaMovement->DashAnimRate);
+		ActiveDashMontage = PickDashMontage(PrevMovementMode);
+		PlayAnimMontage(ActiveDashMontage, NinjaMovement->DashAnimRate);
 	}
 	else if (NinjaMovement->IsWallRunning() && WallRunMontage)
 	{
@@ -725,6 +735,8 @@ void AHypeWorldCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	DOREPLIFETIME_CONDITION(AHypeWorldCharacter, bGuarding, COND_SkipOwner);
 	DOREPLIFETIME_CONDITION(AHypeWorldCharacter, bBattleMode, COND_SkipOwner);
 	DOREPLIFETIME_CONDITION(AHypeWorldCharacter, SubstitutionCharges, COND_OwnerOnly);
+	DOREPLIFETIME_CONDITION(AHypeWorldCharacter, FightingStyleIndex, COND_SkipOwner);
+	DOREPLIFETIME(AHypeWorldCharacter, EquippedWeapon);
 	DOREPLIFETIME(AHypeWorldCharacter, bInvulnerable);
 }
 
@@ -759,6 +771,28 @@ namespace NinjaAttackId
 
 const FNinjaAttack* AHypeWorldCharacter::GetAttack(int32 AttackId) const
 {
+	// Estilo de luta: leve = combo*16 + posição; forte/correndo/ar = base + índice da variação
+	if (const UNinjaFightingStyle* Style = GetFightingStyle())
+	{
+		auto At = [](const TArray<FNinjaAttack>& List, int32 Index) { return List.IsValidIndex(Index) && List[Index].Montage ? &List[Index] : nullptr; };
+		if (AttackId >= 0 && AttackId < NinjaAttackId::Heavy)
+		{
+			return Style->Combos.IsValidIndex(AttackId / 16) ? At(Style->Combos[AttackId / 16].Attacks, AttackId % 16) : nullptr;
+		}
+		if (AttackId >= NinjaAttackId::Heavy && AttackId < NinjaAttackId::Sprint)
+		{
+			return At(Style->Finishers, AttackId - NinjaAttackId::Heavy);
+		}
+		if (AttackId >= NinjaAttackId::Sprint && AttackId < NinjaAttackId::Air)
+		{
+			return At(Style->SprintAttacks, AttackId - NinjaAttackId::Sprint);
+		}
+		if (AttackId >= NinjaAttackId::Air && AttackId < NinjaAttackId::Air + 100)
+		{
+			return At(Style->AirAttacks, AttackId - NinjaAttackId::Air);
+		}
+		return nullptr;
+	}
 	if (AttackId >= 0 && AttackId < NinjaAttackId::Heavy)
 	{
 		return LightCombo.IsValidIndex(AttackId) ? &LightCombo[AttackId] : nullptr;
@@ -785,6 +819,49 @@ int32 AHypeWorldCharacter::ChooseAttack(ENinjaAttackInput Input) const
 		: (GetWorld()->GetTimeSeconds() <= ChainExpireTime ? LastChainAttackId : INDEX_NONE);
 	const bool bChaining = ChainId != INDEX_NONE;
 	const bool bLightChain = bChaining && ChainId < NinjaAttackId::Heavy;
+
+	// Estilo de luta: combos sorteados (nunca o mesmo duas vezes seguidas), finalizador/corrida/ar sorteados
+	if (const UNinjaFightingStyle* Style = GetFightingStyle())
+	{
+		auto NewCombo = [this, Style]()
+		{
+			if (Style->Combos.Num() == 0)
+			{
+				return int32(INDEX_NONE);
+			}
+			LastComboString = PickVariant(Style->Combos.Num(), LastComboString);
+			return LastComboString * 16;
+		};
+		if (Input == ENinjaAttackInput::Heavy)
+		{
+			if (Style->Finishers.Num() == 0 || (bChaining && !bLightChain))
+			{
+				return INDEX_NONE;
+			}
+			LastFinisher = PickVariant(Style->Finishers.Num(), LastFinisher);
+			return NinjaAttackId::Heavy + LastFinisher;
+		}
+		if (bLightChain)
+		{
+			const int32 S = ChainId / 16, P = ChainId % 16;
+			return (Style->Combos.IsValidIndex(S) && P + 1 < Style->Combos[S].Attacks.Num()) ? ChainId + 1 : NewCombo();
+		}
+		if (bChaining)
+		{
+			return NewCombo();
+		}
+		if (GetCharacterMovement()->IsFalling() && Style->AirAttacks.Num() > 0)
+		{
+			LastAirAttack = PickVariant(Style->AirAttacks.Num(), LastAirAttack);
+			return NinjaAttackId::Air + LastAirAttack;
+		}
+		if (GetCharacterMovement()->IsMovingOnGround() && GetVelocity().Size2D() >= SprintAttackMinSpeed && Style->SprintAttacks.Num() > 0)
+		{
+			LastSprintAttack = PickVariant(Style->SprintAttacks.Num(), LastSprintAttack);
+			return NinjaAttackId::Sprint + LastSprintAttack;
+		}
+		return NewCombo();
+	}
 
 	if (Input == ENinjaAttackInput::Heavy)
 	{
@@ -834,6 +911,11 @@ void AHypeWorldCharacter::StartAttack(ENinjaAttackInput Input)
 	if (bKnockedOut || bChargingChakra || IsStunned() || !ComboAbility)
 	{
 		return;
+	}
+	const AHypeWorldPlayerController* PC = Cast<AHypeWorldPlayerController>(GetController());
+	if (PC && PC->IsCombatMenuOpen())
+	{
+		return;   // menu de combate aberto: o clique é do menu
 	}
 	if (IsAttacking() && !bComboWindowOpen)
 	{
@@ -1183,6 +1265,20 @@ bool AHypeWorldCharacter::IsPlayingAttackMontage() const
 		return false;
 	}
 	auto Uses = [Montage](const FNinjaAttack& Attack) { return Attack.Montage == Montage; };
+	if (const UNinjaFightingStyle* Style = GetFightingStyle())
+	{
+		for (const FNinjaComboString& Combo : Style->Combos)
+		{
+			if (Combo.Attacks.ContainsByPredicate(Uses))
+			{
+				return true;
+			}
+		}
+		if (Style->Finishers.ContainsByPredicate(Uses) || Style->SprintAttacks.ContainsByPredicate(Uses) || Style->AirAttacks.ContainsByPredicate(Uses))
+		{
+			return true;
+		}
+	}
 	return LightCombo.ContainsByPredicate(Uses) || HeavyAttacks.ContainsByPredicate(Uses) || Uses(SprintAttack) || Uses(AirAttack);
 }
 
@@ -1464,5 +1560,109 @@ void AHypeWorldCharacter::MulticastSubstitution_Implementation(FVector_NetQuanti
 			LogMesh->SetSimulatePhysics(true);
 			Log->SetLifeSpan(2.f);
 		}
+	}
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Estilos de luta, variedade de golpes e de dash, menu de combate
+// ---------------------------------------------------------------------------------------------------------------------
+
+int32 AHypeWorldCharacter::PickVariant(int32 Num, int32 Last)
+{
+	// Sorteia um índice diferente do último (com uma só opção, repete)
+	if (Num <= 1)
+	{
+		return 0;
+	}
+	int32 Index = FMath::RandRange(0, Num - 2);
+	return (Last != INDEX_NONE && Index >= Last) ? Index + 1 : Index;
+}
+
+UNinjaFightingStyle* AHypeWorldCharacter::GetFightingStyle() const
+{
+	return FightingStyles.IsValidIndex(FightingStyleIndex) ? FightingStyles[FightingStyleIndex].Get() : nullptr;
+}
+
+bool AHypeWorldCharacter::CanUseFightingStyle(const UNinjaFightingStyle* Style) const
+{
+	return Style && (Style->RequiredWeapon == ENinjaWeapon::None || Style->RequiredWeapon == EquippedWeapon) && Style->Combos.Num() > 0;
+}
+
+bool AHypeWorldCharacter::SelectFightingStyle(int32 Index)
+{
+	if (!FightingStyles.IsValidIndex(Index) || !CanUseFightingStyle(FightingStyles[Index]))
+	{
+		return false;
+	}
+	FightingStyleIndex = Index;
+	LastComboString = LastFinisher = LastSprintAttack = LastAirAttack = INDEX_NONE;
+	if (!HasAuthority())
+	{
+		ServerSelectFightingStyle(Index);
+	}
+	return true;
+}
+
+void AHypeWorldCharacter::ServerSelectFightingStyle_Implementation(int32 Index)
+{
+	SelectFightingStyle(Index);
+}
+
+UAnimSequenceBase* AHypeWorldCharacter::GetBattleIdlePose() const
+{
+	const UNinjaFightingStyle* Style = GetFightingStyle();
+	return Style ? Style->BattleIdle.Get() : nullptr;
+}
+
+UAnimMontage* AHypeWorldCharacter::PickDashMontage(EMovementMode PrevMovementMode)
+{
+	// Direção do dash em relação a para onde o corpo olha (no dash de lado/de costas o corpo fica de frente para a câmera)
+	const UNinjaMovementComponent* NinjaMovement = GetNinjaMovement();
+	FVector Dir;
+	float FacingYaw;
+	if (NinjaMovement && (IsLocallyControlled() || HasAuthority()))
+	{
+		Dir = NinjaMovement->GetDashDirection();
+		FacingYaw = NinjaMovement->IsDashStrafe() ? NinjaMovement->GetDashFacingYaw() : Dir.Rotation().Yaw;
+	}
+	else
+	{
+		Dir = GetVelocity().GetSafeNormal2D();   // outros jogadores: pela velocidade e rotação recebidas
+		FacingYaw = GetActorRotation().Yaw;
+	}
+	const float Rel = Dir.IsNearlyZero() ? 0.f : FMath::FindDeltaAngleDegrees(FacingYaw, Dir.Rotation().Yaw);
+
+	const TArray<TObjectPtr<UAnimMontage>>* List = &DashVariants.Front;
+	if (PrevMovementMode == MOVE_Falling && DashVariants.Air.Num() > 0)
+	{
+		List = &DashVariants.Air;
+	}
+	else if (FMath::Abs(Rel) >= 135.f && DashVariants.Back.Num() > 0)
+	{
+		List = &DashVariants.Back;
+	}
+	else if (Rel > 45.f && DashVariants.Right.Num() > 0)
+	{
+		List = &DashVariants.Right;
+	}
+	else if (Rel < -45.f && DashVariants.Left.Num() > 0)
+	{
+		List = &DashVariants.Left;
+	}
+	if (List->Num() == 0)
+	{
+		return DashMontage;
+	}
+	// Variação: contador de dashes embaralhado (igual em todas as máquinas, sem precisar mandar nada pela rede)
+	uint32 Hash = (uint32(DashCount++) + 1u) * 0x9E3779B1u;
+	Hash = ((Hash ^ (Hash >> 15)) * 0x2C1B3C6Du) >> 16;
+	return (*List)[Hash % uint32(List->Num())];
+}
+
+void AHypeWorldCharacter::DoCombatMenu()
+{
+	if (AHypeWorldPlayerController* PC = Cast<AHypeWorldPlayerController>(GetController()))
+	{
+		PC->ToggleCombatMenu();
 	}
 }

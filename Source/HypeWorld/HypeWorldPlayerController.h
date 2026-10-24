@@ -9,6 +9,7 @@
 class UInputMappingContext;
 class UUserWidget;
 class UNinjaHUDWidget;
+class UNinjaCombatMenuWidget;
 
 /**
  *  Basic PlayerController class for a third person game
@@ -44,6 +45,21 @@ protected:
 	/** HUD criado para este jogador */
 	UPROPERTY()
 	TObjectPtr<UNinjaHUDWidget> HUDWidget;
+
+	/** Menu de combate (Tab), criado na primeira vez que abre */
+	UPROPERTY()
+	TObjectPtr<UNinjaCombatMenuWidget> CombatMenu;
+
+public:
+
+	/** Abre/fecha o menu de combate: com ele aberto o mouse aparece e a câmera para de girar */
+	UFUNCTION(BlueprintCallable, Category="HUD")
+	void ToggleCombatMenu();
+
+	UFUNCTION(BlueprintPure, Category="HUD")
+	bool IsCombatMenuOpen() const;
+
+protected:
 
 	/** If true, the player will use UMG touch controls even if not playing on mobile platforms */
 	UPROPERTY(EditAnywhere, Config, Category = "Input|Touch Controls")

@@ -289,4 +289,8 @@ private:
 	float LandTime = 0.f;
 	float BattleAlpha = 0.f;
 	float BattleTime = 0.f;
+
+	/** Base de luta em uso: a do estilo de luta do personagem, ou BattleIdlePose */
+	UPROPERTY()
+	TObjectPtr<UAnimSequenceBase> ActiveBattleIdle;
 };
