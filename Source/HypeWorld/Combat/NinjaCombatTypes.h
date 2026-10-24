@@ -31,7 +31,8 @@ enum class ENinjaAttackInput : uint8
 {
 	None,
 	Light,			// botão esquerdo
-	Heavy			// F
+	Heavy,			// F
+	Launcher		// Espaço no meio do combo: golpe que joga o adversário para cima (começa o combo aéreo)
 };
 
 /** Ficha de um golpe: animação (montagem recortada) e o que ele faz em quem é atingido. */

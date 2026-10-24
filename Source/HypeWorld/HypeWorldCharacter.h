@@ -381,6 +381,32 @@ public:
 	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Fuga")
 	float SubstitutionInvulnerability = 0.5f;
 
+	// ---------- Combo aéreo e mortal para trás ----------
+
+	/** Lançador acertou: o atacante sobe atrás do adversário (cm/s para cima) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Aéreo")
+	float LauncherFollowUpSpeed = 1150.f;
+
+	/** Golpe no ar acertou: atacante e adversário ficam no ar mais um pouco (velocidade para cima, cm/s) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Aéreo")
+	float AirHoverSpeed = 380.f;
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Aéreo")
+	float AirJuggleSpeed = 430.f;
+
+	/** Reações no ar (sorteada) e ao ser lançado para cima */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Aéreo")
+	TArray<UAnimMontage*> AirHitReactMontages;
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Aéreo")
+	UAnimMontage* LaunchReactMontage;
+
+	/** Modo de batalha + S + Espaço: super pulo para cima e para trás com mortal (para atacar/soltar jutsus do ar) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Aéreo")
+	float BackflipUpSpeed = 1500.f;
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Aéreo")
+	float BackflipBackSpeed = 280.f;   // sem frenagem no ar: ~4 m para trás
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Aéreo")
+	UAnimMontage* BackflipMontage;
+
 	/** Golpeando: passo automático para a frente no começo de cada golpe (s) — as animações do pack não andam sozinhas */
 	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
 	float AttackLungeTime = 0.22f;
@@ -596,6 +622,15 @@ protected:
 	mutable int32 LastFinisher = INDEX_NONE;
 	mutable int32 LastSprintAttack = INDEX_NONE;
 	mutable int32 LastAirAttack = INDEX_NONE;
+	mutable int32 LastLauncher = INDEX_NONE;
+
+	/** Golpeando ou logo depois de um golpe (a sequência ainda emenda) */
+	bool IsInComboContext() const;
+	void DoBackflipJump();
+	UFUNCTION(Server, Reliable)
+	void ServerBackflipJump(FVector_NetQuantize10 LaunchVelocity);
+	UFUNCTION(NetMulticast, Unreliable)
+	void MulticastBackflip();
 	static int32 PickVariant(int32 Num, int32 Last);
 
 	// Dash: montagem tocando agora e contador (escolhe a variação igual em todas as máquinas)

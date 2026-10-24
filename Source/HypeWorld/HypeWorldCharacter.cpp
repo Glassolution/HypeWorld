@@ -227,6 +227,27 @@ void AHypeWorldCharacter::DoLook(float Yaw, float Pitch)
 
 void AHypeWorldCharacter::DoJumpStart()
 {
+	// No meio do combo (golpeando ou logo depois), no chão: Espaço = lançador (joga o adversário para cima e sobe junto)
+	if (CanAct() && GetCharacterMovement()->IsMovingOnGround() && IsInComboContext())
+	{
+		const UNinjaFightingStyle* Style = GetFightingStyle();
+		if (Style && Style->Launchers.Num() > 0)
+		{
+			StartAttack(ENinjaAttackInput::Launcher);
+			return;
+		}
+	}
+	// Modo de batalha + S (para trás em relação à câmera) + Espaço: super pulo para cima e para trás com mortal
+	if (CanAct() && IsInBattleMode() && GetCharacterMovement()->IsMovingOnGround() && !IsAttacking() && GetController())
+	{
+		const FVector Accel = GetCharacterMovement()->GetCurrentAcceleration().GetSafeNormal2D();
+		const FVector CamFwd = GetControlRotation().Vector().GetSafeNormal2D();
+		if (!Accel.IsNearlyZero() && FVector::DotProduct(Accel, CamFwd) < -0.5f)
+		{
+			DoBackflipJump();
+			return;
+		}
+	}
 	// Infusão de chakra nos pés, no chão: segurar carrega o super pulo; um toque rápido ainda é o pulo normal (decidido ao soltar)
 	if (CanStartSuperJump())
 	{
@@ -494,6 +515,10 @@ void AHypeWorldCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, 
 	if (PrevMovementMode == MOVE_Falling && !NinjaMovement->IsFalling() && SuperJumpLaunchMontage)
 	{
 		StopAnimMontage(SuperJumpLaunchMontage);
+	}
+	if (PrevMovementMode == MOVE_Falling && !NinjaMovement->IsFalling() && BackflipMontage)
+	{
+		StopAnimMontage(BackflipMontage);
 	}
 	if (bWasWallRunning && !NinjaMovement->IsWallRunning())
 	{
@@ -820,6 +845,7 @@ namespace NinjaAttackId
 	constexpr int32 Heavy = 100;
 	constexpr int32 Sprint = 200;
 	constexpr int32 Air = 300;
+	constexpr int32 Launcher = 400;
 }
 
 const FNinjaAttack* AHypeWorldCharacter::GetAttack(int32 AttackId) const
@@ -840,9 +866,13 @@ const FNinjaAttack* AHypeWorldCharacter::GetAttack(int32 AttackId) const
 		{
 			return At(Style->SprintAttacks, AttackId - NinjaAttackId::Sprint);
 		}
-		if (AttackId >= NinjaAttackId::Air && AttackId < NinjaAttackId::Air + 100)
+		if (AttackId >= NinjaAttackId::Air && AttackId < NinjaAttackId::Launcher)
 		{
 			return At(Style->AirAttacks, AttackId - NinjaAttackId::Air);
+		}
+		if (AttackId >= NinjaAttackId::Launcher && AttackId < NinjaAttackId::Launcher + 100)
+		{
+			return At(Style->Launchers, AttackId - NinjaAttackId::Launcher);
 		}
 		return nullptr;
 	}
@@ -885,6 +915,22 @@ int32 AHypeWorldCharacter::ChooseAttack(ENinjaAttackInput Input) const
 			LastComboString = PickVariant(Style->Combos.Num(), LastComboString);
 			return LastComboString * 16;
 		};
+		if (Input == ENinjaAttackInput::Launcher)
+		{
+			if (Style->Launchers.Num() == 0 || !GetCharacterMovement()->IsMovingOnGround())
+			{
+				return INDEX_NONE;
+			}
+			LastLauncher = PickVariant(Style->Launchers.Num(), LastLauncher);
+			return NinjaAttackId::Launcher + LastLauncher;
+		}
+		// No ar: o combo aéreo segue a sequência AirAttacks (depois do lançador ou de um golpe aéreo, o próximo da lista)
+		if (Input == ENinjaAttackInput::Light && GetCharacterMovement()->IsFalling() && Style->AirAttacks.Num() > 0)
+		{
+			const bool bAirChain = bChaining && ChainId >= NinjaAttackId::Air && ChainId < NinjaAttackId::Launcher;
+			const int32 Next = bAirChain ? ChainId - NinjaAttackId::Air + 1 : 0;
+			return Style->AirAttacks.IsValidIndex(Next) ? NinjaAttackId::Air + Next : INDEX_NONE;
+		}
 		if (Input == ENinjaAttackInput::Heavy)
 		{
 			if (Style->Finishers.Num() == 0 || (bChaining && !bLightChain))
@@ -902,11 +948,6 @@ int32 AHypeWorldCharacter::ChooseAttack(ENinjaAttackInput Input) const
 		if (bChaining)
 		{
 			return NewCombo();
-		}
-		if (GetCharacterMovement()->IsFalling() && Style->AirAttacks.Num() > 0)
-		{
-			LastAirAttack = PickVariant(Style->AirAttacks.Num(), LastAirAttack);
-			return NinjaAttackId::Air + LastAirAttack;
 		}
 		if (GetCharacterMovement()->IsMovingOnGround() && GetVelocity().Size2D() >= SprintAttackMinSpeed && Style->SprintAttacks.Num() > 0)
 		{
@@ -1161,6 +1202,18 @@ void AHypeWorldCharacter::DoAttackTrace(FName DamageSourceBone)
 
 	if (bHitSomething)
 	{
+		// Lançador: o atacante sobe atrás de quem foi lançado. Golpe no ar: fica mais um pouco no ar (o combo aéreo continua)
+		if (IsLocallyControlled() || HasAuthority())
+		{
+			if (CurrentAttackId >= NinjaAttackId::Launcher && CurrentAttackId < NinjaAttackId::Launcher + 100 && bFinalHit)
+			{
+				LaunchCharacter(FVector(0.f, 0.f, LauncherFollowUpSpeed), false, true);
+			}
+			else if (GetCharacterMovement()->IsFalling() && Attack->Launch >= 0.f)
+			{
+				LaunchCharacter(FVector(0.f, 0.f, AirHoverSpeed), false, true);
+			}
+		}
 		HitStop();
 		if (IsLocallyControlled())
 		{
@@ -1259,9 +1312,15 @@ void AHypeWorldCharacter::ApplyHit(AHypeWorldCharacter* Target, const FNinjaAtta
 		AbilitySystem->ApplyGameplayEffectSpecToTarget(*StunSpec.Data.Get(), TargetASC);
 	}
 
-	if (Knockback > 0.f || Launch > 0.f)
+	// Apanhando no ar (combo aéreo): fica no ar, pouco empurrão; o último golpe aéreo (Launch negativo) derruba
+	if (Target->GetCharacterMovement()->IsFalling() && Reaction != ENinjaHitReaction::Block && !bComboBreak)
 	{
-		Target->LaunchCharacter(Push * Knockback + FVector(0.f, 0.f, Launch), true, Launch > 0.f);
+		Knockback = FMath::Min(Knockback, 180.f);
+		Launch = Attack.Launch < 0.f ? Attack.Launch : FMath::Max(Launch, AirJuggleSpeed);
+	}
+	if (Knockback > 0.f || !FMath::IsNearlyZero(Launch))
+	{
+		Target->LaunchCharacter(Push * Knockback + FVector(0.f, 0.f, Launch), true, !FMath::IsNearlyZero(Launch));
 	}
 	Target->MulticastHitReaction(Reaction, -Push, bComboBreak);
 }
@@ -1295,7 +1354,15 @@ void AHypeWorldCharacter::MulticastHitReaction_Implementation(ENinjaHitReaction 
 		ANinjaDamageNumber::Spawn(GetWorld(), Head + FVector(0.f, 0.f, 25.f), TEXT("COMBO QUEBRADO"), FLinearColor(0.55f, 0.85f, 1.f), 30.f);
 	}
 	UAnimMontage* Montage = nullptr;
-	if (Reaction != ENinjaHitReaction::Light && HeavyHitReactMontage)
+	if (Reaction == ENinjaHitReaction::Launch && LaunchReactMontage)
+	{
+		Montage = LaunchReactMontage;
+	}
+	else if (GetCharacterMovement()->IsFalling() && AirHitReactMontages.Num() > 0)
+	{
+		Montage = AirHitReactMontages[FMath::RandRange(0, AirHitReactMontages.Num() - 1)];
+	}
+	else if (Reaction != ENinjaHitReaction::Light && HeavyHitReactMontage)
 	{
 		Montage = HeavyHitReactMontage;
 	}
@@ -1327,7 +1394,7 @@ bool AHypeWorldCharacter::IsPlayingAttackMontage() const
 				return true;
 			}
 		}
-		if (Style->Finishers.ContainsByPredicate(Uses) || Style->SprintAttacks.ContainsByPredicate(Uses) || Style->AirAttacks.ContainsByPredicate(Uses))
+		if (Style->Finishers.ContainsByPredicate(Uses) || Style->SprintAttacks.ContainsByPredicate(Uses) || Style->AirAttacks.ContainsByPredicate(Uses) || Style->Launchers.ContainsByPredicate(Uses))
 		{
 			return true;
 		}
@@ -1932,5 +1999,54 @@ void AHypeWorldCharacter::OnRep_ChargingSuperJump()
 	else if (!bChargingSuperJump)
 	{
 		StopAnimMontage(SuperJumpChargeMontage);
+	}
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Combo aéreo (lançador) e mortal para trás
+// ---------------------------------------------------------------------------------------------------------------------
+
+bool AHypeWorldCharacter::IsInComboContext() const
+{
+	return IsAttacking() || (LastChainAttackId != INDEX_NONE && GetWorld()->GetTimeSeconds() <= ChainExpireTime + 0.25f);
+}
+
+void AHypeWorldCharacter::DoBackflipJump()
+{
+	// Para cima e um pouco para trás (em relação à câmera), com mortal para trás; o corpo continua de frente
+	const FVector Back = -GetCharacterMovement()->ProjectToGravityFloor(GetControlRotation().Vector()).GetSafeNormal();
+	const FVector LaunchVelocity = Back * BackflipBackSpeed + FVector(0.f, 0.f, BackflipUpSpeed);
+	if (BackflipMontage)
+	{
+		PlayAnimMontage(BackflipMontage);
+	}
+	GetNinjaMovement()->bInSuperJump = true;   // sem frenagem no ar (senão o embalo para trás some)
+	LaunchCharacter(LaunchVelocity, true, true);
+	if (!HasAuthority())
+	{
+		ServerBackflipJump(LaunchVelocity);
+	}
+	else
+	{
+		MulticastBackflip();
+	}
+}
+
+void AHypeWorldCharacter::ServerBackflipJump_Implementation(FVector_NetQuantize10 LaunchVelocity)
+{
+	if (!CanAct() || !GetCharacterMovement()->IsMovingOnGround())
+	{
+		return;
+	}
+	GetNinjaMovement()->bInSuperJump = true;
+	LaunchCharacter(LaunchVelocity.GetClampedToMaxSize(FVector2D(BackflipBackSpeed, BackflipUpSpeed).Size() * 1.05f), true, true);
+	MulticastBackflip();
+}
+
+void AHypeWorldCharacter::MulticastBackflip_Implementation()
+{
+	if (!IsLocallyControlled() && BackflipMontage)
+	{
+		PlayAnimMontage(BackflipMontage);
 	}
 }

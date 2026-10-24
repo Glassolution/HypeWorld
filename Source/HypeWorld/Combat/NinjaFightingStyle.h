@@ -87,7 +87,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Golpes")
 	TArray<FNinjaAttack> SprintAttacks;
 
-	/** Atacar no ar (sorteado) */
+	/** Combo aéreo, em ordem: o ataque no ar segue esta sequência (o último derruba) */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Golpes")
 	TArray<FNinjaAttack> AirAttacks;
+
+	/** Lançadores (Espaço no meio do combo): jogam o adversário para cima e o atacante sobe junto (sorteado) */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Golpes")
+	TArray<FNinjaAttack> Launchers;
 };
