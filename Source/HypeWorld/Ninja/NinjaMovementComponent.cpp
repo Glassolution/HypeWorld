@@ -110,6 +110,11 @@ FRotator UNinjaMovementComponent::ComputeOrientToMovementRotation(const FRotator
 	{
 		return FRotator(0.f, Ninja->GetAttackFacingYaw(), 0.f);
 	}
+	// Mortal para trás: o corpo continua olhando para onde a câmera olha (de costas para ela)
+	if (bInBackflip && CharacterOwner)
+	{
+		return FRotator(0.f, CharacterOwner->GetControlRotation().Yaw, 0.f);
+	}
 	// Andando (ou correndo para frente/lado): o corpo olha para onde a câmera olha. Parado: não gira — a câmera orbita livre.
 	if ((IsFocusing() || IsStrafeRunning()) && CharacterOwner)
 	{
@@ -233,6 +238,8 @@ void UNinjaMovementComponent::OnMovementModeChanged(EMovementMode PreviousMoveme
 	{
 		bAirDashUsed = false;
 		bInSuperJump = false;
+		bInBackflip = false;
+		bFloatJump = false;
 		AirSuspendUntil = -1.f;
 	}
 }
@@ -249,7 +256,20 @@ bool UNinjaMovementComponent::IsAirSuspended() const
 
 float UNinjaMovementComponent::GetGravityZ() const
 {
-	return Super::GetGravityZ() * (IsAirSuspended() ? AirSuspendGravityScale : 1.f);
+	if (IsAirSuspended())
+	{
+		return Super::GetGravityZ() * AirSuspendGravityScale;
+	}
+	if (bFloatJump && IsFalling())
+	{
+		// Velocidade vertical (relativa à gravidade): subindo forte = gravidade cheia; perto do topo vai suavizando;
+		// chegando na queda máxima a gravidade some (cai em velocidade constante, devagar)
+		const float Vz = FVector::DotProduct(Velocity, -GetGravityDirection());
+		float Scale = FMath::Lerp(FloatFallGravityScale, 1.f, FMath::Clamp(Vz / FloatBlendSpeed, 0.f, 1.f));
+		Scale *= FMath::Clamp((Vz + FloatMaxFallSpeed) / 150.f, 0.f, 1.f);
+		return Super::GetGravityZ() * Scale;
+	}
+	return Super::GetGravityZ();
 }
 
 void UNinjaMovementComponent::ExitToWalkingOrFalling()

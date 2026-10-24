@@ -133,6 +133,18 @@ public:
 
 	/** No voo do super pulo: sem frenagem nem atrito no ar (senão o embalo para a frente morre); acaba ao pousar */
 	bool bInSuperJump = false;
+	/** No mortal para trás: o corpo continua de frente para a câmera (não vira para onde a tecla aponta); acaba ao pousar */
+	bool bInBackflip = false;
+	/** Voo planado (super pulo e mortal para trás): sobe normal; perto do topo a gravidade vai caindo até FloatFallGravityScale
+	 *  e a queda não passa de FloatMaxFallSpeed — ele segue para a frente flutuando e desce devagar. Acaba ao pousar */
+	bool bFloatJump = false;
+	UPROPERTY(EditAnywhere, Category="Ninja|Voo planado")
+	float FloatFallGravityScale = 0.3f;
+	UPROPERTY(EditAnywhere, Category="Ninja|Voo planado")
+	float FloatMaxFallSpeed = 600.f;
+	/** Subindo mais devagar que isso (cm/s), a gravidade começa a suavizar (transição para a flutuação, sem tranco no topo) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Voo planado")
+	float FloatBlendSpeed = 500.f;
 	virtual void ApplyVelocityBraking(float DeltaTime, float Friction, float BrakingDeceleration) override;
 	bool IsDashStrafe() const { return bDashStrafe; }
 	float GetDashFacingYaw() const { return DashFacingYaw; }

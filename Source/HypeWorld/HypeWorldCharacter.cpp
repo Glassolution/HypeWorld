@@ -2001,6 +2001,7 @@ void AHypeWorldCharacter::ReleaseSuperJump()
 		PlayAnimMontage(SuperJumpLaunchMontage);
 	}
 	GetNinjaMovement()->bInSuperJump = true;
+	GetNinjaMovement()->bFloatJump = true;
 	LaunchCharacter(LaunchVelocity, true, true);
 	if (!HasAuthority())
 	{
@@ -2029,6 +2030,7 @@ void AHypeWorldCharacter::ServerSuperJump_Implementation(FVector_NetQuantize10 L
 	bChargingSuperJump = false;
 	OnRep_ChargingSuperJump();
 	GetNinjaMovement()->bInSuperJump = true;
+	GetNinjaMovement()->bFloatJump = true;
 	LaunchCharacter(LaunchVelocity.GetClampedToMaxSize(MaxSpeed), true, true);
 	MulticastSuperJumpLaunch();
 }
@@ -2093,6 +2095,8 @@ void AHypeWorldCharacter::DoBackflipJump()
 		PlayAnimMontage(BackflipMontage);
 	}
 	GetNinjaMovement()->bInSuperJump = true;   // sem frenagem no ar (senão o embalo para trás some)
+	GetNinjaMovement()->bInBackflip = true;
+	GetNinjaMovement()->bFloatJump = true;
 	LaunchCharacter(LaunchVelocity, true, true);
 	if (!HasAuthority())
 	{
@@ -2111,6 +2115,8 @@ void AHypeWorldCharacter::ServerBackflipJump_Implementation(FVector_NetQuantize1
 		return;
 	}
 	GetNinjaMovement()->bInSuperJump = true;
+	GetNinjaMovement()->bInBackflip = true;
+	GetNinjaMovement()->bFloatJump = true;
 	LaunchCharacter(LaunchVelocity.GetClampedToMaxSize(FVector2D(BackflipBackSpeed, BackflipUpSpeed).Size() * 1.05f), true, true);
 	MulticastBackflip();
 }
