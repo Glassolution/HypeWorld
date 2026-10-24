@@ -427,7 +427,9 @@ void AHypeWorldCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, 
 	{
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 		static const FName EndSection("End");
-		if (AnimInstance && AnimInstance->Montage_IsPlaying(DashMontage) && DashMontage->IsValidSectionName(EndSection))
+		// Saiu correndo do dash: volta direto à corrida (aterrissagem parada deslizaria)
+		const bool bKeepsRunning = NinjaMovement->IsMovingOnGround() && GetVelocity().Size2D() > NinjaMovement->MaxWalkSpeed * 1.5f;
+		if (!bKeepsRunning && AnimInstance && AnimInstance->Montage_IsPlaying(DashMontage) && DashMontage->IsValidSectionName(EndSection))
 		{
 			AnimInstance->Montage_JumpToSection(EndSection, DashMontage);
 		}
