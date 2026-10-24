@@ -465,7 +465,9 @@ void AHypeWorldCharacter::UpdateCameraFollow(float DeltaSeconds)
 	const bool bTowardCamera = FMath::Abs(FMath::FindDeltaAngleDegrees(PC->GetControlRotation().Yaw, Velocity2D.Rotation().Yaw)) > 100.f;
 	const bool bFast = Velocity2D.Size() > CameraFollowMinSpeed && !NinjaMovement->IsWallRunning() && !NinjaMovement->IsStrafeRunning() && !bTowardCamera && !bSidewaysInput;
 	const bool bMouseIdle = GetWorld()->GetTimeSeconds() - LastLookInputTime > CameraFollowDelay;
-	if (!bFast || !bMouseIdle)
+	// Golpeando (e logo depois): a câmera é só do jogador — o avanço do golpe não pode girá-la (pareceria mira travada)
+	const bool bFighting = IsAttacking() || GetWorld()->GetTimeSeconds() - LastAttackEndTime < 0.6f;
+	if (!bFast || !bMouseIdle || bFighting)
 	{
 		return;
 	}
@@ -694,34 +696,17 @@ void AHypeWorldCharacter::BeginAttack(int32 AttackId)
 	LastChainAttackId = INDEX_NONE;
 	AttackHitIndex = 0;
 	bComboWindowOpen = false;
-	HomingSpeed = 0.f;
-	HomingUntil = 0.f;
 
-	// Quantos acertos o golpe tem e quando vem o primeiro
+	// Quantos acertos o golpe tem
 	AttackHitCount = 0;
-	float FirstHit = -1.f;
 	for (const FAnimNotifyEvent& Event : Attack->Montage->Notifies)
 	{
-		if (Cast<UAnimNotify_DoAttackTrace>(Event.Notify))
-		{
-			++AttackHitCount;
-			FirstHit = FirstHit < 0.f ? Event.GetTriggerTime() : FMath::Min(FirstHit, Event.GetTriggerTime());
-		}
+		AttackHitCount += Cast<UAnimNotify_DoAttackTrace>(Event.Notify) ? 1 : 0;
 	}
 	AttackHitCount = FMath::Max(1, AttackHitCount);
 
-	// Mira no alvo mais próximo e, se ele estiver longe, o golpe avança mais até o acerto (chega no alcance certo)
-	const AActor* Target = FaceNearestEnemy();
-	if (Target && FirstHit > 0.f)
-	{
-		const FVector CompForward = GetMesh()->GetComponentTransform().InverseTransformVectorNoScale(GetActorForwardVector()).GetSafeNormal();
-		const FTransform Motion = Attack->Montage->ExtractRootMotionFromTrackRange(0.f, FirstHit, FAnimExtractContext());
-		const float AnimAdvance = FVector::DotProduct(Motion.GetTranslation(), CompForward) * Attack->RootMotionScale;
-		const float Gap = FVector::Dist2D(Target->GetActorLocation(), GetActorLocation()) - GetSimpleCollisionRadius() - Target->GetSimpleCollisionRadius();
-		const float Extra = FMath::Clamp(Gap - Attack->Reach * 0.6f - AnimAdvance, 0.f, Attack->HomingDistance);
-		HomingUntil = FirstHit;
-		HomingSpeed = Extra / FMath::Max(FirstHit / FMath::Max(Attack->PlayRate, 0.1f), 0.05f);
-	}
+	// Sem mira automática: o golpe vai para onde a câmera olha (o corpo vira até lá rápido, sem estalo — ver o movimento)
+	AttackFacingYaw = GetController() ? GetController()->GetControlRotation().Yaw : GetActorRotation().Yaw;
 
 	// Durante golpes o avanço da animação move o personagem (ver ProcessAttackRootMotion)
 	if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
@@ -746,7 +731,7 @@ void AHypeWorldCharacter::EndAttack(bool bWasCancelled)
 	}
 	CurrentAttackId = INDEX_NONE;
 	bComboWindowOpen = false;
-	HomingSpeed = 0.f;
+	LastAttackEndTime = GetWorld()->GetTimeSeconds();
 	if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
 	{
 		AnimInstance->SetRootMotionMode(ERootMotionMode::IgnoreRootMotion);
@@ -760,19 +745,35 @@ FTransform AHypeWorldCharacter::ProcessAttackRootMotion(const FTransform& InRoot
 	{
 		return InRootMotion;
 	}
-	// Só o avanço para a frente (as animações do Mixamo deslizam de lado), escalado; e até o acerto, o puxão até o alvo
+	// Só o avanço para a frente (as animações do Mixamo deslizam de lado), escalado
 	const FVector CompForward = GetMesh()->GetComponentTransform().InverseTransformVectorNoScale(GetActorForwardVector()).GetSafeNormal();
-	FVector Move = CompForward * FVector::DotProduct(InRootMotion.GetTranslation(), CompForward) * Attack->RootMotionScale;
-	if (HomingSpeed > 0.f)
+	float Advance = FVector::DotProduct(InRootMotion.GetTranslation(), CompForward) * Attack->RootMotionScale;
+
+	// Corpo a corpo: com alguém logo à frente o golpe para de avançar (só física — não mira nem puxa ninguém)
+	if (Advance > 0.f)
 	{
-		const UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-		if (AnimInstance && AnimInstance->Montage_GetPosition(Attack->Montage) < HomingUntil)
+		TArray<FOverlapResult> Overlaps;
+		const float Range = GetSimpleCollisionRadius() * 2.f + AttackBodySpacing;
+		FCollisionQueryParams Params(SCENE_QUERY_STAT(NinjaAttackSpacing), false, this);
+		GetWorld()->OverlapMultiByObjectType(Overlaps, GetActorLocation(), FQuat::Identity, FCollisionObjectQueryParams(ECC_Pawn), FCollisionShape::MakeSphere(Range), Params);
+		for (const FOverlapResult& O : Overlaps)
 		{
-			Move += CompForward * HomingSpeed * DeltaSeconds;
+			const AHypeWorldCharacter* Other = Cast<AHypeWorldCharacter>(O.GetActor());
+			if (!Other || Other == this)
+			{
+				continue;
+			}
+			const FVector To = Other->GetActorLocation() - GetActorLocation();
+			const float Gap = To.Size2D() - GetSimpleCollisionRadius() - Other->GetSimpleCollisionRadius();
+			if (Gap < AttackBodySpacing && FVector::DotProduct(To.GetSafeNormal2D(), GetActorForwardVector()) > 0.5f)
+			{
+				Advance = 0.f;
+				break;
+			}
 		}
 	}
 	FTransform Result = InRootMotion;
-	Result.SetTranslation(Move);
+	Result.SetTranslation(CompForward * Advance);
 	return Result;
 }
 
@@ -954,45 +955,16 @@ void AHypeWorldCharacter::MulticastHitReaction_Implementation(ENinjaHitReaction 
 	}
 }
 
-AActor* AHypeWorldCharacter::FaceNearestEnemy()
+bool AHypeWorldCharacter::IsPlayingAttackMontage() const
 {
-	TArray<FOverlapResult> Overlaps;
-	FCollisionQueryParams Params(SCENE_QUERY_STAT(NinjaSoftLock), false, this);
-	GetWorld()->OverlapMultiByObjectType(Overlaps, GetActorLocation(), FQuat::Identity, FCollisionObjectQueryParams(ECC_Pawn), FCollisionShape::MakeSphere(SoftLockRange), Params);
-
-	// Prefere o alvo mais perto da direção que o jogador está olhando (câmera)
-	const FVector Look = GetController() ? GetController()->GetControlRotation().Vector().GetSafeNormal2D() : GetActorForwardVector();
-	AActor* Best = nullptr;
-	float BestScore = -1.f;
-	for (const FOverlapResult& O : Overlaps)
+	const UAnimInstance* AnimInstance = GetMesh() ? GetMesh()->GetAnimInstance() : nullptr;
+	const UAnimMontage* Montage = AnimInstance ? AnimInstance->GetCurrentActiveMontage() : nullptr;
+	if (!Montage)
 	{
-		AHypeWorldCharacter* Other = Cast<AHypeWorldCharacter>(O.GetActor());
-		if (!Other || Other == this || Other->bKnockedOut)
-		{
-			continue;
-		}
-		const FVector To = (Other->GetActorLocation() - GetActorLocation()).GetSafeNormal2D();
-		const float Facing = FVector::DotProduct(Look, To);
-		if (Facing < 0.25f)
-		{
-			continue;
-		}
-		const float Score = Facing - (Other->GetActorLocation() - GetActorLocation()).Size2D() / SoftLockRange * 0.5f;
-		if (Score > BestScore)
-		{
-			BestScore = Score;
-			Best = Other;
-		}
+		return false;
 	}
-	if (Best)
-	{
-		SetActorRotation(FRotator(0.f, (Best->GetActorLocation() - GetActorLocation()).Rotation().Yaw, 0.f));
-	}
-	else if (GetController())
-	{
-		SetActorRotation(FRotator(0.f, Look.Rotation().Yaw, 0.f));
-	}
-	return Best;
+	auto Uses = [Montage](const FNinjaAttack& Attack) { return Attack.Montage == Montage; };
+	return LightCombo.ContainsByPredicate(Uses) || HeavyAttacks.ContainsByPredicate(Uses) || Uses(SprintAttack) || Uses(AirAttack);
 }
 
 void AHypeWorldCharacter::HitStop()

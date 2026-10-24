@@ -219,10 +219,6 @@ public:
 	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
 	float AttackSteering = 0.3f;
 
-	/** Distância máxima para mirar sozinho no inimigo mais próximo ao atacar (cm) */
-	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
-	float SoftLockRange = 600.f;
-
 	/** Clique um pouco antes da janela de combo abrir ainda vale (s) */
 	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
 	float ComboInputWindow = 0.45f;
@@ -240,6 +236,10 @@ public:
 	float BlockStun = 0.2f;
 	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
 	float GuardBreakStun = 1.1f;
+
+	/** Golpeando, o avanço para quando há alguém à frente a menos desta distância entre os corpos (cm) — eles não se atravessam */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
+	float AttackBodySpacing = 45.f;
 
 	/** Golpes seguidos contam no contador da tela se vierem antes deste tempo (s) */
 	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
@@ -297,6 +297,12 @@ public:
 	/** Golpes seguidos acertados agora (0 = sem combo); para o contador da tela */
 	UFUNCTION(BlueprintPure, Category="Ninja|Combate")
 	int32 GetComboHitCount() const;
+
+	/** Está tocando a animação de um golpe (vale em todas as máquinas, inclusive para os outros jogadores) */
+	bool IsPlayingAttackMontage() const;
+
+	/** Para onde o golpe atual mira: a direção da câmera no momento do golpe (sem mira automática — PvP depende de mirar) */
+	float GetAttackFacingYaw() const { return AttackFacingYaw; }
 
 	/** Id do golpe atual (-1 = nenhum) */
 	UFUNCTION(BlueprintPure, Category="Ninja|Combate")
@@ -467,9 +473,6 @@ public:
 	float SprintDoubleTapWindow = 0.3f;
 private:
 
-	/** Gira para o inimigo mais próximo à frente (mira automática suave do combate); devolve o alvo */
-	AActor* FaceNearestEnemy();
-
 	/** Congela a animação por um instante (impacto) */
 	void HitStop();
 
@@ -485,7 +488,7 @@ private:
 	/** Liga/desliga a defesa conforme o botão direito e o estado (só no jogador) */
 	void UpdateGuard();
 
-	/** Ajusta o avanço da animação do golpe: só para a frente, escalado, e puxando até o alvo */
+	/** Ajusta o avanço da animação do golpe: só para a frente, escalado */
 	FTransform ProcessAttackRootMotion(const FTransform& InRootMotion, UCharacterMovementComponent* Movement, float DeltaSeconds);
 
 	int32 CurrentAttackId = INDEX_NONE;
@@ -496,8 +499,8 @@ private:
 	bool bComboWindowOpen = false;
 	ENinjaAttackInput BufferedInput = ENinjaAttackInput::None;
 	float CachedAttackInputTime = -100.f;
-	float HomingSpeed = 0.f;			// avanço extra (cm/s) até o momento do acerto
-	float HomingUntil = 0.f;			// posição na montagem até onde puxa
+	float AttackFacingYaw = 0.f;
+	float LastAttackEndTime = -100.f;
 	bool bWantsGuard = false;
 	int32 ComboHits = 0;
 	float LastComboHitTime = -100.f;

@@ -85,8 +85,4 @@ struct FNinjaAttack
 	/** Escala do avanço da própria animação (1 = como foi gravada). */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Golpe")
 	float RootMotionScale = 1.f;
-
-	/** Distância extra que o golpe pode percorrer para alcançar o alvo mais próximo (cm). */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Golpe")
-	float HomingDistance = 220.f;
 };

@@ -86,10 +86,10 @@ FRotator UNinjaMovementComponent::ComputeOrientToMovementRotation(const FRotator
 			return AlongWall.Rotation();
 		}
 	}
-	// Golpeando: o corpo só vira para onde as teclas puxam (correção de mira); sem teclas, fica para onde o golpe mirou
+	// Golpeando: o corpo vira (rápido, limitado pelo RotationRate — sem estalo) para onde a câmera olhava no golpe
 	if (const AHypeWorldCharacter* Ninja = Cast<AHypeWorldCharacter>(CharacterOwner); Ninja && Ninja->IsAttacking())
 	{
-		return Acceleration.SizeSquared2D() < UE_KINDA_SMALL_NUMBER ? CurrentRotation : Super::ComputeOrientToMovementRotation(CurrentRotation, DeltaTime, DeltaRotation);
+		return FRotator(0.f, Ninja->GetAttackFacingYaw(), 0.f);
 	}
 	// Andando (ou correndo para frente/lado): o corpo olha para onde a câmera olha. Parado: não gira — a câmera orbita livre.
 	if ((IsFocusing() || IsStrafeRunning()) && CharacterOwner)

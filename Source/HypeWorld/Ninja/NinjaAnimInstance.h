@@ -30,6 +30,7 @@ struct FNinjaPoseInputs
 	float ArmBob = 0.f;							// cm que as mãos ficam para trás no sobe e desce do corpo (flutuam)
 	float ChargeAlpha = 0.f;					// 0..1 pose de concentrar chakra (base larga, mãos juntas no peito)
 	float GuardAlpha = 0.f;						// 0..1 pose de defesa (antebraços na frente do rosto)
+	float FistAlpha = 0.f;						// 0..1 punhos fechados (golpes e defesa)
 	float Time = 0.f;							// relógio da animação (respiração)
 };
 
@@ -58,6 +59,8 @@ private:
 
 	FNinjaPoseInputs Inputs;
 	const UAnimSequenceBase* RelaxedHands = nullptr;
+	const UAnimSequenceBase* FistHands = nullptr;
+	float FistPoseTime = 0.f;
 	float LandCrouchDepth = 0.f;
 	float LookDownSpineAngle = 0.f;
 	float LookDownHeadAngle = 0.f;
@@ -102,6 +105,12 @@ public:
 	/** Animação de onde vêm os dedos relaxados (MM_Idle do manequim). Vazio = dedos da própria animação. */
 	UPROPERTY(EditAnywhere, Category="Ninja|Mãos")
 	UAnimSequenceBase* RelaxedHandsPose = nullptr;
+
+	/** Animação de onde vêm os punhos fechados (golpes e defesa) e o momento dela (s). */
+	UPROPERTY(EditAnywhere, Category="Ninja|Mãos")
+	UAnimSequenceBase* FistHandsPose = nullptr;
+	UPROPERTY(EditAnywhere, Category="Ninja|Mãos")
+	float FistPoseTime = 0.4f;
 
 	/** Distância do chão (cm) em que ele começa a olhar para baixo e preparar o pouso. */
 	UPROPERTY(EditAnywhere, Category="Ninja|Pouso")

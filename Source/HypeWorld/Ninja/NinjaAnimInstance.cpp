@@ -127,6 +127,10 @@ void UNinjaAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	// --- Defesa: antebraços sobem na frente do rosto (rápido: é reflexo) ---
 	const float GuardTarget = (Ninja && Ninja->IsGuarding()) ? 1.f : 0.f;
 	PoseInputs.GuardAlpha = FMath::FInterpTo(PoseInputs.GuardAlpha, GuardTarget, DeltaSeconds, 16.f);
+
+	// --- Punhos fechados golpeando ou defendendo ---
+	const float FistTarget = (Ninja && (Ninja->IsPlayingAttackMontage() || Ninja->IsGuarding())) ? 1.f : 0.f;
+	PoseInputs.FistAlpha = FMath::FInterpTo(PoseInputs.FistAlpha, FistTarget, DeltaSeconds, 18.f);
 	PoseInputs.Time += DeltaSeconds;
 
 	// --- Pouso: agacha proporcional à velocidade da queda ---
@@ -197,6 +201,8 @@ void FNinjaAnimInstanceProxy::PreUpdate(UAnimInstance* InAnimInstance, float Del
 	{
 		Inputs = Ninja->PoseInputs;
 		RelaxedHands = Ninja->RelaxedHandsPose;
+		FistHands = Ninja->FistHandsPose;
+		FistPoseTime = Ninja->FistPoseTime;
 		LandCrouchDepth = Ninja->LandCrouchDepth;
 		LookDownSpineAngle = Ninja->LookDownSpineAngle;
 		LookDownHeadAngle = Ninja->LookDownHeadAngle;
@@ -711,10 +717,17 @@ void FNinjaAnimInstanceProxy::ApplyRelaxedHands(FPoseContext& Output) const
 		return;
 	}
 
-	// Calcula a pose da animação de mão relaxada e copia só a rotação dos dedos
+	// Calcula a pose da animação de mão relaxada e copia só a rotação dos dedos (golpeando: punho fechado)
 	FPoseContext Relaxed(Output);
 	FAnimationPoseData RelaxedData(Relaxed);
 	RelaxedHands->GetAnimationPose(RelaxedData, FAnimExtractContext(0.0));
+	const bool bFist = FistHands && Inputs.FistAlpha > 0.01f;
+	FPoseContext Fist(Output);
+	if (bFist)
+	{
+		FAnimationPoseData FistData(Fist);
+		FistHands->GetAnimationPose(FistData, FAnimExtractContext(double(FistPoseTime)));
+	}
 
 	const FBoneContainer& Bones = Output.Pose.GetBoneContainer();
 	for (const TCHAR* Side : { TEXT("l"), TEXT("r") })
@@ -726,7 +739,8 @@ void FNinjaAnimInstanceProxy::ApplyRelaxedHands(FPoseContext& Output) const
 			const FCompactPoseBoneIndex Index = Ref.GetCompactPoseIndex(Bones);
 			if (Index.IsValid())
 			{
-				Output.Pose[Index].SetRotation(Relaxed.Pose[Index].GetRotation());
+				Output.Pose[Index].SetRotation(bFist ? FQuat::Slerp(Relaxed.Pose[Index].GetRotation(), Fist.Pose[Index].GetRotation(), Inputs.FistAlpha).GetNormalized()
+					: Relaxed.Pose[Index].GetRotation());
 			}
 		}
 	}
