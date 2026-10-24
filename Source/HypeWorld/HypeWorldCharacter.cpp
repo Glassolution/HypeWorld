@@ -406,9 +406,78 @@ void AHypeWorldCharacter::UpdateLean(float DeltaSeconds)
 	CurrentLean = FMath::FInterpTo(CurrentLean, TargetLean, DeltaSeconds, LeanInterpSpeed);
 	CurrentWallOffset = FMath::FInterpTo(CurrentWallOffset, TargetWallOffset, DeltaSeconds, LeanInterpSpeed);
 
+	UpdateAcrobatics(DeltaSeconds);
+
+	// Malha gira em volta do centro da cápsula (origem): giro do pulo (em pé) * cambalhota do dash (para a frente) * inclinação
+	const FQuat AcroQuat = FQuat(FVector::UpVector, FMath::DegreesToRadians(SpinTime >= 0.f
+		? JumpSpinDegrees * FMath::InterpEaseInOut(0.f, 1.f, FMath::Clamp(SpinTime / FMath::Max(JumpSpinDuration, 0.05f), 0.f, 1.f), 2.f) : 0.f))
+		* FQuat(FVector::RightVector, FMath::DegreesToRadians(FlipAngle));   // positivo = cabeça vai para a frente e para baixo (medido)
 	const FQuat LeanQuat(FVector::ForwardVector, FMath::DegreesToRadians(CurrentLean));
-	GetMesh()->SetRelativeRotation(LeanQuat * BaseMeshRotation.Quaternion());
-	GetMesh()->SetRelativeLocation(BaseMeshLocation + FVector(0.f, CurrentWallOffset, 0.f));
+	GetMesh()->SetRelativeRotation(AcroQuat * LeanQuat * BaseMeshRotation.Quaternion());
+	// No meio da cambalhota o corpo sobe um pouco (o empurrão das mãos): de ponta-cabeça a cabeça não entra no chão
+	const float FlipLift = DashFlipDegrees > 0.f ? 20.f * FMath::Sin(PI * FMath::Clamp(FlipAngle / DashFlipDegrees, 0.f, 1.f)) : 0.f;
+	GetMesh()->SetRelativeLocation(AcroQuat.RotateVector(BaseMeshLocation + FVector(0.f, CurrentWallOffset, 0.f)) + FVector(0.f, 0.f, FlipLift));
+}
+
+void AHypeWorldCharacter::UpdateAcrobatics(float DeltaSeconds)
+{
+	UNinjaMovementComponent* NinjaMovement = GetNinjaMovement();
+	const float VelZ = GetVelocity().Z;
+
+	// Dash: mergulha (primeiros 15%), gira de ponta-cabeça no meio e pousa no fim — como a estrela/handspring da referência
+	if (NinjaMovement->IsDashing())
+	{
+		DashElapsed += DeltaSeconds;
+		const float T = FMath::Clamp(DashElapsed / FMath::Max(NinjaMovement->GetDashDuration(), 0.05f), 0.f, 1.f);
+		FlipAngle = DashFlipDegrees * FMath::SmoothStep(0.15f, 0.9f, T);
+	}
+	else
+	{
+		DashElapsed = 0.f;
+		// Dash cortado no meio: termina a volta rápido (sem estalo de volta para a pose em pé)
+		if (FlipAngle > 0.f)
+		{
+			FlipAngle += 900.f * DeltaSeconds;
+			if (FlipAngle >= DashFlipDegrees)
+			{
+				FlipAngle = 0.f;
+			}
+		}
+	}
+
+	// Pulos (detectados pela velocidade: funciona também nos outros jogadores)
+	const bool bOnGround = NinjaMovement->IsMovingOnGround();
+	if (NinjaMovement->IsFalling() && VelZ > 300.f)
+	{
+		if (bWasOnGround)
+		{
+			SpinTime = 0.f;				// saiu do chão pulando: gira no próprio eixo
+		}
+		else if (VelZ - LastVelocityZ > 400.f)
+		{
+			bAirArmsSpread = true;		// segundo pulo (ou pulo da parede): braços abertos
+		}
+	}
+	if (SpinTime >= 0.f)
+	{
+		SpinTime += DeltaSeconds;
+		if (SpinTime >= JumpSpinDuration || bOnGround)
+		{
+			SpinTime = -1.f;
+		}
+	}
+	if (bOnGround)
+	{
+		bAirArmsSpread = false;
+	}
+	bWasOnGround = bOnGround;
+	LastVelocityZ = VelZ;
+}
+
+bool AHypeWorldCharacter::IsSpreadingArms() const
+{
+	const UNinjaMovementComponent* NinjaMovement = GetNinjaMovement();
+	return (NinjaMovement && NinjaMovement->IsDashing()) || bAirArmsSpread;
 }
 
 void AHypeWorldCharacter::UpdateRunAnimRate()

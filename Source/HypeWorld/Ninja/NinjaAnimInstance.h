@@ -31,6 +31,7 @@ struct FNinjaPoseInputs
 	float ChargeAlpha = 0.f;					// 0..1 pose de concentrar chakra (base larga, mãos juntas no peito)
 	float GuardAlpha = 0.f;						// 0..1 pose de defesa (antebraços na frente do rosto)
 	float FistAlpha = 0.f;						// 0..1 punhos fechados (golpes e defesa)
+	float ArmsSpreadAlpha = 0.f;				// 0..1 braços abertos (dash e segundo pulo)
 	float Time = 0.f;							// relógio da animação (respiração)
 };
 

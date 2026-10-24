@@ -164,6 +164,16 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
 	float LeanInterpSpeed = 8.f;
 
+	/** Dash acrobático: quanto o corpo gira para a frente (cambalhota/estrela) durante o dash (graus; 0 = sem giro) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Acrobacia")
+	float DashFlipDegrees = 360.f;
+
+	/** Pulo do chão: giro no próprio eixo (graus) e quanto tempo leva (s) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Acrobacia")
+	float JumpSpinDegrees = 360.f;
+	UPROPERTY(EditAnywhere, Category="Ninja|Acrobacia")
+	float JumpSpinDuration = 0.5f;
+
 	/** Velocidade em que a animação de corrida combina com os pés; acima disso ela é acelerada */
 	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
 	float RunAnimNaturalSpeed = 600.f;
@@ -433,6 +443,9 @@ public:
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
+	/** Braços abertos no ar (dash e segundo pulo) — usado pela pose do ABP */
+	bool IsSpreadingArms() const;
+
 	/** Componente de movimento ninja */
 	UFUNCTION(BlueprintPure, Category="Ninja")
 	UNinjaMovementComponent* GetNinjaMovement() const;
@@ -511,5 +524,14 @@ private:
 	float CurrentLean = 0.f;
 	float CurrentWallOffset = 0.f;
 	float LastYaw = 0.f;
+
+	/** Acrobacias só visuais (giram a malha em volta do centro do corpo; roda em todas as máquinas) */
+	void UpdateAcrobatics(float DeltaSeconds);
+	float FlipAngle = 0.f;			// cambalhota do dash (0..DashFlipDegrees)
+	float DashElapsed = 0.f;
+	float SpinTime = -1.f;			// tempo desde o pulo do chão (-1 = sem giro)
+	bool bAirArmsSpread = false;	// segundo pulo: braços abertos até pousar
+	bool bWasOnGround = true;
+	float LastVelocityZ = 0.f;
 };
 

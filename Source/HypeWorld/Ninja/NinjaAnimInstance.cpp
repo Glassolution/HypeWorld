@@ -131,6 +131,10 @@ void UNinjaAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	// --- Punhos fechados golpeando ou defendendo ---
 	const float FistTarget = (Ninja && (Ninja->IsPlayingAttackMontage() || Ninja->IsGuarding())) ? 1.f : 0.f;
 	PoseInputs.FistAlpha = FMath::FInterpTo(PoseInputs.FistAlpha, FistTarget, DeltaSeconds, 18.f);
+
+	// --- Dash e segundo pulo: braços abertos (acrobacia da referência) ---
+	const float SpreadTarget = (Ninja && Ninja->IsSpreadingArms()) ? 1.f : 0.f;
+	PoseInputs.ArmsSpreadAlpha = FMath::FInterpTo(PoseInputs.ArmsSpreadAlpha, SpreadTarget, DeltaSeconds, 12.f);
 	PoseInputs.Time += DeltaSeconds;
 
 	// --- Pouso: agacha proporcional à velocidade da queda ---
@@ -248,7 +252,7 @@ bool FNinjaAnimInstanceProxy::Evaluate_WithRoot(FPoseContext& Output, FAnimNode_
 void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 {
 	if (Inputs.WallHandAlpha < 0.01f && Inputs.LookDownAlpha < 0.01f && Inputs.LandAlpha < 0.01f && Inputs.SprintAlpha < 0.01f && Inputs.ChargeAlpha < 0.01f
-		&& Inputs.GuardAlpha < 0.01f)
+		&& Inputs.GuardAlpha < 0.01f && Inputs.ArmsSpreadAlpha < 0.01f)
 	{
 		return;
 	}
@@ -620,6 +624,24 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 					const FBoneTransform Changed[] = { FBoneTransform(Hand, HandT) };
 					CS.LocalBlendCSBoneTransforms(Changed, 1.f);
 				}
+			}
+		}
+	}
+
+	// 5a) Acrobacia (dash, segundo pulo): braços abertos para os lados, um pouco acima da horizontal, mãos abertas
+	if (Inputs.ArmsSpreadAlpha > 0.01f)
+	{
+		for (const bool bRight : { true, false })
+		{
+			const FCompactPoseBoneIndex Upper = Bone(bRight ? TEXT("upperarm_r") : TEXT("upperarm_l"));
+			const FCompactPoseBoneIndex Lower = Bone(bRight ? TEXT("lowerarm_r") : TEXT("lowerarm_l"));
+			const FCompactPoseBoneIndex Hand = Bone(bRight ? TEXT("hand_r") : TEXT("hand_l"));
+			const FVector Side = bRight ? Right : -Right;
+			AimBone(Upper, Lower, (Side + Up * 0.3f - Forward * 0.15f).GetSafeNormal(), Inputs.ArmsSpreadAlpha * 0.9f);
+			if (Upper.IsValid() && Lower.IsValid())
+			{
+				const FVector UpperDir = (CS.GetComponentSpaceTransform(Lower).GetLocation() - CS.GetComponentSpaceTransform(Upper).GetLocation()).GetSafeNormal();
+				AimBone(Lower, Hand, (UpperDir + Up * 0.2f).GetSafeNormal(), Inputs.ArmsSpreadAlpha * 0.8f);
 			}
 		}
 	}
