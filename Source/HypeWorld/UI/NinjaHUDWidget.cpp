@@ -1,36 +1,29 @@
-// HUD do ninja montado inteiro em C++ (ver o .h).
+// HUD do ninja montado inteiro em C++ (ver o .h). Layout pensado em 1920x1080; a Unreal escala para outras telas.
 
 #include "NinjaHUDWidget.h"
 #include "Blueprint/WidgetTree.h"
-#include "Components/Border.h"
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Components/Image.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
-#include "Components/SceneCaptureComponent2D.h"
 #include "Engine/Texture2D.h"
-#include "Engine/TextureRenderTarget2D.h"
-#include "Materials/MaterialInstanceDynamic.h"
 #include "GameFramework/Pawn.h"
-#include "GameFramework/PlayerController.h"
+#include "GameFramework/PlayerState.h"
 #include "Styling/CoreStyle.h"
 #include "HypeWorldCharacter.h"
 #include "NinjaAttributeSet.h"
 
-// ---------------------------------------------------------------------------------------------------------------------
-// Peças de estilo (cores, pincéis, fontes) — o layout foi pensado em 1920x1080; a Unreal escala para outras telas
-// ---------------------------------------------------------------------------------------------------------------------
-
 namespace NinjaHUD
 {
 	const FLinearColor White(1.f, 1.f, 1.f, 1.f);
-	const FLinearColor SoftWhite(0.85f, 0.85f, 0.85f, 1.f);
-	const FLinearColor Gold(0.80f, 0.66f, 0.45f, 1.f);
-	const FLinearColor HealthRed(0.83f, 0.33f, 0.33f, 1.f);
-	const FLinearColor ChakraBlue(0.40f, 0.64f, 0.76f, 1.f);
-	const FLinearColor DarkFill(0.07f, 0.06f, 0.05f, 0.80f);
-	const FLinearColor Track(0.f, 0.f, 0.f, 0.45f);
+	const FLinearColor Ring(0.55f, 0.84f, 0.98f, 1.f);			// anel azul-claro do retrato
+	const FLinearColor HealthPink(0.91f, 0.21f, 0.37f, 1.f);	// barra de vida
+	const FLinearColor ChakraGray(0.52f, 0.58f, 0.56f, 0.92f);	// barra de chakra (cinza esverdeado, como na referência)
+	const FLinearColor ChakraBlue(0.45f, 0.8f, 1.f, 1.f);
+	const FLinearColor Track(0.f, 0.f, 0.f, 0.38f);
+	const FLinearColor Badge(0.07f, 0.07f, 0.08f, 0.95f);
+	const FLinearColor Gold(0.98f, 0.76f, 0.22f, 1.f);
 
 	/** Caixa arredondada (ou círculo/pílula quando bRound). */
 	FSlateBrush Rounded(const FLinearColor& Fill, float Radius, const FLinearColor& Outline = FLinearColor::Transparent, float OutlineWidth = 0.f, bool bRound = false)
@@ -54,47 +47,38 @@ namespace NinjaHUD
 		return Brush;
 	}
 
-	FSlateFontInfo Font(const TCHAR* Style, float Size)
+	FSlateFontInfo Font(const TCHAR* Style, float Size, bool bShadowOutline = true)
 	{
 		FSlateFontInfo Info = FCoreStyle::GetDefaultFontStyle(Style, Size);
-		Info.OutlineSettings.OutlineSize = 1;
-		Info.OutlineSettings.OutlineColor = FLinearColor(0.f, 0.f, 0.f, 0.55f);
+		if (bShadowOutline)
+		{
+			Info.OutlineSettings.OutlineSize = 1;
+			Info.OutlineSettings.OutlineColor = FLinearColor(0.f, 0.f, 0.f, 0.45f);
+		}
 		return Info;
 	}
 
-	/** Textura branca gerada por código; a função diz a opacidade de cada pixel (0..1). */
-	UTexture2D* MakeTexture(int32 Width, int32 Height, TFunctionRef<float(float U, float V)> Alpha)
+	/** Textura branca gerada por código; a função diz a opacidade de cada ponto (0..1). */
+	UTexture2D* MakeTexture(int32 Size, TFunctionRef<float(float U, float V)> Alpha)
 	{
 		TArray<FColor> Pixels;
-		Pixels.SetNumUninitialized(Width * Height);
-		for (int32 Y = 0; Y < Height; ++Y)
+		Pixels.SetNumUninitialized(Size * Size);
+		for (int32 Y = 0; Y < Size; ++Y)
 		{
-			for (int32 X = 0; X < Width; ++X)
+			for (int32 X = 0; X < Size; ++X)
 			{
-				// 4 amostras por pixel para a borda ficar suave
 				float A = 0.f;
 				for (int32 S = 0; S < 4; ++S)
 				{
-					A += Alpha((X + 0.25f + 0.5f * (S % 2)) / Width, (Y + 0.25f + 0.5f * (S / 2)) / Height);
+					A += Alpha((X + 0.25f + 0.5f * (S % 2)) / Size, (Y + 0.25f + 0.5f * (S / 2)) / Size);
 				}
-				Pixels[Y * Width + X] = FColor(255, 255, 255, (uint8)FMath::RoundToInt(FMath::Clamp(A / 4.f, 0.f, 1.f) * 255.f));
+				Pixels[Y * Size + X] = FColor(255, 255, 255, (uint8)FMath::RoundToInt(FMath::Clamp(A / 4.f, 0.f, 1.f) * 255.f));
 			}
 		}
 		const TConstArrayView64<uint8> Bytes(reinterpret_cast<const uint8*>(Pixels.GetData()), Pixels.Num() * sizeof(FColor));
-		return UTexture2D::CreateTransient(Width, Height, PF_B8G8R8A8, NAME_None, Bytes);
-	}
-
-	bool InsideTriangle(float X, float Y, const FVector2f& A, const FVector2f& B, const FVector2f& C)
-	{
-		auto Side = [](const FVector2f& P, const FVector2f& Q, float X, float Y) { return (Q.X - P.X) * (Y - P.Y) - (Q.Y - P.Y) * (X - P.X); };
-		const float D1 = Side(A, B, X, Y), D2 = Side(B, C, X, Y), D3 = Side(C, A, X, Y);
-		return !((D1 < 0 || D2 < 0 || D3 < 0) && (D1 > 0 || D2 > 0 || D3 > 0));
+		return UTexture2D::CreateTransient(Size, Size, PF_B8G8R8A8, NAME_None, Bytes);
 	}
 }
-
-// ---------------------------------------------------------------------------------------------------------------------
-// Montagem
-// ---------------------------------------------------------------------------------------------------------------------
 
 TSharedRef<SWidget> UNinjaHUDWidget::RebuildWidget()
 {
@@ -113,6 +97,7 @@ void UNinjaHUDWidget::BuildLayout()
 	UCanvasPanel* Canvas = WidgetTree->ConstructWidget<UCanvasPanel>(UCanvasPanel::StaticClass(), TEXT("Root"));
 	WidgetTree->RootWidget = Canvas;
 
+	const FVector2D BottomLeft(0.f, 1.f), BottomCenter(0.5f, 1.f), Center(0.5f, 0.5f), LeftMid(0.f, 0.5f);
 	auto Place = [Canvas](UWidget* Widget, FVector2D Anchor, FVector2D Position, FVector2D Size, FVector2D Alignment = FVector2D::ZeroVector)
 	{
 		UCanvasPanelSlot* PanelSlot = Canvas->AddChildToCanvas(Widget);
@@ -135,162 +120,128 @@ void UNinjaHUDWidget::BuildLayout()
 		Image->SetBrush(Brush);
 		return Image;
 	};
-	auto MakeText = [this](const FString& Words, float Size, const FLinearColor& Color = White, const TCHAR* Style = TEXT("Regular"))
+	auto MakeText = [this](const FString& Words, float Size, const FLinearColor& Color = White, const TCHAR* Style = TEXT("Bold"))
 	{
 		UTextBlock* Text = WidgetTree->ConstructWidget<UTextBlock>();
 		Text->SetText(FText::FromString(Words));
 		Text->SetFont(Font(Style, Size));
 		Text->SetColorAndOpacity(FSlateColor(Color));
+		Text->SetShadowOffset(FVector2D(1.f, 1.f));
+		Text->SetShadowColorAndOpacity(FLinearColor(0.f, 0.f, 0.f, 0.35f));
 		return Text;
 	};
-	/** Quadradinho de tecla com a letra no meio. */
-	auto MakeKey = [this, &MakeText](const FString& Letter, float Size)
-	{
-		UBorder* Box = WidgetTree->ConstructWidget<UBorder>();
-		Box->SetBrush(Rounded(FLinearColor(0.05f, 0.05f, 0.05f, 0.70f), 6.f, FLinearColor(1.f, 1.f, 1.f, 0.55f), 1.5f));
-		Box->SetPadding(FMargin(0.f));
-		Box->SetHorizontalAlignment(HAlign_Center);
-		Box->SetVerticalAlignment(VAlign_Center);
-		Box->SetContent(MakeText(Letter, Size));
-		return Box;
-	};
-	auto MakeBar = [this](const FLinearColor& Fill)
+	auto MakeBar = [this](const FLinearColor& Fill, float Radius)
 	{
 		UProgressBar* Bar = WidgetTree->ConstructWidget<UProgressBar>();
 		FProgressBarStyle Style;
-		Style.SetBackgroundImage(Rounded(Track, 0.f, FLinearColor::Transparent, 0.f, true));
-		Style.SetFillImage(Rounded(Fill, 0.f, FLinearColor::Transparent, 0.f, true));
-		Style.SetMarqueeImage(Rounded(Fill, 0.f, FLinearColor::Transparent, 0.f, true));
+		Style.SetBackgroundImage(Rounded(Track, Radius));
+		Style.SetFillImage(Rounded(Fill, Radius));
+		Style.SetMarqueeImage(Rounded(Fill, Radius));
 		Bar->SetWidgetStyle(Style);
 		Bar->SetFillColorAndOpacity(White);
 		return Bar;
 	};
 
-	FadeTexture = MakeTexture(256, 4, [](float U, float V) { return 1.f - FMath::SmoothStep(0.35f, 1.f, U); });
-	ArrowTexture = MakeTexture(64, 64, [](float U, float V)
+	// Espiral do chakra (ícone da barra de chakra) e moeda
+	SwirlTexture = MakeTexture(64, [](float U, float V)
 	{
-		// ponta de flecha: triângulo com um entalhe embaixo
-		const float X = U * 64.f, Y = V * 64.f;
-		const bool bArrow = InsideTriangle(X, Y, FVector2f(32, 4), FVector2f(56, 60), FVector2f(8, 60));
-		const bool bNotch = InsideTriangle(X, Y, FVector2f(32, 44), FVector2f(58, 64), FVector2f(6, 64));
-		return (bArrow && !bNotch) ? 1.f : 0.f;
+		const FVector2f P(U - 0.5f, V - 0.5f);
+		const float R = P.Size() * 2.f;
+		if (R > 0.95f)
+		{
+			return 0.f;
+		}
+		const float Ang = FMath::Atan2(P.Y, P.X);
+		const float Turns = R * 2.2f - Ang / (2.f * PI);   // espiral de Arquimedes
+		const float D = FMath::Abs(Turns - FMath::RoundToFloat(Turns));
+		return D < 0.16f ? 1.f : 0.f;
 	});
 
-	const FVector2D TopLeft(0, 0), TopRight(1, 0), BottomLeft(0, 1), BottomCenter(0.5f, 1);
-	const FVector2D Center(0.5f, 0.5f);
-
-	// --- Topo esquerdo: retrato, nível, vida, chakra ---
-	FSlateBrush Fade;
-	Fade.SetResourceObject(FadeTexture);
-	Fade.TintColor = FSlateColor(FLinearColor(0.f, 0.f, 0.f, 0.55f));
-	Place(MakeImage(Fade), TopLeft, FVector2D(100, 50), FVector2D(520, 116));
-
-	Place(MakeImage(Rounded(DarkFill, 0.f, Gold, 3.f, true)), TopLeft, FVector2D(36, 28), FVector2D(136, 136));
+	// =========================== Canto de baixo à esquerda: retrato, nome, vida, chakra, moedas ===========================
+	const FVector2D Portrait(115.f, -115.f);
+	Place(MakeImage(Rounded(Ring, 0.f, FLinearColor::Transparent, 0.f, true)), BottomLeft, Portrait, FVector2D(100.f, 100.f), Center);
+	Place(MakeImage(Rounded(FLinearColor(0.08f, 0.08f, 0.1f, 1.f), 0.f, FLinearColor::Transparent, 0.f, true)), BottomLeft, Portrait, FVector2D(88.f, 88.f), Center);
 	if (PortraitTexture)
 	{
-		Place(MakeImage(CircleImage(PortraitTexture)), TopLeft, FVector2D(44, 36), FVector2D(120, 120));
+		Place(MakeImage(CircleImage(PortraitTexture)), BottomLeft, Portrait, FVector2D(86.f, 86.f), Center);
 	}
+	Place(MakeImage(Rounded(Badge, 0.f, FLinearColor(1.f, 1.f, 1.f, 0.15f), 1.f, true)), BottomLeft, FVector2D(115.f, -68.f), FVector2D(30.f, 30.f), Center);
+	LevelText = MakeText(FString::FromInt(PlayerLevel), 12.f);
+	Place(LevelText, BottomLeft, FVector2D(115.f, -68.f), FVector2D::ZeroVector, Center);
 
-	LevelText = MakeText(FString(), 20.f);
-	Place(LevelText, TopLeft, FVector2D(200, 58), FVector2D::ZeroVector);
+	NameText = MakeText(TEXT("Ninja"), 17.f);
+	Place(NameText, BottomLeft, FVector2D(164.f, -162.f), FVector2D::ZeroVector, LeftMid);
 
-	HealthBar = MakeBar(HealthRed);
-	Place(HealthBar, TopLeft, FVector2D(190, 92), FVector2D(380, 28));
-	HealthText = MakeText(FString(), 16.f);
-	Place(HealthText, TopLeft, FVector2D(206, 106), FVector2D::ZeroVector, FVector2D(0.f, 0.5f));
+	HealthBar = MakeBar(HealthPink, 4.f);
+	Place(HealthBar, BottomLeft, FVector2D(164.f, -140.f), FVector2D(246.f, 24.f), FVector2D(0.f, 0.f));
+	HealthText = MakeText(TEXT("0"), 18.f);
+	Place(HealthText, BottomLeft, FVector2D(174.f, -128.f), FVector2D::ZeroVector, LeftMid);
+	HealthMaxText = MakeText(TEXT("/0"), 11.f);
+	Place(HealthMaxText, BottomLeft, FVector2D(214.f, -125.f), FVector2D::ZeroVector, LeftMid);
 
-	ChakraBar = MakeBar(ChakraBlue);
-	Place(ChakraBar, TopLeft, FVector2D(182, 128), FVector2D(350, 28));
-	ChakraText = MakeText(FString(), 16.f);
-	Place(ChakraText, TopLeft, FVector2D(198, 142), FVector2D::ZeroVector, FVector2D(0.f, 0.5f));
+	ChakraBar = MakeBar(ChakraGray, 4.f);
+	Place(ChakraBar, BottomLeft, FVector2D(164.f, -110.f), FVector2D(152.f, 22.f), FVector2D(0.f, 0.f));
+	FSlateBrush Swirl;
+	Swirl.SetResourceObject(SwirlTexture);
+	Swirl.TintColor = FSlateColor(FLinearColor(1.f, 1.f, 1.f, 0.6f));
+	Place(MakeImage(Swirl), BottomLeft, FVector2D(184.f, -99.f), FVector2D(16.f, 16.f), Center);
+	ChakraText = MakeText(TEXT("100%"), 12.f);
+	Place(ChakraText, BottomLeft, FVector2D(308.f, -99.f), FVector2D::ZeroVector, FVector2D(1.f, 0.5f));
 
-	SubstitutionText = MakeText(FString(), 15.f, FLinearColor(0.85f, 0.85f, 0.78f));
-	Place(SubstitutionText, TopLeft, FVector2D(198, 176), FVector2D::ZeroVector, FVector2D(0.f, 0.5f));
-	ChakraFeetText = MakeText(FString(), 15.f, ChakraBlue);
-	Place(ChakraFeetText, TopLeft, FVector2D(198, 200), FVector2D::ZeroVector, FVector2D(0.f, 0.5f));
+	// Caixa preta à direita do chakra (na referência é o microfone): aqui, a infusão de chakra nos pés (V)
+	UImage* InfusionBg = MakeImage(Rounded(FLinearColor(0.02f, 0.02f, 0.03f, 0.88f), 4.f));
+	InfusionBox = InfusionBg;
+	Place(InfusionBg, BottomLeft, FVector2D(324.f, -110.f), FVector2D(86.f, 22.f));
+	InfusionText = MakeText(TEXT("INFUSÃO"), 10.f, ChakraBlue);
+	Place(InfusionText, BottomLeft, FVector2D(367.f, -99.f), FVector2D::ZeroVector, Center);
 
-	// --- Missão ---
-	FSlateBrush QuestBand = Fade;
-	QuestBand.TintColor = FSlateColor(FLinearColor(0.f, 0.f, 0.f, 0.60f));
-	Place(MakeImage(QuestBand), TopLeft, FVector2D(0, 236), FVector2D(560, 100));
+	Place(MakeImage(Rounded(Gold, 0.f, FLinearColor(0.6f, 0.42f, 0.05f, 1.f), 2.f, true)), BottomLeft, FVector2D(172.f, -68.f), FVector2D(16.f, 16.f), Center);
+	CoinText = MakeText(TEXT("0"), 14.f);
+	Place(CoinText, BottomLeft, FVector2D(188.f, -68.f), FVector2D::ZeroVector, LeftMid);
 
-	UImage* Diamond = MakeImage(Rounded(FLinearColor::Transparent, 2.f, White, 2.f));
-	Diamond->SetRenderTransformAngle(45.f);
-	Place(Diamond, TopLeft, FVector2D(62, 266), FVector2D(18, 18), Center);
-	UImage* DiamondDot = MakeImage(Rounded(White, 1.f));
-	DiamondDot->SetRenderTransformAngle(45.f);
-	Place(DiamondDot, TopLeft, FVector2D(62, 266), FVector2D(7, 7), Center);
-
-	QuestTitleText = MakeText(TEXT("Treine suas habilidades"), 20.f);
-	Place(QuestTitleText, TopLeft, FVector2D(90, 266), FVector2D::ZeroVector, FVector2D(0.f, 0.5f));
-	Place(MakeImage(Rounded(FLinearColor::Transparent, 0.f, SoftWhite, 1.5f, true)), TopLeft, FVector2D(98, 304), FVector2D(13, 13), Center);
-	QuestStepText = MakeText(TEXT("Fale com o mestre no dojo"), 15.f, SoftWhite);
-	Place(QuestStepText, TopLeft, FVector2D(114, 304), FVector2D::ZeroVector, FVector2D(0.f, 0.5f));
-
-	// --- Topo direito: minimapa (círculo de 224 px, centro em (-140, 142) a partir do canto) ---
-	const FVector2D MapCenter(-140, 142);
-	Place(MakeImage(Rounded(FLinearColor(0.08f, 0.08f, 0.08f, 0.65f), 0.f, FLinearColor(0.9f, 0.9f, 0.9f, 0.9f), 3.f, true)), TopRight, MapCenter, FVector2D(224, 224), Center);
-	MinimapImage = MakeImage(Rounded(FLinearColor(0.35f, 0.30f, 0.24f, 1.f), 0.f, FLinearColor::Transparent, 0.f, true));
-	Place(MinimapImage, TopRight, MapCenter, FVector2D(208, 208), Center);
-	Place(MakeImage(Rounded(FLinearColor::Transparent, 0.f, FLinearColor(1.f, 1.f, 1.f, 0.25f), 1.f, true)), TopRight, MapCenter, FVector2D(150, 150), Center);
-
-	FSlateBrush Arrow;
-	Arrow.SetResourceObject(ArrowTexture);
-	MinimapArrow = MakeImage(Arrow);
-	Place(MinimapArrow, TopRight, MapCenter, FVector2D(26, 26), Center);
-
-	Place(MakeText(TEXT("N"), 15.f), TopRight, MapCenter + FVector2D(0, -112), FVector2D::ZeroVector, Center);
-	Place(MakeText(TEXT("S"), 15.f), TopRight, MapCenter + FVector2D(0, 112), FVector2D::ZeroVector, Center);
-	Place(MakeText(TEXT("W"), 15.f), TopRight, MapCenter + FVector2D(-112, 0), FVector2D::ZeroVector, Center);
-	Place(MakeText(TEXT("E"), 15.f), TopRight, MapCenter + FVector2D(112, 0), FVector2D::ZeroVector, Center);
-
-	// --- Baixo esquerdo: atalhos ---
-	const TCHAR* HintKeys[] = { TEXT("LMB"), TEXT("F"), TEXT("RMB"), TEXT("C"), TEXT("Q"), TEXT("M"), TEXT("I"), TEXT("J") };
-	const TCHAR* HintLabels[] = { TEXT("Atacar"), TEXT("Golpe forte"), TEXT("Modo batalha / defender"), TEXT("Carregar chakra"), TEXT("Dash / Substituição"), TEXT("Mapa"), TEXT("Inventário"), TEXT("Missões") };
-	for (int32 i = 0; i < 8; ++i)
+	// =========================== Centro de baixo: slots de jutsu (descem fora do modo de batalha) ===========================
+	JutsuSlots.Reset();
+	JutsuSlotBase.Reset();
+	const int32 Count = FMath::Max(1, JutsuSlotCount);
+	const float Size = 62.f, Gap = 14.f;
+	const float StartX = -(Count - 1) * (Size + Gap) * 0.5f;
+	for (int32 i = 0; i < Count; ++i)
 	{
-		const float Y = -394.f + i * 46.f;
-		const float KeyWidth = FCString::Strlen(HintKeys[i]) > 1 ? 52.f : 32.f;
-		Place(MakeKey(HintKeys[i], 13.f), BottomLeft, FVector2D(64, Y), FVector2D(KeyWidth, 32));
-		Place(MakeText(HintLabels[i], 17.f, SoftWhite), BottomLeft, FVector2D(76 + KeyWidth, Y + 16.f), FVector2D::ZeroVector, FVector2D(0.f, 0.5f));
+		const FVector2D Pos(StartX + i * (Size + Gap), -58.f);
+		UTexture2D* IconTex = AbilityIcons.IsValidIndex(i) ? AbilityIcons[i] : nullptr;
+		UImage* Back = MakeImage(Rounded(FLinearColor(0.05f, 0.05f, 0.06f, 0.82f), 0.f, FLinearColor(1.f, 1.f, 1.f, 0.35f), 2.f, true));
+		JutsuSlots.Add(Place(Back, BottomCenter, Pos, FVector2D(Size, Size), Center));
+		JutsuSlotBase.Add(Pos);
+		if (IconTex)
+		{
+			JutsuSlots.Add(Place(MakeImage(CircleImage(IconTex)), BottomCenter, Pos, FVector2D(Size - 8.f, Size - 8.f), Center));
+			JutsuSlotBase.Add(Pos);
+		}
 	}
+	// Cargas da substituição (Q apanhando): duas pílulas em cima da barra, sobem junto com ela
+	SubstitutionPips.Reset();
+	for (int32 k = 0; k < 2; ++k)
+	{
+		const FVector2D Pos(-12.f + k * 24.f, -104.f);
+		UImage* Pip = MakeImage(Rounded(White, 0.f, FLinearColor::Transparent, 0.f, true));
+		SubstitutionPips.Add(Pip);
+		JutsuSlots.Add(Place(Pip, BottomCenter, Pos, FVector2D(18.f, 6.f), Center));
+		JutsuSlotBase.Add(Pos);
+	}
+	JutsuOffset = JutsuHiddenOffset;
 
-	// --- Direita: contador de golpes seguidos ---
-	ComboText = MakeText(TEXT(""), 44.f, FLinearColor(1.f, 0.62f, 0.15f), TEXT("Bold"));
-	ComboText->SetShadowOffset(FVector2D(2.f, 2.f));
-	ComboText->SetShadowColorAndOpacity(FLinearColor(0.f, 0.f, 0.f, 0.8f));
+	// =========================== Barra do super pulo (só carregando) e contador de golpes ===========================
+	SuperJumpText = MakeText(TEXT("PULO DE CHAKRA"), 14.f);
+	SuperJumpText->SetVisibility(ESlateVisibility::Collapsed);
+	Place(SuperJumpText, BottomCenter, FVector2D(0.f, -168.f), FVector2D::ZeroVector, Center);
+	SuperJumpBar = MakeBar(FLinearColor(0.35f, 0.75f, 1.f, 1.f), 4.f);
+	SuperJumpBar->SetVisibility(ESlateVisibility::Collapsed);
+	Place(SuperJumpBar, BottomCenter, FVector2D(0.f, -146.f), FVector2D(320.f, 12.f), Center);
+
+	ComboText = MakeText(TEXT(""), 40.f, FLinearColor(1.f, 0.62f, 0.15f));
 	ComboText->SetVisibility(ESlateVisibility::Collapsed);
 	Place(ComboText, FVector2D(1.f, 0.5f), FVector2D(-90.f, -40.f), FVector2D::ZeroVector, FVector2D(1.f, 0.5f));
-
-	// --- Centro embaixo: barra do super pulo (segurando Espaço com a infusão de chakra) ---
-	SuperJumpText = MakeText(TEXT("PULO DE CHAKRA"), 15.f, White, TEXT("Bold"));
-	SuperJumpText->SetVisibility(ESlateVisibility::Collapsed);
-	Place(SuperJumpText, FVector2D(0.5f, 1.f), FVector2D(0.f, -262.f), FVector2D::ZeroVector, FVector2D(0.5f, 0.5f));
-	SuperJumpBar = MakeBar(FLinearColor(0.35f, 0.75f, 1.f, 1.f));
-	SuperJumpBar->SetVisibility(ESlateVisibility::Collapsed);
-	Place(SuperJumpBar, FVector2D(0.5f, 1.f), FVector2D(0.f, -236.f), FVector2D(360.f, 16.f), FVector2D(0.5f, 0.5f));
-
-	// --- Baixo centro: os 4 poderes ---
-	const TCHAR* AbilityKeyLetters[] = { TEXT("Q"), TEXT("E"), TEXT("R"), TEXT("T") };
-	for (int32 i = 0; i < 4; ++i)
-	{
-		const FVector2D Circle(-156.f + i * 104.f, -112.f);
-		Place(MakeImage(Rounded(DarkFill, 0.f, FLinearColor(0.92f, 0.88f, 0.80f, 0.95f), 2.5f, true)), BottomCenter, Circle, FVector2D(92, 92), Center);
-		if (AbilityIcons.IsValidIndex(i) && AbilityIcons[i])
-		{
-			Place(MakeImage(CircleImage(AbilityIcons[i])), BottomCenter, Circle, FVector2D(84, 84), Center);
-		}
-		Place(MakeKey(AbilityKeyLetters[i], 14.f), BottomCenter, FVector2D(Circle.X, -44.f), FVector2D(30, 30), Center);
-	}
-
-	SetHealth(Health, HealthMax);
-	SetChakra(Chakra, ChakraMax);
-	SetPlayerLevel(PlayerLevel);
 }
-
-// ---------------------------------------------------------------------------------------------------------------------
-// Valores
-// ---------------------------------------------------------------------------------------------------------------------
 
 void UNinjaHUDWidget::SetHealth(float Current, float Max)
 {
@@ -299,7 +250,8 @@ void UNinjaHUDWidget::SetHealth(float Current, float Max)
 	if (HealthBar)
 	{
 		HealthBar->SetPercent(Max > 0.f ? Current / Max : 0.f);
-		HealthText->SetText(FText::FromString(FString::Printf(TEXT("%d / %d"), FMath::RoundToInt(Current), FMath::RoundToInt(Max))));
+		HealthText->SetText(FText::AsNumber(FMath::RoundToInt(Current)));
+		HealthMaxText->SetText(FText::FromString(FString::Printf(TEXT("/%d"), FMath::RoundToInt(Max))));
 	}
 }
 
@@ -309,8 +261,9 @@ void UNinjaHUDWidget::SetChakra(float Current, float Max)
 	ChakraMax = Max;
 	if (ChakraBar)
 	{
-		ChakraBar->SetPercent(Max > 0.f ? Current / Max : 0.f);
-		ChakraText->SetText(FText::FromString(FString::Printf(TEXT("%d / %d"), FMath::RoundToInt(Current), FMath::RoundToInt(Max))));
+		const float Percent = Max > 0.f ? Current / Max : 0.f;
+		ChakraBar->SetPercent(Percent);
+		ChakraText->SetText(FText::FromString(FString::Printf(TEXT("%d%%"), FMath::RoundToInt(Percent * 100.f))));
 	}
 }
 
@@ -319,146 +272,96 @@ void UNinjaHUDWidget::SetPlayerLevel(int32 Level)
 	PlayerLevel = Level;
 	if (LevelText)
 	{
-		LevelText->SetText(FText::FromString(FString::Printf(TEXT("Lv. %d"), Level)));
+		LevelText->SetText(FText::AsNumber(Level));
 	}
-}
-
-void UNinjaHUDWidget::SetQuest(const FText& Title, const FText& Step)
-{
-	if (QuestTitleText)
-	{
-		QuestTitleText->SetText(Title);
-		QuestStepText->SetText(Step);
-	}
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-// Minimapa: uma câmera ortográfica olhando de cima, seguindo o jogador (norte = +X do mundo, no topo)
-// ---------------------------------------------------------------------------------------------------------------------
-
-void UNinjaHUDWidget::NativeConstruct()
-{
-	Super::NativeConstruct();
-
-	APlayerController* PC = GetOwningPlayer();
-	if (!PC || !MinimapImage)
-	{
-		return;
-	}
-
-	MinimapTarget = NewObject<UTextureRenderTarget2D>(this);
-	MinimapTarget->ClearColor = FLinearColor(0.35f, 0.30f, 0.24f, 1.f);
-	MinimapTarget->InitAutoFormat(256, 256);
-
-	MinimapCapture = NewObject<USceneCaptureComponent2D>(PC);
-	MinimapCapture->ProjectionType = ECameraProjectionMode::Orthographic;
-	MinimapCapture->OrthoWidth = MinimapWorldSize;
-	MinimapCapture->CaptureSource = SCS_BaseColor;   // cores sem luz: mais leve e com cara de mapa
-	MinimapCapture->bCaptureEveryFrame = false;
-	MinimapCapture->bCaptureOnMovement = false;
-	MinimapCapture->TextureTarget = MinimapTarget;
-	MinimapCapture->ShowFlags.SetAtmosphere(false);
-	MinimapCapture->ShowFlags.SetFog(false);
-	MinimapCapture->RegisterComponent();
-
-	// A câmera grava a transparência zerada; o material usa só as cores e recorta o círculo
-	if (MinimapMaterial)
-	{
-		MinimapMID = UMaterialInstanceDynamic::Create(MinimapMaterial, this);
-		MinimapMID->SetTextureParameterValue(TEXT("Map"), MinimapTarget);
-		FSlateBrush MapBrush;
-		MapBrush.SetResourceObject(MinimapMID);
-		MinimapImage->SetBrush(MapBrush);
-	}
-	else
-	{
-		MinimapImage->SetBrush(NinjaHUD::CircleImage(MinimapTarget));
-	}
-	MinimapTimer = MinimapUpdateInterval; // desenha já no primeiro quadro
-}
-
-void UNinjaHUDWidget::NativeDestruct()
-{
-	if (MinimapCapture)
-	{
-		MinimapCapture->DestroyComponent();
-		MinimapCapture = nullptr;
-	}
-	Super::NativeDestruct();
 }
 
 void UNinjaHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
-	UpdateMinimap(InDeltaTime);
+
+	const AHypeWorldCharacter* Ninja = Cast<AHypeWorldCharacter>(GetOwningPlayerPawn());
+	if (!Ninja)
+	{
+		return;
+	}
 
 	// Vida e chakra de verdade (atributos do GAS, replicados)
-	if (const AHypeWorldCharacter* Ninja = Cast<AHypeWorldCharacter>(GetOwningPlayerPawn()))
+	if (const UNinjaAttributeSet* A = Ninja->GetAttributes())
 	{
-		if (const UNinjaAttributeSet* A = Ninja->GetAttributes())
+		if (A->GetHealth() != Health || A->GetMaxHealth() != HealthMax)
 		{
-			if (A->GetHealth() != Health || A->GetMaxHealth() != HealthMax)
-			{
-				SetHealth(A->GetHealth(), A->GetMaxHealth());
-			}
-			if (A->GetChakra() != Chakra || A->GetMaxChakra() != ChakraMax)
-			{
-				SetChakra(A->GetChakra(), A->GetMaxChakra());
-			}
+			SetHealth(A->GetHealth(), A->GetMaxHealth());
 		}
-		const int32 FeetOn = Ninja->IsPassiveEnabled(ENinjaPassive::ChakraFeet) ? 1 : 0;
-		if (ChakraFeetText && FeetOn != ShownChakraFeet && Ninja->HasLearnedPassive(ENinjaPassive::ChakraFeet))
+		if (A->GetChakra() != Chakra || A->GetMaxChakra() != ChakraMax)
 		{
-			ShownChakraFeet = FeetOn;
-			ChakraFeetText->SetText(FText::FromString(FeetOn ? TEXT("Infusão de chakra: ligada (V)") : TEXT("Infusão de chakra: desligada (V)")));
-			ChakraFeetText->SetColorAndOpacity(FSlateColor(FeetOn ? NinjaHUD::ChakraBlue : FLinearColor(0.55f, 0.55f, 0.58f)));
-		}
-		if (SuperJumpBar)
-		{
-			const ESlateVisibility Show = Ninja->IsChargingSuperJump() ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Collapsed;
-			SuperJumpBar->SetVisibility(Show);
-			SuperJumpText->SetVisibility(Show);
-			SuperJumpBar->SetPercent(Ninja->GetSuperJumpCharge());
-		}
-		if (SubstitutionText && Ninja->GetSubstitutionCharges() != ShownSubstitutions)
-		{
-			ShownSubstitutions = Ninja->GetSubstitutionCharges();
-			SubstitutionText->SetText(FText::FromString(FString::Printf(TEXT("Substituição %d/%d"), ShownSubstitutions, Ninja->MaxSubstitutions)));
-			SubstitutionText->SetColorAndOpacity(FSlateColor(ShownSubstitutions > 0 ? FLinearColor(0.85f, 0.85f, 0.78f) : FLinearColor(0.6f, 0.3f, 0.25f)));
-		}
-		if (ComboText)
-		{
-			const int32 Hits = Ninja->GetComboHitCount();
-			ComboText->SetVisibility(Hits >= 2 ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Collapsed);
-			if (Hits >= 2)
-			{
-				ComboText->SetText(FText::FromString(FString::Printf(TEXT("%d GOLPES"), Hits)));
-			}
+			SetChakra(A->GetChakra(), A->GetMaxChakra());
 		}
 	}
-}
 
-void UNinjaHUDWidget::UpdateMinimap(float DeltaTime)
-{
-	APawn* Pawn = GetOwningPlayerPawn();
-	if (!Pawn || !MinimapCapture)
+	// Nome do jogador (o da partida)
+	if (const APlayerState* PS = Ninja->GetPlayerState())
 	{
-		return;
+		const FString Name = PS->GetPlayerName().IsEmpty() ? TEXT("Ninja") : PS->GetPlayerName();
+		if (Name != ShownName && NameText)
+		{
+			ShownName = Name;
+			NameText->SetText(FText::FromString(Name));
+		}
 	}
 
-	// A flecha gira com o jogador; o mapa fica parado com o norte para cima
-	if (MinimapArrow)
+	// Infusão de chakra: etiqueta acesa/apagada (some se a passiva não foi aprendida)
+	const int32 Infusion = !Ninja->HasLearnedPassive(ENinjaPassive::ChakraFeet) ? -2 : (Ninja->IsPassiveEnabled(ENinjaPassive::ChakraFeet) ? 1 : 0);
+	if (Infusion != ShownInfusion && InfusionText)
 	{
-		MinimapArrow->SetRenderTransformAngle(Pawn->GetActorRotation().Yaw);
+		ShownInfusion = Infusion;
+		const ESlateVisibility Show = Infusion == -2 ? ESlateVisibility::Collapsed : ESlateVisibility::HitTestInvisible;
+		InfusionBox->SetVisibility(Show);
+		InfusionText->SetVisibility(Show);
+		InfusionText->SetColorAndOpacity(FSlateColor(Infusion == 1 ? NinjaHUD::ChakraBlue : FLinearColor(0.42f, 0.42f, 0.45f, 1.f)));
 	}
 
-	MinimapTimer += DeltaTime;
-	if (MinimapTimer < MinimapUpdateInterval)
+	// Slots de jutsu: sobem no modo de batalha, descem (só a pontinha) fora dele
+	const float Target = Ninja->IsInBattleMode() ? 0.f : JutsuHiddenOffset;
+	JutsuOffset = FMath::FInterpTo(JutsuOffset, Target, InDeltaTime, 9.f);
+	for (int32 i = 0; i < JutsuSlots.Num(); ++i)
 	{
-		return;
+		if (JutsuSlots[i] && JutsuSlotBase.IsValidIndex(i))
+		{
+			JutsuSlots[i]->SetPosition(JutsuSlotBase[i] + FVector2D(0.f, JutsuOffset));
+		}
 	}
-	MinimapTimer = 0.f;
+	const float Raised = 1.f - FMath::Clamp(JutsuOffset / FMath::Max(JutsuHiddenOffset, 1.f), 0.f, 1.f);
+	for (UImage* Pip : SubstitutionPips)
+	{
+		Pip->SetRenderOpacity(Raised);   // as cargas só aparecem com a barra levantada (batalha)
+	}
+	if (Ninja->GetSubstitutionCharges() != ShownSubstitutions)
+	{
+		ShownSubstitutions = Ninja->GetSubstitutionCharges();
+		for (int32 k = 0; k < SubstitutionPips.Num(); ++k)
+		{
+			SubstitutionPips[k]->SetColorAndOpacity(k < ShownSubstitutions ? FLinearColor(1.f, 1.f, 1.f, 0.95f) : FLinearColor(1.f, 1.f, 1.f, 0.18f));
+		}
+	}
 
-	MinimapCapture->SetWorldLocationAndRotation(Pawn->GetActorLocation() + FVector(0.f, 0.f, 5000.f), FRotator(-90.f, 0.f, 0.f));
-	MinimapCapture->CaptureScene();
+	// Super pulo carregando
+	if (SuperJumpBar)
+	{
+		const ESlateVisibility Show = Ninja->IsChargingSuperJump() ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Collapsed;
+		SuperJumpBar->SetVisibility(Show);
+		SuperJumpText->SetVisibility(Show);
+		SuperJumpBar->SetPercent(Ninja->GetSuperJumpCharge());
+	}
+
+	// Contador de golpes seguidos
+	if (ComboText)
+	{
+		const int32 Hits = Ninja->GetComboHitCount();
+		ComboText->SetVisibility(Hits >= 2 ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Collapsed);
+		if (Hits >= 2)
+		{
+			ComboText->SetText(FText::FromString(FString::Printf(TEXT("%d GOLPES"), Hits)));
+		}
+	}
 }

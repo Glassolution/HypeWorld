@@ -1,6 +1,7 @@
-// HUD do ninja montado inteiro em C++, seguindo o mockup (Desktop/Hype World/Referencias/HUD/mockup_hud.png):
-// retrato + nível + vida + chakra (topo esquerdo), missão, minimapa (topo direito), atalhos (baixo esquerdo)
-// e os 4 poderes no centro de baixo.
+// HUD do ninja montado inteiro em C++, limpo, no modelo da referência do Felipe (24/10/2026):
+// canto de baixo à esquerda = retrato redondo com anel + nível, nome, barra de vida "750/750", barra de chakra com % e
+// moedas; centro de baixo = slots de jutsu, abaixados (só a pontinha aparece) e que sobem no modo de batalha.
+// Sem minimapa, sem missão, sem lista de atalhos.
 
 #pragma once
 
@@ -9,14 +10,12 @@
 #include "NinjaHUDWidget.generated.h"
 
 class UCanvasPanel;
+class UCanvasPanelSlot;
 class UImage;
 class UTextBlock;
 class UProgressBar;
 class UTexture2D;
-class UTextureRenderTarget2D;
-class USceneCaptureComponent2D;
-class UMaterialInterface;
-class UMaterialInstanceDynamic;
+class UWidget;
 
 UCLASS()
 class HYPEWORLD_API UNinjaHUDWidget : public UUserWidget
@@ -29,21 +28,17 @@ public:
 	UPROPERTY(EditAnywhere, Category="HUD|Imagens")
 	UTexture2D* PortraitTexture = nullptr;
 
-	/** Ícones dos 4 poderes, na ordem das teclas Q, E, R, T (recortados em círculo). */
+	/** Ícones dos jutsus nos slots (recortados em círculo); slots sem ícone ficam vazios. */
 	UPROPERTY(EditAnywhere, Category="HUD|Imagens")
 	TArray<UTexture2D*> AbilityIcons;
 
-	/** Material que mostra a câmera do minimapa em círculo (M_UI_Minimapa, parâmetro de textura "Map"). */
-	UPROPERTY(EditAnywhere, Category="HUD|Minimapa")
-	UMaterialInterface* MinimapMaterial = nullptr;
+	/** Quantos slots de jutsu a barra tem */
+	UPROPERTY(EditAnywhere, Category="HUD|Jutsus")
+	int32 JutsuSlotCount = 5;
 
-	/** Quantos metros do mundo cabem no minimapa (em cm). */
-	UPROPERTY(EditAnywhere, Category="HUD|Minimapa")
-	float MinimapWorldSize = 6000.f;
-
-	/** De quanto em quanto tempo o minimapa é redesenhado (s). Maior = mais leve. */
-	UPROPERTY(EditAnywhere, Category="HUD|Minimapa")
-	float MinimapUpdateInterval = 0.1f;
+	/** Quanto os slots descem fora do modo de batalha (px; o slot tem 62 — sobra só a pontinha) */
+	UPROPERTY(EditAnywhere, Category="HUD|Jutsus")
+	float JutsuHiddenOffset = 78.f;
 
 	UFUNCTION(BlueprintCallable, Category="HUD")
 	void SetHealth(float Current, float Max);
@@ -54,49 +49,46 @@ public:
 	UFUNCTION(BlueprintCallable, Category="HUD")
 	void SetPlayerLevel(int32 Level);
 
+	/** Mantido por compatibilidade (o HUD novo não mostra missão) */
 	UFUNCTION(BlueprintCallable, Category="HUD")
-	void SetQuest(const FText& Title, const FText& Step);
+	void SetQuest(const FText& Title, const FText& Step) {}
 
 protected:
 
 	virtual TSharedRef<SWidget> RebuildWidget() override;
-	virtual void NativeConstruct() override;
-	virtual void NativeDestruct() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 private:
 
 	void BuildLayout();
-	void UpdateMinimap(float DeltaTime);
 
 	UPROPERTY() TObjectPtr<UProgressBar> HealthBar;
 	UPROPERTY() TObjectPtr<UProgressBar> ChakraBar;
 	UPROPERTY() TObjectPtr<UTextBlock> HealthText;
+	UPROPERTY() TObjectPtr<UTextBlock> HealthMaxText;
 	UPROPERTY() TObjectPtr<UTextBlock> ChakraText;
 	UPROPERTY() TObjectPtr<UTextBlock> LevelText;
-	UPROPERTY() TObjectPtr<UTextBlock> QuestTitleText;
-	UPROPERTY() TObjectPtr<UTextBlock> QuestStepText;
+	UPROPERTY() TObjectPtr<UTextBlock> NameText;
+	UPROPERTY() TObjectPtr<UTextBlock> CoinText;
+	UPROPERTY() TObjectPtr<UWidget> InfusionBox;
+	UPROPERTY() TObjectPtr<UTextBlock> InfusionText;
 	UPROPERTY() TObjectPtr<UTextBlock> ComboText;
-	UPROPERTY() TObjectPtr<UTextBlock> SubstitutionText;
-	UPROPERTY() TObjectPtr<UTextBlock> ChakraFeetText;
 	UPROPERTY() TObjectPtr<UProgressBar> SuperJumpBar;
 	UPROPERTY() TObjectPtr<UTextBlock> SuperJumpText;
-	int32 ShownChakraFeet = -1;
-	int32 ShownSubstitutions = -1;
-	UPROPERTY() TObjectPtr<UImage> MinimapImage;
-	UPROPERTY() TObjectPtr<UImage> MinimapArrow;
-	UPROPERTY() TObjectPtr<UTexture2D> FadeTexture;
-	UPROPERTY() TObjectPtr<UTexture2D> ArrowTexture;
-	UPROPERTY() TObjectPtr<UTextureRenderTarget2D> MinimapTarget;
-	UPROPERTY() TObjectPtr<USceneCaptureComponent2D> MinimapCapture;
-	UPROPERTY() TObjectPtr<UMaterialInstanceDynamic> MinimapMID;
+	UPROPERTY() TArray<TObjectPtr<UImage>> SubstitutionPips;
+	UPROPERTY() TObjectPtr<UTexture2D> SwirlTexture;
 
-	float MinimapTimer = 0.f;
+	/** Slots de jutsu (e as cargas da substituição): sobem e descem juntos com o modo de batalha */
+	UPROPERTY() TArray<TObjectPtr<UCanvasPanelSlot>> JutsuSlots;
+	TArray<FVector2D> JutsuSlotBase;
+	float JutsuOffset = 78.f;
 
-	// Valores de exemplo até a Fase 2 ligar vida/chakra/nível ao sistema de atributos
-	float Health = 500.f;
-	float HealthMax = 500.f;
-	float Chakra = 180.f;
-	float ChakraMax = 200.f;
+	float Health = -1.f;
+	float HealthMax = -1.f;
+	float Chakra = -1.f;
+	float ChakraMax = -1.f;
 	int32 PlayerLevel = 12;
+	FString ShownName;
+	int32 ShownInfusion = -1;
+	int32 ShownSubstitutions = -1;
 };
