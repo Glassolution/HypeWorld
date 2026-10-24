@@ -398,6 +398,16 @@ protected:
 	float LastBattleTime = -100.f;
 	void UpdateBattleMode();
 
+	/** Modo de batalha ligado pelo clique no botão direito (até outro clique ou nocaute) */
+	bool bBattleToggle = false;
+	void SetBattleToggle(bool bOn);
+	UFUNCTION(Server, Reliable)
+	void ServerSetBattleToggle(bool bOn);
+
+	/** Corrida automática: desliga sozinha ao parar */
+	void UpdateAutoRun(float DeltaSeconds);
+	float AutoRunStopTime = 0.f;
+
 	UFUNCTION()
 	void OnRep_ChargingChakra();
 
@@ -439,11 +449,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Input")
 	virtual void DoJumpEnd();
 
-	/** Começa a corrida ninja */
+	/** Shift (clique): andar -> trote -> corrida ninja -> andar (corrida automática, não precisa segurar) */
 	UFUNCTION(BlueprintCallable, Category="Input")
 	virtual void DoSprintStart();
 
-	/** Para a corrida ninja */
+	/** Volta a andar (desliga a corrida automática) */
 	UFUNCTION(BlueprintCallable, Category="Input")
 	virtual void DoSprintEnd();
 

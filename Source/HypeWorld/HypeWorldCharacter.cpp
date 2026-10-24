@@ -113,7 +113,6 @@ void AHypeWorldCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 
 		// Corrida ninja e dash
 		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &AHypeWorldCharacter::DoSprintStart);
-		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &AHypeWorldCharacter::DoSprintEnd);
 		EnhancedInputComponent->BindAction(DashAction, ETriggerEvent::Started, this, &AHypeWorldCharacter::DoDash);
 
 		// Combate
@@ -224,13 +223,40 @@ void AHypeWorldCharacter::DoJumpEnd()
 
 void AHypeWorldCharacter::DoSprintStart()
 {
-	// Shift uma vez (segurar) = correr; dois toques rápidos (segurar) = corrida ninja
+	// Corrida automática (não precisa segurar): cada clique no Shift troca andar -> trote -> corrida ninja -> andar.
+	// Ao parar de andar volta sozinho para o andar (UpdateAutoRun).
 	if (UNinjaMovementComponent* NinjaMovement = GetNinjaMovement())
 	{
-		const float Now = GetWorld()->GetTimeSeconds();
-		NinjaMovement->SetRunning(true);
-		NinjaMovement->SetSprinting(Now - LastSprintTapTime <= SprintDoubleTapWindow);
-		LastSprintTapTime = Now;
+		if (NinjaMovement->WantsToSprint())
+		{
+			DoSprintEnd();
+		}
+		else if (NinjaMovement->WantsToRun())
+		{
+			NinjaMovement->SetSprinting(true);
+		}
+		else
+		{
+			NinjaMovement->SetRunning(true);
+		}
+	}
+}
+
+void AHypeWorldCharacter::UpdateAutoRun(float DeltaSeconds)
+{
+	UNinjaMovementComponent* NinjaMovement = GetNinjaMovement();
+	if (!IsLocallyControlled() || !NinjaMovement || !(NinjaMovement->WantsToRun() || NinjaMovement->WantsToSprint()))
+	{
+		AutoRunStopTime = 0.f;
+		return;
+	}
+	// Parado no chão sem apertar direção por um instante: a corrida automática desliga
+	const bool bStopped = NinjaMovement->IsMovingOnGround() && NinjaMovement->GetCurrentAcceleration().IsNearlyZero() && GetVelocity().Size2D() < 20.f;
+	AutoRunStopTime = bStopped ? AutoRunStopTime + DeltaSeconds : 0.f;
+	if (AutoRunStopTime > 0.3f)
+	{
+		DoSprintEnd();
+		AutoRunStopTime = 0.f;
 	}
 }
 
@@ -288,6 +314,7 @@ void AHypeWorldCharacter::Tick(float DeltaSeconds)
 	UpdateRunAnimRate();
 	UpdateIdleBreak(DeltaSeconds);
 	UpdateDoubleJump();
+	UpdateAutoRun(DeltaSeconds);
 	UpdateTurnInPlace(DeltaSeconds);
 	UpdateCameraFollow(DeltaSeconds);
 	UpdateGuard();
@@ -329,6 +356,24 @@ void AHypeWorldCharacter::UpdateIdleBreak(float DeltaSeconds)
 	}
 }
 
+void AHypeWorldCharacter::SetBattleToggle(bool bOn)
+{
+	bBattleToggle = bOn;
+	if (!bOn)
+	{
+		LastBattleTime = -100.f;   // desligou: sai da batalha já (sem esperar os segundos depois do último golpe)
+	}
+	if (!HasAuthority())
+	{
+		ServerSetBattleToggle(bOn);
+	}
+}
+
+void AHypeWorldCharacter::ServerSetBattleToggle_Implementation(bool bOn)
+{
+	SetBattleToggle(bOn);
+}
+
 void AHypeWorldCharacter::UpdateBattleMode()
 {
 	// Quem decide: o servidor e o próprio jogador (resposta imediata); os outros recebem pela rede
@@ -336,9 +381,7 @@ void AHypeWorldCharacter::UpdateBattleMode()
 	{
 		return;
 	}
-	const UNinjaMovementComponent* NinjaMovement = GetNinjaMovement();
-	const bool bHoldingFocus = NinjaMovement && NinjaMovement->IsFocusing();
-	bBattleMode = !bKnockedOut && (bGuarding || bHoldingFocus || IsAttacking() || GetWorld()->GetTimeSeconds() - LastBattleTime < BattleModeDuration);
+	bBattleMode = !bKnockedOut && (bBattleToggle || bGuarding || IsAttacking() || GetWorld()->GetTimeSeconds() - LastBattleTime < BattleModeDuration);
 }
 
 void AHypeWorldCharacter::UpdateDoubleJump()
@@ -1136,6 +1179,7 @@ void AHypeWorldCharacter::OnHealthChanged(const FOnAttributeChangeData& Data)
 void AHypeWorldCharacter::OnKnockedOut()
 {
 	bKnockedOut = true;
+	bBattleToggle = false;   // nocauteado: o modo de batalha ligado pelo clique acaba
 	if (HasAuthority())
 	{
 		AbilitySystem->CancelAbilities();
@@ -1214,6 +1258,8 @@ float AHypeWorldCharacter::GetChakra() const
 
 void AHypeWorldCharacter::DoFocusStart()
 {
+	// Um clique liga o modo de batalha (fica até outro clique ou até ser nocauteado); segurando, também defende
+	SetBattleToggle(!bBattleToggle);
 	bWantsGuard = true;   // parado ou andando, o botão direito também defende
 	if (UNinjaMovementComponent* NinjaMovement = GetNinjaMovement())
 	{

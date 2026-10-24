@@ -134,6 +134,8 @@ public:
 	void RequestDash() { bWantsToDash = true; }
 	void SetFocusing(bool bFocus) { bWantsToFocus = bFocus; }
 	void SetRunning(bool bRun) { bWantsToRun = bRun; }
+	bool WantsToRun() const { return bWantsToRun; }
+	bool WantsToSprint() const { return bWantsToSprint; }
 
 	UFUNCTION(BlueprintPure, Category="Ninja")
 	bool IsRunning() const { return bWantsToRun && !bWantsToSprint && IsMovingOnGround(); }
