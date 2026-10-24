@@ -2,11 +2,10 @@
 
 #include "NinjaAbilities.h"
 #include "NinjaEffects.h"
+#include "NinjaCombatTypes.h"
 #include "HypeWorldCharacter.h"
 #include "AbilitySystemComponent.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
-#include "Animation/AnimInstance.h"
-#include "Components/SkeletalMeshComponent.h"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Combo
@@ -16,36 +15,42 @@ UGA_NinjaMeleeCombo::UGA_NinjaMeleeCombo()
 {
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
 	NetExecutionPolicy = EGameplayAbilityNetExecutionPolicy::LocalPredicted;
+	bRetriggerInstancedAbility = true;							// golpe novo corta o anterior (janela de combo)
+	ActivationBlockedTags.AddTag(TAG_Ninja_State_Stunned);		// atordoado não ataca
 }
 
 void UGA_NinjaMeleeCombo::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 	const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	AHypeWorldCharacter* Ninja = Cast<AHypeWorldCharacter>(GetAvatarActorFromActorInfo());
-	if (!Ninja || !Ninja->ComboMontage || Ninja->IsChargingChakra() || !CommitAbility(Handle, ActorInfo, ActivationInfo))
+	const int32 AttackId = TriggerEventData ? FMath::RoundToInt(TriggerEventData->EventMagnitude) : 0;
+	const FNinjaAttack* Attack = Ninja ? Ninja->GetAttack(AttackId) : nullptr;
+	if (!Ninja || !Attack || !Attack->Montage || Ninja->IsChargingChakra() || !CommitAbility(Handle, ActorInfo, ActivationInfo))
 	{
 		EndAbility(Handle, ActorInfo, ActivationInfo, true, true);
 		return;
 	}
 
-	Ninja->BeginCombo();
+	Ninja->BeginAttack(AttackId);
 
 	UAbilityTask_PlayMontageAndWait* Task = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
-		this, NAME_None, Ninja->ComboMontage, Ninja->ComboPlayRate, NAME_None, true, 1.f);
+		this, NAME_None, Attack->Montage, Attack->PlayRate, NAME_None, true, 1.f);
 	Task->OnCompleted.AddDynamic(this, &UGA_NinjaMeleeCombo::OnMontageFinished);
 	Task->OnBlendOut.AddDynamic(this, &UGA_NinjaMeleeCombo::OnMontageFinished);
 	Task->OnInterrupted.AddDynamic(this, &UGA_NinjaMeleeCombo::OnMontageCancelled);
 	Task->OnCancelled.AddDynamic(this, &UGA_NinjaMeleeCombo::OnMontageCancelled);
 	Task->ReadyForActivation();
+}
 
-	// Cada golpe termina o combo, a não ser que o jogador clique a tempo (CheckCombo pula para o próximo)
-	if (UAnimInstance* AnimInstance = Ninja->GetMesh()->GetAnimInstance())
+void UGA_NinjaMeleeCombo::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
+	const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
+{
+	AHypeWorldCharacter* Ninja = Cast<AHypeWorldCharacter>(GetAvatarActorFromActorInfo());
+	if (Ninja && IsEndAbilityValid(Handle, ActorInfo))
 	{
-		for (const FName& Section : Ninja->ComboSectionNames)
-		{
-			AnimInstance->Montage_SetNextSection(Section, NAME_None, Ninja->ComboMontage);
-		}
+		Ninja->EndAttack(bWasCancelled);
 	}
+	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
 
 void UGA_NinjaMeleeCombo::OnMontageFinished()
@@ -66,6 +71,7 @@ UGA_NinjaChargeChakra::UGA_NinjaChargeChakra()
 {
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
 	NetExecutionPolicy = EGameplayAbilityNetExecutionPolicy::LocalPredicted;
+	ActivationBlockedTags.AddTag(TAG_Ninja_State_Stunned);
 }
 
 void UGA_NinjaChargeChakra::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,

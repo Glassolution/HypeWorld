@@ -29,6 +29,7 @@ struct FNinjaPoseInputs
 	float ArmSway = 0.f;						// StepSway atrasado: as mãos seguem o corpo depois
 	float ArmBob = 0.f;							// cm que as mãos ficam para trás no sobe e desce do corpo (flutuam)
 	float ChargeAlpha = 0.f;					// 0..1 pose de concentrar chakra (base larga, mãos juntas no peito)
+	float GuardAlpha = 0.f;						// 0..1 pose de defesa (antebraços na frente do rosto)
 	float Time = 0.f;							// relógio da animação (respiração)
 };
 
@@ -73,6 +74,8 @@ private:
 	float SprintStraighten = 0.f;
 	float SprintFootNarrow = 0.f;
 	float SprintHandRelax = 0.f;
+	float GuardHandForward = 0.f;
+	float GuardHandSpread = 0.f;
 	float ChargeCrouchDepth = 0.f;
 	float ChargeStanceWidth = 0.f;
 	float ChargeToeOut = 0.f;
@@ -219,6 +222,12 @@ public:
 	/** Quanto as mãos ficam abaixo da base do pescoço (cm) — 0 = altura do queixo. */
 	UPROPERTY(EditAnywhere, Category="Ninja|Chakra")
 	float ChargeHandDrop = 6.f;
+
+	/** Defesa: punhos à frente do rosto (cm à frente do pescoço) e afastados do centro (cm). */
+	UPROPERTY(EditAnywhere, Category="Ninja|Defesa")
+	float GuardHandForward = 24.f;
+	UPROPERTY(EditAnywhere, Category="Ninja|Defesa")
+	float GuardHandSpread = 9.f;
 
 	/** Rapidez com que a mão vai até a parede / volta. */
 	UPROPERTY(EditAnywhere, Category="Ninja|Parede")

@@ -240,15 +240,22 @@ void UNinjaHUDWidget::BuildLayout()
 	Place(MakeText(TEXT("E"), 15.f), TopRight, MapCenter + FVector2D(112, 0), FVector2D::ZeroVector, Center);
 
 	// --- Baixo esquerdo: atalhos ---
-	const TCHAR* HintKeys[] = { TEXT("LMB"), TEXT("C"), TEXT("Ctrl"), TEXT("M"), TEXT("I"), TEXT("J") };
-	const TCHAR* HintLabels[] = { TEXT("Atacar"), TEXT("Carregar chakra"), TEXT("Desviar"), TEXT("Mapa"), TEXT("Inventário"), TEXT("Missões") };
-	for (int32 i = 0; i < 6; ++i)
+	const TCHAR* HintKeys[] = { TEXT("LMB"), TEXT("F"), TEXT("RMB"), TEXT("C"), TEXT("Ctrl"), TEXT("M"), TEXT("I"), TEXT("J") };
+	const TCHAR* HintLabels[] = { TEXT("Atacar"), TEXT("Golpe forte"), TEXT("Defender"), TEXT("Carregar chakra"), TEXT("Desviar"), TEXT("Mapa"), TEXT("Inventário"), TEXT("Missões") };
+	for (int32 i = 0; i < 8; ++i)
 	{
-		const float Y = -302.f + i * 46.f;
+		const float Y = -394.f + i * 46.f;
 		const float KeyWidth = FCString::Strlen(HintKeys[i]) > 1 ? 52.f : 32.f;
 		Place(MakeKey(HintKeys[i], 13.f), BottomLeft, FVector2D(64, Y), FVector2D(KeyWidth, 32));
 		Place(MakeText(HintLabels[i], 17.f, SoftWhite), BottomLeft, FVector2D(76 + KeyWidth, Y + 16.f), FVector2D::ZeroVector, FVector2D(0.f, 0.5f));
 	}
+
+	// --- Direita: contador de golpes seguidos ---
+	ComboText = MakeText(TEXT(""), 44.f, FLinearColor(1.f, 0.62f, 0.15f), TEXT("Bold"));
+	ComboText->SetShadowOffset(FVector2D(2.f, 2.f));
+	ComboText->SetShadowColorAndOpacity(FLinearColor(0.f, 0.f, 0.f, 0.8f));
+	ComboText->SetVisibility(ESlateVisibility::Collapsed);
+	Place(ComboText, FVector2D(1.f, 0.5f), FVector2D(-90.f, -40.f), FVector2D::ZeroVector, FVector2D(1.f, 0.5f));
 
 	// --- Baixo centro: os 4 poderes ---
 	const TCHAR* AbilityKeyLetters[] = { TEXT("Q"), TEXT("E"), TEXT("R"), TEXT("T") };
@@ -384,6 +391,15 @@ void UNinjaHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 			if (A->GetChakra() != Chakra || A->GetMaxChakra() != ChakraMax)
 			{
 				SetChakra(A->GetChakra(), A->GetMaxChakra());
+			}
+		}
+		if (ComboText)
+		{
+			const int32 Hits = Ninja->GetComboHitCount();
+			ComboText->SetVisibility(Hits >= 2 ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Collapsed);
+			if (Hits >= 2)
+			{
+				ComboText->SetText(FText::FromString(FString::Printf(TEXT("%d GOLPES"), Hits)));
 			}
 		}
 	}

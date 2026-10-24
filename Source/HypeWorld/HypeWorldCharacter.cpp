@@ -23,6 +23,7 @@
 #include "NinjaDamageNumber.h"
 #include "Net/UnrealNetwork.h"
 #include "Engine/OverlapResult.h"
+#include "AnimNotify_DoAttackTrace.h"
 #include "TimerManager.h"
 
 AHypeWorldCharacter::AHypeWorldCharacter(const FObjectInitializer& ObjectInitializer)
@@ -57,6 +58,8 @@ AHypeWorldCharacter::AHypeWorldCharacter(const FObjectInitializer& ObjectInitial
 	GetCharacterMovement()->bUseSeparateBrakingFriction = true;
 	GetCharacterMovement()->BrakingFriction = 0.6f;
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
+	// Golpes andam pela própria animação, mas dá para corrigir a direção com as teclas no meio do golpe
+	GetCharacterMovement()->bAllowPhysicsRotationDuringAnimRootMotion = true;
 
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
@@ -115,6 +118,7 @@ void AHypeWorldCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 
 		// Combate
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &AHypeWorldCharacter::DoAttackPressed);
+		EnhancedInputComponent->BindAction(HeavyAttackAction, ETriggerEvent::Started, this, &AHypeWorldCharacter::DoHeavyAttackPressed);
 		EnhancedInputComponent->BindAction(ChargeChakraAction, ETriggerEvent::Started, this, &AHypeWorldCharacter::DoChargePressed);
 		EnhancedInputComponent->BindAction(ChargeChakraAction, ETriggerEvent::Completed, this, &AHypeWorldCharacter::DoChargeReleased);
 		EnhancedInputComponent->BindAction(FocusAction, ETriggerEvent::Started, this, &AHypeWorldCharacter::DoFocusStart);
@@ -160,8 +164,8 @@ void AHypeWorldCharacter::DoMove(float Right, float Forward)
 
 		FVector Wish = ForwardDirection * Forward + RightDirection * Right;
 
-		// Carregando chakra: não anda. Atacando: só ajusta um pouco a direção (o golpe já empurra para a frente)
-		if (bChargingChakra)
+		// Carregando chakra ou atordoado: não anda. Atacando: só ajusta um pouco a direção (o golpe já empurra para a frente)
+		if (bChargingChakra || IsStunned())
 		{
 			return;
 		}
@@ -241,6 +245,10 @@ void AHypeWorldCharacter::DoSprintEnd()
 
 void AHypeWorldCharacter::DoDash()
 {
+	if (IsStunned())
+	{
+		return;
+	}
 	if (UNinjaMovementComponent* NinjaMovement = GetNinjaMovement())
 	{
 		NinjaMovement->RequestDash();
@@ -269,6 +277,7 @@ void AHypeWorldCharacter::BeginPlay()
 		if (ChargeChakraAbility) { AbilitySystem->GiveAbility(FGameplayAbilitySpec(ChargeChakraAbility, 1, INDEX_NONE, this)); }
 	}
 	AbilitySystem->GetGameplayAttributeValueChangeDelegate(UNinjaAttributeSet::GetHealthAttribute()).AddUObject(this, &AHypeWorldCharacter::OnHealthChanged);
+	GetCharacterMovement()->ProcessRootMotionPreConvertToWorld.BindUObject(this, &AHypeWorldCharacter::ProcessAttackRootMotion);
 }
 
 void AHypeWorldCharacter::Tick(float DeltaSeconds)
@@ -280,6 +289,7 @@ void AHypeWorldCharacter::Tick(float DeltaSeconds)
 	UpdateIdleBreak(DeltaSeconds);
 	UpdateTurnInPlace(DeltaSeconds);
 	UpdateCameraFollow(DeltaSeconds);
+	UpdateGuard();
 }
 
 void AHypeWorldCharacter::UpdateIdleBreak(float DeltaSeconds)
@@ -539,6 +549,7 @@ void AHypeWorldCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(AHypeWorldCharacter, bChargingChakra);
+	DOREPLIFETIME_CONDITION(AHypeWorldCharacter, bGuarding, COND_SkipOwner);
 }
 
 bool AHypeWorldCharacter::IsAttacking() const
@@ -547,113 +558,403 @@ bool AHypeWorldCharacter::IsAttacking() const
 	return Spec && Spec->IsActive();
 }
 
+bool AHypeWorldCharacter::IsStunned() const
+{
+	return AbilitySystem && AbilitySystem->HasMatchingGameplayTag(TAG_Ninja_State_Stunned);
+}
+
+bool AHypeWorldCharacter::IsGuarding() const
+{
+	return bGuarding && !bKnockedOut && !IsStunned();
+}
+
+int32 AHypeWorldCharacter::GetComboHitCount() const
+{
+	return GetWorld() && GetWorld()->GetTimeSeconds() - LastComboHitTime <= ComboCounterTime ? ComboHits : 0;
+}
+
+// Ids dos golpes: 0..99 combo leve, 100+ fortes, 200 correndo, 300 no ar
+namespace NinjaAttackId
+{
+	constexpr int32 Heavy = 100;
+	constexpr int32 Sprint = 200;
+	constexpr int32 Air = 300;
+}
+
+const FNinjaAttack* AHypeWorldCharacter::GetAttack(int32 AttackId) const
+{
+	if (AttackId >= 0 && AttackId < NinjaAttackId::Heavy)
+	{
+		return LightCombo.IsValidIndex(AttackId) ? &LightCombo[AttackId] : nullptr;
+	}
+	if (AttackId >= NinjaAttackId::Heavy && AttackId < NinjaAttackId::Sprint)
+	{
+		return HeavyAttacks.IsValidIndex(AttackId - NinjaAttackId::Heavy) ? &HeavyAttacks[AttackId - NinjaAttackId::Heavy] : nullptr;
+	}
+	if (AttackId == NinjaAttackId::Sprint)
+	{
+		return SprintAttack.Montage ? &SprintAttack : nullptr;
+	}
+	if (AttackId == NinjaAttackId::Air)
+	{
+		return AirAttack.Montage ? &AirAttack : nullptr;
+	}
+	return nullptr;
+}
+
+int32 AHypeWorldCharacter::ChooseAttack(ENinjaAttackInput Input) const
+{
+	// Emenda no golpe atual, ou no que acabou de terminar (se a janela de combo dele chegou a abrir)
+	const int32 ChainId = (IsAttacking() && CurrentAttackId != INDEX_NONE) ? CurrentAttackId
+		: (GetWorld()->GetTimeSeconds() <= ChainExpireTime ? LastChainAttackId : INDEX_NONE);
+	const bool bChaining = ChainId != INDEX_NONE;
+	const bool bLightChain = bChaining && ChainId < NinjaAttackId::Heavy;
+
+	if (Input == ENinjaAttackInput::Heavy)
+	{
+		// Forte sozinho, ou finalizador que depende de em que ponto do combo leve ele entra; forte não emenda em forte
+		if (HeavyAttacks.Num() == 0 || (bChaining && !bLightChain))
+		{
+			return INDEX_NONE;
+		}
+		return NinjaAttackId::Heavy + (bLightChain ? FMath::Min(ChainId + 1, HeavyAttacks.Num() - 1) : 0);
+	}
+
+	if (LightCombo.Num() == 0)
+	{
+		return INDEX_NONE;
+	}
+	if (bLightChain)
+	{
+		return (ChainId + 1) % LightCombo.Num();
+	}
+	if (bChaining)
+	{
+		return 0;   // depois de um forte / de corrida / aéreo: recomeça o combo leve
+	}
+	if (GetCharacterMovement()->IsFalling() && AirAttack.Montage)
+	{
+		return NinjaAttackId::Air;
+	}
+	if (GetCharacterMovement()->IsMovingOnGround() && GetVelocity().Size2D() >= SprintAttackMinSpeed && SprintAttack.Montage)
+	{
+		return NinjaAttackId::Sprint;
+	}
+	return 0;
+}
+
 void AHypeWorldCharacter::DoAttackPressed()
 {
-	if (bKnockedOut || bChargingChakra)
+	StartAttack(ENinjaAttackInput::Light);
+}
+
+void AHypeWorldCharacter::DoHeavyAttackPressed()
+{
+	StartAttack(ENinjaAttackInput::Heavy);
+}
+
+void AHypeWorldCharacter::StartAttack(ENinjaAttackInput Input)
+{
+	if (bKnockedOut || bChargingChakra || IsStunned() || !ComboAbility)
 	{
 		return;
 	}
-	if (IsAttacking())
+	if (IsAttacking() && !bComboWindowOpen)
 	{
-		// Durante o combo: guarda o clique para emendar o próximo golpe (aqui e no servidor)
+		// No meio do golpe: guarda o clique; ele vale quando a janela do próximo golpe abrir (CheckCombo)
+		BufferedInput = Input;
 		CachedAttackInputTime = GetWorld()->GetTimeSeconds();
-		if (!HasAuthority())
-		{
-			ServerCacheAttackInput();
-		}
 		return;
 	}
-	AbilitySystem->TryActivateAbilityByClass(ComboAbility);
+	const int32 AttackId = ChooseAttack(Input);
+	FGameplayAbilitySpec* Spec = AbilitySystem->FindAbilitySpecFromClass(ComboAbility);
+	if (AttackId == INDEX_NONE || !Spec)
+	{
+		return;
+	}
+	BufferedInput = ENinjaAttackInput::None;
+	bComboWindowOpen = false;
+
+	// O id vai no evento: o servidor recebe junto com a ativação e toca o mesmo golpe
+	FGameplayEventData Payload;
+	Payload.EventTag = TAG_Ninja_Event_Attack;
+	Payload.Instigator = this;
+	Payload.EventMagnitude = AttackId;
+	AbilitySystem->TriggerAbilityFromGameplayEvent(Spec->Handle, AbilitySystem->AbilityActorInfo.Get(), TAG_Ninja_Event_Attack, &Payload, *AbilitySystem);
 }
 
-void AHypeWorldCharacter::ServerCacheAttackInput_Implementation()
+void AHypeWorldCharacter::BeginAttack(int32 AttackId)
 {
-	CachedAttackInputTime = GetWorld()->GetTimeSeconds();
+	const FNinjaAttack* Attack = GetAttack(AttackId);
+	if (!Attack || !Attack->Montage)
+	{
+		return;
+	}
+	CurrentAttackId = AttackId;
+	LastChainAttackId = INDEX_NONE;
+	AttackHitIndex = 0;
+	bComboWindowOpen = false;
+	HomingSpeed = 0.f;
+	HomingUntil = 0.f;
+
+	// Quantos acertos o golpe tem e quando vem o primeiro
+	AttackHitCount = 0;
+	float FirstHit = -1.f;
+	for (const FAnimNotifyEvent& Event : Attack->Montage->Notifies)
+	{
+		if (Cast<UAnimNotify_DoAttackTrace>(Event.Notify))
+		{
+			++AttackHitCount;
+			FirstHit = FirstHit < 0.f ? Event.GetTriggerTime() : FMath::Min(FirstHit, Event.GetTriggerTime());
+		}
+	}
+	AttackHitCount = FMath::Max(1, AttackHitCount);
+
+	// Mira no alvo mais próximo e, se ele estiver longe, o golpe avança mais até o acerto (chega no alcance certo)
+	const AActor* Target = FaceNearestEnemy();
+	if (Target && FirstHit > 0.f)
+	{
+		const FVector CompForward = GetMesh()->GetComponentTransform().InverseTransformVectorNoScale(GetActorForwardVector()).GetSafeNormal();
+		const FTransform Motion = Attack->Montage->ExtractRootMotionFromTrackRange(0.f, FirstHit, FAnimExtractContext());
+		const float AnimAdvance = FVector::DotProduct(Motion.GetTranslation(), CompForward) * Attack->RootMotionScale;
+		const float Gap = FVector::Dist2D(Target->GetActorLocation(), GetActorLocation()) - GetSimpleCollisionRadius() - Target->GetSimpleCollisionRadius();
+		const float Extra = FMath::Clamp(Gap - Attack->Reach * 0.6f - AnimAdvance, 0.f, Attack->HomingDistance);
+		HomingUntil = FirstHit;
+		HomingSpeed = Extra / FMath::Max(FirstHit / FMath::Max(Attack->PlayRate, 0.1f), 0.05f);
+	}
+
+	// Durante golpes o avanço da animação move o personagem (ver ProcessAttackRootMotion)
+	if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
+	{
+		AnimInstance->SetRootMotionMode(ERootMotionMode::RootMotionFromMontagesOnly);
+	}
 }
 
-void AHypeWorldCharacter::BeginCombo()
+void AHypeWorldCharacter::EndAttack(bool bWasCancelled)
 {
-	ComboIndex = 0;
-	CachedAttackInputTime = -100.f;
-	FaceNearestEnemy();
-	Lunge();
+	// Golpe que terminou sem ser interrompido: o próximo clique ainda emenda por um instante depois do fim
+	LastChainAttackId = bWasCancelled ? INDEX_NONE : CurrentAttackId;
+	ChainExpireTime = GetWorld()->GetTimeSeconds() + ComboChainGrace;
+	if (bWasCancelled)
+	{
+		BufferedInput = ENinjaAttackInput::None;
+	}
+	else if (IsLocallyControlled() && BufferedInput != ENinjaAttackInput::None)
+	{
+		// Clique guardado e a janela não chegou a abrir (o golpe acabou no mesmo quadro): vale agora
+		GetWorldTimerManager().SetTimerForNextTick(this, &AHypeWorldCharacter::ConsumeBufferedAttack);
+	}
+	CurrentAttackId = INDEX_NONE;
+	bComboWindowOpen = false;
+	HomingSpeed = 0.f;
+	if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
+	{
+		AnimInstance->SetRootMotionMode(ERootMotionMode::IgnoreRootMotion);
+	}
+}
+
+FTransform AHypeWorldCharacter::ProcessAttackRootMotion(const FTransform& InRootMotion, UCharacterMovementComponent* Movement, float DeltaSeconds)
+{
+	const FNinjaAttack* Attack = GetAttack(CurrentAttackId);
+	if (!Attack)
+	{
+		return InRootMotion;
+	}
+	// Só o avanço para a frente (as animações do Mixamo deslizam de lado), escalado; e até o acerto, o puxão até o alvo
+	const FVector CompForward = GetMesh()->GetComponentTransform().InverseTransformVectorNoScale(GetActorForwardVector()).GetSafeNormal();
+	FVector Move = CompForward * FVector::DotProduct(InRootMotion.GetTranslation(), CompForward) * Attack->RootMotionScale;
+	if (HomingSpeed > 0.f)
+	{
+		const UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+		if (AnimInstance && AnimInstance->Montage_GetPosition(Attack->Montage) < HomingUntil)
+		{
+			Move += CompForward * HomingSpeed * DeltaSeconds;
+		}
+	}
+	FTransform Result = InRootMotion;
+	Result.SetTranslation(Move);
+	return Result;
 }
 
 void AHypeWorldCharacter::CheckCombo()
 {
-	// Chamado pelo AnimNotify no fim de cada golpe: se o jogador clicou a tempo, emenda o próximo
-	if (!IsAttacking() || GetWorld()->GetTimeSeconds() - CachedAttackInputTime > ComboInputWindow)
+	// AnimNotify perto do fim de cada golpe: abre a janela do próximo. Quem decide é o jogador (o servidor recebe pela habilidade)
+	if (!IsLocallyControlled())
 	{
 		return;
 	}
-	CachedAttackInputTime = -100.f;
-	if (ComboIndex + 1 < ComboSectionNames.Num())
+	bComboWindowOpen = IsAttacking();
+	if (BufferedInput != ENinjaAttackInput::None)
 	{
-		++ComboIndex;
-		FaceNearestEnemy();
-		Lunge();
-		AbilitySystem->CurrentMontageJumpToSection(ComboSectionNames[ComboIndex]);
+		// No próximo quadro: trocar de montagem dentro de um AnimNotify não é seguro
+		GetWorldTimerManager().SetTimerForNextTick(this, &AHypeWorldCharacter::ConsumeBufferedAttack);
+	}
+}
+
+void AHypeWorldCharacter::ConsumeBufferedAttack()
+{
+	const ENinjaAttackInput Input = BufferedInput;
+	BufferedInput = ENinjaAttackInput::None;
+	if (Input != ENinjaAttackInput::None && GetWorld()->GetTimeSeconds() - CachedAttackInputTime <= ComboInputWindow)
+	{
+		bComboWindowOpen = true;   // o clique foi dado durante o golpe: emenda mesmo que a janela já tenha passado
+		StartAttack(Input);
 	}
 }
 
 void AHypeWorldCharacter::DoAttackTrace(FName DamageSourceBone)
 {
-	// Só o servidor decide o acerto e o dano (todos veem o resultado pela vida replicada)
-	if (!HasAuthority())
+	// Servidor: acerto de verdade (dano). Jogador: só o efeito (pausa no impacto e contador de combo).
+	const FNinjaAttack* Attack = GetAttack(CurrentAttackId);
+	if (!Attack || !(HasAuthority() || IsLocallyControlled()))
 	{
 		return;
 	}
+	const bool bFinalHit = ++AttackHitIndex >= AttackHitCount;
 
 	const FVector Start = GetActorLocation() + GetActorForwardVector() * 30.f;
-	const FVector End = Start + GetActorForwardVector() * MeleeReach;
+	const FVector End = Start + GetActorForwardVector() * Attack->Reach;
 	FCollisionQueryParams Params(SCENE_QUERY_STAT(NinjaMelee), false, this);
-	FCollisionObjectQueryParams Objects;
-	Objects.AddObjectTypesToQuery(ECC_Pawn);
-
 	TArray<FHitResult> Hits;
-	GetWorld()->SweepMultiByObjectType(Hits, Start, End, FQuat::Identity, Objects, FCollisionShape::MakeSphere(MeleeRadius), Params);
+	GetWorld()->SweepMultiByObjectType(Hits, Start, End, FQuat::Identity, FCollisionObjectQueryParams(ECC_Pawn), FCollisionShape::MakeSphere(Attack->Radius), Params);
 
 	TSet<AActor*> Done;
-	const float Damage = ComboDamage.IsValidIndex(ComboIndex) ? ComboDamage[ComboIndex] : 25.f;
 	bool bHitSomething = false;
 	for (const FHitResult& Hit : Hits)
 	{
 		AHypeWorldCharacter* Target = Cast<AHypeWorldCharacter>(Hit.GetActor());
-		if (!Target || Done.Contains(Target) || Target->bKnockedOut)
+		if (!Target || Target == this || Done.Contains(Target) || Target->bKnockedOut)
 		{
 			continue;
 		}
 		Done.Add(Target);
 
 		// Desvio: quem está no dash fica invulnerável
-		UNinjaMovementComponent* TargetMove = Target->GetNinjaMovement();
+		const UNinjaMovementComponent* TargetMove = Target->GetNinjaMovement();
 		if (TargetMove && TargetMove->IsDashing())
 		{
 			continue;
 		}
-
-		UAbilitySystemComponent* TargetASC = Target->GetAbilitySystemComponent();
-		FGameplayEffectContextHandle Context = AbilitySystem->MakeEffectContext();
-		Context.AddHitResult(Hit);
-		FGameplayEffectSpecHandle Spec = AbilitySystem->MakeOutgoingSpec(UGE_NinjaDamage::StaticClass(), 1.f, Context);
-		Spec.Data->SetSetByCallerMagnitude(NinjaSetByCaller::Damage, Damage);
-		AbilitySystem->ApplyGameplayEffectSpecToTarget(*Spec.Data.Get(), TargetASC);
-
-		// Empurrãozinho para trás no último golpe
-		if (ComboIndex == ComboSectionNames.Num() - 1)
-		{
-			Target->LaunchCharacter(GetActorForwardVector() * 700.f + FVector(0.f, 0.f, 250.f), true, true);
-		}
 		bHitSomething = true;
+		if (HasAuthority())
+		{
+			ApplyHit(Target, *Attack, bFinalHit, Hit);
+		}
 	}
 
 	if (bHitSomething)
 	{
-		Attributes->SetChakra(FMath::Min(Attributes->GetChakra() + ChakraPerHit, Attributes->GetMaxChakra()));
+		HitStop();
+		if (IsLocallyControlled())
+		{
+			const float Now = GetWorld()->GetTimeSeconds();
+			ComboHits = Now - LastComboHitTime <= ComboCounterTime ? ComboHits + 1 : 1;
+			LastComboHitTime = Now;
+		}
+		if (HasAuthority())
+		{
+			Attributes->SetChakra(FMath::Min(Attributes->GetChakra() + ChakraPerHit, Attributes->GetMaxChakra()));
+		}
 	}
 }
 
-void AHypeWorldCharacter::FaceNearestEnemy()
+void AHypeWorldCharacter::ApplyHit(AHypeWorldCharacter* Target, const FNinjaAttack& Attack, bool bFinalHit, const FHitResult& Hit)
+{
+	const FVector Push = (Target->GetActorLocation() - GetActorLocation()).GetSafeNormal2D();
+	ENinjaHitReaction Reaction = bFinalHit ? Attack.Reaction : ENinjaHitReaction::Light;
+	float Damage = Attack.Damage;
+	float Stun = Attack.Stun;
+	float Knockback = bFinalHit ? Attack.Knockback : FMath::Min(Attack.Knockback, 120.f);
+	float Launch = bFinalHit ? Attack.Launch : 0.f;
+
+	// Defesa: só segura golpes de frente; golpe forte quebra
+	const bool bFromFront = FVector::DotProduct(Target->GetActorForwardVector().GetSafeNormal2D(), -Push) > 0.2f;
+	if (Target->IsGuarding() && bFromFront)
+	{
+		if (Attack.bBreaksGuard)
+		{
+			Reaction = ENinjaHitReaction::GuardBreak;
+			Damage *= 0.5f;
+			Stun = GuardBreakStun;
+			Knockback = 250.f;
+		}
+		else
+		{
+			Reaction = ENinjaHitReaction::Block;
+			Damage *= GuardDamageScale;
+			Stun = BlockStun;
+			Knockback = 120.f;
+		}
+		Launch = 0.f;
+	}
+
+	UAbilitySystemComponent* TargetASC = Target->GetAbilitySystemComponent();
+
+	// Levar golpe (sem defender) interrompe o que ele estava fazendo: combo, carga de chakra
+	if (Reaction != ENinjaHitReaction::Block)
+	{
+		TargetASC->CancelAbilities();
+	}
+
+	FGameplayEffectContextHandle Context = AbilitySystem->MakeEffectContext();
+	Context.AddHitResult(Hit);
+	FGameplayEffectSpecHandle DamageSpec = AbilitySystem->MakeOutgoingSpec(UGE_NinjaDamage::StaticClass(), 1.f, Context);
+	DamageSpec.Data->SetSetByCallerMagnitude(NinjaSetByCaller::Damage, Damage);
+	AbilitySystem->ApplyGameplayEffectSpecToTarget(*DamageSpec.Data.Get(), TargetASC);
+
+	if (Stun > 0.f && !Target->bKnockedOut)
+	{
+		FGameplayEffectSpecHandle StunSpec = AbilitySystem->MakeOutgoingSpec(UGE_NinjaStun::StaticClass(), 1.f, Context);
+		StunSpec.Data->SetSetByCallerMagnitude(NinjaSetByCaller::Duration, Stun);
+		AbilitySystem->ApplyGameplayEffectSpecToTarget(*StunSpec.Data.Get(), TargetASC);
+	}
+
+	if (Knockback > 0.f || Launch > 0.f)
+	{
+		Target->LaunchCharacter(Push * Knockback + FVector(0.f, 0.f, Launch), true, Launch > 0.f);
+	}
+	Target->MulticastHitReaction(Reaction, -Push);
+}
+
+void AHypeWorldCharacter::MulticastHitReaction_Implementation(ENinjaHitReaction Reaction, FVector_NetQuantizeNormal FromDirection)
+{
+	if (bKnockedOut)
+	{
+		return;
+	}
+	const FVector Head = GetActorLocation() + FVector(0.f, 0.f, GetSimpleCollisionHalfHeight() + 30.f);
+	if (Reaction == ENinjaHitReaction::Block)
+	{
+		ANinjaHitFlash::Spawn(GetWorld(), GetActorLocation() + FVector(0.f, 0.f, 40.f) + FVector(FromDirection) * 35.f, HitFlashMaterial, FLinearColor(0.35f, 0.7f, 1.f));
+		ANinjaDamageNumber::Spawn(GetWorld(), Head, TEXT("DEFESA"), FLinearColor(0.45f, 0.8f, 1.f), 28.f);
+		return;
+	}
+
+	// Vira para quem bateu (a animação de reação é de frente)
+	if (HasAuthority() || IsLocallyControlled())
+	{
+		SetActorRotation(FRotator(0.f, FVector(FromDirection).Rotation().Yaw, 0.f));
+	}
+	if (Reaction == ENinjaHitReaction::GuardBreak)
+	{
+		ANinjaDamageNumber::Spawn(GetWorld(), Head, TEXT("DEFESA QUEBRADA"), FLinearColor(1.f, 0.45f, 0.15f), 32.f);
+	}
+	UAnimMontage* Montage = nullptr;
+	if (Reaction != ENinjaHitReaction::Light && HeavyHitReactMontage)
+	{
+		Montage = HeavyHitReactMontage;
+	}
+	else if (HitReactMontages.Num() > 0)
+	{
+		Montage = HitReactMontages[FMath::RandRange(0, HitReactMontages.Num() - 1)];
+	}
+	if (Montage)
+	{
+		PlayAnimMontage(Montage, Reaction == ENinjaHitReaction::Light ? 1.3f : 1.f);
+	}
+}
+
+AActor* AHypeWorldCharacter::FaceNearestEnemy()
 {
 	TArray<FOverlapResult> Overlaps;
 	FCollisionQueryParams Params(SCENE_QUERY_STAT(NinjaSoftLock), false, this);
@@ -691,22 +992,41 @@ void AHypeWorldCharacter::FaceNearestEnemy()
 	{
 		SetActorRotation(FRotator(0.f, Look.Rotation().Yaw, 0.f));
 	}
-}
-
-void AHypeWorldCharacter::Lunge()
-{
-	if (GetCharacterMovement()->IsMovingOnGround())
-	{
-		// Vindo correndo, o golpe aproveita parte do embalo (mas nunca menos que o avanço normal)
-		const float Carry = FMath::Max(AttackLunge, GetVelocity().Size2D() * 0.6f);
-		LaunchCharacter(GetActorForwardVector() * Carry, true, false);
-	}
+	return Best;
 }
 
 void AHypeWorldCharacter::HitStop()
 {
 	CustomTimeDilation = 0.05f;
 	GetWorldTimerManager().SetTimer(HitStopTimer, [this]() { CustomTimeDilation = 1.f; }, HitStopDuration, false);
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Defesa
+// ---------------------------------------------------------------------------------------------------------------------
+
+void AHypeWorldCharacter::UpdateGuard()
+{
+	if (!IsLocallyControlled())
+	{
+		return;
+	}
+	const UNinjaMovementComponent* NinjaMovement = GetNinjaMovement();
+	const bool bNewGuarding = bWantsGuard && NinjaMovement && NinjaMovement->IsMovingOnGround() && !NinjaMovement->IsRunning()
+		&& !NinjaMovement->IsSprinting() && !IsAttacking() && !bChargingChakra && !bKnockedOut;
+	if (bNewGuarding != bGuarding)
+	{
+		bGuarding = bNewGuarding;
+		if (!HasAuthority())
+		{
+			ServerSetGuarding(bNewGuarding);
+		}
+	}
+}
+
+void AHypeWorldCharacter::ServerSetGuarding_Implementation(bool bNewGuarding)
+{
+	bGuarding = bNewGuarding;
 }
 
 void AHypeWorldCharacter::OnHealthChanged(const FOnAttributeChangeData& Data)
@@ -720,17 +1040,10 @@ void AHypeWorldCharacter::OnHealthChanged(const FOnAttributeChangeData& Data)
 		ANinjaHitFlash::Spawn(GetWorld(), GetActorLocation() + FVector(0.f, 0.f, 25.f), HitFlashMaterial, FLinearColor(1.f, 0.85f, 0.5f));
 		HitStop();
 
+		// A reação (animação, virar para quem bateu) vem do MulticastHitReaction, que sabe o tipo do golpe
 		if (Data.NewValue <= 0.f)
 		{
 			OnKnockedOut();
-		}
-		else if (HitReactMontages.Num() > 0)
-		{
-			if (bChargingChakra && HasAuthority())
-			{
-				AbilitySystem->CancelAbilities();   // levar golpe interrompe a carga de chakra
-			}
-			PlayAnimMontage(HitReactMontages[FMath::RandRange(0, HitReactMontages.Num() - 1)], 1.3f);
 		}
 	}
 	else if (Delta > 0.5f && bKnockedOut && Data.NewValue > 0.f)
@@ -757,6 +1070,11 @@ void AHypeWorldCharacter::OnKnockedOut()
 // ---------------------------------------------------------------------------------------------------------------------
 // Carregar chakra
 // ---------------------------------------------------------------------------------------------------------------------
+
+bool AHypeWorldCharacter::CanJumpInternal_Implementation() const
+{
+	return !IsStunned() && Super::CanJumpInternal_Implementation();
+}
 
 bool AHypeWorldCharacter::CanChargeChakra() const
 {
@@ -805,6 +1123,7 @@ float AHypeWorldCharacter::GetChakra() const
 
 void AHypeWorldCharacter::DoFocusStart()
 {
+	bWantsGuard = true;   // parado ou andando, o botão direito também defende
 	if (UNinjaMovementComponent* NinjaMovement = GetNinjaMovement())
 	{
 		NinjaMovement->SetFocusing(true);
@@ -813,6 +1132,7 @@ void AHypeWorldCharacter::DoFocusStart()
 
 void AHypeWorldCharacter::DoFocusEnd()
 {
+	bWantsGuard = false;
 	if (UNinjaMovementComponent* NinjaMovement = GetNinjaMovement())
 	{
 		NinjaMovement->SetFocusing(false);

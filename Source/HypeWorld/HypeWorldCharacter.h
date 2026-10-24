@@ -8,6 +8,7 @@
 #include "AbilitySystemInterface.h"
 #include "GameplayEffectTypes.h"
 #include "CombatAttacker.h"
+#include "NinjaCombatTypes.h"
 #include "HypeWorldCharacter.generated.h"
 
 class USpringArmComponent;
@@ -82,6 +83,10 @@ protected:
 	/** Atacar (combo corpo a corpo) */
 	UPROPERTY(EditAnywhere, Category="Input")
 	UInputAction* AttackAction;
+
+	/** Golpe forte / finalizador */
+	UPROPERTY(EditAnywhere, Category="Input")
+	UInputAction* HeavyAttackAction;
 
 	/** Carregar chakra (segurar) */
 	UPROPERTY(EditAnywhere, Category="Input")
@@ -186,55 +191,71 @@ public:
 
 	// ---------- Combate ----------
 
-	/** Montagem do combo (seções Melee01..03 com os AnimNotifies de golpe e de combo) */
+	/** Combo leve (botão esquerdo): um golpe por clique, em ordem. */
 	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
-	UAnimMontage* ComboMontage;
+	TArray<FNinjaAttack> LightCombo;
 
-	/** Nomes das seções do combo, em ordem */
+	/** Golpes fortes (F). [0] = sozinho; [N] = finalizador depois do N-ésimo golpe leve (se faltar, usa o último). */
 	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
-	TArray<FName> ComboSectionNames = { FName("Melee01"), FName("Melee02"), FName("Melee03") };
+	TArray<FNinjaAttack> HeavyAttacks;
 
-	/** Velocidade do combo (maior = golpes mais rápidos) */
+	/** Atacar correndo (acima de SprintAttackMinSpeed). */
 	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
-	float ComboPlayRate = 1.35f;
+	FNinjaAttack SprintAttack;
 
-	/** Dano de cada golpe do combo (o último é o mais forte) */
+	/** Atacar no ar. */
 	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
-	TArray<float> ComboDamage = { 28.f, 32.f, 55.f };
+	FNinjaAttack AirAttack;
+
+	/** Velocidade a partir da qual o ataque vira o golpe de corrida (cm/s) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
+	float SprintAttackMinSpeed = 450.f;
 
 	/** Chakra ganho por golpe acertado */
 	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
 	float ChakraPerHit = 4.f;
 
-	/** Alcance e raio do golpe (cm) */
-	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
-	float MeleeReach = 130.f;
-	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
-	float MeleeRadius = 55.f;
-
 	/** Atacando: quanto da direção das teclas ainda vale (0 = trava, 1 = livre) — dá para corrigir a mira no meio do golpe */
 	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
 	float AttackSteering = 0.3f;
-
-	/** Quanto o personagem avança a cada golpe (cm/s de impulso) */
-	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
-	float AttackLunge = 450.f;
 
 	/** Distância máxima para mirar sozinho no inimigo mais próximo ao atacar (cm) */
 	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
 	float SoftLockRange = 600.f;
 
-	/** Tempo em que o clique de ataque continua valendo para emendar o próximo golpe (s) */
+	/** Clique um pouco antes da janela de combo abrir ainda vale (s) */
 	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
-	float ComboInputWindow = 0.6f;
+	float ComboInputWindow = 0.45f;
+
+	/** Depois que um golpe termina, o próximo clique ainda continua a sequência por este tempo (s) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
+	float ComboChainGrace = 0.35f;
+
+	/** Defendendo, quanto do dano de frente passa (0,15 = 15%) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
+	float GuardDamageScale = 0.15f;
+
+	/** Atordoamento ao defender um golpe (s) e ao ter a defesa quebrada (s) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
+	float BlockStun = 0.2f;
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
+	float GuardBreakStun = 1.1f;
+
+	/** Golpes seguidos contam no contador da tela se vierem antes deste tempo (s) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
+	float ComboCounterTime = 1.6f;
 
 	/** Pausa no impacto (s) — dá peso ao golpe */
 	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
 	float HitStopDuration = 0.06f;
 
-	/** Reação ao levar golpe */
+	/** Reação ao levar golpe leve (sorteia uma) */
 	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
 	TArray<UAnimMontage*> HitReactMontages;
+
+	/** Reação a golpe forte / arremesso / defesa quebrada */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
+	UAnimMontage* HeavyHitReactMontage;
 
 	/** Animação de nocaute */
 	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
@@ -253,13 +274,33 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UNinjaAttributeSet* GetAttributes() const { return Attributes; }
 
-	// ICombatAttacker (chamados pelos AnimNotifies da montagem de combo)
+	// ICombatAttacker (chamados pelos AnimNotifies das montagens de golpe)
 	virtual void DoAttackTrace(FName DamageSourceBone) override;
 	virtual void CheckCombo() override;
 	virtual void CheckChargedAttack() override {}
 
-	/** Começo do combo (chamado pela habilidade) */
-	void BeginCombo();
+	/** Golpe pelo id: 0..99 leve, 100+ forte, 200 correndo, 300 no ar. */
+	const FNinjaAttack* GetAttack(int32 AttackId) const;
+
+	/** Começo e fim de um golpe (chamados pela habilidade, no jogador e no servidor) */
+	void BeginAttack(int32 AttackId);
+	void EndAttack(bool bWasCancelled);
+
+	/** Defendendo (botão direito parado ou andando) */
+	UFUNCTION(BlueprintPure, Category="Ninja|Combate")
+	bool IsGuarding() const;
+
+	/** Atordoado por um golpe */
+	UFUNCTION(BlueprintPure, Category="Ninja|Combate")
+	bool IsStunned() const;
+
+	/** Golpes seguidos acertados agora (0 = sem combo); para o contador da tela */
+	UFUNCTION(BlueprintPure, Category="Ninja|Combate")
+	int32 GetComboHitCount() const;
+
+	/** Id do golpe atual (-1 = nenhum) */
+	UFUNCTION(BlueprintPure, Category="Ninja|Combate")
+	int32 GetCurrentAttackId() const { return CurrentAttackId; }
 
 	UFUNCTION(BlueprintPure, Category="Ninja|Combate")
 	bool IsChargingChakra() const { return bChargingChakra; }
@@ -270,9 +311,13 @@ public:
 	UFUNCTION(BlueprintPure, Category="Ninja|Combate")
 	float GetChakra() const;
 
-	/** Botão de ataque (combo) */
+	/** Botão de ataque (combo leve) */
 	UFUNCTION(BlueprintCallable, Category="Input")
 	void DoAttackPressed();
+
+	/** Botão de golpe forte */
+	UFUNCTION(BlueprintCallable, Category="Input")
+	void DoHeavyAttackPressed();
 
 	/** Começa / para de carregar chakra */
 	UFUNCTION(BlueprintCallable, Category="Input")
@@ -302,8 +347,18 @@ protected:
 	/** Nocauteado (vida zero) */
 	virtual void OnKnockedOut();
 
+	/** Servidor: aplica um acerto em Target (dano, defesa, atordoamento, empurrão, reação em todos) */
+	void ApplyHit(AHypeWorldCharacter* Target, const FNinjaAttack& Attack, bool bFinalHit, const FHitResult& Hit);
+
+	/** Reação de quem apanhou, em todas as máquinas */
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastHitReaction(ENinjaHitReaction Reaction, FVector_NetQuantizeNormal FromDirection);
+
 	UFUNCTION(Server, Reliable)
-	void ServerCacheAttackInput();
+	void ServerSetGuarding(bool bNewGuarding);
+
+	UPROPERTY(Replicated)
+	bool bGuarding = false;
 
 	UFUNCTION()
 	void OnRep_ChargingChakra();
@@ -313,6 +368,9 @@ protected:
 
 	bool bKnockedOut = false;
 	virtual void OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PreviousCustomMode = 0) override;
+
+	/** Atordoado não pula */
+	virtual bool CanJumpInternal_Implementation() const override;
 
 	/** Initialize input action bindings */
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -409,17 +467,40 @@ public:
 	float SprintDoubleTapWindow = 0.3f;
 private:
 
-	/** Gira para o inimigo mais próximo à frente (mira automática suave do combate) */
-	void FaceNearestEnemy();
-
-	/** Pequeno avanço a cada golpe */
-	void Lunge();
+	/** Gira para o inimigo mais próximo à frente (mira automática suave do combate); devolve o alvo */
+	AActor* FaceNearestEnemy();
 
 	/** Congela a animação por um instante (impacto) */
 	void HitStop();
 
-	int32 ComboIndex = 0;
+	/** Escolhe o próximo golpe para o botão apertado (-1 = nenhum) */
+	int32 ChooseAttack(ENinjaAttackInput Input) const;
+
+	/** Dispara o golpe pela habilidade (com o id no evento, para o servidor tocar o mesmo) */
+	void StartAttack(ENinjaAttackInput Input);
+
+	/** Usa o clique guardado durante o golpe (se ainda valer) */
+	void ConsumeBufferedAttack();
+
+	/** Liga/desliga a defesa conforme o botão direito e o estado (só no jogador) */
+	void UpdateGuard();
+
+	/** Ajusta o avanço da animação do golpe: só para a frente, escalado, e puxando até o alvo */
+	FTransform ProcessAttackRootMotion(const FTransform& InRootMotion, UCharacterMovementComponent* Movement, float DeltaSeconds);
+
+	int32 CurrentAttackId = INDEX_NONE;
+	int32 LastChainAttackId = INDEX_NONE;	// golpe que acabou de terminar (a sequência continua até ChainExpireTime)
+	float ChainExpireTime = -100.f;
+	int32 AttackHitIndex = 0;			// acertos já feitos no golpe atual
+	int32 AttackHitCount = 1;			// acertos que o golpe tem (AnimNotifies DoAttackTrace)
+	bool bComboWindowOpen = false;
+	ENinjaAttackInput BufferedInput = ENinjaAttackInput::None;
 	float CachedAttackInputTime = -100.f;
+	float HomingSpeed = 0.f;			// avanço extra (cm/s) até o momento do acerto
+	float HomingUntil = 0.f;			// posição na montagem até onde puxa
+	bool bWantsGuard = false;
+	int32 ComboHits = 0;
+	float LastComboHitTime = -100.f;
 	FTimerHandle HitStopTimer;
 
 	FRotator BaseMeshRotation = FRotator::ZeroRotator;

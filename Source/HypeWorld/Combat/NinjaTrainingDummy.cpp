@@ -21,6 +21,7 @@ void ANinjaTrainingDummy::BeginPlay()
 	{
 		GetAbilitySystemComponent()->SetNumericAttributeBase(UNinjaAttributeSet::GetMaxHealthAttribute(), DummyHealth);
 		GetAbilitySystemComponent()->SetNumericAttributeBase(UNinjaAttributeSet::GetHealthAttribute(), DummyHealth);
+		bGuarding = bAlwaysGuard;
 	}
 }
 

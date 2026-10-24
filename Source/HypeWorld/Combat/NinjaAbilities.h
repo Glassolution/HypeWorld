@@ -10,7 +10,8 @@
 
 class UAnimMontage;
 
-/** Combo de socos/chutes: toca a montagem de combo; os golpes e a janela do próximo golpe vêm dos AnimNotifies dela. */
+/** Um golpe do combo: o jogador escolhe qual (id no EventMagnitude do evento) e o servidor toca o mesmo.
+ *  Cada golpe novo reinicia a habilidade (bRetriggerInstancedAbility), cortando o anterior na janela de combo. */
 UCLASS()
 class HYPEWORLD_API UGA_NinjaMeleeCombo : public UGameplayAbility
 {
@@ -22,6 +23,9 @@ public:
 
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
+
+	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
+		const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 
 private:
 

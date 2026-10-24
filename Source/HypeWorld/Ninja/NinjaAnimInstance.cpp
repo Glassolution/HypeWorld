@@ -123,6 +123,10 @@ void UNinjaAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	const AHypeWorldCharacter* Ninja = Cast<AHypeWorldCharacter>(Char);
 	const float ChargeTarget = (Ninja && Ninja->IsChargingChakra()) ? 1.f : 0.f;
 	PoseInputs.ChargeAlpha = FMath::FInterpConstantTo(PoseInputs.ChargeAlpha, ChargeTarget, DeltaSeconds, 4.f);   // ~0,25 s para assumir a base
+
+	// --- Defesa: antebraços sobem na frente do rosto (rápido: é reflexo) ---
+	const float GuardTarget = (Ninja && Ninja->IsGuarding()) ? 1.f : 0.f;
+	PoseInputs.GuardAlpha = FMath::FInterpTo(PoseInputs.GuardAlpha, GuardTarget, DeltaSeconds, 16.f);
 	PoseInputs.Time += DeltaSeconds;
 
 	// --- Pouso: agacha proporcional à velocidade da queda ---
@@ -209,6 +213,8 @@ void FNinjaAnimInstanceProxy::PreUpdate(UAnimInstance* InAnimInstance, float Del
 		SprintStraighten = Ninja->SprintStraighten;
 		SprintFootNarrow = Ninja->SprintFootNarrow;
 		SprintHandRelax = Ninja->SprintHandRelax;
+		GuardHandForward = Ninja->GuardHandForward;
+		GuardHandSpread = Ninja->GuardHandSpread;
 		ChargeCrouchDepth = Ninja->ChargeCrouchDepth;
 		ChargeStanceWidth = Ninja->ChargeStanceWidth;
 		ChargeToeOut = Ninja->ChargeToeOut;
@@ -235,7 +241,8 @@ bool FNinjaAnimInstanceProxy::Evaluate_WithRoot(FPoseContext& Output, FAnimNode_
 
 void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 {
-	if (Inputs.WallHandAlpha < 0.01f && Inputs.LookDownAlpha < 0.01f && Inputs.LandAlpha < 0.01f && Inputs.SprintAlpha < 0.01f && Inputs.ChargeAlpha < 0.01f)
+	if (Inputs.WallHandAlpha < 0.01f && Inputs.LookDownAlpha < 0.01f && Inputs.LandAlpha < 0.01f && Inputs.SprintAlpha < 0.01f && Inputs.ChargeAlpha < 0.01f
+		&& Inputs.GuardAlpha < 0.01f)
 	{
 		return;
 	}
@@ -608,6 +615,27 @@ void FNinjaAnimInstanceProxy::ApplyNinjaPose(FPoseContext& Output) const
 					CS.LocalBlendCSBoneTransforms(Changed, 1.f);
 				}
 			}
+		}
+	}
+
+	// 5b) Defesa: punhos na frente do rosto, cotovelos para baixo e para dentro, cabeça um pouco baixa
+	if (Inputs.GuardAlpha > 0.01f && Neck.IsValid())
+	{
+		RotateBone(Head, BendAxis, 8.f * Inputs.GuardAlpha);
+		const FVector Face = CS.GetComponentSpaceTransform(Neck).GetLocation() + Forward * GuardHandForward + Up * 6.f;
+		for (const bool bRight : { true, false })
+		{
+			const FCompactPoseBoneIndex Upper = Bone(bRight ? TEXT("upperarm_r") : TEXT("upperarm_l"));
+			const FCompactPoseBoneIndex Lower = Bone(bRight ? TEXT("lowerarm_r") : TEXT("lowerarm_l"));
+			const FCompactPoseBoneIndex Hand = Bone(bRight ? TEXT("hand_r") : TEXT("hand_l"));
+			if (!Hand.IsValid())
+			{
+				continue;
+			}
+			const FVector Side = bRight ? Right : -Right;
+			const FVector Current = CS.GetComponentSpaceTransform(Hand).GetLocation();
+			const FVector Target = Face + Side * GuardHandSpread + Forward * (bRight ? -4.f : 4.f);   // mão da frente um pouco adiantada
+			SolveLimb(Upper, Lower, Hand, FMath::Lerp(Current, Target, Inputs.GuardAlpha), (Side * 0.5f - Up).GetSafeNormal());
 		}
 	}
 

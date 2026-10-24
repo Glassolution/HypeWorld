@@ -27,6 +27,10 @@ public:
 	UPROPERTY(EditAnywhere, Category="Ninja|Boneco")
 	float RespawnDelay = 2.5f;
 
+	/** Fica sempre defendendo (para treinar quebrar a defesa com o golpe forte). */
+	UPROPERTY(EditAnywhere, Category="Ninja|Boneco")
+	bool bAlwaysGuard = false;
+
 protected:
 
 	virtual void BeginPlay() override;

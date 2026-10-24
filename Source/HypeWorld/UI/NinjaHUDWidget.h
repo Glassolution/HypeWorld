@@ -76,6 +76,7 @@ private:
 	UPROPERTY() TObjectPtr<UTextBlock> LevelText;
 	UPROPERTY() TObjectPtr<UTextBlock> QuestTitleText;
 	UPROPERTY() TObjectPtr<UTextBlock> QuestStepText;
+	UPROPERTY() TObjectPtr<UTextBlock> ComboText;
 	UPROPERTY() TObjectPtr<UImage> MinimapImage;
 	UPROPERTY() TObjectPtr<UImage> MinimapArrow;
 	UPROPERTY() TObjectPtr<UTexture2D> FadeTexture;
