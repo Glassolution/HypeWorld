@@ -34,7 +34,19 @@ public:
 
 	/** Experiência do nível atual (0..1) — o arco azul em volta do retrato. Placeholder até existir XP. */
 	UPROPERTY(EditAnywhere, Category="HUD")
-	float ExperiencePercent = 0.72f;
+	float ExperiencePercent = 0.75f;
+
+	/** Fonte do bloco de vida: a Montserrat (fonte composta com as faces "ExtraBold", "Bold" e "SemiBold").
+	 *  Vazio = Roboto da engine, só como substituta temporária até a Montserrat ser importada. */
+	UPROPERTY(EditAnywhere, Category="HUD|Bloco de vida")
+	UObject* HudFont = nullptr;
+
+	/** O bloco de vida é montado em 548x254 (medidas da referência) e escalado inteiro: posição do canto de cima à esquerda
+	 *  (a partir do canto de baixo à esquerda da tela, em px de 1920x1080) e escala */
+	UPROPERTY(EditAnywhere, Category="HUD|Bloco de vida")
+	FVector2D LifeBlockPosition = FVector2D(25.f, -215.f);
+	UPROPERTY(EditAnywhere, Category="HUD|Bloco de vida")
+	float LifeBlockScale = 0.77f;
 
 	/** Moedas (placeholder até existir dinheiro) */
 	UPROPERTY(EditAnywhere, Category="HUD")
@@ -69,6 +81,8 @@ protected:
 private:
 
 	void BuildLayout();
+	void BuildLifeBlock(UCanvasPanel* Root);
+	FSlateFontInfo HudFontInfo(const TCHAR* Face, float SizePx) const;
 
 	UPROPERTY() TObjectPtr<UTextBlock> HealthText;
 	UPROPERTY() TObjectPtr<UTextBlock> HealthMaxText;
@@ -87,6 +101,8 @@ private:
 	UPROPERTY() TObjectPtr<UTexture2D> HeadsetTexture;
 	UPROPERTY() TObjectPtr<UTexture2D> CoinTexture;
 	float ShownXp = -1.f;
+	int32 ShownCoins = -1;
+	static FString FormatThousands(int32 Value);
 	/** Barras: a imagem de preenchimento é recortada (não esticada) conforme a porcentagem */
 	void SetFill(UImage* Fill, UTexture2D* Texture, float Percent, float Width, const FLinearColor& Tint);
 	void UpdateXpRing();
