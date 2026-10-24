@@ -1265,9 +1265,11 @@ void AHypeWorldCharacter::ApplyHit(AHypeWorldCharacter* Target, const FNinjaAtta
 	float Knockback = bFinalHit ? Attack.Knockback : FMath::Min(Attack.Knockback, 120.f);
 	float Launch = bFinalHit ? Attack.Launch : 0.f;
 
-	// Defesa: só segura golpes de frente; golpe forte quebra
+	// Defesa: só segura golpes de frente e no chão (no ar não dá para defender); golpe forte quebra.
+	// Lançador quebra a defesa e lança do mesmo jeito (o combo aéreo sempre começa)
 	const bool bFromFront = FVector::DotProduct(Target->GetActorForwardVector().GetSafeNormal2D(), -Push) > 0.2f;
-	if (Target->IsGuarding() && bFromFront)
+	const bool bLauncherBreak = Attack.bBreaksGuard && Attack.Reaction == ENinjaHitReaction::Launch && bFinalHit;
+	if (Target->IsGuarding() && bFromFront && Target->GetCharacterMovement()->IsMovingOnGround() && !bLauncherBreak)
 	{
 		if (Attack.bBreaksGuard)
 		{
