@@ -1522,6 +1522,16 @@ void AHypeWorldCharacter::UpdateCombatState(float DeltaSeconds)
 		AddMovementInput(GetActorForwardVector(), 1.f);
 	}
 
+	// Aterrissagem do dash (seção "End", vai até ele se levantar): se o jogador se mexer, sai suave na hora (não desliza agachado)
+	if (ActiveDashMontage && GetCharacterMovement()->IsMovingOnGround() && !GetCharacterMovement()->GetCurrentAcceleration().IsNearlyZero())
+	{
+		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+		if (AnimInstance && AnimInstance->Montage_IsPlaying(ActiveDashMontage) && AnimInstance->Montage_GetCurrentSection(ActiveDashMontage) == FName("End"))
+		{
+			AnimInstance->Montage_Stop(0.25f, ActiveDashMontage);
+		}
+	}
+
 	// Acabou o atordoamento: a animação de apanhar sai assim que ele se mexe (não fica "preso" na reação)
 	if (!IsStunned() && GetVelocity().SizeSquared2D() > 40.f * 40.f && GetCharacterMovement()->IsMovingOnGround())
 	{
