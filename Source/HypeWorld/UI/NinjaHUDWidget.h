@@ -1,7 +1,7 @@
 // HUD do ninja montado inteiro em C++, limpo, no modelo da referência do Felipe (24/10/2026):
 // canto de baixo à esquerda = bloco de vida feito com as imagens PNG do Felipe recortadas em peças (retrato com anel de XP +
-// nível, nome, vida "750/750", chakra cinza com % fora da batalha / azul com "atual / máximo" na batalha, moedas fora da
-// batalha / 2 ícones na batalha); centro de baixo = slots de jutsu, abaixados (só a pontinha aparece) e que sobem na batalha.
+// nível, nome, vida "750/750", chakra cinza com % fora da batalha / azul com "atual / máximo" na batalha, moedas só fora
+// da batalha); centro de baixo = slots de jutsu, abaixados (só a pontinha aparece) e que sobem na batalha.
 // Sem minimapa, sem missão, sem lista de atalhos.
 
 #pragma once
@@ -69,8 +69,7 @@ public:
 	UTexture2D* ChakraBattleEmptyTexture = nullptr;
 	UPROPERTY(EditAnywhere, Category="HUD|Bloco de vida")
 	UTexture2D* CoinIconTexture = nullptr;
-	/** Ícones que aparecem no lugar das moedas no modo de batalha: [0] substituição (barra = cargas), [1] infusão de chakra
-	 *  (barra cheia = ligada; carregando o super pulo = a carga) */
+	/** Cards da imagem de batalha, guardados para os efeitos (atordoado, sangramento, tontura...) — ainda não aparecem */
 	UPROPERTY(EditAnywhere, Category="HUD|Bloco de vida")
 	TArray<UTexture2D*> BattleIconTextures;
 
@@ -121,12 +120,8 @@ private:
 	UPROPERTY() TObjectPtr<UImage> ChakraEmpty;
 	UPROPERTY() TObjectPtr<UImage> XpRing;
 	UPROPERTY() TObjectPtr<UTexture2D> RingTexture;
-	/** Linha de baixo: moedas fora da batalha, os 2 ícones (com barrinha) na batalha */
+	/** Linha de baixo: moedas (só fora da batalha) */
 	UPROPERTY() TArray<TObjectPtr<UWidget>> CoinWidgets;
-	UPROPERTY() TArray<TObjectPtr<UWidget>> BattleIconWidgets;
-	UPROPERTY() TArray<TObjectPtr<UImage>> BattleIconBars;
-	TArray<float> BattleIconBarWidth;
-	TArray<float> ShownIconFill;
 	int32 ShownBattle = -1;
 	float ShownXp = -1.f;
 	int32 ShownCoins = -1;
@@ -134,7 +129,7 @@ private:
 	/** Barras: a imagem de preenchimento é recortada (não esticada) conforme a porcentagem */
 	void SetFill(UImage* Fill, UTexture2D* Texture, float Percent, float Width, const FLinearColor& Tint);
 	void UpdateXpRing();
-	/** Troca o visual do modo de batalha: chakra azul com "atual / máximo" e os ícones; fora dele chakra cinza com % e moedas */
+	/** Troca o visual do modo de batalha: chakra azul com "atual / máximo"; fora dele chakra cinza com % e moedas */
 	void ApplyBattleLook(bool bBattle);
 	/** px da imagem do Felipe -> px do bloco na tela */
 	float K() const { return LifeBlockScale; }

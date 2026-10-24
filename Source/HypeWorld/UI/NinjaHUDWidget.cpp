@@ -125,15 +125,11 @@ namespace NinjaLife
 	const FBox2D Health(FVector2D(596.f, 237.f), FVector2D(1905.f, 389.f));
 	const FBox2D Chakra(FVector2D(590.f, 403.f), FVector2D(1437.f, 530.f));
 	const FBox2D Coin(FVector2D(566.f, 576.f), FVector2D(683.f, 689.f));
-	const FBox2D Icons[2] = { FBox2D(FVector2D(573.f, 561.5f), FVector2D(728.f, 703.5f)), FBox2D(FVector2D(733.f, 561.5f), FVector2D(888.f, 703.5f)) };
-	const FBox2D IconBars[2] = { FBox2D(FVector2D(590.f, 679.5f), FVector2D(711.f, 690.5f)), FBox2D(FVector2D(751.f, 679.5f), FVector2D(872.f, 690.5f)) };
-	const FColor IconBarColors[2] = { FColor(250, 113, 134), FColor(186, 251, 252) };
 	// Textos: ponto de apoio (px da imagem) e tamanho da fonte (px da imagem; altura das maiúsculas ~0,7 disso)
 	const FVector2D NamePos(605.f, 172.f);			const float NameSize = 117.f;
 	const FVector2D HealthPos(678.f, 312.f);		const float HealthSize = 116.f, HealthMaxSize = 72.f;
 	const FVector2D ChakraPos(1385.f, 469.f);		const float ChakraSize = 83.f;		// direita do texto
 	const FVector2D ChakraBattlePos(1371.f, 462.f);	const float ChakraBattleSize = 76.f;
-	const FColor ChakraBattleText(27, 68, 105);
 	const float LevelSize = 145.f;
 	const FVector2D CoinTextPos(712.f, 632.f);		const float CoinSize = 100.f;
 	const FColor RaisedShadow(150, 150, 162);		// "relevo" cinza embaixo do nome e das moedas
@@ -327,31 +323,11 @@ void UNinjaHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 		UpdateXpRing();
 	}
 
-	// Bloco de vida: visual de batalha (chakra azul, ícones) ou normal (chakra cinza, moedas)
+	// Bloco de vida: visual de batalha (chakra azul) ou normal (chakra cinza, moedas)
 	const bool bBattle = Ninja->IsInBattleMode();
 	if (int32(bBattle) != ShownBattle)
 	{
 		ApplyBattleLook(bBattle);
-	}
-	if (bBattle && BattleIconBars.Num() == 2)
-	{
-		// [0] substituição: cargas; [1] infusão de chakra: ligada = cheia, carregando o super pulo = a carga
-		const float Fill[2] = {
-			Ninja->MaxSubstitutions > 0 ? float(Ninja->GetSubstitutionCharges()) / Ninja->MaxSubstitutions : 0.f,
-			!Ninja->IsPassiveEnabled(ENinjaPassive::ChakraFeet) ? 0.f : (Ninja->IsChargingSuperJump() ? Ninja->GetSuperJumpCharge() : 1.f) };
-		for (int32 i = 0; i < 2; ++i)
-		{
-			if (!ShownIconFill.IsValidIndex(i) || !FMath::IsNearlyEqual(ShownIconFill[i], Fill[i], 0.005f))
-			{
-				ShownIconFill.SetNum(2);
-				ShownIconFill[i] = Fill[i];
-				if (UCanvasPanelSlot* BarSlot = Cast<UCanvasPanelSlot>(BattleIconBars[i]->Slot))
-				{
-					BarSlot->SetSize(FVector2D(BattleIconBarWidth[i] * FMath::Clamp(Fill[i], 0.f, 1.f), BarSlot->GetSize().Y));
-				}
-				BattleIconBars[i]->SetVisibility(Fill[i] > 0.005f ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Hidden);
-			}
-		}
 	}
 
 	// Slots de jutsu: sobem no modo de batalha, descem (só a pontinha) fora dele
@@ -456,8 +432,6 @@ void UNinjaHUDWidget::ApplyBattleLook(bool bBattle)
 	if (ChakraText)
 	{
 		ChakraText->SetFont(HudFontInfo(TEXT("ExtraBold"), (bBattle ? ChakraBattleSize : ChakraSize) * K()));
-		ChakraText->SetColorAndOpacity(FSlateColor(bBattle ? FLinearColor::FromSRGBColor(ChakraBattleText) : FLinearColor::White));
-		ChakraText->SetShadowColorAndOpacity(FLinearColor(0.f, 0.f, 0.f, bBattle ? 0.f : 0.35f));
 		if (UCanvasPanelSlot* TextSlot = Cast<UCanvasPanelSlot>(ChakraText->Slot))
 		{
 			TextSlot->SetPosition(((bBattle ? ChakraBattlePos : ChakraPos) - Origin) * K());
@@ -467,11 +441,6 @@ void UNinjaHUDWidget::ApplyBattleLook(bool bBattle)
 	{
 		W->SetVisibility(bBattle ? ESlateVisibility::Collapsed : ESlateVisibility::HitTestInvisible);
 	}
-	for (UWidget* W : BattleIconWidgets)
-	{
-		W->SetVisibility(bBattle ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Collapsed);
-	}
-	ShownIconFill.Reset();
 	if (ChakraMax >= 0.f)
 	{
 		SetChakra(Chakra, ChakraMax);
@@ -541,7 +510,7 @@ void UNinjaHUDWidget::BuildLifeBlock(UCanvasPanel* Root)
 	const FVector2D ReliefOffset(0.f, FMath::Max(1.f, 6.f * K()));
 	const FLinearColor SoftShadow(0.f, 0.f, 0.f, 0.35f);
 
-	// Camadas, de trás para frente: base (retrato, trilho do anel, caixa de voz) -> arco de XP -> selo + nível -> barras -> textos
+	// Camadas, de trás para frente: base (retrato, trilho do anel, caixa de voz) -> arco de XP -> selo + nível -> barras -> textos -> moedas
 	PutRect(Picture(LifeBaseTexture), Base);
 	XpRing = WidgetTree->ConstructWidget<UImage>();
 	PutRect(XpRing.Get(), FBox2D(RingCenter - FVector2D(RingOuter), RingCenter + FVector2D(RingOuter)));
@@ -575,7 +544,7 @@ void UNinjaHUDWidget::BuildLifeBlock(UCanvasPanel* Root)
 	MaxSlot->SetPadding(FMargin(0.f, 0.f, 0.f, (HealthSize - HealthMaxSize) * 0.25f * K()));   // linhas de base juntas (descendentes diferentes)
 	PutAt(HpRow, HealthPos, FVector2D(0.f, 0.5f));
 
-	// Texto do chakra (alinhado à direita; posição, cor e tamanho trocam com o modo de batalha)
+	// Texto do chakra, branco nos dois modos (alinhado à direita; posição e tamanho trocam com o modo de batalha)
 	ChakraText = Text(TEXT("100%"), TEXT("ExtraBold"), ChakraSize, FLinearColor::White, FVector2D(0.f, 1.f), SoftShadow);
 	PutAt(ChakraText.Get(), ChakraPos, FVector2D(1.f, 0.5f));
 
@@ -588,23 +557,6 @@ void UNinjaHUDWidget::BuildLifeBlock(UCanvasPanel* Root)
 	ShownCoins = Coins;
 	CoinWidgets = { CoinImage, CoinText };
 
-	// Na batalha: os 2 ícones com a barrinha de baixo (o trilho já vem na imagem; o preenchimento é desenhado aqui)
-	BattleIconWidgets.Reset();
-	BattleIconBars.Reset();
-	BattleIconBarWidth.Reset();
-	for (int32 i = 0; i < 2; ++i)
-	{
-		UImage* Icon = Picture(BattleIconTextures.IsValidIndex(i) ? BattleIconTextures[i] : nullptr);
-		PutRect(Icon, Icons[i]);
-		UImage* Bar = WidgetTree->ConstructWidget<UImage>();
-		FSlateBrush BarBrush;
-		BarBrush.TintColor = FSlateColor(FLinearColor::FromSRGBColor(IconBarColors[i]));
-		Bar->SetBrush(BarBrush);
-		PutRect(Bar, IconBars[i]);
-		BattleIconWidgets.Append({ Icon, Bar });
-		BattleIconBars.Add(Bar);
-		BattleIconBarWidth.Add(IconBars[i].GetSize().X * K());
-	}
 	ShownBattle = -1;
 	ApplyBattleLook(false);
 }
