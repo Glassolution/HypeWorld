@@ -228,12 +228,28 @@ void UNinjaMovementComponent::OnMovementModeChanged(EMovementMode PreviousMoveme
 {
 	Super::OnMovementModeChanged(PreviousMovementMode, PreviousCustomMode);
 
-	// Tocou o chão: libera o dash no ar de novo e acaba o voo do super pulo.
+	// Tocou o chão: libera o dash no ar de novo e acaba o voo do super pulo e a suspensão do combo aéreo.
 	if (MovementMode == MOVE_Walking || MovementMode == MOVE_NavWalking)
 	{
 		bAirDashUsed = false;
 		bInSuperJump = false;
+		AirSuspendUntil = -1.f;
 	}
+}
+
+void UNinjaMovementComponent::SuspendInAir(float Duration)
+{
+	AirSuspendUntil = GetWorld()->GetTimeSeconds() + Duration;
+}
+
+bool UNinjaMovementComponent::IsAirSuspended() const
+{
+	return IsFalling() && GetWorld() && GetWorld()->GetTimeSeconds() < AirSuspendUntil;
+}
+
+float UNinjaMovementComponent::GetGravityZ() const
+{
+	return Super::GetGravityZ() * (IsAirSuspended() ? AirSuspendGravityScale : 1.f);
 }
 
 void UNinjaMovementComponent::ExitToWalkingOrFalling()

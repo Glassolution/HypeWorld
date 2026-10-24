@@ -387,11 +387,23 @@ public:
 	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Aéreo")
 	float LauncherFollowUpSpeed = 1150.f;
 
-	/** Golpe no ar acertou: atacante e adversário ficam no ar mais um pouco (velocidade para cima, cm/s) */
+	/** Golpe no ar acertou: atacante e adversário param de cair e ficam suspensos (gravidade fraca) por AirSuspendTime;
+	 *  cada acerto ou golpe seguinte do combo aéreo renova. Velocidades = pequeno impulso para cima (cm/s) */
 	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Aéreo")
-	float AirHoverSpeed = 380.f;
+	float AirHoverSpeed = 60.f;
 	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Aéreo")
-	float AirJuggleSpeed = 430.f;
+	float AirJuggleSpeed = 80.f;
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Aéreo")
+	float AirSuspendTime = 1.f;
+
+	/** Empurrão máximo dos golpes aéreos que não são o último (cm/s) — pequeno para os dois continuarem juntos */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Aéreo")
+	float AirJuggleKnockback = 80.f;
+
+	/** Último golpe do combo aéreo: arremessa para longe (sem frear no ar) e o adversário fica invulnerável (s) —
+	 *  cai longe e não dá para emendar golpes no chão */
+	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Aéreo")
+	float AirFinisherInvulnerability = 1.6f;
 
 	/** Reações no ar (sorteada) e ao ser lançado para cima */
 	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Aéreo")
@@ -572,7 +584,10 @@ protected:
 
 	/** Reação de quem apanhou, em todas as máquinas */
 	UFUNCTION(NetMulticast, Reliable)
-	void MulticastHitReaction(ENinjaHitReaction Reaction, FVector_NetQuantizeNormal FromDirection, bool bComboBreak);
+	void MulticastHitReaction(ENinjaHitReaction Reaction, FVector_NetQuantizeNormal FromDirection, bool bComboBreak, bool bAirJuggle, bool bThrownAway);
+
+	/** Último golpe (com reação de arremesso) da sequência aérea */
+	bool IsAirFinisher(const FNinjaAttack& Attack, int32 AttackId) const;
 
 	// Fuga do combo (servidor decide)
 	UFUNCTION(Server, Reliable)
@@ -609,6 +624,8 @@ protected:
 	void UpdateSuperJump(float DeltaSeconds);
 	void ReleaseSuperJump();
 	bool CanStartSuperJump() const;
+	/** Para de segurar/carregar o super pulo sem pular */
+	void CancelSuperJumpCharge();
 
 	UPROPERTY(Replicated)
 	int32 FightingStyleIndex = 0;

@@ -1011,6 +1011,17 @@ void AHypeWorldCharacter::StartAttack(ENinjaAttackInput Input)
 	{
 		return;   // menu de combate aberto: o clique é do menu
 	}
+	// Segurando Espaço no chão (com a infusão, o Espaço segurado ainda não pulou) + ataque = lançador: começa o combo aéreo.
+	// O super pulo que estava carregando é cancelado (soltar o Espaço depois não pula)
+	if (Input == ENinjaAttackInput::Light && bJumpKeyHeld && GetCharacterMovement()->IsMovingOnGround())
+	{
+		const UNinjaFightingStyle* Style = GetFightingStyle();
+		if (Style && Style->Launchers.Num() > 0)
+		{
+			CancelSuperJumpCharge();
+			Input = ENinjaAttackInput::Launcher;
+		}
+	}
 	if (IsAttacking() && !bComboWindowOpen)
 	{
 		// No meio do golpe: guarda o clique; ele vale quando a janela do próximo golpe abrir (CheckCombo)
@@ -1056,6 +1067,12 @@ void AHypeWorldCharacter::BeginAttack(int32 AttackId)
 		AttackHitCount += Cast<UAnimNotify_DoAttackTrace>(Event.Notify) ? 1 : 0;
 	}
 	AttackHitCount = FMath::Max(1, AttackHitCount);
+
+	// Próximo golpe do combo aéreo: continua suspenso enquanto prepara o golpe
+	if (AttackId >= NinjaAttackId::Air && AttackId < NinjaAttackId::Launcher && GetNinjaMovement() && GetNinjaMovement()->IsAirSuspended())
+	{
+		GetNinjaMovement()->SuspendInAir(AirSuspendTime);
+	}
 
 	// Sem mira automática: o golpe vai para onde a câmera olha (o corpo vira até lá rápido, sem estalo — ver o movimento)
 	AttackFacingYaw = GetController() ? GetController()->GetControlRotation().Yaw : GetActorRotation().Yaw;
@@ -1202,16 +1219,22 @@ void AHypeWorldCharacter::DoAttackTrace(FName DamageSourceBone)
 
 	if (bHitSomething)
 	{
-		// Lançador: o atacante sobe atrás de quem foi lançado. Golpe no ar: fica mais um pouco no ar (o combo aéreo continua)
+		// Lançador: o atacante sobe atrás de quem foi lançado. Golpe no ar: fica suspenso no ar (o combo aéreo continua);
+		// o último golpe aéreo solta: o atacante cai normal
 		if (IsLocallyControlled() || HasAuthority())
 		{
 			if (CurrentAttackId >= NinjaAttackId::Launcher && CurrentAttackId < NinjaAttackId::Launcher + 100 && bFinalHit)
 			{
 				LaunchCharacter(FVector(0.f, 0.f, LauncherFollowUpSpeed), false, true);
 			}
-			else if (GetCharacterMovement()->IsFalling() && Attack->Launch >= 0.f)
+			else if (bFinalHit && IsAirFinisher(*Attack, CurrentAttackId))
+			{
+				GetNinjaMovement()->EndAirSuspend();
+			}
+			else if (GetCharacterMovement()->IsFalling())
 			{
 				LaunchCharacter(FVector(0.f, 0.f, AirHoverSpeed), false, true);
+				GetNinjaMovement()->SuspendInAir(AirSuspendTime);
 			}
 		}
 		HitStop();
@@ -1312,24 +1335,55 @@ void AHypeWorldCharacter::ApplyHit(AHypeWorldCharacter* Target, const FNinjaAtta
 		AbilitySystem->ApplyGameplayEffectSpecToTarget(*StunSpec.Data.Get(), TargetASC);
 	}
 
-	// Apanhando no ar (combo aéreo): fica no ar, pouco empurrão; o último golpe aéreo (Launch negativo) derruba
-	if (Target->GetCharacterMovement()->IsFalling() && Reaction != ENinjaHitReaction::Block && !bComboBreak)
+	// Combo aéreo: apanhando no ar fica suspenso junto com o atacante, com pouco empurrão. O último golpe aéreo arremessa
+	// para longe e deixa invulnerável até depois de cair (sem golpes infinitos no chão)
+	bool bAirJuggle = false;
+	bool bThrownAway = bComboBreak;
+	if (Reaction != ENinjaHitReaction::Block && !bComboBreak)
 	{
-		Knockback = FMath::Min(Knockback, 180.f);
-		Launch = Attack.Launch < 0.f ? Attack.Launch : FMath::Max(Launch, AirJuggleSpeed);
+		if (bFinalHit && IsAirFinisher(Attack, CurrentAttackId))
+		{
+			bThrownAway = true;
+			Target->InvulnerableUntil = GetWorld()->GetTimeSeconds() + AirFinisherInvulnerability;
+			Target->TakenComboHits = 0;
+		}
+		else if (Target->GetCharacterMovement()->IsFalling())
+		{
+			bAirJuggle = true;
+			Knockback = FMath::Min(Knockback, AirJuggleKnockback);
+			Launch = FMath::Max(Launch, AirJuggleSpeed);
+		}
 	}
+	// A reação antes do impulso: a suspensão (ou o voo sem frear) já vale no próximo movimento
+	Target->MulticastHitReaction(Reaction, -Push, bComboBreak, bAirJuggle, bThrownAway);
 	if (Knockback > 0.f || !FMath::IsNearlyZero(Launch))
 	{
 		Target->LaunchCharacter(Push * Knockback + FVector(0.f, 0.f, Launch), true, !FMath::IsNearlyZero(Launch));
 	}
-	Target->MulticastHitReaction(Reaction, -Push, bComboBreak);
 }
 
-void AHypeWorldCharacter::MulticastHitReaction_Implementation(ENinjaHitReaction Reaction, FVector_NetQuantizeNormal FromDirection, bool bComboBreak)
+bool AHypeWorldCharacter::IsAirFinisher(const FNinjaAttack& Attack, int32 AttackId) const
+{
+	return AttackId >= NinjaAttackId::Air && AttackId < NinjaAttackId::Launcher && Attack.Reaction == ENinjaHitReaction::Knockback;
+}
+
+void AHypeWorldCharacter::MulticastHitReaction_Implementation(ENinjaHitReaction Reaction, FVector_NetQuantizeNormal FromDirection, bool bComboBreak, bool bAirJuggle, bool bThrownAway)
 {
 	if (bKnockedOut)
 	{
 		return;
+	}
+	if (UNinjaMovementComponent* Move = GetNinjaMovement())
+	{
+		if (bAirJuggle)
+		{
+			Move->SuspendInAir(AirSuspendTime);
+		}
+		else if (bThrownAway)
+		{
+			Move->EndAirSuspend();
+			Move->bInSuperJump = true;   // voa sem frear no ar até cair (acaba ao pousar)
+		}
 	}
 	LastBattleTime = GetWorld()->GetTimeSeconds();   // apanhou: entra em modo de batalha
 	const FVector Head = GetActorLocation() + FVector(0.f, 0.f, GetSimpleCollisionHalfHeight() + 30.f);
@@ -1894,17 +1948,7 @@ void AHypeWorldCharacter::UpdateSuperJump(float DeltaSeconds)
 	// Saiu do chão, apanhou ou desligou a infusão: cancela (sem pular)
 	if (!GetCharacterMovement()->IsMovingOnGround() || !CanAct() || !IsPassiveEnabled(ENinjaPassive::ChakraFeet))
 	{
-		bJumpKeyHeld = false;
-		if (bChargingSuperJump)
-		{
-			bChargingSuperJump = false;
-			SuperJumpCharge = 0.f;
-			OnRep_ChargingSuperJump();
-			if (!HasAuthority())
-			{
-				ServerSetChargingSuperJump(false);
-			}
-		}
+		CancelSuperJumpCharge();
 		return;
 	}
 	JumpHoldTime += DeltaSeconds;
@@ -2005,6 +2049,21 @@ void AHypeWorldCharacter::OnRep_ChargingSuperJump()
 // ---------------------------------------------------------------------------------------------------------------------
 // Combo aéreo (lançador) e mortal para trás
 // ---------------------------------------------------------------------------------------------------------------------
+
+void AHypeWorldCharacter::CancelSuperJumpCharge()
+{
+	bJumpKeyHeld = false;
+	if (bChargingSuperJump)
+	{
+		bChargingSuperJump = false;
+		SuperJumpCharge = 0.f;
+		OnRep_ChargingSuperJump();
+		if (!HasAuthority())
+		{
+			ServerSetChargingSuperJump(false);
+		}
+	}
+}
 
 bool AHypeWorldCharacter::IsInComboContext() const
 {

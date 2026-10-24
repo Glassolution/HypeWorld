@@ -137,6 +137,15 @@ public:
 	bool IsDashStrafe() const { return bDashStrafe; }
 	float GetDashFacingYaw() const { return DashFacingYaw; }
 
+	/** Combo aéreo: a cada acerto no ar, atacante e adversário ficam suspensos (gravidade fraca) por um tempo; acaba ao pousar */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Combate")
+	float AirSuspendGravityScale = 0.1f;
+	void SuspendInAir(float Duration);
+	void EndAirSuspend() { AirSuspendUntil = -1.f; }
+	UFUNCTION(BlueprintPure, Category="Ninja")
+	bool IsAirSuspended() const;
+	virtual float GetGravityZ() const override;
+
 	/** Velocidade correndo na parede. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Parede")
 	float WallRunSpeed = 1100.f;
@@ -233,6 +242,7 @@ private:
 	void ResetGravity();
 	virtual void HandleImpact(const FHitResult& Hit, float TimeSlice = 0.f, const FVector& MoveDelta = FVector::ZeroVector) override;
 	float DashFacingYaw = 0.f;
+	float AirSuspendUntil = -1.f;	// hora do mundo até quando fica suspenso no ar
 
 	void PhysDash(float DeltaTime, int32 Iterations);
 	void PhysWallRun(float DeltaTime, int32 Iterations);
