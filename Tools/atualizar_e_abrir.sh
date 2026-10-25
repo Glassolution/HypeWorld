@@ -28,9 +28,9 @@ fi
 
 passo "1/5 Puxando do GitHub"
 cd "$PROJ" || falhou "Projeto não encontrado em $PROJ"
-if [ -n "$(git status --porcelain)" ]; then
+if [ -n "$(git status --porcelain --untracked-files=no)" ]; then
     echo "Você tem mudanças locais ainda sem commit:"
-    git status --short
+    git status --short --untracked-files=no
     falhou "Faça commit (ou peça ao Claude) antes de puxar, para nada se perder."
 fi
 git pull --ff-only origin main || falhou "Não deu para puxar (sem internet ou histórico diferente)."
