@@ -56,6 +56,9 @@ void AHypeWorldPlayerController::SetupInputComponent()
 	// only add IMCs for local player controllers
 	if (IsLocalPlayerController())
 	{
+		// Esc fora do Enhanced Input (tecla fixa, não depende de asset): soltar/prender o mouse
+		InputComponent->BindKey(EKeys::Escape, IE_Pressed, this, &AHypeWorldPlayerController::ToggleFreeMouse);
+
 		// Add Input Mapping Contexts
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 		{
@@ -114,6 +117,30 @@ void AHypeWorldPlayerController::ToggleCombatMenu()
 	if (bOpen)
 	{
 		CombatMenu->Refresh();
+		FInputModeGameAndUI Mode;
+		Mode.SetHideCursorDuringCapture(false);
+		Mode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+		SetInputMode(Mode);
+		SetIgnoreLookInput(true);
+	}
+	else
+	{
+		SetInputMode(FInputModeGameOnly());
+		ResetIgnoreLookInput();
+	}
+}
+
+void AHypeWorldPlayerController::ToggleFreeMouse()
+{
+	if (IsCombatMenuOpen())
+	{
+		ToggleCombatMenu();
+		return;
+	}
+	bMouseFree = !bMouseFree;
+	SetShowMouseCursor(bMouseFree);
+	if (bMouseFree)
+	{
 		FInputModeGameAndUI Mode;
 		Mode.SetHideCursorDuringCapture(false);
 		Mode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
