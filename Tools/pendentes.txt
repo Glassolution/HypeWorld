@@ -5,3 +5,4 @@
 # Os scripts precisam poder rodar de novo sem estragar nada (refazer o asset em vez de duplicar).
 
 Tools/editor/criar_tela_carregamento.py
+Tools/editor/criar_tela_selecao.py

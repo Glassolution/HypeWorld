@@ -2,6 +2,7 @@
 
 #include "HypeLoadingScreenWidget.h"
 #include "HypeLoadingSubsystem.h"
+#include "HypeCharacterSelectWidget.h"
 #include "Blueprint/WidgetTree.h"
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
@@ -30,6 +31,7 @@ UHypeLoadingScreenWidget::UHypeLoadingScreenWidget(const FObjectInitializer& Obj
 	: Super(ObjectInitializer)
 {
 	MapaSeguinte = TSoftObjectPtr<UWorld>(FSoftObjectPath(TEXT("/Game/Maps/Tutorial/L_Tutorial_Forest.L_Tutorial_Forest")));
+	TelaAoEntrar = TSoftClassPtr<UUserWidget>(FSoftObjectPath(TEXT("/Game/HypeWorld/UI/CharacterSelect/WBP_CharacterSelect.WBP_CharacterSelect_C")));
 	Logo = TSoftObjectPtr<UTexture2D>(FSoftObjectPath(TEXT("/Game/HypeWorld/UI/Textures/T_Logo_HypeWorld.T_Logo_HypeWorld")));
 	LogoMaterial = TSoftObjectPtr<UMaterialInterface>(FSoftObjectPath(TEXT("/Game/HypeWorld/UI/Loading/M_UI_LoadingLogo.M_UI_LoadingLogo")));
 	BackgroundMaterial = TSoftObjectPtr<UMaterialInterface>(FSoftObjectPath(TEXT("/Game/HypeWorld/UI/Loading/M_UI_LoadingBackground.M_UI_LoadingBackground")));
@@ -331,7 +333,13 @@ void UHypeLoadingScreenWidget::NativeTick(const FGeometry& MyGeometry, float InD
 				Frames, FrameTimeSum, Frames / FMath::Max(FrameTimeSum, 0.001f), WorstFrame * 1000.f);
 			if (Loader)
 			{
-				Loader->TravelToPreloadedMap(FadeInTime);
+				// Sem o WBP (script ainda não rodado) usa a classe C++, que já tem todos os valores
+				TSubclassOf<UUserWidget> NextScreen = TelaAoEntrar.IsNull() ? nullptr : TelaAoEntrar.LoadSynchronous();
+				if (!NextScreen && !TelaAoEntrar.IsNull())
+				{
+					NextScreen = UHypeCharacterSelectWidget::StaticClass();
+				}
+				Loader->TravelToPreloadedMap(FadeInTime, NextScreen);
 			}
 		}
 		break;

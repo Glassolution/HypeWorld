@@ -2,9 +2,12 @@
 
 #include "HypeLoadingSubsystem.h"
 #include "AssetRegistry/IAssetRegistry.h"
+#include "Blueprint/UserWidget.h"
 #include "Engine/Engine.h"
+#include "Engine/GameInstance.h"
 #include "Engine/GameViewportClient.h"
 #include "Engine/World.h"
+#include "GameFramework/PlayerController.h"
 #include "Kismet/GameplayStatics.h"
 #include "UObject/Package.h"
 #include "UObject/UObjectGlobals.h"
@@ -23,6 +26,11 @@ void UHypeLoadingSubsystem::Deinitialize()
 {
 	FCoreUObjectDelegates::PostLoadMapWithWorld.Remove(PostLoadMapHandle);
 	RemoveFadeOverlay();
+	if (ScreenTicker.IsValid())
+	{
+		FTSTicker::GetCoreTicker().RemoveTicker(ScreenTicker);
+		ScreenTicker.Reset();
+	}
 	Super::Deinitialize();
 }
 
@@ -117,13 +125,14 @@ float UHypeLoadingSubsystem::GetProgress() const
 	return LastProgress;
 }
 
-void UHypeLoadingSubsystem::TravelToPreloadedMap(float FadeInTime)
+void UHypeLoadingSubsystem::TravelToPreloadedMap(float FadeInTime, TSubclassOf<UUserWidget> ScreenAfter)
 {
 	if (bTraveling)
 	{
 		return;
 	}
 	bTraveling = true;
+	PendingScreen = ScreenAfter;
 	FadeDuration = FMath::Max(FadeInTime, 0.01f);
 	if (UGameViewportClient* Viewport = GetGameInstance()->GetGameViewportClient())
 	{
@@ -156,6 +165,39 @@ void UHypeLoadingSubsystem::OnPostLoadMap(UWorld* World)
 	Viewport->AddViewportWidgetContent(FadeOverlay.ToSharedRef(), 10000);
 	FadeTime = -0.15f;   // segura o preto um instante: os primeiros quadros do mapa costumam engasgar
 	FadeTicker = FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateUObject(this, &UHypeLoadingSubsystem::TickFade));
+
+	// Tela seguinte (seleção do personagem): já embaixo do preto, para o primeiro quadro visível ser ela
+	ScreenWait = 0.f;
+	if (PendingScreen && TryShowScreenAfter(0.f))
+	{
+		ScreenTicker = FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateUObject(this, &UHypeLoadingSubsystem::TryShowScreenAfter));
+	}
+}
+
+bool UHypeLoadingSubsystem::TryShowScreenAfter(float DeltaTime)
+{
+	ScreenWait += DeltaTime;
+	UGameInstance* GameInstance = GetGameInstance();
+	APlayerController* PC = GameInstance ? GameInstance->GetFirstLocalPlayerController() : nullptr;
+	if (PendingScreen && PC && PC->GetPawn())
+	{
+		if (UUserWidget* Screen = CreateWidget<UUserWidget>(PC, PendingScreen))
+		{
+			Screen->AddToViewport(50);
+			UE_LOG(LogHypeLoading, Log, TEXT("Tela seguinte aberta: %s"), *PendingScreen->GetName());
+		}
+	}
+	else if (PendingScreen && ScreenWait < 10.f)
+	{
+		return true;	// o personagem ainda não nasceu: tenta de novo no próximo quadro
+	}
+	else if (PendingScreen)
+	{
+		UE_LOG(LogHypeLoading, Warning, TEXT("Tela seguinte não aberta: o jogador não ganhou personagem em 10 s"));
+	}
+	PendingScreen = nullptr;
+	ScreenTicker.Reset();
+	return false;
 }
 
 bool UHypeLoadingSubsystem::TickFade(float DeltaTime)

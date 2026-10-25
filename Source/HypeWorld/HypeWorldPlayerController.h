@@ -64,6 +64,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category="HUD")
 	void ToggleFreeMouse();
 
+	/** Esconde/mostra o HUD (a tela de seleção do personagem esconde enquanto está aberta) */
+	UFUNCTION(BlueprintCallable, Category="HUD")
+	void SetHUDHidden(bool bHidden);
+
 protected:
 
 	bool bMouseFree = false;

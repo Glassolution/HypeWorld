@@ -130,6 +130,14 @@ void AHypeWorldPlayerController::ToggleCombatMenu()
 	}
 }
 
+void AHypeWorldPlayerController::SetHUDHidden(bool bHidden)
+{
+	if (HUDWidget)
+	{
+		HUDWidget->SetVisibility(bHidden ? ESlateVisibility::Collapsed : ESlateVisibility::SelfHitTestInvisible);
+	}
+}
+
 void AHypeWorldPlayerController::ToggleFreeMouse()
 {
 	if (IsCombatMenuOpen())

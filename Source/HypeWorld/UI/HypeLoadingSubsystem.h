@@ -11,6 +11,7 @@
 #include "HypeLoadingSubsystem.generated.h"
 
 class SBorder;
+class UUserWidget;
 
 UCLASS()
 class HYPEWORLD_API UHypeLoadingSubsystem : public UGameInstanceSubsystem
@@ -30,8 +31,9 @@ public:
 	bool IsPreloaded() const { return LoadedWorld != nullptr; }
 	bool HasLoadFailed() const { return bLoadFailed; }
 
-	/** Abre o mapa (já em memória) e faz o fade in do preto quando ele estiver pronto */
-	void TravelToPreloadedMap(float FadeInTime = 0.8f);
+	/** Abre o mapa (já em memória) e faz o fade in do preto quando ele estiver pronto.
+	 *  ScreenAfter: tela aberta assim que o mapa tiver o personagem (ex.: seleção do personagem); vazio = direto ao jogo */
+	void TravelToPreloadedMap(float FadeInTime = 0.8f, TSubclassOf<UUserWidget> ScreenAfter = nullptr);
 
 private:
 
@@ -39,6 +41,12 @@ private:
 	void OnPostLoadMap(UWorld* World);
 	bool TickFade(float DeltaTime);
 	void RemoveFadeOverlay();
+	/** Cria a ScreenAfter quando o jogador local já tem personagem (tenta a cada quadro, até 10 s) */
+	bool TryShowScreenAfter(float DeltaTime);
+
+	UPROPERTY() TSubclassOf<UUserWidget> PendingScreen;
+	FTSTicker::FDelegateHandle ScreenTicker;
+	float ScreenWait = 0.f;
 
 	/** Mundo carregado, guardado até o OpenLevel terminar */
 	UPROPERTY() TObjectPtr<UWorld> LoadedWorld;

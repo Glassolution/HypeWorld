@@ -33,6 +33,9 @@ public:
 	/** Mapa aberto depois da tela (por enquanto a floresta do tutorial; depois, a criação de personagem) */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Carregamento") TSoftObjectPtr<UWorld> MapaSeguinte;
 
+	/** Tela aberta quando o mapa seguinte entra (seleção do personagem). Vazio = direto ao jogo */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Carregamento") TSoftClassPtr<UUserWidget> TelaAoEntrar;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Carregamento|Visual") TSoftObjectPtr<UTexture2D> Logo;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Carregamento|Visual") TSoftObjectPtr<UMaterialInterface> LogoMaterial;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Carregamento|Visual") TSoftObjectPtr<UMaterialInterface> BackgroundMaterial;
