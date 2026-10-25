@@ -24,12 +24,21 @@ DEFINE_LOG_CATEGORY_STATIC(LogHypeCharacterSelect, Log, All);
 
 namespace HypeSelect
 {
+	// Cores medidas na referência (sRGB) convertidas para o espaço linear da interface (sem isso o preto vira cinza)
+	FLinearColor SRGB(uint8 R, uint8 G, uint8 B, float A = 1.f)
+	{
+		FLinearColor C = FLinearColor::FromSRGBColor(FColor(R, G, B));
+		C.A = A;
+		return C;
+	}
 	const FLinearColor White(1.f, 1.f, 1.f, 1.f);
-	const FLinearColor LabelOff(1.f, 1.f, 1.f, 0.55f);
-	const FLinearColor BoxOn(0.02f, 0.02f, 0.02f, 0.95f);		// caixa escolhida: preta
-	const FLinearColor BoxOff(0.10f, 0.09f, 0.08f, 0.55f);		// as outras: escura translúcida
-	const FLinearColor BackFill(0.055f, 0.055f, 0.055f, 0.92f);	// Voltar
-	const FLinearColor NextFill(0.42f, 0.37f, 0.30f, 0.80f);	// Próximo (bege acinzentado)
+	const FLinearColor LabelOff = SRGB(200, 196, 190, 0.6f);
+	const FLinearColor BoxOn = SRGB(8, 8, 8, 0.94f);			// caixa escolhida: preta
+	const FLinearColor BoxOff = SRGB(22, 19, 16, 0.62f);		// as outras: marrom-escura translúcida
+	const FLinearColor BoxLocked = SRGB(22, 19, 16, 0.35f);		// vila trancada: quase some
+	const FLinearColor BackFill = SRGB(14, 14, 14, 0.94f);		// Voltar: preto
+	const FLinearColor NextFill = SRGB(96, 88, 76, 0.78f);		// Próximo: cinza quente translúcido
+	const FLinearColor PillFill = SRGB(16, 16, 16, 0.62f);		// "Olhar fixo"
 
 	float EaseOut(float T) { T = FMath::Clamp(T, 0.f, 1.f); return 1.f - FMath::Pow(1.f - T, 3.f); }
 
@@ -111,18 +120,18 @@ UHypeCharacterSelectWidget::UHypeCharacterSelectWidget(const FObjectInitializer&
 	FHypeVillageOption Konoha;
 	Konoha.Id = TEXT("Konoha");
 	Konoha.Name = NSLOCTEXT("HypeSelect", "Konoha", "Konoha");
-	Konoha.IconColor = FLinearColor(0.80f, 0.76f, 0.48f, 1.f);
+	Konoha.IconColor = HypeSelect::SRGB(236, 220, 160);
 	Konoha.Clans = {
-		Clan(TEXT("Akimichi"), NSLOCTEXT("HypeSelect", "Akimichi", "Akimichi"), FLinearColor(0.75f, 0.16f, 0.12f, 1.f)),
-		Clan(TEXT("Hyuga"), NSLOCTEXT("HypeSelect", "Hyuga", "Hyuga"), FLinearColor(0.85f, 0.33f, 0.15f, 1.f)),
-		Clan(TEXT("Nara"), NSLOCTEXT("HypeSelect", "Nara", "Nara"), FLinearColor(0.45f, 0.60f, 0.38f, 1.f)),
-		Clan(TEXT("Senju"), NSLOCTEXT("HypeSelect", "Senju", "Senju"), FLinearColor(0.35f, 0.55f, 0.75f, 1.f)),
-		Clan(TEXT("Uchiha"), NSLOCTEXT("HypeSelect", "Uchiha", "Uchiha"), FLinearColor(0.82f, 0.12f, 0.12f, 1.f)),
+		Clan(TEXT("Akimichi"), NSLOCTEXT("HypeSelect", "Akimichi", "Akimichi"), HypeSelect::SRGB(196, 42, 36)),
+		Clan(TEXT("Hyuga"), NSLOCTEXT("HypeSelect", "Hyuga", "Hyuga"), HypeSelect::SRGB(232, 96, 44)),
+		Clan(TEXT("Nara"), NSLOCTEXT("HypeSelect", "Nara", "Nara"), HypeSelect::SRGB(150, 176, 128)),
+		Clan(TEXT("Senju"), NSLOCTEXT("HypeSelect", "Senju", "Senju"), HypeSelect::SRGB(132, 168, 210)),
+		Clan(TEXT("Uchiha"), NSLOCTEXT("HypeSelect", "Uchiha", "Uchiha"), HypeSelect::SRGB(212, 34, 34)),
 	};
 	FHypeVillageOption Suna;	// sem clãs ainda = trancada (como na referência)
 	Suna.Id = TEXT("Suna");
 	Suna.Name = NSLOCTEXT("HypeSelect", "Suna", "Suna");
-	Suna.IconColor = FLinearColor(0.85f, 0.70f, 0.45f, 1.f);
+	Suna.IconColor = HypeSelect::SRGB(212, 180, 120);
 	Villages = { Konoha, Suna };
 
 	SetIsFocusable(true);
@@ -300,16 +309,24 @@ void UHypeCharacterSelectWidget::BuildLayout()
 		return Button;
 	};
 	// Uma opção (vila ou clã): rótulo em cima, caixa de pincel, ícone (ou letra inicial) e o botão por cima
-	auto Option = [&](const FText& Name, const TSoftObjectPtr<UTexture2D>& IconAsset, const FLinearColor& IconColor,
+	auto Option = [&](FName Id, const FText& Name, const TSoftObjectPtr<UTexture2D>& IconAsset, const FLinearColor& IconColor,
 		bool bSelected, bool bLocked, float X, float LabelY, float BoxY, const FVector2D& BoxSize, TArray<TObjectPtr<UButton>>& List)
 	{
-		const float Dim = bLocked ? 0.3f : (bSelected ? 1.f : 0.55f);
-		Place(MakeText(Name, FontInfo(bSelected ? TEXT("Bold") : TEXT("SemiBold"), 9), bSelected ? White : LabelOff), TopLeft, FVector2D(X, LabelY), FVector2D::ZeroVector, Center);
-		Place(MakeImage(TextureBrush(BoxTexture, bSelected ? BoxOn : BoxOff)), TopLeft, FVector2D(X, BoxY), BoxSize, Center);
-		if (UTexture2D* IconTexture = IconAsset.LoadSynchronous())
+		const float Dim = bLocked ? 0.0f : (bSelected ? 1.f : 0.5f);
+		Place(MakeText(Name, FontInfo(bSelected ? TEXT("Bold") : TEXT("SemiBold"), 9), bSelected ? White : (bLocked ? LabelOff * FLinearColor(1.f, 1.f, 1.f, 0.6f) : LabelOff)),
+			TopLeft, FVector2D(X, LabelY), FVector2D::ZeroVector, Center);
+		Place(MakeImage(TextureBrush(BoxTexture, bSelected ? BoxOn : (bLocked ? BoxLocked : BoxOff))), TopLeft, FVector2D(X, BoxY), BoxSize, Center);
+		const float IconSize = BoxSize.Y * 0.66f;
+		UTexture2D* IconTexture = IconAsset.LoadSynchronous();
+		UTexture2D* Generated = IconTexture ? nullptr : GetGeneratedIcon(Id, 0);
+		if (IconTexture || Generated)
 		{
-			const float IconSize = BoxSize.Y * 0.62f;
-			Place(MakeImage(TextureBrush(IconTexture, IconColor), Dim), TopLeft, FVector2D(X, BoxY), FVector2D(IconSize, IconSize), Center);
+			// Uchiha: leque com a parte de baixo branca (segunda camada) e a de cima na cor do clã
+			if (UTexture2D* Second = IconTexture ? nullptr : GetGeneratedIcon(Id, 1))
+			{
+				Place(MakeImage(TextureBrush(Second, SRGB(236, 232, 226)), Dim), TopLeft, FVector2D(X, BoxY), FVector2D(IconSize, IconSize), Center);
+			}
+			Place(MakeImage(TextureBrush(IconTexture ? IconTexture : Generated, IconColor), Dim), TopLeft, FVector2D(X, BoxY), FVector2D(IconSize, IconSize), Center);
 		}
 		else if (!Name.IsEmpty())
 		{
@@ -343,7 +360,7 @@ void UHypeCharacterSelectWidget::BuildLayout()
 	for (int32 i = 0; i < Villages.Num(); ++i)
 	{
 		const FHypeVillageOption& V = Villages[i];
-		Option(V.Name, V.Icon, V.IconColor, i == SelectedVillage, V.Clans.Num() == 0, RowX(i, Villages.Num(), VillagePitch),
+		Option(V.Id, V.Name, V.Icon, V.IconColor, i == SelectedVillage, V.Clans.Num() == 0, RowX(i, Villages.Num(), VillagePitch),
 			VillageLabelY, VillageBoxY, VillageBoxSize, VillageButtons);
 	}
 
@@ -353,13 +370,13 @@ void UHypeCharacterSelectWidget::BuildLayout()
 		for (int32 i = 0; i < Village->Clans.Num(); ++i)
 		{
 			const FHypeClanOption& C = Village->Clans[i];
-			Option(C.Name, C.Icon, C.IconColor, i == SelectedClan, false, RowX(i, Village->Clans.Num(), ClanPitch),
+			Option(C.Id, C.Name, C.Icon, C.IconColor, i == SelectedClan, false, RowX(i, Village->Clans.Num(), ClanPitch),
 				ClanLabelY, ClanBoxY, ClanBoxSize, ClanButtons);
 		}
 	}
 
 	// --- Voltar / Próximo ---
-	const float Radius = 7.f;
+	const float Radius = 6.f;
 	const float BackX = ColumnCenter - (ButtonSize.X + ButtonGap) * 0.5f;
 	const float NextX = ColumnCenter + (ButtonSize.X + ButtonGap) * 0.5f;
 	const FSlateFontInfo ButtonFont = FontInfo(TEXT("SemiBold"), 11);
@@ -379,15 +396,144 @@ void UHypeCharacterSelectWidget::BuildLayout()
 	// --- Olhar fixo (canto de baixo à direita) e versão embaixo dele ---
 	const FVector2D BottomRight(1.f, 1.f);
 	const FVector2D LookPos(-LookButtonMargin.X, -LookButtonMargin.Y);
-	Place(MakeImage(Rounded(bLookFixed ? FLinearColor(1.f, 1.f, 1.f, 0.18f) : FLinearColor(0.05f, 0.05f, 0.05f, 0.6f), 6.f)), BottomRight, LookPos, LookButtonSize, BottomRight);
-	const FLinearColor LookColor = bLookFixed ? White : FLinearColor(1.f, 1.f, 1.f, 0.8f);
-	Place(MakeImage(TextureBrush(EyeTexture, LookColor)), BottomRight, LookPos + FVector2D(-LookButtonSize.X + 22.f, -LookButtonSize.Y * 0.5f), FVector2D(18.f, 18.f), Center);
+	Place(MakeImage(Rounded(bLookFixed ? SRGB(255, 255, 255, 0.16f) : PillFill, 6.f)), BottomRight, LookPos, LookButtonSize, BottomRight);
+	const FLinearColor LookColor = bLookFixed ? White : SRGB(230, 230, 230, 0.75f);
+	// olho à esquerda e o texto logo depois dele (antes o texto ficava em cima do olho)
+	const float LookLeft = LookPos.X - LookButtonSize.X;
+	Place(MakeImage(TextureBrush(EyeTexture, LookColor)), BottomRight, FVector2D(LookLeft + 22.f, LookPos.Y - LookButtonSize.Y * 0.5f), FVector2D(16.f, 16.f), Center);
 	Place(MakeText(NSLOCTEXT("HypeSelect", "LookFixed", "Olhar fixo"), FontInfo(TEXT("SemiBold"), 9), LookColor), BottomRight,
-		LookPos + FVector2D(-LookButtonSize.X * 0.5f - 12.f, -LookButtonSize.Y * 0.5f), FVector2D::ZeroVector, FVector2D(0.5f, 0.5f));
+		FVector2D(LookLeft + 36.f, LookPos.Y - LookButtonSize.Y * 0.5f), FVector2D::ZeroVector, FVector2D(0.f, 0.5f));
 	LookButton = MakeButton(6.f);
 	Place(LookButton, BottomRight, LookPos, LookButtonSize, BottomRight);
 	Place(MakeText(NSLOCTEXT("HypeSelect", "Version", "hype world · alpha"), FontInfo(TEXT("SemiBold"), 8), FLinearColor(1.f, 1.f, 1.f, 0.35f)), BottomRight,
 		FVector2D(-16.f, -8.f), FVector2D::ZeroVector, BottomRight);
+}
+
+UTexture2D* UHypeCharacterSelectWidget::GetGeneratedIcon(FName Id, int32 Layer)
+{
+	using namespace HypeSelect;
+	const FName Key = Layer == 0 ? Id : FName(*FString::Printf(TEXT("%s_%d"), *Id.ToString(), Layer));
+	if (const TObjectPtr<UTexture2D>* Found = IconCache.Find(Key))
+	{
+		return *Found;
+	}
+
+	// Cada símbolo = distância (em unidades de -1..1, negativa dentro) de um desenho simples; a borda é suavizada em 1 px
+	const int32 Size = 96;
+	const float PxPerUnit = Size * 0.5f;
+	auto Circle = [](const FVector2f& P, const FVector2f& C, float R) { return FVector2f::Distance(P, C) - R; };
+	auto Ring = [&](const FVector2f& P, const FVector2f& C, float R, float W) { return FMath::Abs(Circle(P, C, R)) - W * 0.5f; };
+	auto Line = [](const FVector2f& P, const FVector2f& A, const FVector2f& B, float W) { return SegmentDistance(P, A, B) - W * 0.5f; };
+	auto Box = [](const FVector2f& P, const FVector2f& C, const FVector2f& Half)
+	{
+		const FVector2f D(FMath::Abs(P.X - C.X) - Half.X, FMath::Abs(P.Y - C.Y) - Half.Y);
+		return FVector2f(FMath::Max(D.X, 0.f), FMath::Max(D.Y, 0.f)).Size() + FMath::Min(FMath::Max(D.X, D.Y), 0.f);
+	};
+	TFunction<float(const FVector2f&)> Shape;
+	const FString Name = Id.ToString();
+	if (Name == TEXT("Konoha"))
+	{
+		// Folha: espiral + ponta saindo para a esquerda em cima
+		Shape = [&](const FVector2f& P)
+		{
+			const float R = P.Size();
+			const float Theta = FMath::Atan2(P.Y, P.X);
+			float Best = 10.f;
+			for (int32 K = 0; K < 3; ++K)
+			{
+				const float T = Theta + PI + 2.f * PI * K;	// 0..6π
+				if (T > 4.4f * PI) { continue; }
+				const float SpiralR = 0.08f + 0.105f * T / PI;
+				Best = FMath::Min(Best, FMath::Abs(R - SpiralR));
+			}
+			const float Spiral = Best - 0.06f;
+			const float Tip = Line(P, FVector2f(-0.25f, -0.52f), FVector2f(-0.82f, -0.78f), 0.10f);
+			return FMath::Min(Spiral, Tip);
+		};
+	}
+	else if (Name == TEXT("Suna"))
+	{
+		// Ampulheta: dois triângulos em contorno
+		Shape = [&](const FVector2f& P)
+		{
+			const float A = Line(P, FVector2f(-0.55f, -0.7f), FVector2f(0.55f, -0.7f), 0.11f);
+			const float B = Line(P, FVector2f(-0.55f, 0.7f), FVector2f(0.55f, 0.7f), 0.11f);
+			const float C = Line(P, FVector2f(-0.55f, -0.7f), FVector2f(0.55f, 0.7f), 0.11f);
+			const float D = Line(P, FVector2f(0.55f, -0.7f), FVector2f(-0.55f, 0.7f), 0.11f);
+			return FMath::Min(FMath::Min(A, B), FMath::Min(C, D));
+		};
+	}
+	else if (Name == TEXT("Akimichi"))
+	{
+		// Anel com um caractere estilizado dentro
+		Shape = [&](const FVector2f& P)
+		{
+			float D = Ring(P, FVector2f(0.f, 0.f), 0.72f, 0.12f);
+			D = FMath::Min(D, Line(P, FVector2f(-0.38f, -0.32f), FVector2f(0.38f, -0.32f), 0.10f));
+			D = FMath::Min(D, Line(P, FVector2f(-0.30f, 0.02f), FVector2f(0.30f, 0.02f), 0.10f));
+			D = FMath::Min(D, Line(P, FVector2f(0.f, -0.48f), FVector2f(0.f, 0.46f), 0.10f));
+			D = FMath::Min(D, Line(P, FVector2f(0.f, 0.08f), FVector2f(-0.34f, 0.40f), 0.09f));
+			D = FMath::Min(D, Line(P, FVector2f(0.f, 0.08f), FVector2f(0.34f, 0.40f), 0.09f));
+			return D;
+		};
+	}
+	else if (Name == TEXT("Hyuga"))
+	{
+		// Chama/gota: círculo embaixo + ponta para cima
+		Shape = [&](const FVector2f& P)
+		{
+			const float Body = Circle(P, FVector2f(0.f, 0.22f), 0.42f);
+			const float Up = FMath::Max(Line(P, FVector2f(0.f, -0.72f), FVector2f(0.f, 0.15f), 0.f) - (0.42f * FMath::Clamp((P.Y + 0.72f) / 0.94f, 0.f, 1.f)), -1.f);
+			const float Inner = Circle(P, FVector2f(0.06f, 0.30f), 0.16f);
+			return FMath::Max(FMath::Min(Body, Up), -Inner);
+		};
+	}
+	else if (Name == TEXT("Nara"))
+	{
+		// Lua crescente (sombra)
+		Shape = [&](const FVector2f& P)
+		{
+			return FMath::Max(Circle(P, FVector2f(0.f, 0.f), 0.66f), -Circle(P, FVector2f(0.28f, -0.16f), 0.56f));
+		};
+	}
+	else if (Name == TEXT("Senju"))
+	{
+		// Losango em contorno com traço no meio
+		Shape = [&](const FVector2f& P)
+		{
+			const float Diamond = FMath::Abs((FMath::Abs(P.X) + FMath::Abs(P.Y)) * 0.7071f - 0.48f) - 0.07f;
+			return FMath::Min(Diamond, Line(P, FVector2f(0.f, -0.42f), FVector2f(0.f, 0.42f), 0.10f));
+		};
+	}
+	else if (Name == TEXT("Uchiha"))
+	{
+		// Leque: camada 0 = metade de cima (cor do clã), camada 1 = metade de baixo + cabo (branco)
+		const FVector2f Fan(0.f, -0.14f);
+		if (Layer == 0)
+		{
+			Shape = [&, Fan](const FVector2f& P) { return FMath::Max(Circle(P, Fan, 0.56f), P.Y - (Fan.Y - 0.02f)); };
+		}
+		else
+		{
+			Shape = [&, Fan](const FVector2f& P)
+			{
+				const float Lower = FMath::Max(Circle(P, Fan, 0.56f), (Fan.Y + 0.02f) - P.Y);
+				return FMath::Min(Lower, Box(P, FVector2f(0.f, 0.62f), FVector2f(0.07f, 0.26f)));
+			};
+		}
+	}
+	if (!Shape || (Layer > 0 && Name != TEXT("Uchiha")))
+	{
+		IconCache.Add(Key, nullptr);
+		return nullptr;
+	}
+	UTexture2D* Texture = MakeTexture(Size, Size, [&](float X, float Y)
+	{
+		const FVector2f P(X / PxPerUnit - 1.f, Y / PxPerUnit - 1.f);
+		return FMath::Clamp(0.5f - Shape(P) * PxPerUnit, 0.f, 1.f);
+	});
+	IconCache.Add(Key, Texture);
+	return Texture;
 }
 
 void UHypeCharacterSelectWidget::NativeConstruct()
@@ -452,6 +598,15 @@ void UHypeCharacterSelectWidget::SetupPreviewCamera()
 	{
 		PreviewCamera->GetCameraComponent()->SetFieldOfView(CameraFOV);
 		PreviewCamera->GetCameraComponent()->SetConstraintAspectRatio(false);
+		// Fundo desfocado como na referência: foco no personagem, lente bem aberta
+		FPostProcessSettings& Post = PreviewCamera->GetCameraComponent()->PostProcessSettings;
+		Post.bOverride_DepthOfFieldFocalDistance = true;
+		Post.DepthOfFieldFocalDistance = CameraDistance;
+		Post.bOverride_DepthOfFieldFstop = true;
+		Post.DepthOfFieldFstop = BackgroundBlurFstop;
+		Post.bOverride_DepthOfFieldMinFstop = true;
+		Post.DepthOfFieldMinFstop = BackgroundBlurFstop;
+		PreviewCamera->GetCameraComponent()->PostProcessBlendWeight = 1.f;
 		PC->SetViewTargetWithBlend(PreviewCamera, 0.f);
 	}
 }

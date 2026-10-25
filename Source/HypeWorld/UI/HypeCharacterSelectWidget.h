@@ -60,8 +60,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Visual") TSoftObjectPtr<UTexture2D> Logo;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Visual", meta=(AllowedClasses="/Script/Engine.Font")) TSoftObjectPtr<UObject> Font;
 	/** Escurecido da esquerda (atrás do menu) e o resto da tela */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Visual") float LeftShade = 0.55f;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Visual") float BaseShade = 0.08f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Visual") float LeftShade = 0.62f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Visual") float BaseShade = 0.10f;
+	/** Fundo desfocado como na referência: abertura da lente (menor = mais desfocado) */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Camera") float BackgroundBlurFstop = 1.2f;
 
 	/** Centro da coluna do menu (x) e largura da logo, px de 1080p */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Layout") float ColumnCenter = 384.f;
@@ -87,11 +89,11 @@ public:
 
 	/** Câmera de frente para o personagem: distância à frente, para o lado (+ = direita do personagem) e altura
 	 *  (relativas ao centro da cápsula), inclinação e campo de visão */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Camera") float CameraDistance = 320.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Camera") float CameraDistance = 380.f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Camera") float CameraSide = 15.f;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Camera") float CameraHeight = 30.f;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Camera") float CameraPitch = -2.f;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Camera") float CameraFOV = 70.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Camera") float CameraHeight = 44.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Camera") float CameraPitch = -1.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Camera") float CameraFOV = 50.f;
 	/** Volta da câmera para as costas do personagem ao apertar Próximo (s) */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Camera") float CameraBlendTime = 0.9f;
 
@@ -112,6 +114,7 @@ protected:
 private:
 
 	void BuildLayout();
+	UTexture2D* GetGeneratedIcon(FName Id, int32 Layer);
 	void Refresh();
 	void SetupPreviewCamera();
 	void Confirm();
@@ -136,6 +139,8 @@ private:
 	UPROPERTY() TObjectPtr<UTexture2D> DashTexture;
 	UPROPERTY() TObjectPtr<UTexture2D> EyeTexture;
 	UPROPERTY() TObjectPtr<UTexture2D> LogoTexture;
+	/** Símbolos das vilas/clãs desenhados por código (quando não há PNG): chave "Id" ou "Id_1" (segunda camada) */
+	UPROPERTY() TMap<FName, TObjectPtr<UTexture2D>> IconCache;
 
 	UPROPERTY() TObjectPtr<ACameraActor> PreviewCamera;
 
