@@ -1,0 +1,56 @@
+{
+ "caixa": [
+  460,
+  460
+ ],
+ "centro": [
+  230,
+  200
+ ],
+ "raio": 121.0,
+ "escala_textura": 0.5565217391304348,
+ "slots": [
+  {
+   "nome": "T_JS_Slot1",
+   "numero_centro": [
+    229.0,
+    379.5
+   ]
+  },
+  {
+   "nome": "T_JS_Slot2",
+   "numero_centro": [
+    231.0,
+    379.5
+   ]
+  },
+  {
+   "nome": "T_JS_Slot3",
+   "numero_centro": [
+    234.0,
+    379.5
+   ]
+  },
+  {
+   "nome": "T_JS_Slot4",
+   "numero_centro": [
+    232.0,
+    376.5
+   ]
+  },
+  {
+   "nome": "T_JS_Slot5",
+   "numero_centro": [
+    237.0,
+    377.5
+   ]
+  },
+  {
+   "nome": "T_JS_Slot6",
+   "numero_centro": [
+    223.0,
+    377.0
+   ]
+  }
+ ]
+}
