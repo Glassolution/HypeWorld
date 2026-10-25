@@ -130,11 +130,11 @@ void AHypeWorldPlayerController::ToggleCombatMenu()
 	}
 }
 
-void AHypeWorldPlayerController::SetHUDHidden(bool bHidden)
+void AHypeWorldPlayerController::SetHUDHidden(bool bHideHUD)
 {
 	if (HUDWidget)
 	{
-		HUDWidget->SetVisibility(bHidden ? ESlateVisibility::Collapsed : ESlateVisibility::SelfHitTestInvisible);
+		HUDWidget->SetVisibility(bHideHUD ? ESlateVisibility::Collapsed : ESlateVisibility::SelfHitTestInvisible);
 	}
 }
 

@@ -66,7 +66,7 @@ public:
 
 	/** Esconde/mostra o HUD (a tela de seleção do personagem esconde enquanto está aberta) */
 	UFUNCTION(BlueprintCallable, Category="HUD")
-	void SetHUDHidden(bool bHidden);
+	void SetHUDHidden(bool bHideHUD);
 
 protected:
 

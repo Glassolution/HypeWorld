@@ -48,7 +48,7 @@ echo "ok"
 passo "3/5 Compilando o C++"
 "$UE/Engine/Build/BatchFiles/Mac/Build.sh" HypeWorldEditor Mac Development -project="$UPROJECT" > "$PROJ/Saved/ultima_compilacao.log" 2>&1
 if ! grep -q "Result: Succeeded" "$PROJ/Saved/ultima_compilacao.log"; then
-    grep -E "error" "$PROJ/Saved/ultima_compilacao.log" | head -20
+    grep -iE "error" "$PROJ/Saved/ultima_compilacao.log" | head -20
     falhou "A compilação falhou. Mande esses erros para o Claude (log completo: Saved/ultima_compilacao.log)."
 fi
 echo "compilou"
