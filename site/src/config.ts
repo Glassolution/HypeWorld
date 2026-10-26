@@ -10,7 +10,6 @@ export const HERO_VIDEO = '/media/hero.mp4'
 export const HERO_SLIDES = [
   '/media/slides/itachi-corvos.jpg',
   '/media/slides/obito-lua.jpg',
-  '/media/slides/itachi-pintura.jpg',
   '/media/slides/naruto-hokage-vila.jpg',
   '/media/slides/itachi-grama.jpg',
   '/media/slides/naruto-sabio.jpg',
