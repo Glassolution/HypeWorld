@@ -12,7 +12,6 @@ export const HERO_SLIDES = [
   '/media/slides/obito-lua.jpg',
   '/media/slides/naruto-hokage-vila.jpg',
   '/media/slides/itachi-grama.jpg',
-  '/media/slides/naruto-sabio.jpg',
   '/media/slides/minato-lua.jpg',
 ]
 
