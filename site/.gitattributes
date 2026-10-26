@@ -1,0 +1,4 @@
+# O site é publicado na Vercel, que não baixa arquivos do Git LFS: imagens e vídeos daqui ficam no Git normal
+*.png -filter -diff -merge binary
+*.jpg -filter -diff -merge binary
+*.mp4 -filter -diff -merge binary
