@@ -143,6 +143,10 @@ void AHypeWorldCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 		{
 			EnhancedInputComponent->BindAction(ChakraFeetAction, ETriggerEvent::Started, this, &AHypeWorldCharacter::DoToggleChakraFeet);
 		}
+		if (ZoomAction)
+		{
+			EnhancedInputComponent->BindAction(ZoomAction, ETriggerEvent::Triggered, this, &AHypeWorldCharacter::Zoom);
+		}
 	}
 	else
 	{
@@ -168,6 +172,20 @@ void AHypeWorldCharacter::Look(const FInputActionValue& Value)
 
 	// route the input
 	DoLook(LookAxisVector.X, LookAxisVector.Y);
+}
+
+void AHypeWorldCharacter::Zoom(const FInputActionValue& Value)
+{
+	// Rodinha para cima (+1) aproxima, para baixo (-1) afasta
+	CameraZoomGoal = FMath::Clamp(CameraZoomGoal - Value.Get<float>() * CameraZoomStep, CameraZoomMin, CameraZoomMax);
+}
+
+void AHypeWorldCharacter::UpdateCameraZoom(float DeltaSeconds)
+{
+	if (CameraZoomGoal > 0.f)
+	{
+		CameraBoom->TargetArmLength = FMath::FInterpTo(CameraBoom->TargetArmLength, CameraZoomGoal, DeltaSeconds, CameraZoomSpeed);
+	}
 }
 
 void AHypeWorldCharacter::DoMove(float Right, float Forward)
@@ -447,6 +465,7 @@ void AHypeWorldCharacter::BeginPlay()
 	BaseMeshLocation = GetMesh()->GetRelativeLocation();
 	LastYaw = GetActorRotation().Yaw;
 	DefaultRotationRate = GetCharacterMovement()->RotationRate.Yaw;
+	CameraZoomGoal = FMath::Clamp(CameraBoom->TargetArmLength, CameraZoomMin, CameraZoomMax);
 
 	// GAS: dono e avatar são o próprio personagem; habilidades são dadas pelo servidor
 	AbilitySystem->InitAbilityActorInfo(this, this);
@@ -472,6 +491,7 @@ void AHypeWorldCharacter::Tick(float DeltaSeconds)
 	UpdateAutoRun(DeltaSeconds);
 	UpdateTurnInPlace(DeltaSeconds);
 	UpdateCameraFollow(DeltaSeconds);
+	UpdateCameraZoom(DeltaSeconds);
 	UpdateGuard();
 	UpdateBattleMode();
 	UpdateCombatState(DeltaSeconds);
@@ -792,9 +812,43 @@ void AHypeWorldCharacter::UpdateRunAnimRate()
 		const float Side = FVector::DotProduct(FVector::CrossProduct(Facing, VelDir), -GetCharacterMovement()->GetGravityDirection());   // + direita, - esquerda
 		const bool bRunningSide = Speed >= StrafeRunMinSpeed;
 		const float SideNatural = bRunningSide ? (Side >= 0.f ? RunStrafeRightNatural : RunStrafeLeftNatural) : WalkStrafeNatural;
-		const float WFwd = FMath::Max(0.f, Fwd), WBack = FMath::Max(0.f, -Fwd), WSide = FMath::Abs(Side);
-		Natural = (WFwd * Natural + WSide * SideNatural + WBack * WalkBackNatural) / FMath::Max(WFwd + WSide + WBack, 0.01f);
+		float WFwd = FMath::Max(0.f, Fwd), WBack = FMath::Max(0.f, -Fwd), WSide = FMath::Abs(Side);
+		// Correndo, pesos como no BS_ANAP_Locomocao: até 45° só a corrida de frente (diagonais), 45°–90° frente→lado, 90°–180° lado→costas
+		const float Angle = FMath::RadiansToDegrees(FMath::Atan2(FMath::Abs(Side), Fwd));
+		if (bRunningSide && NinjaMovement->WantsToRun() && !NinjaMovement->WantsToSprint() && !NinjaMovement->IsFocusing())
+		{
+			// Mesmos pesos lineares da faixa de 700 cm/s: frente/lado/costas a cada 90 graus.
+			WSide = Angle <= 90.f ? Angle / 90.f : (180.f - Angle) / 90.f;
+			WFwd = FMath::Max(0.f, 1.f - Angle / 90.f);
+			WBack = FMath::Max(0.f, (Angle - 90.f) / 90.f);
+		}
+		else if (bRunningSide && Angle <= 45.f)
+		{
+			WFwd = 1.f;
+			WSide = 0.f;
+			WBack = 0.f;
+		}
+		else if (bRunningSide && Angle > 90.f)
+		{
+			WBack = (Angle - 90.f) / 90.f;
+			WFwd = 0.f;
+			WSide = 1.f - WBack;
+		}
+		else if (bRunningSide)
+		{
+			WSide = (Angle - 45.f) / 45.f;
+			WFwd = 1.f - WSide;
+			WBack = 0.f;
+		}
+		const float BackNatural = bRunningSide ? RunBackNatural : WalkBackNatural;
+		Natural = (WFwd * Natural + WSide * SideNatural + WBack * BackNatural) / FMath::Max(WFwd + WSide + WBack, 0.01f);
 		Rate = FMath::Clamp(Speed / FMath::Max(1.f, Natural), 0.8f, FMath::Max(1.f, MaxRunAnimRate));   // um pouco mais lenta também vale (trote)
+	}
+	// O trote usa taxas próprias por amostra; não multiplicar novamente pela razão 700/velocidade natural.
+	if (NinjaMovement->IsMovingOnGround() && NinjaMovement->WantsToRun() && !NinjaMovement->WantsToSprint()
+		&& !NinjaMovement->IsFocusing() && !NinjaMovement->IsDashing() && !IsAttacking() && !NinjaMovement->HasCustomGravity())
+	{
+		Rate = FMath::Lerp(0.85f, 1.f, FMath::Clamp(Speed / FMath::Max(1.f, NinjaMovement->RunSpeed), 0.f, 1.f));
 	}
 	GetMesh()->GlobalAnimRateScale = FMath::FInterpTo(GetMesh()->GlobalAnimRateScale, Rate, GetWorld()->GetDeltaSeconds(), 10.f);
 }
@@ -841,14 +895,19 @@ void AHypeWorldCharacter::UpdateTurnInPlace(float DeltaSeconds)
 	UCharacterMovementComponent* Move = GetCharacterMovement();
 	const float Speed = GetVelocity().Size2D();
 
-	// Rapidez de giro: virada em andamento > corrida (curva aberta) > normal
+	// Rapidez de giro: virada em andamento > corrida ninja (curva aberta) / trote de combate (vira quase na hora) > normal
 	if (TurnTimeLeft > 0.f)
 	{
 		TurnTimeLeft -= DeltaSeconds;
 	}
+	else if (Speed > CameraFollowMinSpeed)
+	{
+		const UNinjaMovementComponent* NinjaMovement = GetNinjaMovement();
+		Move->RotationRate.Yaw = NinjaMovement && NinjaMovement->WantsToSprint() ? SprintRotationRate : CombatRunRotationRate;
+	}
 	else
 	{
-		Move->RotationRate.Yaw = Speed > CameraFollowMinSpeed ? SprintRotationRate : DefaultRotationRate;
+		Move->RotationRate.Yaw = DefaultRotationRate;
 	}
 
 	const bool bStill = Move->IsMovingOnGround() && Speed < 10.f;

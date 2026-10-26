@@ -32,6 +32,10 @@ struct FNinjaPoseInputs
 	float GuardAlpha = 0.f;						// 0..1 pose de defesa (antebraços na frente do rosto)
 	float FistAlpha = 0.f;						// 0..1 punhos fechados (golpes e defesa)
 	float ArmsSpreadAlpha = 0.f;				// 0..1 braços abertos (dash e segundo pulo)
+	float CombatAlpha = 0.f;					// 0..1 tronco e braços na pose de prontidão (trote / parado no trote)
+	float CombatLean = 0.f;						// graus de inclinação lateral do tronco na curva (+ = para a direita)
+	float CombatMoving = 0.f;
+	float CombatWarpAngle = 0.f;
 	float BattleAlpha = 0.f;					// 0..1 pose de luta parada (modo de batalha)
 	float BattleTime = 0.f;						// relógio da pose de luta (ela é um loop)
 	float Time = 0.f;							// relógio da animação (respiração)
@@ -60,6 +64,14 @@ private:
 	/** Modo de batalha parado: mistura a pose de luta por cima do parado normal. */
 	void ApplyBattleIdle(FPoseContext& Output) const;
 	const UAnimSequenceBase* BattleIdle = nullptr;
+
+	/** Trote (corrida de combate): do spine_01 para cima vem a pose de prontidão (a coluna guarda um pouco da corrida)
+	 *  e o tronco inclina nas curvas. Pernas e quadril continuam da corrida. */
+	void ApplyCombatReady(FPoseContext& Output) const;
+	void ApplyCombatOrientationWarp(FPoseContext& Output);
+	const UAnimSequenceBase* CombatPose = nullptr;
+	const UAnimSequenceBase* CombatCenterPose = nullptr;
+	float CombatSpineFromRun = 0.25f;
 
 	/** Abre os dedos de uma mão (puxa para a pose de referência, que é a mão aberta). */
 	void OpenHand(FCompactPose& Pose, bool bRight, float Alpha, bool bOnlyIndexAndMiddle = false) const;
@@ -264,6 +276,37 @@ public:
 	UPROPERTY(EditAnywhere, Category="Ninja|Batalha")
 	float BattleIdleMaxSpeed = 120.f;
 
+	/** Corrida de combate (trote, sem Shift): pose do tronco e dos braços. Vazio = desliga. */
+	UPROPERTY(EditAnywhere, Category="Ninja|Corrida de combate")
+	UAnimSequenceBase* CombatReadyPose = nullptr;
+
+	/** Média local do ciclo de corrida: remove o viés da corrida antes de somar seu movimento à prontidão. */
+	UPROPERTY(EditAnywhere, Category="Ninja|Corrida de combate")
+	UAnimSequenceBase* CombatRunCenterPose = nullptr;
+
+	/** Quanto da coluna continua vindo da corrida (0..1): o corpo reage aos passos sem balançar os braços. */
+	UPROPERTY(EditAnywhere, Category="Ninja|Corrida de combate")
+	float CombatSpineFromRun = 0.25f;
+
+	/** Rapidez para entrar/sair da pose (ao trocar para a corrida ninja ou ao golpear). */
+	UPROPERTY(EditAnywhere, Category="Ninja|Corrida de combate")
+	float CombatBlendSpeed = 10.f;
+
+	/** Inclinação lateral máxima do tronco na curva (graus). */
+	UPROPERTY(EditAnywhere, Category="Ninja|Corrida de combate")
+	float CombatLeanMax = 10.f;
+
+	/** Giro (graus/s) correndo a CombatLeanFullSpeed que dá a inclinação máxima. */
+	UPROPERTY(EditAnywhere, Category="Ninja|Corrida de combate")
+	float CombatLeanFullTurnRate = 540.f;
+
+	UPROPERTY(EditAnywhere, Category="Ninja|Corrida de combate")
+	float CombatLeanFullSpeed = 700.f;
+
+	/** Rapidez com que a inclinação acompanha a curva. */
+	UPROPERTY(EditAnywhere, Category="Ninja|Corrida de combate")
+	float CombatLeanSpeed = 8.f;
+
 	/** Rapidez com que a mão vai até a parede / volta. */
 	UPROPERTY(EditAnywhere, Category="Ninja|Parede")
 	float WallHandBlendSpeed = 10.f;
@@ -289,6 +332,9 @@ private:
 	float LandTime = 0.f;
 	float BattleAlpha = 0.f;
 	float BattleTime = 0.f;
+	float CombatAlpha = 0.f;
+	float CombatLean = 0.f;
+	float LastActorYaw = 0.f;
 
 	/** Velocidade relativa à gravidade (na parede/teto o "chão" é a parede) — escrita nas variáveis do Anim Blueprint */
 	FVector SurfaceVelocity = FVector::ZeroVector;

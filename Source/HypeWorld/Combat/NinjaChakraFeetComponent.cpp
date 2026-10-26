@@ -1,6 +1,7 @@
 #include "NinjaChakraFeetComponent.h"
 #include "Components/PointLightComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "NinjaVisibleBody.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine/SkeletalMesh.h"
 #include "Engine/StaticMesh.h"
@@ -61,7 +62,7 @@ void UNinjaChakraFeetComponent::Build()
 {
 	bBuilt = true;
 	ACharacter* Owner = Cast<ACharacter>(GetOwner());
-	USkeletalMeshComponent* Body = Owner ? Owner->GetMesh() : nullptr;
+	Body = GetNinjaVisibleBody(Owner);
 
 	// Casca: cópia da malha do corpo seguindo a mesma pose; o material só mostra (e infla) a região dos pés
 	if (Body && ShellMaterial)
@@ -84,7 +85,7 @@ void UNinjaChakraFeetComponent::Build()
 		Shell->SetVisibility(false);
 	}
 
-	const TCHAR* Bones[2][2] = { { TEXT("foot_l"), TEXT("ball_l") }, { TEXT("foot_r"), TEXT("ball_r") } };
+	const FName Bones[2][2] = { { FootBoneL, BallBoneL }, { FootBoneR, BallBoneR } };
 	for (int32 i = 0; i < 2; ++i)
 	{
 		FFoot& Foot = Feet.AddDefaulted_GetRef();
@@ -139,7 +140,7 @@ void UNinjaChakraFeetComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	const ACharacter* Owner = Cast<ACharacter>(GetOwner());
-	if (!bBuilt || !Owner || !Owner->GetMesh())
+	if (!bBuilt || !Owner || !Body)
 	{
 		return;
 	}
@@ -152,8 +153,8 @@ void UNinjaChakraFeetComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 
 	for (FFoot& Foot : Feet)
 	{
-		const FVector Ankle = Owner->GetMesh()->GetSocketLocation(Foot.Bone);
-		const FVector Ball = Owner->GetMesh()->GetSocketLocation(Foot.Ball);
+		const FVector Ankle = Body->GetSocketLocation(Foot.Bone);
+		const FVector Ball = Body->GetSocketLocation(Foot.Ball);
 		// Centro da sola: entre tornozelo e peito do pé, na altura do mais baixo dos dois, um pouco abaixo
 		const FVector Mid = (Ankle + Ball) * 0.5f;
 		const float Lowest = FMath::Min(FVector::DotProduct(Ankle, Up), FVector::DotProduct(Ball, Up));

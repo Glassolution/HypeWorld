@@ -115,6 +115,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Input")
 	UInputAction* WalkToggleAction;
 
+	/** Rodinha do mouse: aproxima/afasta a câmera */
+	UPROPERTY(EditAnywhere, Category="Input")
+	UInputAction* ZoomAction;
+
 	/** Animação do dash (usada quando DashVariants não tem nada para a direção) */
 	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
 	UAnimMontage* DashMontage;
@@ -170,6 +174,16 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Ninja|Câmera")
 	float CameraFollowDelay = 0.6f;
 
+	/** Zoom com a rodinha: distância mínima e máxima da câmera (cm), quanto cada clique da rodinha anda e a rapidez do ajuste */
+	UPROPERTY(EditAnywhere, Category="Ninja|Câmera")
+	float CameraZoomMin = 180.f;
+	UPROPERTY(EditAnywhere, Category="Ninja|Câmera")
+	float CameraZoomMax = 750.f;
+	UPROPERTY(EditAnywhere, Category="Ninja|Câmera")
+	float CameraZoomStep = 60.f;
+	UPROPERTY(EditAnywhere, Category="Ninja|Câmera")
+	float CameraZoomSpeed = 10.f;
+
 	/** Corrida ninja: rapidez com que a câmera volta para as costas nas curvas */
 	UPROPERTY(EditAnywhere, Category="Ninja|Câmera")
 	float SprintCameraFollowSpeed = 8.f;
@@ -185,6 +199,10 @@ protected:
 	/** Rapidez de giro do corpo correndo rápido (graus/s): menor = curva mais aberta */
 	UPROPERTY(EditAnywhere, Category="Ninja|Movimento")
 	float SprintRotationRate = 360.f;
+
+	/** Rapidez de giro no trote (corrida de combate, sem Shift): alta, o corpo vira quase na hora para onde vai */
+	UPROPERTY(EditAnywhere, Category="Ninja|Movimento")
+	float CombatRunRotationRate = 1080.f;
 
 	/** Animação que toca de vez em quando se ficar parado (olhar em volta) */
 	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
@@ -244,6 +262,10 @@ protected:
 	float WalkStrafeNatural = 164.f;
 	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
 	float WalkBackNatural = 107.f;
+
+	/** Velocidade natural da corrida de costas (acima de StrafeRunMinSpeed) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
+	float RunBackNatural = 308.f;
 
 	/** Abaixo desta velocidade, de lado/de costas conta como andar (acima, corrida lateral) */
 	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
@@ -841,6 +863,11 @@ private:
 
 	/** Câmera volta suave para trás do boneco quando ele corre e o mouse está parado */
 	void UpdateCameraFollow(float DeltaSeconds);
+
+	/** Rodinha do mouse: muda a distância desejada da câmera; UpdateCameraZoom chega nela suave */
+	void Zoom(const FInputActionValue& Value);
+	void UpdateCameraZoom(float DeltaSeconds);
+	float CameraZoomGoal = 0.f;
 
 	/** Ao sair do lugar numa direção muito diferente, toca a animação de virar e gira no mesmo ritmo */
 	void UpdateTurnInPlace(float DeltaSeconds);

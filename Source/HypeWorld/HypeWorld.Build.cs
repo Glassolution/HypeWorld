@@ -24,10 +24,11 @@ public class HypeWorld : ModuleRules
 			"GameplayTasks"
 		});
 
-		PrivateDependencyModuleNames.AddRange(new string[] { "AnimationCore", "SlateCore", "Landscape" });
+		PrivateDependencyModuleNames.AddRange(new string[] { "AnimationCore", "SlateCore", "Landscape", "AnimationWarpingRuntime", "AnimGraphRuntime" });
 		if (Target.bBuildEditor)
 		{
 			PrivateDependencyModuleNames.Add("UnrealEd");   // ferramentas de editor (NinjaEditorTools: Blocking Volume)
+			PrivateDependencyModuleNames.AddRange(new string[] { "AnimGraph", "BlueprintGraph", "AssetTools" });   // NinjaEditorTools: Anim Blueprint de retarget
 		}
 
 		PublicIncludePaths.AddRange(new string[] {

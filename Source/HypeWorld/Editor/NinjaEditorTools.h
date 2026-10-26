@@ -14,6 +14,8 @@ class UFontFace;
 class ULandscapeLayerInfoObject;
 class UMaterialInterface;
 class ALandscape;
+class UAnimBlueprint;
+class USkeletalMesh;
 
 UCLASS()
 class HYPEWORLD_API UNinjaEditorTools : public UBlueprintFunctionLibrary
@@ -25,6 +27,11 @@ public:
 	/** Reconstrói os dados internos (triangulação) de um blend space depois de trocar amostras por script. */
 	UFUNCTION(BlueprintCallable, Category="Ninja|Editor")
 	static bool RebuildBlendSpace(UBlendSpace* BlendSpace);
+
+	/** Cria um Anim Blueprint para TargetMesh cujo AnimGraph é só um "Retarget Pose From Mesh" (pose do componente pai,
+	 *  pelo IKRetargeter) ligado ao Output Pose. O nó da engine não é exportado, então é criado por reflexão. */
+	UFUNCTION(BlueprintCallable, Category="Ninja|Editor")
+	static UAnimBlueprint* CreateRetargetAnimBlueprint(USkeletalMesh* TargetMesh, UObject* IKRetargeter, const FString& PackagePath, const FString& AssetName);
 
 	/** Recorta um golpe de uma animação: a montagem toca só [StartTime, EndTime] da animação.
 	 *  HitTimes = momentos de acerto (AnimNotify DoAttackTrace); ComboTime = abre a janela do próximo golpe (CheckCombo, <0 = sem).

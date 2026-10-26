@@ -92,7 +92,7 @@ private:
 
 	void BuildAura();
 	UMaterialInstanceDynamic* MakeMID(UMaterialInterface* Base);
-	void SetPartsVisible(bool bVisible);
+	void SetPartsVisible(bool bShowParts);
 	void FaceCamera(UStaticMeshComponent* Plane, const FVector2D& Size, float BottomZ, float BackOffset, float FrontReach) const;
 	void PlayLoop(USoundBase* Sound);
 

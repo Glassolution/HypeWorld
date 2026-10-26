@@ -32,12 +32,9 @@ float UNinjaMovementComponent::GetMaxSpeed() const
 	}
 
 	// Correndo de lado: animações de strafe são mais lentas, a velocidade acompanha
-	if (IsStrafeRunning())
+	if (IsStrafeRunning() && !IsFocusing())
 	{
-		const float Side = GetSidewaysAmount();
-		const FVector Facing = UpdatedComponent ? ProjectToGravityFloor(UpdatedComponent->GetForwardVector()).GetSafeNormal() : FVector::ForwardVector;
-		const float Back = FMath::Clamp(-FVector::DotProduct(Facing, ProjectToGravityFloor(Acceleration).GetSafeNormal()), 0.f, 1.f);
-		return FMath::Lerp(FMath::Lerp(RunSpeed, RunStrafeSpeed, Side), RunBackSpeed, Back);
+		return RunSpeed;
 	}
 
 	// Andando: de costas para a câmera (frente/lado/costas); de costas é mais devagar

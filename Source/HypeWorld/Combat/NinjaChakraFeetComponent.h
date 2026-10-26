@@ -37,6 +37,12 @@ public:
 	UPROPERTY(EditAnywhere, Category="Chakra nos pés|Materiais") TObjectPtr<UMaterialInterface> GroundMaterial;
 
 	/** Casca: raio em volta do centro da sola (cm), até onde sobe (tornozelo, cm) e quanto fica afastada do pé (cm) */
+	/** Ossos do tornozelo e do peito do pé no corpo visível (outro personagem com retarget tem outros nomes) */
+	UPROPERTY(EditAnywhere, Category="Chakra nos pés|Ossos") FName FootBoneL = TEXT("foot_l");
+	UPROPERTY(EditAnywhere, Category="Chakra nos pés|Ossos") FName BallBoneL = TEXT("ball_l");
+	UPROPERTY(EditAnywhere, Category="Chakra nos pés|Ossos") FName FootBoneR = TEXT("foot_r");
+	UPROPERTY(EditAnywhere, Category="Chakra nos pés|Ossos") FName BallBoneR = TEXT("ball_r");
+
 	UPROPERTY(EditAnywhere, Category="Chakra nos pés") float FootRadius = 20.f;
 	UPROPERTY(EditAnywhere, Category="Chakra nos pés") float AnkleHeight = 16.f;
 	UPROPERTY(EditAnywhere, Category="Chakra nos pés") float Inflate = 3.f;
@@ -97,6 +103,7 @@ private:
 
 	TArray<FFoot> Feet;
 	UPROPERTY() TObjectPtr<USkeletalMeshComponent> Shell;
+	UPROPERTY() TObjectPtr<USkeletalMeshComponent> Body;   // corpo visível (de onde vêm a malha e os pés)
 	UPROPERTY() TObjectPtr<UMaterialInstanceDynamic> ShellMID;
 	UPROPERTY() TArray<TObjectPtr<UObject>> Keep;   // segura os componentes e MIDs criados em tempo de jogo
 

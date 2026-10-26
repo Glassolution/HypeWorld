@@ -12,9 +12,14 @@
 #include "TwoBoneIK.h"
 #include "Animation/AnimSequenceBase.h"
 #include "Animation/AnimationPoseData.h"
+#include "Engine/Engine.h"
+#include "HAL/IConsoleManager.h"
+#include "BoneControllers/AnimNode_OrientationWarping.h"
 
 namespace
 {
+	TAutoConsoleVariable<int32> CVarNinjaLocomotionDebug(TEXT("ninja.LocomotionDebug"), 0,
+		TEXT("Mostra Direction e GroundSpeed lidos do ABP_Ninja (1 = ligado)."));
 	const TCHAR* GFingerBones[] = {
 		TEXT("thumb_01"), TEXT("thumb_02"), TEXT("thumb_03"),
 		TEXT("index_metacarpal"), TEXT("index_01"), TEXT("index_02"), TEXT("index_03"),
@@ -57,6 +62,25 @@ void UNinjaAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		PoseInputs.BattleTime = BattleTime;
 	}
 
+	// Corrida de combate (trote, sem Shift): tronco e braços na pose de prontidão, correndo ou parado; some na corrida ninja,
+	// andando, no ar e quando uma montagem (golpe, chakra, reação) toca. Nas curvas o tronco inclina para dentro.
+	{
+		const AHypeWorldCharacter* Ninja = Cast<AHypeWorldCharacter>(Char);
+		const bool bCombatRun = ActiveBattleIdle && Move->IsMovingOnGround() && Move->WantsToRun() && !Move->WantsToSprint()
+			&& !Move->IsFocusing() && !Move->IsDashing() && !(Ninja && Ninja->IsAttacking());
+		const float Target = bCombatRun ? 1.f - FMath::Clamp(GetSlotMontageGlobalWeight(FName("DefaultSlot")), 0.f, 1.f) : 0.f;
+		CombatAlpha = FMath::FInterpTo(CombatAlpha, Target, DeltaSeconds, CombatBlendSpeed);
+		const float Yaw = Char->GetActorRotation().Yaw;
+		const float YawRate = FMath::FindDeltaAngleDegrees(LastActorYaw, Yaw) / DeltaSeconds;
+		LastActorYaw = Yaw;
+		const float SpeedFactor = FMath::Clamp(Char->GetVelocity().Size2D() / FMath::Max(1.f, CombatLeanFullSpeed), 0.f, 1.f);
+		const float LeanTarget = bCombatRun ? FMath::Clamp(YawRate / FMath::Max(1.f, CombatLeanFullTurnRate), -1.f, 1.f) * CombatLeanMax * SpeedFactor : 0.f;
+		CombatLean = FMath::FInterpTo(CombatLean, LeanTarget, DeltaSeconds, CombatLeanSpeed);
+		PoseInputs.CombatAlpha = CombatAlpha;
+		PoseInputs.CombatLean = CombatLean;
+		PoseInputs.CombatMoving = SpeedFactor;
+	}
+
 	// Velocidade no espaço da gravidade: na parede/teto o "chão" é a parede (as animações de andar/correr seguem)
 	{
 		const FQuat ToGravity = FQuat::FindBetweenNormals(Move->GetGravityDirection(), FVector::DownVector);
@@ -67,6 +91,23 @@ void UNinjaAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 	const FVector Vel2D = Char->GetVelocity().GetSafeNormal2D();
 	FullDirection = Vel2D.IsNearlyZero() ? 0.f : FMath::FindDeltaAngleDegrees(Char->GetActorRotation().Yaw, Vel2D.Rotation().Yaw);
+	const float AbsDirection = FMath::Abs(FullDirection);
+	// As diagonais usam frente até 45 graus e costas a partir de 135 graus; o warping cobre a diferença.
+	const float SourceAngle = AbsDirection <= 45.f ? 0.f : (AbsDirection < 135.f ? 2.f * (AbsDirection - 45.f) : 180.f);
+	PoseInputs.CombatWarpAngle = Move->HasCustomGravity() ? 0.f : FMath::Sign(FullDirection) * (AbsDirection - SourceAngle);
+	if (GEngine && CVarNinjaLocomotionDebug.GetValueOnGameThread() != 0 && Char->IsLocallyControlled())
+	{
+		auto ReadNumber = [this](FName Name)
+		{
+			FProperty* Prop = GetClass()->FindPropertyByName(Name);
+			if (const FDoubleProperty* D = CastField<FDoubleProperty>(Prop)) return D->GetPropertyValue_InContainer(this);
+			if (const FFloatProperty* F = CastField<FFloatProperty>(Prop)) return double(F->GetPropertyValue_InContainer(this));
+			return 0.0;
+		};
+		GEngine->AddOnScreenDebugMessage(uint64(GetUniqueID()), 0.f, FColor::Green,
+			FString::Printf(TEXT("ABP_Ninja Direction=%+.1f  Speed=%.1f cm/s  Calculated=%+.1f"),
+				ReadNumber(TEXT("Direction")), ReadNumber(TEXT("GroundSpeed")), FullDirection));
+	}
 
 	const FTransform CompTM = Mesh->GetComponentTransform();
 	const FVector Forward = Char->GetActorForwardVector();
@@ -115,7 +156,7 @@ void UNinjaAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	PoseInputs.LookDownAlpha = FMath::FInterpTo(PoseInputs.LookDownAlpha, LookTarget, DeltaSeconds, 6.f);
 
 	// --- Corrida ninja: braços esticados para trás (pela velocidade, então funciona nos outros jogadores também) ---
-	const float SprintTarget = (Move->IsMovingOnGround() && (Move->IsSprinting() || Velocity.Size2D() > SprintPoseMinSpeed)) ? 1.f : 0.f;
+	const float SprintTarget = (Move->IsMovingOnGround() && (Move->IsSprinting() || Velocity.Size2D() > FMath::Max(SprintPoseMinSpeed, Move->RunSpeed + 50.f))) ? 1.f : 0.f;
 	PoseInputs.SprintAlpha = FMath::FInterpTo(PoseInputs.SprintAlpha, SprintTarget, DeltaSeconds, 6.f);
 
 	// Cada pisada: o pé mais baixo é o de apoio, o corpo balança para ele; as mãos seguem atrasadas e "flutuam" no sobe e desce
@@ -261,6 +302,9 @@ void FNinjaAnimInstanceProxy::PreUpdate(UAnimInstance* InAnimInstance, float Del
 		RelaxedHands = Ninja->RelaxedHandsPose;
 		FistHands = Ninja->FistHandsPose;
 		BattleIdle = Ninja->ActiveBattleIdle ? Ninja->ActiveBattleIdle.Get() : Ninja->BattleIdlePose;
+		CombatPose = Ninja->ActiveBattleIdle ? Ninja->ActiveBattleIdle.Get() : Ninja->BattleIdlePose;
+		CombatCenterPose = Ninja->CombatRunCenterPose;
+		CombatSpineFromRun = Ninja->CombatSpineFromRun;
 		FistPoseTime = Ninja->FistPoseTime;
 		LandCrouchDepth = Ninja->LandCrouchDepth;
 		LookDownSpineAngle = Ninja->LookDownSpineAngle;
@@ -298,7 +342,9 @@ bool FNinjaAnimInstanceProxy::Evaluate_WithRoot(FPoseContext& Output, FAnimNode_
 	EvaluateAnimationNode_WithRoot(Output, InRootNode);
 	if (InRootNode == GetRootNode())
 	{
+		ApplyCombatReady(Output);
 		ApplyBattleIdle(Output);
+		ApplyCombatOrientationWarp(Output);
 	}
 	if (InRootNode == GetRootNode() && bProceduralPose)
 	{
@@ -825,6 +871,68 @@ void FNinjaAnimInstanceProxy::ApplyRelaxedHands(FPoseContext& Output) const
 			}
 		}
 	}
+}
+
+void FNinjaAnimInstanceProxy::ApplyCombatReady(FPoseContext& Output) const
+{
+	if (!CombatPose || Inputs.CombatAlpha < 0.01f || CombatPose->GetPlayLength() <= 0.f) return;
+	const FBoneContainer& Bones = Output.Pose.GetBoneContainer();
+	FBoneReference SpineRef(TEXT("spine_01"));
+	SpineRef.Initialize(Bones);
+	const FCompactPoseBoneIndex Spine1 = SpineRef.GetCompactPoseIndex(Bones);
+	if (!Spine1.IsValid()) return;
+
+	// O loop de batalha do estilo ativo respira no próprio ritmo, independente da cadência das pernas.
+	FPoseContext Battle(Output);
+	FAnimationPoseData BattleData(Battle);
+	CombatPose->GetAnimationPose(BattleData, FAnimExtractContext(double(FMath::Fmod(Inputs.BattleTime, CombatPose->GetPlayLength()))));
+	FCSPose<FCompactPose> BattleCS;
+	BattleCS.InitPose(Battle.Pose);
+	const FReferenceSkeleton& ReferenceSkeleton = Bones.GetReferenceSkeleton();
+	for (const FCompactPoseBoneIndex Index : Output.Pose.ForEachBoneIndex())
+	{
+		bool bUpper = false;
+		for (FCompactPoseBoneIndex Parent = Index; Parent.IsValid(); Parent = Output.Pose.GetParentBoneIndex(Parent))
+		{
+			if (Parent == Spine1) { bUpper = true; break; }
+		}
+		if (!bUpper || Index == Spine1) continue;
+		const FString Name = ReferenceSkeleton.GetBoneName(Bones.MakeMeshPoseIndex(Index).GetInt()).ToString();
+		// Máscara gradual na cintura: preserva a conexão com o quadril e assume a guarda nos ombros/braços.
+		const float Mask = Name == TEXT("spine_02") ? 0.5f : Name == TEXT("spine_03") ? 0.75f : 1.f;
+		Output.Pose[Index].BlendWith(Battle.Pose[Index], Mask * Inputs.CombatAlpha);
+	}
+	FCSPose<FCompactPose> CS;
+	CS.InitPose(Output.Pose);
+	FTransform Spine = CS.GetComponentSpaceTransform(Spine1);
+	FQuat Target = BattleCS.GetComponentSpaceTransform(Spine1).GetRotation();
+	Target = FQuat(Inputs.ForwardCS.GetSafeNormal(), FMath::DegreesToRadians(-Inputs.CombatLean * 0.35f)) * Target;
+	Spine.SetRotation(FQuat::Slerp(Spine.GetRotation(), Target, Inputs.CombatAlpha * 0.65f).GetNormalized());
+	const FBoneTransform Changed[] = { FBoneTransform(Spine1, Spine) };
+	CS.LocalBlendCSBoneTransforms(Changed, 1.f);
+	FCSPose<FCompactPose>::ConvertComponentPosesToLocalPoses(MoveTemp(CS), Output.Pose);
+}
+
+void FNinjaAnimInstanceProxy::ApplyCombatOrientationWarp(FPoseContext& Output)
+{
+	if (Inputs.CombatAlpha < 0.01f || Inputs.CombatMoving < 0.01f || FMath::Abs(Inputs.CombatWarpAngle) < 0.01f) return;
+	FAnimNode_OrientationWarping Warp;
+	Warp.Mode = EWarpingEvaluationMode::Manual;
+	Warp.OrientationAngle = Inputs.CombatWarpAngle * Inputs.CombatAlpha;
+	Warp.DistributedBoneOrientationAlpha = 1.f;
+	Warp.RotationInterpSpeed = 0.f;
+	Warp.SpineBones.Add(FBoneReference(TEXT("spine_01")));
+	Warp.IKFootRootBone = FBoneReference(TEXT("ik_foot_root"));
+	Warp.IKFootBones.Add(FBoneReference(TEXT("ik_foot_l")));
+	Warp.IKFootBones.Add(FBoneReference(TEXT("ik_foot_r")));
+	Warp.Initialize_AnyThread(FAnimationInitializeContext(this));
+	Warp.CacheBones_AnyThread(FAnimationCacheBonesContext(this));
+	if (!Warp.IsValidToEvaluate(Output.Pose.GetBoneContainer().GetSkeletonAsset(), Output.Pose.GetBoneContainer())) return;
+	FComponentSpacePoseContext Warped(this);
+	Warped.Pose.InitPose(Output.Pose);
+	TArray<FBoneTransform> Changes;
+	Warp.EvaluateSkeletalControl_AnyThread(Warped, Changes);
+	FCSPose<FCompactPose>::ConvertComponentPosesToLocalPoses(MoveTemp(Warped.Pose), Output.Pose);
 }
 
 void FNinjaAnimInstanceProxy::ApplyBattleIdle(FPoseContext& Output) const

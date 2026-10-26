@@ -3,6 +3,7 @@
 #include "NinjaChakraAuraComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "NinjaVisibleBody.h"
 #include "Components/InstancedStaticMeshComponent.h"
 #include "Components/PointLightComponent.h"
 #include "GameFramework/Character.h"
@@ -125,9 +126,9 @@ void UNinjaChakraAuraComponent::BeginPlay()
 	Super::BeginPlay();
 	// A chama desenha sem teste de profundidade (o chão não corta a base); o material usa o Custom Depth do corpo
 	// para o personagem continuar na frente dela
-	if (const ACharacter* Character = Cast<ACharacter>(GetOwner()))
+	if (USkeletalMeshComponent* Body = GetNinjaVisibleBody(Cast<ACharacter>(GetOwner())))
 	{
-		Character->GetMesh()->SetRenderCustomDepth(true);
+		Body->SetRenderCustomDepth(true);
 	}
 	BuildAura();
 	SetPartsVisible(false);
@@ -162,14 +163,14 @@ void UNinjaChakraAuraComponent::BuildAura()
 	UStaticMesh* Plane = LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Plane.Plane"));
 	UStaticMesh* Sphere = LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Sphere.Sphere"));
 
-	auto MakeStatic = [this, Owner](UStaticMesh* Mesh, UMaterialInstanceDynamic* MID, bool bAbsoluteRotation)
+	auto MakeStatic = [this, Owner](UStaticMesh* Mesh, UMaterialInstanceDynamic* MID, bool bUseAbsoluteRotation)
 	{
 		UStaticMeshComponent* Comp = NewObject<UStaticMeshComponent>(Owner);
 		Comp->SetStaticMesh(Mesh);
 		Comp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		Comp->SetCastShadow(false);
 		Comp->SetupAttachment(this);
-		Comp->SetUsingAbsoluteRotation(bAbsoluteRotation);   // planos virados para a câmera giram sozinhos
+		Comp->SetUsingAbsoluteRotation(bUseAbsoluteRotation);   // planos virados para a câmera giram sozinhos
 		Comp->RegisterComponent();
 		if (MID)
 		{
@@ -181,7 +182,7 @@ void UNinjaChakraAuraComponent::BuildAura()
 	const float FeetZ = -Owner->GetSimpleCollisionHalfHeight();
 
 	// 1) Brilho leve no corpo (cópia da malha seguindo a pose, inflada pelo material)
-	USkeletalMeshComponent* Body = Owner->GetMesh();
+	USkeletalMeshComponent* Body = GetNinjaVisibleBody(Owner);
 	if (Body && ShellMaterial)
 	{
 		Shell = NewObject<USkeletalMeshComponent>(Owner);
@@ -256,13 +257,13 @@ void UNinjaChakraAuraComponent::BuildAura()
 	LoopAudio->RegisterComponent();
 }
 
-void UNinjaChakraAuraComponent::SetPartsVisible(bool bVisible)
+void UNinjaChakraAuraComponent::SetPartsVisible(bool bShowParts)
 {
 	for (USceneComponent* Part : TArray<USceneComponent*>{ Shell, Flame, FrontFlame, Ground, SparkMesh, Light })
 	{
 		if (Part)
 		{
-			Part->SetVisibility(bVisible);
+			Part->SetVisibility(bShowParts);
 		}
 	}
 }

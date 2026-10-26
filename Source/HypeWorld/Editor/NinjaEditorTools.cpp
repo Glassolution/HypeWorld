@@ -20,6 +20,15 @@
 #include "ActorFactories/ActorFactory.h"
 #include "Builders/CubeBuilder.h"
 #include "Engine/BlockingVolume.h"
+#include "Animation/AnimBlueprint.h"
+#include "Engine/SkeletalMesh.h"
+#include "Factories/AnimBlueprintFactory.h"
+#include "AnimGraphNode_Root.h"
+#include "AssetToolsModule.h"
+#include "EdGraph/EdGraph.h"
+#include "EdGraphSchema_K2.h"
+#include "Kismet2/BlueprintEditorUtils.h"
+#include "Kismet2/KismetEditorUtilities.h"
 #endif
 
 bool UNinjaEditorTools::RebuildBlendSpace(UBlendSpace* BlendSpace)
@@ -35,6 +44,87 @@ bool UNinjaEditorTools::RebuildBlendSpace(UBlendSpace* BlendSpace)
 	}
 #endif
 	return false;
+}
+
+UAnimBlueprint* UNinjaEditorTools::CreateRetargetAnimBlueprint(USkeletalMesh* TargetMesh, UObject* IKRetargeter, const FString& PackagePath, const FString& AssetName)
+{
+#if WITH_EDITOR
+	UClass* NodeClass = FindObject<UClass>(nullptr, TEXT("/Script/IKRigDeveloper.AnimGraphNode_RetargetPoseFromMesh"));
+	if (!TargetMesh || !IKRetargeter || !NodeClass)
+	{
+		return nullptr;
+	}
+
+	UAnimBlueprintFactory* Factory = NewObject<UAnimBlueprintFactory>();
+	Factory->TargetSkeleton = TargetMesh->GetSkeleton();
+	Factory->PreviewSkeletalMesh = TargetMesh;
+	Factory->ParentClass = UAnimInstance::StaticClass();
+	Factory->BlueprintType = BPTYPE_Normal;
+	Factory->bTemplate = false;   // senão o Anim Blueprint sai sem esqueleto e não roda no mesh
+	IAssetTools& AssetTools = FModuleManager::LoadModuleChecked<FAssetToolsModule>("AssetTools").Get();
+	UAnimBlueprint* AnimBP = Cast<UAnimBlueprint>(AssetTools.CreateAsset(AssetName, PackagePath, UAnimBlueprint::StaticClass(), Factory));
+	if (!AnimBP)
+	{
+		return nullptr;
+	}
+
+	UEdGraph* AnimGraph = nullptr;
+	for (UEdGraph* Graph : AnimBP->FunctionGraphs)
+	{
+		if (Graph->GetFName() == UEdGraphSchema_K2::GN_AnimGraph)
+		{
+			AnimGraph = Graph;
+		}
+	}
+	UAnimGraphNode_Root* Root = nullptr;
+	for (UEdGraphNode* GraphNode : AnimGraph ? AnimGraph->Nodes : TArray<TObjectPtr<UEdGraphNode>>())
+	{
+		Root = Root ? Root : Cast<UAnimGraphNode_Root>(GraphNode);
+	}
+	if (!Root)
+	{
+		return nullptr;
+	}
+
+	// Nó "Retarget Pose From Mesh": o retargeter fica no struct Node (FAnimNode_RetargetPoseFromMesh::IKRetargeterAsset)
+	UEdGraphNode* Retarget = NewObject<UEdGraphNode>(AnimGraph, NodeClass, NAME_None, RF_Transactional);
+	if (FStructProperty* NodeProp = FindFProperty<FStructProperty>(NodeClass, TEXT("Node")))
+	{
+		void* NodeData = NodeProp->ContainerPtrToValuePtr<void>(Retarget);
+		if (FObjectPropertyBase* AssetProp = FindFProperty<FObjectPropertyBase>(NodeProp->Struct, TEXT("IKRetargeterAsset")))
+		{
+			AssetProp->SetObjectPropertyValue_InContainer(NodeData, IKRetargeter);
+		}
+	}
+	AnimGraph->AddNode(Retarget, false, false);
+	Retarget->CreateNewGuid();
+	Retarget->PostPlacedNewNode();
+	Retarget->AllocateDefaultPins();
+	Retarget->NodePosX = Root->NodePosX - 400;
+	Retarget->NodePosY = Root->NodePosY;
+
+	UEdGraphPin* PoseOut = nullptr;
+	UEdGraphPin* ResultIn = nullptr;
+	for (UEdGraphPin* Pin : Retarget->Pins)
+	{
+		PoseOut = (!PoseOut && Pin->Direction == EGPD_Output) ? Pin : PoseOut;
+	}
+	for (UEdGraphPin* Pin : Root->Pins)
+	{
+		ResultIn = (!ResultIn && Pin->Direction == EGPD_Input) ? Pin : ResultIn;
+	}
+	if (!PoseOut || !ResultIn || !AnimGraph->GetSchema()->TryCreateConnection(PoseOut, ResultIn))
+	{
+		return nullptr;
+	}
+
+	FBlueprintEditorUtils::MarkBlueprintAsStructurallyModified(AnimBP);
+	FKismetEditorUtilities::CompileBlueprint(AnimBP);
+	AnimBP->MarkPackageDirty();
+	return AnimBP;
+#else
+	return nullptr;
+#endif
 }
 
 bool UNinjaEditorTools::BuildAttackMontage(UAnimMontage* Montage, UAnimSequenceBase* Animation, float StartTime, float EndTime,
