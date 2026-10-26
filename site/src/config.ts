@@ -2,8 +2,19 @@
 export const DOWNLOAD_URL = '#'
 
 // Vídeo do topo da home. Coloque o arquivo em public/media/hero.mp4.
-// Enquanto ele não existir, aparece o fundo animado com pétalas.
+// Quando ele existir, aparece por cima das imagens abaixo.
 export const HERO_VIDEO = '/media/hero.mp4'
+
+// Imagens que passam no fundo da home (pasta public/media/slides).
+// Para trocar ou adicionar, coloque o arquivo na pasta e o nome aqui.
+export const HERO_SLIDES = [
+  '/media/slides/treino-luta.jpg',
+  '/media/slides/treino-chakra.jpg',
+  '/media/slides/treino-parede.jpg',
+]
+
+// Tempo de cada imagem na tela, em milissegundos
+export const HERO_SLIDE_TIME = 6000
 
 // Redes sociais do rodapé. Troque '#' pelos links reais.
 export const SOCIAL = {

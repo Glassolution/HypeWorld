@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import logo from '../assets/logo.png'
 import Petals from './Petals'
+import Slides from './Slides'
 import { HERO_VIDEO } from '../config'
 import { useI18n } from '../i18n'
 
@@ -41,6 +42,8 @@ export default function Hero() {
       <div className="hero-sticky">
         <div className="hero-scene" style={sceneStyle}>
           <div className="hero-fallback">
+            <Slides />
+            <div className="hero-haze" />
             <Petals />
           </div>
           <video
