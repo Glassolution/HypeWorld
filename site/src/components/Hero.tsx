@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import logo from '../assets/logo.png'
-import Petals from './Petals'
 import Slides from './Slides'
 import { HERO_VIDEO } from '../config'
 import { useI18n } from '../i18n'
@@ -29,12 +28,9 @@ export default function Hero() {
     }
   }, [])
 
-  // A logo surge na primeira metade da rolagem e cresce até o fim, como no Zenkai
-  const logoIn = clamp(p / 0.45)
-  const logoStyle = {
-    opacity: logoIn,
-    transform: `translate(-50%, -50%) scale(${0.7 + logoIn * 0.3 + p * 0.25})`,
-  }
+  // A logo fica no centro desde o início e cresce um pouco com a rolagem, como no Zenkai
+  const logoStyle = { transform: `translate(-50%, -50%) scale(${1 + p * 0.3})` }
+  const hintOpacity = 1 - clamp(p / 0.25)
   const sceneStyle = { transform: `scale(${1.12 - p * 0.12})` }
 
   return (
@@ -44,7 +40,6 @@ export default function Hero() {
           <div className="hero-fallback">
             <Slides />
             <div className="hero-haze" />
-            <Petals />
           </div>
           <video
             className={hasVideo ? 'ready' : ''}
@@ -59,7 +54,7 @@ export default function Hero() {
         </div>
         <div className="hero-veil" />
         <img className="hero-logo" src={logo} alt="HypeWorld" style={logoStyle} />
-        <span className="hero-scroll" style={{ opacity: 1 - logoIn }}>
+        <span className="hero-scroll" style={{ opacity: hintOpacity }}>
           {t.heroScroll}
         </span>
       </div>
