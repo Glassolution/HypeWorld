@@ -8,11 +8,14 @@ export const HERO_VIDEO = '/media/hero.mp4'
 // Imagens que passam no fundo da home (pasta public/media/slides).
 // Para trocar ou adicionar, coloque o arquivo na pasta e o nome aqui.
 export const HERO_SLIDES = [
+  '/media/slides/itachi-sentado-corvos.jpg',
   '/media/slides/itachi-corvos.jpg',
   '/media/slides/naruto-hokage-vila.jpg',
   '/media/slides/obito-lua.jpg',
   '/media/slides/itachi-grama.jpg',
   '/media/slides/minato-lua.jpg',
+  '/media/slides/itachi-fogo.jpg',
+  '/media/slides/madara-espada.jpg',
 ]
 
 // Tempo de cada imagem na tela, em milissegundos
