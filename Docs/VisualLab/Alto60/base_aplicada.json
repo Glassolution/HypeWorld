@@ -1,0 +1,41 @@
+{
+  "shadow_cuts": [
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.StaticMeshActor_221.StaticMeshComponent0",
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.StaticMeshActor_222.StaticMeshComponent0",
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.StaticMeshActor_223.StaticMeshComponent0",
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.StaticMeshActor_224.StaticMeshComponent0",
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_18",
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_2",
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_3",
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_66",
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_67",
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_68",
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_69",
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.StaticMeshActor_1167.StaticMeshComponent0",
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.StaticMeshActor_1168.StaticMeshComponent0",
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.StaticMeshActor_1169.StaticMeshComponent0",
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.StaticMeshActor_1170.StaticMeshComponent0",
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.StaticMeshActor_1171.StaticMeshComponent0",
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.StaticMeshActor_1172.StaticMeshComponent0",
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.StaticMeshActor_1173.StaticMeshComponent0",
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.StaticMeshActor_1174.StaticMeshComponent0"
+  ],
+  "bush_materials": [
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_18",
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_2",
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_3",
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_66",
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_67",
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_68",
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_69"
+  ],
+  "contact": [
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_18",
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_2",
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_3",
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_66",
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_67",
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_68",
+    "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_69"
+  ]
+}

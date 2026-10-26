@@ -6,6 +6,19 @@
 
 Última atualização: 2026-10-25 (tufos em duas escalas; chão no tom da grama, sem manchas).
 
+## Base Alto aprovada em 26/10/2026
+
+- Autorização: aplicar no projeto e fazer commit. Perfil agressivo Alto-60 continua experimental.
+- Tela 1920×1080, resolução interna 100%, resolução dinâmica desligada. Presets do Médio em diante usam 100%.
+- AA: TSR com os parâmetros de qualidade 1 (histórico 100%, UpdateQuality 1, Flickering 0, RejectionAntiAliasingQuality 1). TAA descartado.
+- GI: Lumen Irradiance Volume (`r.Lumen.FinalGatherMethod=0`), demais parâmetros do Alto preservados.
+- Sombras: 3 cascatas de 1536, alcance da luz 5000 cm × escala 0,85 = 42,5 m. PCSS ativo, Source Angle preservado, Distance Field Shadows ao longe, sem VSM. RadiusThreshold 0,06.
+- Cortes pequenos: 19 componentes do experimento aprovado, identificados em `Docs/VisualLab/Alto60/base_aplicada.json`; geometria visível. Arbustos/flores pequenos sem sombra dinâmica; pequenos props afastados com caster desligado conforme o enquadramento aprovado. Não há mudança de layout.
+- Arbustos: materiais copiados em `/Game/HypeWorld/VisualLab/Integrado/Arbustos`, com degradê escuro na base e escurecimento central suave. Flores preservadas. Contact shadow de 12 cm, intensidade 0,5; grama excluída. O efeito é artístico no material, sem bake de iluminação.
+- AO atual preservado: Lumen ShortRangeAO em meia resolução, 2 slices × 3 steps; sem AO adicional na grama.
+- Mapa de produção `/Game/Maps/Tutorial/L_Tutorial` mantém layout, vento e animações. Cópias de comparação em `/Game/HypeWorld/VisualLab/Alto60`.
+- Novas mudanças nestes itens exigem consulta a este arquivo e autorização do usuário. Medições e evidências anteriores em `Docs/VisualLab/Alto100`.
+
 ## Assets (cópias do projeto; o pack StyleHex não é alterado)
 
 | O quê | Asset |
