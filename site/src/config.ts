@@ -11,6 +11,10 @@ export const HERO_SLIDES = [
   '/media/slides/itachi-corvos.jpg',
   '/media/slides/obito-lua.jpg',
   '/media/slides/itachi-pintura.jpg',
+  '/media/slides/naruto-hokage-vila.jpg',
+  '/media/slides/itachi-grama.jpg',
+  '/media/slides/naruto-sabio.jpg',
+  '/media/slides/minato-lua.jpg',
 ]
 
 // Tempo de cada imagem na tela, em milissegundos
