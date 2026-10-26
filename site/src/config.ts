@@ -9,14 +9,14 @@ export const HERO_VIDEO = '/media/hero.mp4'
 // Para trocar ou adicionar, coloque o arquivo na pasta e o nome aqui.
 export const HERO_SLIDES = [
   '/media/slides/itachi-corvos.jpg',
-  '/media/slides/obito-lua.jpg',
   '/media/slides/naruto-hokage-vila.jpg',
+  '/media/slides/obito-lua.jpg',
   '/media/slides/itachi-grama.jpg',
   '/media/slides/minato-lua.jpg',
 ]
 
 // Tempo de cada imagem na tela, em milissegundos
-export const HERO_SLIDE_TIME = 6000
+export const HERO_SLIDE_TIME = 3500
 
 // Redes sociais do rodapé. Troque '#' pelos links reais.
 export const SOCIAL = {

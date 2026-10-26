@@ -125,7 +125,7 @@ button { font: inherit; color: inherit; }
   position: absolute; inset: 0;
   background-size: cover; background-position: center;
   opacity: 0; transform: scale(1.02);
-  transition: opacity 1.4s ease;
+  transition: opacity 1s ease;
   filter: saturate(0.9) brightness(0.8);
 }
 .slide.on { opacity: 1; animation: kenburns linear forwards; }
