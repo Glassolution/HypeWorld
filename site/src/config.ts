@@ -8,9 +8,11 @@ export const HERO_VIDEO = '/media/hero.mp4'
 // Imagens que passam no fundo da home (pasta public/media/slides).
 // Para trocar ou adicionar, coloque o arquivo na pasta e o nome aqui.
 export const HERO_SLIDES = [
-  '/media/slides/treino-luta.jpg',
-  '/media/slides/treino-chakra.jpg',
-  '/media/slides/treino-parede.jpg',
+  '/media/slides/naruto-meditando.jpg',
+  '/media/slides/obito-floresta.jpg',
+  '/media/slides/naruto-selfie.jpg',
+  '/media/slides/naruto-sasuke-estrelas.jpg',
+  '/media/slides/itachi.jpg',
 ]
 
 // Tempo de cada imagem na tela, em milissegundos
