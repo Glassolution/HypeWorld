@@ -1982,6 +1982,14 @@ void AHypeWorldCharacter::PlayJutsuSeals(const UNinjaJutsuData* Jutsu)
 	PresentedJutsu = Jutsu;
 	bJutsuReleased = false;
 	SealIndex = INDEX_NONE;
+	ClearJutsuAnticipation();
+	if (Jutsu)
+	{
+		for (USceneComponent* Piece : ANinjaJutsuProjectile::SpawnAnticipation(GetJutsuBody(), Jutsu->MuzzleSocket, Jutsu))
+		{
+			JutsuAnticipation.Add(Piece);
+		}
+	}
 	if (Jutsu && Jutsu->BodyCastAnimation)
 	{
 		USkeletalMeshComponent* Body = GetJutsuBody();
@@ -2091,8 +2099,25 @@ void AHypeWorldCharacter::EndJutsuSeals()
 	StopJutsuSeals(CurrentJutsu ? CurrentJutsu->SealBlendOut : 0.18f);
 }
 
+void AHypeWorldCharacter::ClearJutsuAnticipation()
+{
+	for (USceneComponent* Piece : JutsuAnticipation)
+	{
+		if (UNiagaraComponent* Embers = Cast<UNiagaraComponent>(Piece))
+		{
+			Embers->Deactivate();   // as brasas já soltas terminam sozinhas
+		}
+		else if (Piece)
+		{
+			Piece->DestroyComponent();
+		}
+	}
+	JutsuAnticipation.Reset();
+}
+
 void AHypeWorldCharacter::EndJutsu(bool bWasCancelled)
 {
+	ClearJutsuAnticipation();
 	StopJutsuSeals(bWasCancelled ? 0.12f : (CurrentJutsu ? CurrentJutsu->CastBlendOut : 0.2f));
 	CurrentJutsu = nullptr;
 	PresentedJutsu = nullptr;
@@ -2103,6 +2128,7 @@ void AHypeWorldCharacter::MulticastJutsuEnd_Implementation(bool bCancelled)
 {
 	if (!HasAuthority() && !IsLocallyControlled())
 	{
+		ClearJutsuAnticipation();
 		StopJutsuSeals(bCancelled ? 0.12f : (PresentedJutsu ? PresentedJutsu->CastBlendOut : 0.2f));
 		PresentedJutsu = nullptr;
 	}
@@ -2116,6 +2142,7 @@ void AHypeWorldCharacter::OnJutsuRelease()
 		return;
 	}
 	bJutsuReleased = true;
+	ClearJutsuAnticipation();
 	USkeletalMeshComponent* Body = GetJutsuBody();
 	FVector Mouth = GetActorLocation() + FVector(0.f, 0.f, 70.f);
 	if (Body && Body->DoesSocketExist(Jutsu->MuzzleSocket))

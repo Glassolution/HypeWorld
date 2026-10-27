@@ -1,8 +1,8 @@
 // Explosão de fogo estilizada (anime), só visual, criada em cada máquina pelo projétil quando ele explode.
-// Poucas formas 3D grandes com o material mestre M_Fogo_Estilizado (ruído rolando + máscara de formato + limiar com erosão):
-// cúpula principal que cresce e sobe, coluna de chama, anel de choque rente ao chão (com uma distorção de calor pequena
-// só nele), 3-5 chamas presas ao chão que tremulam e apagam, puffs de fumaça (M_Fumaca_Estilizada) que sobem e se
-// desfazem, e brasas Niagara. Tudo é animado aqui por parâmetros do material (Erosion), sem sprites.
+// Camadas em formas 3D simples com o material mestre M_Fogo_Estilizado (macio e aditivo, some pela borda):
+// núcleo amarelo-laranja que estoura rápido e encolhe, halo vermelho grande e translúcido, riscos finos de borda dura
+// saindo em raios, puffs de fumaça marrom-escura que sobem, puffs vermelhos que encolhem e somem na dissipação,
+// distorção de calor pequena em volta e faíscas/brasas Niagara. Ritmo: entrada quase instantânea, saída lenta.
 
 #pragma once
 
@@ -28,50 +28,47 @@ public:
 	/** Antes de BeginPlay (SpawnActorDeferred): onde explodiu, raio da bola e o chão embaixo (se houver) */
 	void Init(const FVector& InCenter, float InBallRadius, bool bInHasFloor, const FVector& InFloorPoint, const FVector& InFloorNormal);
 
-	/** Malhas (origem na base, altura 100 cm; a esfera tem centro na origem e raio 50) */
+	/** Malhas (a esfera tem centro na origem e raio 50; a chama tem base na origem e altura 100) */
 	UPROPERTY(EditDefaultsOnly, Category="Explosão") TObjectPtr<UStaticMesh> SphereMesh;
 	UPROPERTY(EditDefaultsOnly, Category="Explosão") TObjectPtr<UStaticMesh> FlameMesh;
-	UPROPERTY(EditDefaultsOnly, Category="Explosão") TObjectPtr<UStaticMesh> ColumnMesh;
-	UPROPERTY(EditDefaultsOnly, Category="Explosão") TObjectPtr<UStaticMesh> RingMesh;
 
-	/** Material mestre de fogo (instâncias por forma) e de fumaça; distorção pequena só no anel */
+	/** Núcleo (aditivo), halo vermelho, riscos (borda dura), fumaça escura, puffs vermelhos e distorção de calor */
 	UPROPERTY(EditDefaultsOnly, Category="Explosão") TObjectPtr<UMaterialInterface> DomeMaterial;
-	UPROPERTY(EditDefaultsOnly, Category="Explosão") TObjectPtr<UMaterialInterface> ColumnMaterial;
-	UPROPERTY(EditDefaultsOnly, Category="Explosão") TObjectPtr<UMaterialInterface> RingMaterial;
-	UPROPERTY(EditDefaultsOnly, Category="Explosão") TObjectPtr<UMaterialInterface> GroundFlameMaterial;
+	UPROPERTY(EditDefaultsOnly, Category="Explosão") TObjectPtr<UMaterialInterface> HaloMaterial;
+	UPROPERTY(EditDefaultsOnly, Category="Explosão") TObjectPtr<UMaterialInterface> StreakMaterial;
 	UPROPERTY(EditDefaultsOnly, Category="Explosão") TObjectPtr<UMaterialInterface> SmokeMaterial;
-	UPROPERTY(EditDefaultsOnly, Category="Explosão") TObjectPtr<UMaterialInterface> HeatRingMaterial;
+	UPROPERTY(EditDefaultsOnly, Category="Explosão") TObjectPtr<UMaterialInterface> EmberPuffMaterial;
+	UPROPERTY(EditDefaultsOnly, Category="Explosão") TObjectPtr<UMaterialInterface> HeatMaterial;
 
-	/** Brasas (pequenas, caindo com gravidade) */
+	/** Faíscas finas com gravidade (rajada) e brasas flutuando que se apagam (dissipação) */
 	UPROPERTY(EditDefaultsOnly, Category="Explosão") TObjectPtr<UNiagaraSystem> EmberSystem;
+	UPROPERTY(EditDefaultsOnly, Category="Explosão") TObjectPtr<UNiagaraSystem> DriftEmberSystem;
 
-	/** Cúpula: raio final (x raio da bola), subida (cm), tempo de crescer e tempo até sumir (s) */
-	UPROPERTY(EditDefaultsOnly, Category="Explosão|Cúpula") float DomeScale = 2.1f;
-	UPROPERTY(EditDefaultsOnly, Category="Explosão|Cúpula") float DomeRise = 90.f;
-	UPROPERTY(EditDefaultsOnly, Category="Explosão|Cúpula") float DomeGrowTime = 0.35f;
-	UPROPERTY(EditDefaultsOnly, Category="Explosão|Cúpula") float DomeLife = 0.95f;
+	/** Núcleo: raio máximo (x raio da bola), tempo até o máximo e vida (s) */
+	UPROPERTY(EditDefaultsOnly, Category="Explosão|Núcleo") float DomeScale = 1.35f;
+	UPROPERTY(EditDefaultsOnly, Category="Explosão|Núcleo") float DomeGrowTime = 0.08f;
+	UPROPERTY(EditDefaultsOnly, Category="Explosão|Núcleo") float DomeLife = 0.5f;
+	/** Halo: raio (x raio da bola) e vida (s) */
+	UPROPERTY(EditDefaultsOnly, Category="Explosão|Núcleo") float HaloScale = 2.6f;
+	UPROPERTY(EditDefaultsOnly, Category="Explosão|Núcleo") float HaloLife = 0.6f;
 
-	/** Coluna: altura final (cm), raio (cm), vida (s) */
-	UPROPERTY(EditDefaultsOnly, Category="Explosão|Coluna") float ColumnHeight = 520.f;
-	UPROPERTY(EditDefaultsOnly, Category="Explosão|Coluna") float ColumnRadius = 120.f;
-	UPROPERTY(EditDefaultsOnly, Category="Explosão|Coluna") float ColumnLife = 1.3f;
+	/** Riscos: quantos, comprimento (cm), velocidade (cm/s) e vida (s, mín/máx) */
+	UPROPERTY(EditDefaultsOnly, Category="Explosão|Riscos") int32 Streaks = 14;
+	UPROPERTY(EditDefaultsOnly, Category="Explosão|Riscos") FVector2D StreakLength = FVector2D(90.f, 170.f);
+	UPROPERTY(EditDefaultsOnly, Category="Explosão|Riscos") float StreakSpeed = 1300.f;
+	UPROPERTY(EditDefaultsOnly, Category="Explosão|Riscos") FVector2D StreakLife = FVector2D(0.16f, 0.28f);
 
-	/** Anel de choque: raio final (cm) e vida (s) */
-	UPROPERTY(EditDefaultsOnly, Category="Explosão|Anel") float RingRadius = 520.f;
-	UPROPERTY(EditDefaultsOnly, Category="Explosão|Anel") float RingLife = 0.55f;
+	/** Fumaça marrom: quantos puffs, raio (cm), subida (cm/s), vento (cm/s) e vida (s, mín/máx) */
+	UPROPERTY(EditDefaultsOnly, Category="Explosão|Fumaça") int32 SmokePuffs = 6;
+	UPROPERTY(EditDefaultsOnly, Category="Explosão|Fumaça") FVector2D SmokeRadius = FVector2D(55.f, 90.f);
+	UPROPERTY(EditDefaultsOnly, Category="Explosão|Fumaça") float SmokeRise = 70.f;
+	UPROPERTY(EditDefaultsOnly, Category="Explosão|Fumaça") FVector SmokeWind = FVector(20.f, 15.f, 0.f);
+	UPROPERTY(EditDefaultsOnly, Category="Explosão|Fumaça") FVector2D SmokeLife = FVector2D(0.9f, 1.4f);
 
-	/** Fogo no chão: quantas chamas, altura (cm) e vida (s, mín/máx) */
-	UPROPERTY(EditDefaultsOnly, Category="Explosão|Chão") int32 GroundFlames = 4;
-	UPROPERTY(EditDefaultsOnly, Category="Explosão|Chão") FVector2D GroundFlameHeight = FVector2D(110.f, 190.f);
-	UPROPERTY(EditDefaultsOnly, Category="Explosão|Chão") FVector2D GroundFlameLife = FVector2D(2.f, 2.8f);
-	UPROPERTY(EditDefaultsOnly, Category="Explosão|Chão") float GroundFlameSpread = 110.f;
-
-	/** Fumaça: quantos puffs, raio (cm), subida (cm/s), deriva com o vento (cm/s) e vida (s, mín/máx) */
-	UPROPERTY(EditDefaultsOnly, Category="Explosão|Fumaça") int32 SmokePuffs = 7;
-	UPROPERTY(EditDefaultsOnly, Category="Explosão|Fumaça") FVector2D SmokeRadius = FVector2D(70.f, 120.f);
-	UPROPERTY(EditDefaultsOnly, Category="Explosão|Fumaça") float SmokeRise = 55.f;
-	UPROPERTY(EditDefaultsOnly, Category="Explosão|Fumaça") FVector SmokeWind = FVector(28.f, 21.f, 0.f);
-	UPROPERTY(EditDefaultsOnly, Category="Explosão|Fumaça") FVector2D SmokeLife = FVector2D(2.2f, 2.9f);
+	/** Puffs vermelhos da dissipação: quantos, raio (cm) e vida (s, mín/máx) */
+	UPROPERTY(EditDefaultsOnly, Category="Explosão|Dissipação") int32 EmberPuffs = 5;
+	UPROPERTY(EditDefaultsOnly, Category="Explosão|Dissipação") FVector2D EmberPuffRadius = FVector2D(45.f, 75.f);
+	UPROPERTY(EditDefaultsOnly, Category="Explosão|Dissipação") FVector2D EmberPuffLife = FVector2D(0.8f, 1.3f);
 
 protected:
 
@@ -91,10 +88,10 @@ private:
 		float Size = 1.f;
 		float Height = 1.f;
 		float Phase = 0.f;
-		int32 Kind = 0;		// 0 cúpula, 1 coluna, 2 anel, 3 chama do chão, 4 fumaça, 5 calor do anel
+		int32 Kind = 0;		// 0 núcleo, 1 halo, 2 risco, 3 fumaça, 4 puff vermelho, 5 calor
 	};
 
-	FPiece& AddPiece(UStaticMesh* Mesh, UMaterialInterface* Material, int32 Kind, const FVector& Origin, float Delay, float Life);
+	FPiece* AddPiece(UStaticMesh* Mesh, UMaterialInterface* Material, int32 Kind, const FVector& Origin, float Delay, float Life);
 	void UpdatePiece(FPiece& Piece, float Age);
 
 	TArray<FPiece> Pieces;

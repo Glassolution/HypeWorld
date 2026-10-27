@@ -96,6 +96,8 @@ ANinjaJutsuProjectile::ANinjaJutsuProjectile()
 	Heat = MakeShell(TEXT("Heat"));
 	Halo = MakeShell(TEXT("Halo"));
 	GroundWave = MakeShell(TEXT("GroundWave"));
+	FireBody = MakeShell(TEXT("FireBody"));
+	FireBody->SetVisibility(false);
 	GroundGlow = CreateDefaultSubobject<UDecalComponent>(TEXT("GroundGlow"));
 	GroundGlow->SetupAttachment(Root);
 	GroundGlow->SetFadeScreenSize(0.01f);
@@ -125,7 +127,12 @@ ANinjaJutsuProjectile::ANinjaJutsuProjectile()
 	Light->SetIndirectLightingIntensity(0.f);
 	Light->SetVolumetricScatteringIntensity(0.f);
 	Light->bUseInverseSquaredFalloff = false;
-	Light->SetLightFalloffExponent(2.f);
+	Light->SetLightFalloffExponent(5.f);   // poça de luz local em volta da bola, sem lavar o chão inteiro
+	// Ordem das camadas translúcidas (mesmo centro): halo atrás, corpo, núcleo, casca na frente
+	Halo->TranslucencySortPriority = -1;
+	Core->TranslucencySortPriority = 1;
+	OuterFlames->TranslucencySortPriority = 2;
+	Ignition->TranslucencySortPriority = -1;
 	BloomBounds = CreateDefaultSubobject<USphereComponent>(TEXT("BloomBounds"));
 	BloomBounds->SetupAttachment(Root);
 	BloomBounds->InitSphereRadius(750.f);
@@ -185,6 +192,52 @@ void ANinjaJutsuProjectile::Prewarm(AActor* Context, const UNinjaJutsuData* Juts
 	}
 }
 
+TArray<USceneComponent*> ANinjaJutsuProjectile::SpawnAnticipation(USceneComponent* Body, FName Socket, const UNinjaJutsuData* Jutsu)
+{
+	TArray<USceneComponent*> Spawned;
+	const ANinjaJutsuProjectile* Defaults = Jutsu && Jutsu->ProjectileClass ? Jutsu->ProjectileClass->GetDefaultObject<ANinjaJutsuProjectile>() : nullptr;
+	if (!Body || !Defaults || !Body->GetWorld() || Body->GetWorld()->GetNetMode() == NM_DedicatedServer)
+	{
+		return Spawned;
+	}
+	if (!Body->DoesSocketExist(Socket)) { Socket = NAME_None; }
+	AActor* Owner = Body->GetOwner();
+	if (Defaults->AnticipationSystem)
+	{
+		Spawned.Add(UNiagaraFunctionLibrary::SpawnSystemAttached(Defaults->AnticipationSystem, Body, Socket, FVector::ZeroVector,
+			FRotator::ZeroRotator, EAttachLocation::SnapToTarget, true, true, ENCPoolMethod::None));
+	}
+	if (Defaults->GlowMesh && Defaults->AnticipationMaterial)
+	{
+		UStaticMeshComponent* Glow = NewObject<UStaticMeshComponent>(Owner);
+		Glow->SetStaticMesh(Defaults->GlowMesh);
+		Glow->SetMaterial(0, Defaults->AnticipationMaterial);
+		Glow->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		Glow->SetCastShadow(false);
+		Glow->bReceivesDecals = false;
+		Glow->SetupAttachment(Body, Socket);
+		Glow->SetRelativeScale3D(FVector(0.32f));
+		Glow->RegisterComponent();
+		Spawned.Add(Glow);
+	}
+	if (Defaults->AnticipationLight > 0.f)
+	{
+		UPointLightComponent* Glow = NewObject<UPointLightComponent>(Owner);
+		Glow->SetCastShadows(false);
+		Glow->SetIntensityUnits(ELightUnits::Candelas);
+		Glow->SetIntensity(Defaults->AnticipationLight);
+		Glow->SetLightColor(Defaults->LightColor);
+		Glow->SetAttenuationRadius(260.f);
+		Glow->SetVolumetricScatteringIntensity(0.f);
+		Glow->SetupAttachment(Body, Socket);
+		Glow->SetRelativeLocation(FVector(0.f, 0.f, 0.f));
+		Glow->RegisterComponent();
+		Spawned.Add(Glow);
+	}
+	Spawned.Remove(nullptr);
+	return Spawned;
+}
+
 void ANinjaJutsuProjectile::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -222,7 +275,7 @@ void ANinjaJutsuProjectile::BeginPlay()
 void ANinjaJutsuProjectile::SetupVisuals()
 {
 	const TPair<UStaticMeshComponent*, UMaterialInterface*> Shells[] = {
-		{Core, CoreMaterial}, {Flames, FlameMaterial}, {OuterFlames, OuterFlameMaterial}, {Heat, HeatMaterial}};
+		{Core, CoreMaterial}, {Flames, FlameMaterial}, {OuterFlames, ShellMaterial ? ShellMaterial.Get() : OuterFlameMaterial.Get()}, {Heat, HeatMaterial}};
 	for (const TPair<UStaticMeshComponent*, UMaterialInterface*>& Shell : Shells)
 	{
 		Shell.Key->SetStaticMesh(BallMesh);
@@ -244,21 +297,108 @@ void ANinjaJutsuProjectile::SetupVisuals()
 	{
 		Trail->SetAsset(TrailSystem);
 	}
-	Ignition->SetStaticMesh(IgnitionMesh);
-	Ignition->SetMaterial(0, IgnitionMaterial);
+	// Ignition virou a cauda boca -> bola (o clarão da saída agora é o núcleo + halo + luz, sem placa)
+	Ignition->SetStaticMesh(TailMesh);
+	if (TailMaterial) { TailMID = UMaterialInstanceDynamic::Create(TailMaterial, this); Ignition->SetMaterial(0, TailMID); }
 	Ignition->SetVisibility(false);
 	for (UNiagaraComponent* Spiral : Spirals) { Spiral->SetAsset(SpiralSystem); }
 	BodyFlames->SetAsset(BodySystem);
 	Heat->SetStaticMesh(IgnitionMesh);
-	Halo->SetStaticMesh(IgnitionMesh);
+	Halo->SetStaticMesh(GlowMesh ? GlowMesh.Get() : IgnitionMesh.Get());
 	GroundWave->SetStaticMesh(IgnitionMesh);
 	Halo->SetVisibility(false);
 	GroundWave->SetVisibility(false);
 	if (HaloMaterial) { HaloMID = UMaterialInstanceDynamic::Create(HaloMaterial, this); Halo->SetMaterial(0, HaloMID); }
-	if (ShockwaveMaterial) { WaveMID = UMaterialInstanceDynamic::Create(ShockwaveMaterial, this); GroundWave->SetMaterial(0, WaveMID); }
+	if (RibbonMesh && RibbonMaterial)
+	{
+		// Sem a onda de chão antiga, o GroundWave vira a fita espiral do voo
+		GroundWave->SetStaticMesh(RibbonMesh);
+		GroundWave->SetMaterial(0, RibbonMaterial);
+		GroundWave->TranslucencySortPriority = 2;
+	}
+	else if (ShockwaveMaterial) { WaveMID = UMaterialInstanceDynamic::Create(ShockwaveMaterial, this); GroundWave->SetMaterial(0, WaveMID); }
 	if (GroundGlowMaterial) { GlowMID = UMaterialInstanceDynamic::Create(GroundGlowMaterial, this); GroundGlow->SetDecalMaterial(GlowMID); }
 	Light->SetLightColor(LightColor);
 	Light->SetAttenuationRadius(LightRadius);
+
+	if (FireballMesh && FireballMaterial)
+	{
+		FireBody->SetStaticMesh(FireballMesh);
+		UMaterialInstanceDynamic* BodyMID = UMaterialInstanceDynamic::Create(FireballMaterial, this);
+		BodyMID->SetScalarParameterValue(TEXT("Seed"), float(Launch.VisualSeed % 997) / 97.f);
+		FireBody->SetMaterial(0, BodyMID);
+	}
+	if (TongueMesh && TongueMaterial && GetNetMode() != NM_DedicatedServer)
+	{
+		for (int32 Index = 0; Index < TongueCount + InnerTongueCount; ++Index)
+		{
+			FTongue& Tongue = Tongues.AddDefaulted_GetRef();
+			Tongue.bInner = Index >= TongueCount && InnerTongueMaterial;
+			UStaticMeshComponent* Mesh = NewObject<UStaticMeshComponent>(this);
+			Mesh->SetStaticMesh(TongueMesh);
+			Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			Mesh->SetCastShadow(false);
+			Mesh->bReceivesDecals = false;
+			Mesh->SetCanEverAffectNavigation(false);
+			Mesh->TranslucencySortPriority = Tongue.bInner ? 1 : 0;   // línguas amarelas de dentro por cima do corpo
+			Mesh->SetupAttachment(Root);
+			Mesh->RegisterComponent();
+			Mesh->SetVisibility(false);
+			Tongue.MID = UMaterialInstanceDynamic::Create(Tongue.bInner ? InnerTongueMaterial.Get() : TongueMaterial.Get(), this);
+			Tongue.MID->SetScalarParameterValue(TEXT("Seed"), FMath::FRand() * 10.f);
+			Mesh->SetMaterial(0, Tongue.MID);
+			Tongue.Mesh = Mesh;
+			RespawnTongue(Tongue, true);
+		}
+	}
+}
+
+void ANinjaJutsuProjectile::RespawnTongue(FTongue& Tongue, bool bStagger)
+{
+	// Nasce na base/interior: as de fora num anel mais largo e menores, as do centro maiores
+	const float Spread = Tongue.bInner ? 0.15f : 0.5f;
+	const float R01 = FMath::Sqrt(FMath::FRand());
+	const float Angle = FMath::FRand() * UE_TWO_PI;
+	Tongue.Pos = FVector(FMath::FRandRange(-0.3f, 0.25f), FMath::Cos(Angle) * R01 * Spread, FMath::Sin(Angle) * R01 * Spread * 0.5f - 0.45f);
+	Tongue.Vel = FVector(-TongueDrag * FMath::FRandRange(0.7f, 1.2f), FMath::FRandRange(-0.25f, 0.25f), TongueRise * FMath::FRandRange(0.8f, 1.2f));
+	Tongue.Life = FMath::FRandRange(TongueLife.X, TongueLife.Y) * (Tongue.bInner ? 1.3f : 1.f);
+	Tongue.Height = (Tongue.bInner ? 1.3f : FMath::Lerp(1.5f, 0.7f, R01)) * FMath::FRandRange(0.8f, 1.2f);
+	Tongue.Width = (Tongue.bInner ? 0.26f : FMath::Lerp(0.62f, 0.38f, R01)) * FMath::FRandRange(0.85f, 1.15f);
+	Tongue.Phase = FMath::FRand() * 10.f;
+	Tongue.Age = bStagger ? FMath::FRand() * Tongue.Life : 0.f;
+}
+
+void ANinjaJutsuProjectile::UpdateTongues(float DeltaSeconds, float Radius, float Visible)
+{
+	for (FTongue& Tongue : Tongues)
+	{
+		Tongue.Age += DeltaSeconds;
+		if (Tongue.Age > Tongue.Life) { RespawnTongue(Tongue, false); }
+		const float X = Tongue.Age / Tongue.Life;
+		// Empuxo para cima acelerando + enrolar leve (curl barato: velocidade lateral girando com a fase)
+		Tongue.Vel.Z += TongueRise * 1.5f * DeltaSeconds;
+		const float Curl = Tongue.Phase + Tongue.Age * 11.f;
+		Tongue.Pos += (Tongue.Vel + FVector(0.f, FMath::Cos(Curl), FMath::Sin(Curl) * 0.3f) * 0.6f) * DeltaSeconds;
+		// Eixo da língua = direção da velocidade (sobe e deita para trás com o voo)
+		const FVector Dir = (Tongue.Vel + FVector(0.f, 0.f, TongueRise * 0.6f)).GetSafeNormal();
+		const float Grow = FMath::SmoothStep(0.f, 0.3f, X);
+		const float Height = Tongue.Height * Radius * FMath::Lerp(0.45f, 1.f, Grow) * (1.f + 0.35f * X) * Visible;
+		const float Width = Tongue.Width * Radius * FMath::Lerp(0.6f, 1.f, Grow) * (1.f - 0.45f * X) * Visible;
+		UStaticMeshComponent* Mesh = Tongue.Mesh;
+		Mesh->SetVisibility(Visible > 0.01f);
+		const FQuat Wobble(Dir, Tongue.bInner ? 0.6f * FMath::Sin(Tongue.Age * 14.f + Tongue.Phase) : 0.f);   // as de dentro ondulam
+		Mesh->SetRelativeLocationAndRotation(Tongue.Pos * Radius, Wobble * FRotationMatrix::MakeFromZ(Dir).ToQuat());
+		Mesh->SetRelativeScale3D(FVector(Width / 40.f, Width / 40.f, FMath::Max(Height, 1.f) / 100.f));
+		Tongue.MID->SetScalarParameterValue(TEXT("Erosion"), FMath::SmoothStep(0.4f, 1.f, X));
+	}
+}
+
+void ANinjaJutsuProjectile::HideTongues()
+{
+	for (FTongue& Tongue : Tongues)
+	{
+		if (Tongue.Mesh) { Tongue.Mesh->SetVisibility(false); }
+	}
 }
 
 void ANinjaJutsuProjectile::OnRep_Launch()
@@ -316,7 +456,7 @@ void ANinjaJutsuProjectile::ApplyBallVisual(const FVector& Center, float Radius,
 	const float Base = Radius / MeshRadius;
 	const float Grow = FMath::Clamp(T / FMath::Max(GrowTime, 0.01f), 0.f, 1.f);
 	Core->SetVisibility(true);
-	Flames->SetVisibility(true);
+	Flames->SetVisibility(Tongues.Num() == 0);   // com línguas não há esfera de corpo
 	OuterFlames->SetVisibility(!BodySystem);
 	if (BodySystem)
 	{
@@ -330,34 +470,69 @@ void ANinjaJutsuProjectile::ApplyBallVisual(const FVector& Center, float Radius,
 		}
 		BodyFlames->SetVariableFloat(TEXT("User.SpawnScale"), Distance > 1800.f ? 0.55f : 1.f);
 	}
+	// Saída (0-0,15 s): só luz (núcleo estourado + halo enorme + luz forte); depois a bola estica em gota -> coluna
+	const float Flash = 1.f - FMath::SmoothStep(0.f, 0.15f, T);
+	// X = direção do voo; um pouco de Z para a chama "subir" (vista de cima e de trás, vira gota/coluna na tela)
+	const float StretchIn = FMath::SmoothStep(0.12f, 0.5f, T);
+	const FVector Stretch(1.f + FlightStretch * StretchIn, 1.f, 1.f + 0.25f * StretchIn);
 	Heat->SetVisibility(Grow > 0.5f);
 	const float InnerScale = BodySystem ? 0.85f : 1.f;
-	Core->SetRelativeScale3D(FVector(1.4f, 1.f, 1.f) * Base * ShellScales.X * InnerScale);
-	Flames->SetRelativeScale3D(FVector(1.55f, 1.f, 1.f) * Base * ShellScales.Y * InnerScale);
-	OuterFlames->SetRelativeScale3D(FVector(1.65f, 1.f, 1.f) * Base * ShellScales.Z);
+	Core->SetRelativeScale3D(Stretch * Base * ShellScales.X * InnerScale * (1.f + 0.3f * Flash));
+	Flames->SetRelativeScale3D(Stretch * Base * ShellScales.Y * InnerScale);
+	Flames->SetRelativeLocation(FVector(-Radius * 0.25f * (Stretch.X - 1.f), 0.f, 0.f));   // corpo puxado para trás: gota
+	if (Tongues.Num() > 0)
+	{
+		// Núcleo pequeno e baixo, na base das línguas (a borda some por Fresnel no material)
+		Core->SetRelativeLocation(FVector(0.f, 0.f, -Radius * 0.25f));
+		UpdateTongues(GetWorld()->GetDeltaSeconds(), Radius, FMath::SmoothStep(0.04f, 0.18f, T));
+	}
+	if (FireballMesh && FireballMaterial)
+	{
+		// Corpo: chama oval inclinada para trás, girando devagar no próprio eixo vertical e pulsando
+		const float BodyRadius = FMath::Max(FireballMesh->GetBounds().BoxExtent.X, 1.f);
+		const float Pulse = 1.f + 0.05f * FMath::Sin(T * 13.f) + 0.03f * FMath::Sin(T * 29.f + 1.3f);
+		FireBody->SetVisibility(true);
+		FireBody->SetRelativeLocation(FVector(-Radius * 0.1f, 0.f, Radius * 0.3f));
+		FireBody->SetRelativeRotation(FRotator(FireballLean, 0.f, 0.f).Quaternion() * FQuat(FVector::UpVector, FMath::DegreesToRadians(SpinAngle * 0.35f)));
+		FireBody->SetRelativeScale3D(FVector(Radius * FireballScale / BodyRadius * Pulse * FMath::SmoothStep(0.02f, 0.16f, T)));
+	}
+	OuterFlames->SetRelativeScale3D(FVector(1.1f, 1.f, 1.f) * Base * ShellScales.Z);
 	Heat->SetRelativeScale3D(FVector(1.5f, 1.f, 1.f) * Base * HeatScale);
-	// As cascas giram em sentidos opostos (o material também corre o ruído): chamas "rodando" em volta do núcleo
+	// O corpo e a casca giram em sentidos opostos (o material também corre o ruído)
 	Flames->SetRelativeRotation(FRotator(0.f, 0.f, SpinAngle));
 	OuterFlames->SetRelativeRotation(FRotator(0.f, 0.f, -SpinAngle * 0.7f));
+	const bool bShell = ShellMaterial ? (T > float(ShellWindow.X) && T < float(ShellWindow.Y)) : !BodySystem;
+	OuterFlames->SetVisibility(bShell);
 	for (int32 Index = 0; Index < Spirals.Num(); ++Index)
 	{
 		const float Angle = T * 28.f + Index * UE_TWO_PI / 3.f;
 		Spirals[Index]->SetRelativeLocation(FVector(-Radius * 0.35f, FMath::Cos(Angle) * Radius * 1.12f, FMath::Sin(Angle) * Radius * 1.12f));
 		if (SpiralSystem && Grow > 0.5f && !Spirals[Index]->IsActive()) { Spirals[Index]->Activate(true); }
 	}
-	Ignition->SetVisibility(IgnitionMesh && IgnitionMaterial && T < 0.25f);
-	if (T < 0.25f)
+	if (RibbonMesh && RibbonMaterial)
 	{
-		// Clarão entre a boca e a bola, acompanhando a saída
-		const FVector Position = FMath::Lerp(FVector(Launch.Start), Center, 0.45f);
-		Ignition->SetWorldLocation(Position);
-		if (APlayerCameraManager* Camera = UGameplayStatics::GetPlayerCameraManager(this, 0))
-		{
-			Ignition->SetWorldRotation(FRotationMatrix::MakeFromZ(Camera->GetCameraLocation() - Position).Rotator());
-		}
-		Ignition->SetWorldScale3D(FVector(3.8f, 4.8f, 1.f) * FMath::Clamp(T / 0.06f, 0.1f, 1.f));
+		// Fita: anel inclinado em volta do corpo, girando em torno do eixo do voo (a inclinação balança: espiral)
+		const float RibbonRadius = FMath::Max(RibbonMesh->GetBounds().BoxExtent.GetMax(), 1.f);
+		// Quase deitada em relação ao voo: de trás e de cima aparece como arcos passando pela frente e por trás da bola
+		GroundWave->SetVisibility(T > float(ShellWindow.Y) - 0.05f);
+		// Com línguas: anel fino quase deitado, girando em volta do eixo vertical da coluna e subindo/descendo nela
+		const bool bColumn = Tongues.Num() > 0;
+		GroundWave->SetRelativeLocation(bColumn ? FVector(-Radius * 0.2f, 0.f, Radius * (0.25f + 0.3f * FMath::Sin(T * 7.f)))
+			: FVector(-Radius * 0.15f * Stretch.X, 0.f, 0.f));
+		const FQuat Spin(bColumn ? FVector::UpVector : FVector::ForwardVector, FMath::DegreesToRadians(SpinAngle * 2.2f));
+		GroundWave->SetRelativeRotation(Spin * FRotator(18.f + 10.f * FMath::Sin(T * 9.f), 0.f, 0.f).Quaternion());
+		GroundWave->SetRelativeScale3D(FVector(Radius * (bColumn ? 0.75f : 1.05f) / RibbonRadius) * (bColumn ? FVector(1.f, 1.f, 0.8f) : FVector(Stretch.X, 1.f, 2.f)));
 	}
-	FirePostProcess->Settings.BloomIntensity = T < 0.08f ? 0.95f : 0.75f;
+	// Cauda: cone com a base na bola e a ponta na boca, se desfazendo até TailTime
+	const FVector ToMouth = FVector(Launch.Start) - Center;
+	Ignition->SetVisibility(TailMesh && TailMID && T < TailTime && ToMouth.Size() > Radius);
+	if (T < TailTime)
+	{
+		Ignition->SetWorldLocationAndRotation(Center, FRotationMatrix::MakeFromZ(ToMouth).Rotator());
+		Ignition->SetWorldScale3D(FVector(Radius * 0.6f / 50.f, Radius * 0.6f / 50.f, ToMouth.Size() / 100.f));
+		TailMID->SetScalarParameterValue(TEXT("Erosion"), FMath::SmoothStep(0.05f, TailTime, T));
+	}
+	FirePostProcess->Settings.BloomIntensity = 0.55f + 0.25f * Flash;
 	FirePostProcess->bEnabled = true;
 	for (UMaterialInstanceDynamic* MID : MIDs)
 	{
@@ -365,17 +540,36 @@ void ANinjaJutsuProjectile::ApplyBallVisual(const FVector& Center, float Radius,
 		{
 			MID->SetScalarParameterValue(TEXT("Grow"), Grow);
 			MID->SetScalarParameterValue(TEXT("Dissolve"), 0.f);
+			MID->SetScalarParameterValue(TEXT("Erosion"), 0.f);
 			MID->SetScalarParameterValue(TEXT("Radius"), Radius);
 			MID->SetVectorParameterValue(TEXT("TravelDirection"), FLinearColor(Launch.Direction.X, Launch.Direction.Y, Launch.Direction.Z));
 		}
 	}
+	if (MIDs.IsValidIndex(2) && MIDs[2])
+	{
+		// Casca: entra inteira e se rasga até sumir no fim da janela
+		MIDs[2]->SetScalarParameterValue(TEXT("Erosion"), FMath::SmoothStep(float(ShellWindow.X) + 0.04f, float(ShellWindow.Y), T));
+	}
 	for (int32 Index = 0; Index < FMath::Min(MIDs.Num(), 3); ++Index)
 	{
-		if (MIDs[Index]) { MIDs[Index]->SetScalarParameterValue(TEXT("Intensity"), Index == 0 ? 1.8f : 1.25f); }
+		if (MIDs[Index]) { MIDs[Index]->SetScalarParameterValue(TEXT("Intensity"), Index == 0 ? 1.f + 2.f * Flash : 1.f + Flash); }
 	}
 	UpdateSceneIntegration(Center, Radius, T, false);
+	if (GlowMesh)
+	{
+		// Halo vermelho: esfera macia grande em volta (o brilho de anime); enorme no clarão da saída
+		const float GlowRadius = FMath::Max(GlowMesh->GetBounds().BoxExtent.GetMax(), 1.f);
+		// Com línguas: halo alto (acompanha a coluna de chamas) e sem esticar para a frente
+		const bool bColumn = Tongues.Num() > 0;
+		const FVector HaloShape = bColumn ? FVector(1.f, 1.f, 1.45f) : Stretch;
+		Halo->SetRelativeLocation(FVector(bColumn ? -Radius * 0.3f : 0.f, 0.f, bColumn ? Radius * 0.35f : 0.f));
+		Halo->SetRelativeRotation(FRotator::ZeroRotator);
+		Halo->SetRelativeScale3D(HaloShape * Radius * FMath::Lerp(bColumn ? 1.4f : 1.9f, bColumn ? 1.9f : 2.7f, Flash) / GlowRadius);
+		Halo->SetVisibility(HaloMID != nullptr);
+		if (HaloMID) { HaloMID->SetScalarParameterValue(TEXT("Intensity"), 1.f + 1.5f * Flash); }
+	}
 	const float Flicker = 1.f + .065f * FMath::Sin(T * 41.f) + .035f * FMath::Sin(T * 73.f);
-	Light->SetIntensity(LightIntensity * Flicker * FMath::Lerp(0.5f, 1.f, Grow) * (T < .08f ? 1.8f : 1.f));
+	Light->SetIntensity(LightIntensity * Flicker * FMath::Lerp(0.5f, 1.f, Grow) * (1.f + 1.2f * Flash));
 	if (!Trail->IsActive() && TrailSystem)
 	{
 		Trail->Activate(true);
@@ -415,8 +609,8 @@ void ANinjaJutsuProjectile::UpdateSceneIntegration(const FVector& Center, float 
 		GroundGlow->SetWorldRotation((-GroundNormal).Rotation());
 		GroundGlow->DecalSize = FVector(100.f, Radius * 2.3f, Radius * 2.3f);
 		if (GlowMID) { GlowMID->SetScalarParameterValue(TEXT("Intensity"), bImpact ? 1.8f * FMath::Exp(-T * 1.6f) : 1.f); }
-		GroundWave->SetVisibility(bImpact && ShockwaveMaterial && T < .6f);
-		if (bImpact)
+		if (!RibbonMesh) { GroundWave->SetVisibility(bImpact && ShockwaveMaterial && T < .6f); }
+		if (bImpact && !RibbonMesh)
 		{
 			GroundWave->SetWorldLocation(GroundPoint + GroundNormal * 8.f);
 			GroundWave->SetWorldRotation(FRotationMatrix::MakeFromZ(GroundNormal).Rotator());
@@ -572,6 +766,8 @@ void ANinjaJutsuProjectile::PlayExplosion(const FVector& Location)
 	UpdateSceneIntegration(Location, FullRadius, 0.f, true);
 	Trail->Deactivate();
 	Ignition->SetVisibility(false);
+	FireBody->SetVisibility(false);
+	HideTongues();
 	for (UNiagaraComponent* Spiral : Spirals) { Spiral->Deactivate(); }
 	FirePostProcess->Settings.BloomIntensity = 0.65f;
 	FirePostProcess->bEnabled = true;
@@ -610,6 +806,7 @@ void ANinjaJutsuProjectile::PlayExplosion(const FVector& Location)
 			if (UDecalComponent* Decal = UGameplayStatics::SpawnDecalAtLocation(this, ScorchDecal, FVector(120.f, ScorchSize, ScorchSize),
 				FloorPoint, DecalRot, ScorchHold + ScorchFade + 0.1f))
 			{
+				Decal->SetFadeIn(0.15f, 0.35f);   // aparece por baixo do clarão, sem o quadro cheio no instante do impacto
 				Decal->SetFadeOut(ScorchHold, ScorchFade, false);
 				Decal->SetFadeScreenSize(0.f);
 			}

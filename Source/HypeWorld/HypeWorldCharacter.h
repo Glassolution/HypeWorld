@@ -864,6 +864,9 @@ protected:
 	float SealElapsed = 0.f;
 	bool bJutsuReleased = false;
 	TArray<int32> JutsuUseCounts;
+	/** Antecipação do jutsu na boca durante os selos (só visual); some no lançamento ou no cancelamento */
+	UPROPERTY() TArray<TObjectPtr<USceneComponent>> JutsuAnticipation;
+	void ClearJutsuAnticipation();
 
 	// Tremida de câmera
 	void UpdateCameraShake(float DeltaSeconds);

@@ -64,6 +64,10 @@ public:
 	 *  materiais, PSOs e sistemas Niagara */
 	static void Prewarm(AActor* Context, const UNinjaJutsuData* Jutsu);
 
+	/** Antecipação nos selos (só visual, máquina local): brasas, brilho e luz presos a Socket de Body. Devolve os
+	 *  componentes criados para quem chamou destruir no lançamento */
+	static TArray<USceneComponent*> SpawnAnticipation(USceneComponent* Body, FName Socket, const UNinjaJutsuData* Jutsu);
+
 	// ---------- Trajetória ----------
 
 	/** A chama cresce de StartRadius até FullRadius em GrowTime (subindo GrowLift) enquanto já avança */
@@ -99,6 +103,41 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") TObjectPtr<UMaterialInterface> GroundGlowMaterial;
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") TObjectPtr<UMaterialInterface> ShockwaveMaterial;
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") TObjectPtr<UNiagaraSystem> GroundFireSystem;
+	/** Esfera macia (aditiva, some pela borda): halo vermelho grande e brilho da antecipação */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") TObjectPtr<UStaticMesh> GlowMesh;
+	/** Casca de chama no lançamento (único elemento de borda dura), visível em ShellWindow (s) */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") TObjectPtr<UMaterialInterface> ShellMaterial;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") FVector2D ShellWindow = FVector2D(0.08f, 0.3f);
+	/** Cauda ligando a boca à bola no começo do voo (malha com base na origem e altura 100), some até TailTime (s) */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") TObjectPtr<UStaticMesh> TailMesh;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") TObjectPtr<UMaterialInterface> TailMaterial;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") float TailTime = 0.45f;
+	/** Fita espiral vermelho-escura girando em volta da bola (anel inclinado, recortado pelo ruído do material) */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") TObjectPtr<UStaticMesh> RibbonMesh;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") TObjectPtr<UMaterialInterface> RibbonMaterial;
+	/** Corpo principal: malha de chama oval (mais alta que larga, pontas para cima), girando devagar no eixo vertical,
+	 *  pulsando e inclinada para trás (graus). Escala = raio da bola x FireballScale */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") TObjectPtr<UStaticMesh> FireballMesh;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") TObjectPtr<UMaterialInterface> FireballMaterial;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") float FireballScale = 1.1f;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") float FireballLean = 14.f;
+	/** Corpo de línguas de chama (no lugar da esfera): malhas de língua (base na origem, altura 100, raio 40) que nascem
+	 *  na base/interior o tempo todo, sobem, ficam para trás com o voo, esticam e se desfazem. Interiores = aditivas */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") TObjectPtr<UStaticMesh> TongueMesh;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") TObjectPtr<UMaterialInterface> TongueMaterial;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") TObjectPtr<UMaterialInterface> InnerTongueMaterial;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") int32 TongueCount = 24;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") int32 InnerTongueCount = 3;
+	/** Vida de cada língua (s, mín/máx), subida e arrasto para trás (x raio por segundo) */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") FVector2D TongueLife = FVector2D(0.25f, 0.4f);
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") float TongueRise = 2.4f;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") float TongueDrag = 1.6f;
+	/** Quanto a bola se estica na direção do voo (gota -> coluna) */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") float FlightStretch = 0.7f;
+	/** Antecipação durante os selos: brasas na boca, brilho macio e luz laranja fraca */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") TObjectPtr<UNiagaraSystem> AnticipationSystem;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") TObjectPtr<UMaterialInterface> AnticipationMaterial;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") float AnticipationLight = 14.f;
 	/** Escala de cada casca em relação ao raio */
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") FVector ShellScales = FVector(1.f, 1.18f, 1.42f);
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") float HeatScale = 1.7f;
@@ -151,6 +190,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category="Jutsu") TObjectPtr<UStaticMeshComponent> Heat;
 	UPROPERTY(VisibleAnywhere, Category="Jutsu") TObjectPtr<UStaticMeshComponent> Halo;
 	UPROPERTY(VisibleAnywhere, Category="Jutsu") TObjectPtr<UStaticMeshComponent> GroundWave;
+	UPROPERTY(VisibleAnywhere, Category="Jutsu") TObjectPtr<UStaticMeshComponent> FireBody;
 	UPROPERTY(VisibleAnywhere, Category="Jutsu") TObjectPtr<UDecalComponent> GroundGlow;
 	UPROPERTY(VisibleAnywhere, Category="Jutsu") TObjectPtr<UNiagaraComponent> Trail;
 	UPROPERTY(VisibleAnywhere, Category="Jutsu") TObjectPtr<UNiagaraComponent> BodyFlames;
@@ -185,6 +225,26 @@ private:
 	UPROPERTY() TObjectPtr<UMaterialInstanceDynamic> HaloMID;
 	UPROPERTY() TObjectPtr<UMaterialInstanceDynamic> WaveMID;
 	UPROPERTY() TObjectPtr<UMaterialInstanceDynamic> GlowMID;
+	UPROPERTY() TObjectPtr<UMaterialInstanceDynamic> TailMID;
+
+	/** Uma língua de chama do corpo (posição/velocidade no espaço do ator, em unidades de raio) */
+	struct FTongue
+	{
+		TObjectPtr<UStaticMeshComponent> Mesh;
+		TObjectPtr<UMaterialInstanceDynamic> MID;
+		FVector Pos = FVector::ZeroVector;
+		FVector Vel = FVector::ZeroVector;
+		float Age = 0.f;
+		float Life = 0.3f;
+		float Height = 1.f;
+		float Width = 0.3f;
+		float Phase = 0.f;
+		bool bInner = false;
+	};
+	TArray<FTongue> Tongues;
+	void RespawnTongue(FTongue& Tongue, bool bStagger);
+	void UpdateTongues(float DeltaSeconds, float Radius, float Visible);
+	void HideTongues();
 	FVector GroundPoint = FVector::ZeroVector;
 	FVector GroundNormal = FVector::UpVector;
 	double LastGroundTrace = -100.0;
