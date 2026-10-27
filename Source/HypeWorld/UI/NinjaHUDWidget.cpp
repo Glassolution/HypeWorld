@@ -17,6 +17,7 @@
 #include "Styling/CoreStyle.h"
 #include "HypeWorldCharacter.h"
 #include "NinjaAttributeSet.h"
+#include "NinjaJutsuData.h"
 
 namespace NinjaHUD
 {
@@ -377,6 +378,40 @@ void UNinjaHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 		if (JutsuSlots[i] && JutsuSlotBase.IsValidIndex(i))
 		{
 			JutsuSlots[i]->SetPosition(JutsuSlotBase[i] + FVector2D(0.f, JutsuOffset));
+		}
+	}
+	// Jutsus da barra: arte/custo do Data Asset do slot (se houver), cooldown pelo GAS e pulso ao usar
+	ShownSlotJutsu.SetNum(JutsuSlotWidgets.Num());
+	ShownJutsuUses.SetNum(JutsuSlotWidgets.Num());
+	for (int32 i = 0; i < JutsuSlotWidgets.Num(); ++i)
+	{
+		const UNinjaJutsuData* Jutsu = Ninja->GetJutsuInSlot(i);
+		if (Jutsu && ShownSlotJutsu[i].Get() != Jutsu)
+		{
+			ShownSlotJutsu[i] = Jutsu;
+			FNinjaJutsuSlotData Data;
+			Data.Icon = Jutsu->Icon;
+			Data.ThemeColor = Jutsu->ThemeColor;
+			Data.Number = FMath::RoundToInt(Jutsu->ChakraCost);
+			JutsuSlotWidgets[i]->SetData(Data);
+		}
+		if (Jutsu)
+		{
+			float Duration = 0.f;
+			const float Remaining = Ninja->GetJutsuCooldownRemaining(i, Duration);
+			if (Remaining > 0.f)
+			{
+				JutsuSlotWidgets[i]->SetCooldown(Remaining, Duration);
+			}
+		}
+		const int32 Uses = Ninja->GetJutsuUseCount(i);
+		if (Uses != ShownJutsuUses[i])
+		{
+			if (Uses > ShownJutsuUses[i])
+			{
+				JutsuSlotWidgets[i]->PlayUsed();
+			}
+			ShownJutsuUses[i] = Uses;
 		}
 	}
 	for (UNinjaJutsuSlotWidget* SlotWidget : JutsuSlotWidgets)

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
+#include "InputCoreTypes.h"
 #include "AbilitySystemInterface.h"
 #include "GameplayEffectTypes.h"
 #include "CombatAttacker.h"
@@ -18,12 +19,14 @@ class UCameraComponent;
 class UInputAction;
 class UNinjaMovementComponent;
 class UAnimMontage;
+class UNinjaDodgeDefinition;
 class UAbilitySystemComponent;
 class UNinjaAttributeSet;
 class UNinjaChakraAuraComponent;
 class UNinjaChakraFeetComponent;
 class UGameplayAbility;
 class UMaterialInterface;
+class UNinjaJutsuData;
 struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
@@ -276,6 +279,20 @@ protected:
 	float MaxRunAnimRate = 2.7f;
 
 public:
+	bool IsPlayingDashMontage() const;
+	/** Frente, direita, trás, esquerda. Cada entrada é um asset substituível no editor. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ninja|Esquiva de combate")
+	TArray<TObjectPtr<UNinjaDodgeDefinition>> CombatDodges;
+	UNinjaDodgeDefinition* GetCombatDodgeForDirection(int32 Index) const;
+	void PlayCombatDodge(UNinjaDodgeDefinition* Definition);
+	UFUNCTION(NetMulticast, Reliable) void MulticastCombatDodge(UNinjaDodgeDefinition* Definition, float FacingYaw);
+	UFUNCTION(BlueprintCallable, Category="Ninja|Esquiva") bool TryCancelDodgeForAction();
+	UAnimMontage* GetActiveDashMontage() const { return ActiveDashMontage; }
+	FVector GetRawMoveDirection() const { return DashMoveDirection; }
+	FVector DashMoveDirection = FVector::ZeroVector;
+	uint64 DashMoveFrame = 0;
+	FVector RawMoveDirection = FVector::ZeroVector;
+	float RawMoveTime = -100.f;
 
 	// ---------- Combate ----------
 
@@ -372,6 +389,12 @@ public:
 
 	/** Começo e fim de um golpe (chamados pela habilidade, no jogador e no servidor) */
 	void BeginAttack(int32 AttackId);
+	bool CanActivateAttack(int32 AttackId) const;
+	UFUNCTION(BlueprintPure, Category="Ninja|Combate") bool CanStartLauncher() const;
+	UFUNCTION(BlueprintPure, Category="Ninja|Combate") float GetAirComboCooldownRemaining() const;
+	UFUNCTION(BlueprintPure, Category="Ninja|Infusão") float GetSuperJumpCooldownRemaining() const;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ninja|Combate") float AirComboCooldown = 3.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ninja|Infusão") float SuperJumpCooldown = 3.f;
 	void EndAttack(bool bWasCancelled);
 
 	/** Defendendo (botão direito parado ou andando) */
@@ -470,7 +493,7 @@ public:
 	/** Gravidade do mortal (× a do personagem): X = subindo, Y = flutuando no topo/descendo, Z = queda máxima (cm/s).
 	 *  Pouca gravidade no topo = fica "levitando" no alto para atacar ou se reposicionar */
 	UPROPERTY(EditAnywhere, Category="Ninja|Combate|Aéreo")
-	FVector BackflipGravity = FVector(0.55f, 0.15f, 550.f);
+	FVector BackflipGravity = FVector(1.f, 1.f, 0.f);
 
 	/** Golpeando: passo automático para a frente no começo de cada golpe (s) — as animações do pack não andam sozinhas */
 	UPROPERTY(EditAnywhere, Category="Ninja|Combate")
@@ -545,19 +568,18 @@ public:
 
 	/** Velocidade para a frente e para cima com a barra vazia (X) e cheia (Y), em cm/s */
 	UPROPERTY(EditAnywhere, Category="Ninja|Infusão")
-	FVector2D SuperJumpForwardSpeed = FVector2D(700.f, 1300.f);
+	FVector2D SuperJumpForwardSpeed = FVector2D(1800.f, 3000.f);
 	UPROPERTY(EditAnywhere, Category="Ninja|Infusão")
-	FVector2D SuperJumpUpSpeed = FVector2D(800.f, 1300.f);
+	FVector2D SuperJumpUpSpeed = FVector2D(850.f, 1250.f);
 	/** Mirando para o céu: velocidade só para cima (vazia X, cheia Y). Entre olhar reto e para cima mistura os dois */
 	UPROPERTY(EditAnywhere, Category="Ninja|Infusão")
-	FVector2D SuperJumpVerticalSpeed = FVector2D(1200.f, 1900.f);
+	FVector2D SuperJumpVerticalSpeed = FVector2D(1434.f, 2271.f);
 	/** Inclinação da câmera (graus) em que o salto começa a virar vertical (X) e fica totalmente vertical (Y) */
 	UPROPERTY(EditAnywhere, Category="Ninja|Infusão")
-	FVector2D SuperJumpVerticalPitch = FVector2D(10.f, 55.f);
-	/** Gravidade do super pulo (× a do personagem): X = subindo, Y = no topo/descendo, Z = queda máxima (cm/s).
-	 *  Igual em X e Y = arco de catapulta "no espaço": sai empurrado para a frente e cai longe, sem frear */
+	FVector2D SuperJumpVerticalPitch = FVector2D(25.f, 70.f);
+	/** Compatibilidade com assets antigos. O salto agora usa gravidade constante e altura definida pelo impulso. */
 	UPROPERTY(EditAnywhere, Category="Ninja|Infusão")
-	FVector SuperJumpGravity = FVector(0.35f, 0.35f, 900.f);
+	FVector SuperJumpGravity = FVector(1.f, 1.f, 0.f);
 
 	/** Agachado carregando (início + loop) e o salto (impulso → voo → descida) */
 	UPROPERTY(EditAnywhere, Category="Ninja|Animação")
@@ -626,6 +648,55 @@ public:
 	UFUNCTION(BlueprintPure, Category="Ninja|Combate")
 	bool IsAttacking() const;
 
+	// ---------- Jutsus (barra de slots do HUD) ----------
+
+	/** Jutsu de cada slot da barra (o slot 0 é a tecla 1). Cada um vira um spec de JutsuAbility com a ficha como SourceObject */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ninja|Jutsus")
+	TArray<TObjectPtr<UNinjaJutsuData>> JutsuLoadout;
+
+	/** Tecla de cada slot */
+	UPROPERTY(EditAnywhere, Category="Ninja|Jutsus")
+	TArray<FKey> JutsuSlotKeys = { EKeys::One, EKeys::Two, EKeys::Three, EKeys::Four, EKeys::Five, EKeys::Six };
+
+	/** Habilidade usada por todos os jutsus (vazio = UGA_NinjaJutsu) */
+	UPROPERTY(EditAnywhere, Category="Ninja|Jutsus")
+	TSubclassOf<UGameplayAbility> JutsuAbility;
+
+	/** Inclinação máxima da mira do jutsu para cima/baixo (graus) — o jutsu vai para onde a câmera olha */
+	UPROPERTY(EditAnywhere, Category="Ninja|Jutsus")
+	FVector2D JutsuAimPitchLimits = FVector2D(-12.f, 14.f);
+
+	/** Usa o jutsu do slot (tecla do slot) */
+	UFUNCTION(BlueprintCallable, Category="Ninja|Jutsus")
+	bool TryUseJutsuSlot(int32 Slot);
+
+	const UNinjaJutsuData* GetJutsuInSlot(int32 Slot) const { return JutsuLoadout.IsValidIndex(Slot) ? JutsuLoadout[Slot].Get() : nullptr; }
+
+	/** Segundos de cooldown que faltam no slot (e a duração total) */
+	float GetJutsuCooldownRemaining(int32 Slot, float& OutDuration) const;
+
+	/** Quantas vezes o slot foi usado por este jogador (o HUD pulsa o ícone quando muda) */
+	int32 GetJutsuUseCount(int32 Slot) const { return JutsuUseCounts.IsValidIndex(Slot) ? JutsuUseCounts[Slot] : 0; }
+
+	UFUNCTION(BlueprintPure, Category="Ninja|Jutsus")
+	bool IsCastingJutsu() const { return CurrentJutsu != nullptr; }
+	bool CanStartJutsu() const;
+
+	/** Chamados pela habilidade (no jogador e no servidor) */
+	void BeginJutsu(const UNinjaJutsuData* Jutsu);
+	void EndJutsuSeals();
+	void EndJutsu(bool bWasCancelled);
+
+	/** AnimNotify NinjaJutsuRelease (todas as máquinas): fogo na boca, tremida; no servidor cria o projétil */
+	void OnJutsuRelease();
+
+	/** Servidor: acerto de jutsu (dano em área já escalado pela distância) */
+	void ApplyJutsuHit(AHypeWorldCharacter* Target, const UNinjaJutsuData* Jutsu, float Scale, const FHitResult& Hit);
+
+	/** Tremida de câmera (só no jogador local): amplitude em graus, some em Duration */
+	UFUNCTION(BlueprintCallable, Category="Ninja|Câmera")
+	void AddCameraShake(float Degrees, float Duration);
+
 	/** Constructor */
 	AHypeWorldCharacter(const FObjectInitializer& ObjectInitializer);
 
@@ -683,7 +754,7 @@ protected:
 	UFUNCTION(Server, Reliable)
 	void ServerSuperJump(FVector_NetQuantize10 LaunchVelocity);
 	UFUNCTION(NetMulticast, Unreliable)
-	void MulticastSuperJumpLaunch();
+	void MulticastSuperJumpLaunch(float UpSpeed);
 	void UpdateSuperJump(float DeltaSeconds);
 	void ReleaseSuperJump();
 	bool CanStartSuperJump() const;
@@ -774,6 +845,32 @@ protected:
 
 	UFUNCTION()
 	void OnRep_ChargingChakra();
+
+	// Jutsus: selos no corpo visível (em todas as máquinas) e estado do lançamento
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastJutsuSeals(const UNinjaJutsuData* Jutsu);
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastJutsuEnd(bool bCancelled);
+	void PlayJutsuSeals(const UNinjaJutsuData* Jutsu);
+	void StopJutsuSeals(float BlendOut);
+	void UpdateJutsuSeals(float DeltaSeconds);
+	void StartSeal(int32 Index);
+	USkeletalMeshComponent* GetJutsuBody() const;
+	UPROPERTY() TObjectPtr<const UNinjaJutsuData> CurrentJutsu;
+	/** Jutsu que está sendo mostrado (selos/lançamento) — também nos outros jogadores */
+	UPROPERTY() TObjectPtr<const UNinjaJutsuData> PresentedJutsu;
+	UPROPERTY() TObjectPtr<UAnimMontage> SealMontage;
+	int32 SealIndex = INDEX_NONE;
+	float SealElapsed = 0.f;
+	bool bJutsuReleased = false;
+	TArray<int32> JutsuUseCounts;
+
+	// Tremida de câmera
+	void UpdateCameraShake(float DeltaSeconds);
+	float ShakeAmplitude = 0.f;
+	float ShakeElapsed = 0.f;
+	float ShakeDuration = 0.f;
+	FRotator CameraBaseRotation = FRotator::ZeroRotator;
 
 	UPROPERTY(ReplicatedUsing=OnRep_ChargingChakra)
 	bool bChargingChakra = false;
@@ -884,6 +981,7 @@ private:
 
 	/** Detecta o pulo duplo pela velocidade (vale também para os outros jogadores na rede) e toca a animação */
 	void UpdateDoubleJump();
+	void PlayJumpMontage(UAnimMontage* Montage, float UpSpeed);
 	bool bWasFalling = false;
 	float DoubleJumpLastVelZ = 0.f;
 
@@ -917,6 +1015,10 @@ private:
 	int32 CurrentAttackId = INDEX_NONE;
 	int32 LastChainAttackId = INDEX_NONE;	// golpe que acabou de terminar (a sequência continua até ChainExpireTime)
 	float ChainExpireTime = -100.f;
+	float GroundComboReadyUntil = -100.f;
+	float AirComboReadyUntil = -100.f;
+	float NextLauncherTime = -100.f;
+	float NextSuperJumpTime = -100.f;
 	int32 AttackHitIndex = 0;			// acertos já feitos no golpe atual
 	int32 AttackHitCount = 1;			// acertos que o golpe tem (AnimNotifies DoAttackTrace)
 	bool bComboWindowOpen = false;

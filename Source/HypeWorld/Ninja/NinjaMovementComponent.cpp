@@ -1,6 +1,10 @@
 // Movimento ninja: corrida ninja, dash e corrida na parede, com predição no cliente (pronto para multiplayer).
 
 #include "NinjaMovementComponent.h"
+#include "NinjaDodgeDefinition.h"
+#include "Animation/AnimInstance.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "Curves/CurveFloat.h"
 #include "GameFramework/Character.h"
 #include "Components/CapsuleComponent.h"
 #include "HypeWorld.h"
@@ -78,6 +82,11 @@ float UNinjaMovementComponent::GetSidewaysAmount() const
 
 FRotator UNinjaMovementComponent::ComputeOrientToMovementRotation(const FRotator& CurrentRotation, float DeltaTime, FRotator& DeltaRotation) const
 {
+	if (IsCombatDodging() && CombatDodgeDefinition)
+	{
+		const float Return = FMath::SmoothStep(CombatDodgeDefinition->CancelStart, ActiveDashDuration, GetCombatDodgeElapsed());
+		return FRotator(0.f, DashFacingYaw + CombatDodgeDefinition->BodyYawOffset * (1.f - Return), 0.f);
+	}
 	// Na parede o corpo olha ao longo da parede, não para onde o controle aponta (senão ele vira de cara para a parede).
 	if (IsWallRunning())
 	{
@@ -86,6 +95,10 @@ FRotator UNinjaMovementComponent::ComputeOrientToMovementRotation(const FRotator
 		{
 			return AlongWall.Rotation();
 		}
+	}
+	if (IsDashing() && bDashStrafe && HasCustomGravity())
+	{
+		return CurrentRotation;
 	}
 	// Na parede/teto: o giro normal da engine (relativo à gravidade)
 	if (HasCustomGravity())
@@ -189,6 +202,7 @@ void UNinjaMovementComponent::UpdateCharacterStateBeforeMovement(float DeltaSeco
 		bWantsToDash = false;
 		if (CanDash())
 		{
+			if (IsCombatDodging()) FinishCombatDodge();
 			StartDash();
 		}
 	}
@@ -221,6 +235,7 @@ void UNinjaMovementComponent::PhysCustom(float DeltaTime, int32 Iterations)
 	switch (CustomMovementMode)
 	{
 	case NMOVE_Dash:	PhysDash(DeltaTime, Iterations); break;
+	case NMOVE_CombatDodge: PhysCombatDodge(DeltaTime, Iterations); break;
 	case NMOVE_WallRun:	PhysWallRun(DeltaTime, Iterations); break;
 	default:			Super::PhysCustom(DeltaTime, Iterations); break;
 	}
@@ -233,12 +248,7 @@ void UNinjaMovementComponent::OnMovementModeChanged(EMovementMode PreviousMoveme
 	// Tocou o chão: libera o dash no ar de novo e acaba o voo do super pulo e a suspensão do combo aéreo.
 	if (MovementMode == MOVE_Walking || MovementMode == MOVE_NavWalking)
 	{
-		// Pousou rápido apertando direção: já cai na corrida ninja (pulo/dash emendam na corrida)
-		if (bLandIntoSprint && PreviousMovementMode == MOVE_Falling && !Acceleration.IsNearlyZero() && ProjectToGravityFloor(Velocity).Size() > RunSpeed)
-		{
-			bWantsToRun = true;
-			bWantsToSprint = true;
-		}
+		// Pousar conserva o modo escolhido pelo jogador; velocidade de dash não liga Shift.
 		bAirMomentum = false;
 		bAirDashUsed = false;
 		bInSuperJump = false;
@@ -258,6 +268,7 @@ void UNinjaMovementComponent::StartFloatJump(float RiseScale, float FallScale, f
 
 void UNinjaMovementComponent::SuspendInAir(float Duration)
 {
+	if (!IsAirSuspended()) AirSuspendStart = GetWorld()->GetTimeSeconds();
 	AirSuspendUntil = GetWorld()->GetTimeSeconds() + Duration;
 }
 
@@ -270,17 +281,12 @@ float UNinjaMovementComponent::GetGravityZ() const
 {
 	if (IsAirSuspended())
 	{
-		return Super::GetGravityZ() * AirSuspendGravityScale;
+		const float Now = GetWorld()->GetTimeSeconds();
+		const float Weight = FMath::Min(FMath::SmoothStep(0.f, 0.12f, Now - AirSuspendStart),
+			FMath::SmoothStep(0.f, 0.25f, AirSuspendUntil - Now));
+		return Super::GetGravityZ() * FMath::Lerp(1.f, AirSuspendGravityScale, Weight);
 	}
-	if (bFloatJump && IsFalling())
-	{
-		// Velocidade vertical (relativa à gravidade): subindo forte = gravidade de subida; perto do topo vai virando a de
-		// queda; chegando na queda máxima a gravidade some (cai em velocidade constante, devagar)
-		const float Vz = FVector::DotProduct(Velocity, -GetGravityDirection());
-		float Scale = FMath::Lerp(FloatFallGravityScale, FloatRiseGravityScale, FMath::Clamp(Vz / FloatBlendSpeed, 0.f, 1.f));
-		Scale *= FMath::Clamp((Vz + FloatMaxFallSpeed) / 150.f, 0.f, 1.f);
-		return Super::GetGravityZ() * Scale;
-	}
+	// A altura vem do impulso. Subida e descida usam a mesma aceleração.
 	return Super::GetGravityZ();
 }
 
@@ -297,17 +303,24 @@ void UNinjaMovementComponent::ExitToWalkingOrFalling()
 
 bool UNinjaMovementComponent::CanDash() const
 {
-	if (!UpdatedComponent || DashCooldownLeft > 0.f || IsDashing())
+	if (!UpdatedComponent || DashCooldownLeft > 0.f || (IsDashing() && !CanCancelCombatDodge()))
 	{
 		return false;
 	}
-	return IsMovingOnGround() || IsWallRunning() || (IsFalling() && !bAirDashUsed);
+	return CanCancelCombatDodge() || IsMovingOnGround() || IsWallRunning() || (IsFalling() && !bAirDashUsed);
 }
 
 void UNinjaMovementComponent::StartDash()
 {
+	if (TryStartCombatDodge()) return;
 	// Vai para onde o jogador está apontando o movimento; sem direção, vai para frente (no plano do chão atual: parede/teto também)
 	DashDirection = ProjectToGravityFloor(Acceleration).GetSafeNormal();
+	if (const AHypeWorldCharacter* Ninja = Cast<AHypeWorldCharacter>(CharacterOwner); Ninja && Ninja->IsLocallyControlled())
+	{
+		// Input original do quadro atual, sem depender da ordem dos callbacks Q/A/D ou da curva do sprint.
+		DashDirection = ProjectToGravityFloor(Ninja->GetRawMoveDirection()).GetSafeNormal();
+	}
+	const bool bDirectionalDash = !DashDirection.IsNearlyZero();
 	if (DashDirection.IsNearlyZero())
 	{
 		DashDirection = ProjectToGravityFloor(UpdatedComponent->GetForwardVector()).GetSafeNormal();
@@ -320,17 +333,27 @@ void UNinjaMovementComponent::StartDash()
 
 	// Tecla para o lado/para trás em relação à câmera (no chão): o corpo fica de frente para a câmera e o dash vai de lado/de costas
 	bDashStrafe = false;
-	if (IsMovingOnGround() && !HasCustomGravity() && CharacterOwner && !Acceleration.IsNearlyZero())
+	DashInputAngle = 0.f;
+	if (CharacterOwner && bDirectionalDash)
 	{
 		const float ControlYaw = CharacterOwner->GetControlRotation().Yaw;
-		if (FMath::Abs(FMath::FindDeltaAngleDegrees(ControlYaw, DashDirection.Rotation().Yaw)) > DashStrafeAngle)
+		const FQuat ToGravity = FQuat::FindBetweenNormals(GetGravityDirection(), FVector::DownVector);
+		const float RelativeYaw = (ToGravity * CharacterOwner->GetControlRotation().Quaternion()).Rotator().Yaw;
+		const FQuat Basis = ToGravity.Inverse() * FRotator(0.f, RelativeYaw, 0.f).Quaternion();
+		DashInputAngle = FMath::RadiansToDegrees(FMath::Atan2(FVector::DotProduct(DashDirection, Basis.GetAxisY()), FVector::DotProduct(DashDirection, Basis.GetAxisX())));
+		if (FMath::Abs(DashInputAngle) >= FMath::Min(DashStrafeAngle, 40.f))
 		{
 			bDashStrafe = true;
 			DashFacingYaw = ControlYaw;
-			MoveUpdatedComponent(FVector::ZeroVector, FRotator(0.f, ControlYaw, 0.f).Quaternion(), false);
+			if (!HasCustomGravity())
+			{
+				MoveUpdatedComponent(FVector::ZeroVector, FRotator(0.f, ControlYaw, 0.f).Quaternion(), false);
+			}
 		}
 	}
 	DashEntrySpeed = ProjectToGravityFloor(Velocity).Size();
+	DashEntryUpSpeed = IsFalling() ? FVector::DotProduct(Velocity, -GetGravityDirection()) : 0.f;
+	ActiveDashDuration = 0.f;
 	DashTimeLeft = GetDashDuration();
 	DashCooldownLeft = DashCooldown;
 	SetMovementMode(MOVE_Custom, NMOVE_Dash);
@@ -338,20 +361,143 @@ void UNinjaMovementComponent::StartDash()
 
 float UNinjaMovementComponent::GetDashDuration() const
 {
+	if (ActiveDashDuration > 0.f)
+	{
+		return ActiveDashDuration;
+	}
 	return DashRootMotionAnim ? DashAnimMoveEnd / FMath::Max(DashAnimRate, 0.01f) : DashDuration;
+}
+
+bool UNinjaMovementComponent::TryStartCombatDodge()
+{
+	AHypeWorldCharacter* Ninja = Cast<AHypeWorldCharacter>(CharacterOwner);
+	if (!Ninja || bWantsToSprint || !bWantsToRun || !IsMovingOnGround() || HasCustomGravity()) return false;
+	DashFacingYaw = Ninja->GetControlRotation().Yaw;
+	FVector Input = Ninja->IsLocallyControlled() ? Ninja->GetRawMoveDirection() : Acceleration;
+	const float Angle = Input.IsNearlyZero() ? 180.f : FMath::FindDeltaAngleDegrees(DashFacingYaw, Input.Rotation().Yaw);
+	const int32 Index = (FMath::RoundToInt(Angle / 90.f) + 4) % 4;
+	UNinjaDodgeDefinition* Definition = Ninja->GetCombatDodgeForDirection(Index);
+	if (!Definition || !Definition->Montage) return false;
+	CombatDodgeDefinition = Definition;
+	DashDirection = FRotator(0.f, DashFacingYaw + Index * 90.f, 0.f).Vector();
+	DashInputAngle = Index == 3 ? -90.f : Index * 90.f;
+	bDashStrafe = true;
+	CombatDodgeDistance = 0.f;
+	ActiveDashDuration = FMath::Clamp(Definition->Duration, 0.4f, 0.6f);
+	DashTimeLeft = ActiveDashDuration;
+	DashCooldownLeft = DashCooldown;
+	Velocity = FVector::ZeroVector;
+	MoveUpdatedComponent(FVector::ZeroVector, FRotator(0.f, DashFacingYaw + Definition->BodyYawOffset, 0.f).Quaternion(), false);
+	SetMovementMode(MOVE_Custom, NMOVE_CombatDodge);
+	return true;
+}
+
+bool UNinjaMovementComponent::CanCancelCombatDodge() const
+{
+	return IsCombatDodging() && CombatDodgeDefinition && GetCombatDodgeElapsed() >= CombatDodgeDefinition->CancelStart;
+}
+
+bool UNinjaMovementComponent::TryCancelCombatDodge()
+{
+	if (!IsCombatDodging()) return true;
+	if (!CanCancelCombatDodge()) return false;
+	FinishCombatDodge();
+	return true;
+}
+
+void UNinjaMovementComponent::SetSimulatedCombatDodge(UNinjaDodgeDefinition* Definition, float FacingYaw)
+{
+	CombatDodgeDefinition = Definition;
+	DashFacingYaw = FacingYaw;
+	bDashStrafe = true;
+	ActiveDashDuration = Definition ? Definition->Duration : 0.55f;
+	DashTimeLeft = ActiveDashDuration;
+}
+
+void UNinjaMovementComponent::FinishCombatDodge()
+{
+	DashTimeLeft = 0.f;
+	// O restante deste mesmo frame já é walking: não reaplicar a última translação da montagem.
+	RootMotionParams.Clear();
+	Velocity = FVector::ZeroVector;
+	MoveUpdatedComponent(FVector::ZeroVector, FRotator(0.f, DashFacingYaw, 0.f).Quaternion(), false);
+	ExitToWalkingOrFalling();
+	CharacterOwner->SetAnimRootMotionTranslationScale(1.f);
+	if (UAnimInstance* Anim = CharacterOwner->GetMesh()->GetAnimInstance()) Anim->SetRootMotionMode(ERootMotionMode::IgnoreRootMotion);
+	CombatDodgeDefinition = nullptr;
+}
+
+void UNinjaMovementComponent::PhysCombatDodge(float DeltaTime, int32 Iterations)
+{
+	if (DeltaTime < MIN_TICK_TIME || !CombatDodgeDefinition) return;
+	const float Step = FMath::Min(DeltaTime, DashTimeLeft);
+	const float From = GetCombatDodgeElapsed() / ActiveDashDuration;
+	DashTimeLeft = FMath::Max(0.f, DashTimeLeft - Step);
+	const float To = GetCombatDodgeElapsed() / ActiveDashDuration;
+	auto Progress = [&](float T) { return CombatDodgeDefinition->DistanceCurve ? FMath::Clamp(CombatDodgeDefinition->DistanceCurve->GetFloatValue(T), 0.f, 1.f) : 1.f - FMath::Square(1.f - T); };
+	float Distance = CombatDodgeDefinition->Distance * FMath::Max(0.f, Progress(To) - Progress(From));
+	if (CombatDodgeDefinition->bUseRootMotion)
+	{
+		RestorePreAdditiveRootMotionVelocity();
+		ApplyRootMotionToVelocity(DeltaTime);
+		Distance = HasAnimRootMotion() ? ProjectToGravityFloor(Velocity).Size() * Step : 0.f;
+	}
+	Distance = FMath::Min(Distance, FMath::Max(0.f, CombatDodgeDefinition->Distance - CombatDodgeDistance));
+	const FVector Before = UpdatedComponent->GetComponentLocation();
+	FHitResult Hit;
+	SafeMoveUpdatedComponent(DashDirection * Distance, UpdatedComponent->GetComponentQuat(), true, Hit);
+	if (Hit.IsValidBlockingHit()) HandleImpact(Hit, Step, DashDirection * Distance);
+	CombatDodgeDistance += ProjectToGravityFloor(UpdatedComponent->GetComponentLocation() - Before).Size();
+	Velocity = DashDirection * (Distance / FMath::Max(Step, MIN_TICK_TIME));
+	FFindFloorResult Floor;
+	FindFloor(UpdatedComponent->GetComponentLocation(), Floor, false);
+	if (Floor.IsWalkableFloor() && Floor.FloorDist <= MaxStepHeight)
+	{
+		FHitResult FloorHit;
+		SafeMoveUpdatedComponent(GetGravityDirection() * FMath::Max(0.f, Floor.FloorDist - MIN_FLOOR_DIST), UpdatedComponent->GetComponentQuat(), true, FloorHit);
+	}
+	else { FinishCombatDodge(); StartNewPhysics(DeltaTime - Step, Iterations); return; }
+	if (DashTimeLeft <= MIN_TICK_TIME)
+	{
+		FinishCombatDodge();
+		if (DeltaTime > Step) StartNewPhysics(DeltaTime - Step, Iterations);
+	}
+}
+
+void UNinjaMovementComponent::MatchDashDuration(float AnimationMoveTime)
+{
+	if (IsDashing() && bDashStrafe && AnimationMoveTime > 0.f)
+	{
+		ActiveDashDuration = AnimationMoveTime / FMath::Max(DashAnimRate, 0.01f);
+		DashTimeLeft = ActiveDashDuration;
+	}
 }
 
 void UNinjaMovementComponent::EndDash()
 {
 	DashTimeLeft = 0.f;
 	const float RunStateSpeed = bWantsToSprint ? SprintSpeed : (bWantsToRun ? RunSpeed : MaxWalkSpeed);
+	FVector ExitInput = ProjectToGravityFloor(Acceleration);
+	if (const AHypeWorldCharacter* Ninja = Cast<AHypeWorldCharacter>(CharacterOwner); Ninja && Ninja->IsLocallyControlled())
+	{
+		ExitInput = ProjectToGravityFloor(Ninja->RawMoveDirection);
+	}
+	const bool bHasMoveInput = !ExitInput.IsNearlyZero();
 	FFindFloorResult Floor;
 	FindFloor(UpdatedComponent->GetComponentLocation(), Floor, false);
 	if (!Floor.IsWalkableFloor())
 	{
+		if (bDashStrafe)
+		{
+			const float ExitSpeed = bHasMoveInput ? RunStateSpeed : 0.f;
+			Velocity = DashDirection * ExitSpeed - GetGravityDirection() * DashEntryUpSpeed;
+			bAirMomentum = false;
+			SetMovementMode(MOVE_Falling);
+			return;
+		}
 		// No ar: o embalo do dash continua (sem frenagem até pousar) e sobe um pouco, para emendar pulo/queda sem "travar"
 		const float ExitSpeed = FMath::Max3(RunStateSpeed, DashSpeed * AirDashExitSpeedFraction, DashEntrySpeed);
-		Velocity = DashDirection * ExitSpeed - GetGravityDirection() * AirDashExitUpSpeed;
+		Velocity = DashDirection * ExitSpeed - GetGravityDirection() * (bDashStrafe ? 0.f : AirDashExitUpSpeed);
 		bAirMomentum = true;
 		SetMovementMode(MOVE_Falling);
 		return;
@@ -359,7 +505,9 @@ void UNinjaMovementComponent::EndDash()
 	// No chão: correndo sai na velocidade da corrida; senão sai rápido e o atrito desacelera suave (sem parada seca)
 	if (bWantsToSprint || bWantsToRun || !DashRootMotionAnim)
 	{
-		Velocity = DashDirection * FMath::Max(RunStateSpeed, DashRootMotionAnim ? 0.f : DashSpeed * GroundDashExitSpeedFraction);
+		Velocity = bDashStrafe
+			? ExitInput.GetClampedToMaxSize(1.f) * RunStateSpeed
+			: DashDirection * FMath::Max(RunStateSpeed, DashRootMotionAnim ? 0.f : DashSpeed * GroundDashExitSpeedFraction);
 	}
 	ExitToWalkingOrFalling();
 }
@@ -398,10 +546,27 @@ void UNinjaMovementComponent::PhysDash(float DeltaTime, int32 Iterations)
 		HandleImpact(Hit, DeltaTime, Delta);
 		SlideAlongSurface(Delta, 1.f - Hit.Time, Hit.Normal, Hit, true);
 	}
+	// O dash lateral segue o piso; fora da borda, entrega imediatamente à física de queda.
+	if (bDashStrafe)
+	{
+		FFindFloorResult Floor;
+		FindFloor(UpdatedComponent->GetComponentLocation(), Floor, false);
+		if (Floor.IsWalkableFloor() && Floor.FloorDist <= MaxStepHeight)
+		{
+			FHitResult FloorHit;
+			SafeMoveUpdatedComponent(GetGravityDirection() * FMath::Max(0.f, Floor.FloorDist - MIN_FLOOR_DIST), UpdatedComponent->GetComponentQuat(), true, FloorHit);
+		}
+		else
+		{
+			EndDash();
+			return;
+		}
+	}
 
 	if (DashTimeLeft <= 0.f)
 	{
 		EndDash();
+		if (DeltaTime > StepTime) StartNewPhysics(DeltaTime - StepTime, Iterations);
 	}
 }
 
@@ -544,6 +709,14 @@ void FSavedMove_Ninja::Clear()
 	bSavedWantsToRun = false;
 	bSavedAirDashUsed = false;
 	SavedDashTimeLeft = 0.f;
+	SavedActiveDashDuration = 0.f;
+	SavedCombatDodgeDefinition = nullptr;
+	SavedCombatDodgeDistance = 0.f;
+	SavedDashEntrySpeed = 0.f;
+	SavedDashEntryUpSpeed = 0.f;
+	SavedDashFacingYaw = 0.f;
+	SavedDashInputAngle = 0.f;
+	bSavedDashStrafe = false;
 	SavedDashCooldownLeft = 0.f;
 	SavedDashDirection = FVector::ForwardVector;
 	SavedWallRunTimeLeft = 0.f;
@@ -585,6 +758,14 @@ void FSavedMove_Ninja::SetMoveFor(ACharacter* C, float InDeltaTime, FVector cons
 		bSavedWantsToRun = Move->bWantsToRun;
 		bSavedAirDashUsed = Move->bAirDashUsed;
 		SavedDashTimeLeft = Move->DashTimeLeft;
+		SavedActiveDashDuration = Move->ActiveDashDuration;
+		SavedCombatDodgeDefinition = Move->CombatDodgeDefinition;
+		SavedCombatDodgeDistance = Move->CombatDodgeDistance;
+		SavedDashEntrySpeed = Move->DashEntrySpeed;
+		SavedDashEntryUpSpeed = Move->DashEntryUpSpeed;
+		SavedDashFacingYaw = Move->DashFacingYaw;
+		SavedDashInputAngle = Move->DashInputAngle;
+		bSavedDashStrafe = Move->bDashStrafe;
 		SavedDashCooldownLeft = Move->DashCooldownLeft;
 		SavedDashDirection = Move->DashDirection;
 		SavedWallRunTimeLeft = Move->WallRunTimeLeft;
@@ -601,6 +782,14 @@ void FSavedMove_Ninja::PrepMoveFor(ACharacter* C)
 	{
 		Move->bAirDashUsed = bSavedAirDashUsed;
 		Move->DashTimeLeft = SavedDashTimeLeft;
+		Move->ActiveDashDuration = SavedActiveDashDuration;
+		Move->CombatDodgeDefinition = SavedCombatDodgeDefinition;
+		Move->CombatDodgeDistance = SavedCombatDodgeDistance;
+		Move->DashEntrySpeed = SavedDashEntrySpeed;
+		Move->DashEntryUpSpeed = SavedDashEntryUpSpeed;
+		Move->DashFacingYaw = SavedDashFacingYaw;
+		Move->DashInputAngle = SavedDashInputAngle;
+		Move->bDashStrafe = bSavedDashStrafe;
 		Move->DashCooldownLeft = SavedDashCooldownLeft;
 		Move->DashDirection = SavedDashDirection;
 		Move->WallRunTimeLeft = SavedWallRunTimeLeft;
@@ -650,6 +839,10 @@ void UNinjaMovementComponent::HandleImpact(const FHitResult& Hit, float TimeSlic
 
 bool UNinjaMovementComponent::TryAttachToSurface(const FHitResult& Hit)
 {
+	if (IsDashing() && bDashStrafe)
+	{
+		return false; // A esquiva lateral colide e termina, sem virar corrida na parede.
+	}
 	// Com a infusão, indo contra uma parede/teto (não um chão), ela vira o chão: a gravidade passa a apontar para ela
 	if (!IsChakraFeetActive() || SurfaceAttachBlock > 0.f || !Hit.bBlockingHit || !(IsMovingOnGround() || IsFalling() || IsDashing()))
 	{

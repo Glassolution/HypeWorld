@@ -17,6 +17,10 @@
 	],
 	"Plugins": [
 		{
+			"Name": "NiagaraFluids",
+			"Enabled": true
+		},
+		{
 			"Name": "AnimationWarping",
 			"Enabled": true
 		},

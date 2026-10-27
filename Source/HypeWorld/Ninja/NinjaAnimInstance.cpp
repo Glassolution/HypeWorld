@@ -12,9 +12,9 @@
 #include "TwoBoneIK.h"
 #include "Animation/AnimSequenceBase.h"
 #include "Animation/AnimationPoseData.h"
+#include "Animation/AnimMontageEvaluationState.h"
 #include "Engine/Engine.h"
 #include "HAL/IConsoleManager.h"
-#include "BoneControllers/AnimNode_OrientationWarping.h"
 
 namespace
 {
@@ -45,6 +45,14 @@ void UNinjaAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		return;
 	}
 
+	const AHypeWorldCharacter* DashCharacter = Cast<AHypeWorldCharacter>(Char);
+	PoseInputs.bDashPose = Move->IsDashing() || (DashCharacter && DashCharacter->IsPlayingDashMontage());
+	if (PoseInputs.bDashPose)
+	{
+		PoseInputs.SprintAlpha = 0.f;
+		CombatAlpha = 0.f;
+		BattleAlpha = 0.f;
+	}
 	// Modo de batalha parado: pose de luta (some ao andar e quando uma montagem — golpe, chakra, reação — toca)
 	{
 		const AHypeWorldCharacter* Ninja = Cast<AHypeWorldCharacter>(Char);
@@ -62,13 +70,14 @@ void UNinjaAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		PoseInputs.BattleTime = BattleTime;
 	}
 
-	// Corrida de combate (trote, sem Shift): tronco e braços na pose de prontidão, correndo ou parado; some na corrida ninja,
+	// Corrida de combate (trote, sem Shift, em modo de batalha): tronco e braços na pose de prontidão; some na corrida ninja,
 	// andando, no ar e quando uma montagem (golpe, chakra, reação) toca. Nas curvas o tronco inclina para dentro.
 	{
 		const AHypeWorldCharacter* Ninja = Cast<AHypeWorldCharacter>(Char);
-		const bool bCombatRun = ActiveBattleIdle && Move->IsMovingOnGround() && Move->WantsToRun() && !Move->WantsToSprint()
+		const bool bCombatRun = Ninja && Ninja->IsInBattleMode() && ActiveBattleIdle && Move->IsMovingOnGround() && Move->WantsToRun() && !Move->WantsToSprint()
 			&& !Move->IsFocusing() && !Move->IsDashing() && !(Ninja && Ninja->IsAttacking());
-		const float Target = bCombatRun ? 1.f - FMath::Clamp(GetSlotMontageGlobalWeight(FName("DefaultSlot")), 0.f, 1.f) : 0.f;
+		const float MovingAlpha = FMath::SmoothStep(20.f, 160.f, float(Char->GetVelocity().Size2D()));
+		const float Target = bCombatRun ? MovingAlpha * (1.f - FMath::Clamp(GetSlotMontageGlobalWeight(FName("DefaultSlot")), 0.f, 1.f)) : 0.f;
 		CombatAlpha = FMath::FInterpTo(CombatAlpha, Target, DeltaSeconds, CombatBlendSpeed);
 		const float Yaw = Char->GetActorRotation().Yaw;
 		const float YawRate = FMath::FindDeltaAngleDegrees(LastActorYaw, Yaw) / DeltaSeconds;
@@ -95,6 +104,13 @@ void UNinjaAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	// As diagonais usam frente até 45 graus e costas a partir de 135 graus; o warping cobre a diferença.
 	const float SourceAngle = AbsDirection <= 45.f ? 0.f : (AbsDirection < 135.f ? 2.f * (AbsDirection - 45.f) : 180.f);
 	PoseInputs.CombatWarpAngle = Move->HasCustomGravity() ? 0.f : FMath::Sign(FullDirection) * (AbsDirection - SourceAngle);
+	// As amostras diagonais usam o ciclo frontal/traseiro com os passos girados.
+	// Essa correção pertence à locomoção, independente da guarda do modo de batalha.
+	const bool bDirectionalRun = Move->IsMovingOnGround() && Move->WantsToRun() && !Move->WantsToSprint()
+		&& !PoseInputs.bDashPose && !Move->HasCustomGravity();
+	const float WarpTarget = bDirectionalRun ? FMath::SmoothStep(450.f, 650.f, SurfaceSpeed)
+		* (1.f - FMath::Clamp(GetSlotMontageGlobalWeight(FName("DefaultSlot")), 0.f, 1.f)) : 0.f;
+	PoseInputs.LocomotionWarpAlpha = FMath::FInterpTo(PoseInputs.LocomotionWarpAlpha, WarpTarget, DeltaSeconds, 12.f);
 	if (GEngine && CVarNinjaLocomotionDebug.GetValueOnGameThread() != 0 && Char->IsLocallyControlled())
 	{
 		auto ReadNumber = [this](FName Name)
@@ -156,8 +172,8 @@ void UNinjaAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	PoseInputs.LookDownAlpha = FMath::FInterpTo(PoseInputs.LookDownAlpha, LookTarget, DeltaSeconds, 6.f);
 
 	// --- Corrida ninja: braços esticados para trás (pela velocidade, então funciona nos outros jogadores também) ---
-	const float SprintTarget = (Move->IsMovingOnGround() && (Move->IsSprinting() || Velocity.Size2D() > FMath::Max(SprintPoseMinSpeed, Move->RunSpeed + 50.f))) ? 1.f : 0.f;
-	PoseInputs.SprintAlpha = FMath::FInterpTo(PoseInputs.SprintAlpha, SprintTarget, DeltaSeconds, 6.f);
+	const float SprintTarget = Move->IsSprinting() ? 1.f : 0.f;
+	PoseInputs.SprintAlpha = PoseInputs.bDashPose ? 0.f : FMath::FInterpTo(PoseInputs.SprintAlpha, SprintTarget, DeltaSeconds, 6.f);
 
 	// Cada pisada: o pé mais baixo é o de apoio, o corpo balança para ele; as mãos seguem atrasadas e "flutuam" no sobe e desce
 	float SwayTarget = 0.f;
@@ -294,6 +310,15 @@ void UNinjaAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds)
 void FNinjaAnimInstanceProxy::PreUpdate(UAnimInstance* InAnimInstance, float DeltaSeconds)
 {
 	FAnimInstanceProxy::PreUpdate(InAnimInstance, DeltaSeconds);
+	LateralDashMontage = nullptr;
+	if (const AHypeWorldCharacter* Character = Cast<AHypeWorldCharacter>(InAnimInstance->TryGetPawnOwner()))
+	{
+		const UNinjaMovementComponent* Movement = Character->GetNinjaMovement();
+		if (Movement && Movement->IsDashStrafe() && Character->IsPlayingDashMontage())
+		{
+			LateralDashMontage = Character->GetActiveDashMontage();
+		}
+	}
 
 	if (const UNinjaAnimInstance* Ninja = Cast<UNinjaAnimInstance>(InAnimInstance))
 	{
@@ -340,6 +365,54 @@ bool FNinjaAnimInstanceProxy::Evaluate_WithRoot(FPoseContext& Output, FAnimNode_
 {
 	// Primeiro a animação normal (gráfico do Animation Blueprint), depois os retoques.
 	EvaluateAnimationNode_WithRoot(Output, InRootNode);
+	auto RememberPose = [&]()
+	{
+		if (InRootNode != GetRootNode()) return;
+		PreviousFinalPose.SetNum(Output.Pose.GetNumBones());
+		for (const FCompactPoseBoneIndex Index : Output.Pose.ForEachBoneIndex()) PreviousFinalPose[Index.GetInt()] = Output.Pose[Index];
+	};
+	if (InRootNode == GetRootNode() && LateralDashMontage && LateralDashMontage->SlotAnimTracks.Num() > 0)
+	{
+		for (const FMontageEvaluationState& State : GetMontageEvaluationData())
+		{
+			if (State.Montage.Get() == LateralDashMontage)
+			{
+				if (!bHadLateralDashPose || State.MontagePosition < LastLateralDashPosition)
+				{
+					DashEntryPose = PreviousFinalPose;
+				}
+				TArray<FTransform> ExitPose;
+				const bool bExiting = State.BlendInfo.GetDesiredValue() < 0.5f;
+				if (bExiting)
+				{
+					ExitPose.SetNum(Output.Pose.GetNumBones());
+					for (const FCompactPoseBoneIndex Index : Output.Pose.ForEachBoneIndex()) ExitPose[Index.GetInt()] = Output.Pose[Index];
+				}
+				// Entrada curta a partir da última pose estável; a corrida não continua tocando sobre o salto.
+				Output.ResetToRefPose();
+				FAnimationPoseData PoseData(Output);
+				LateralDashMontage->SlotAnimTracks[0].AnimTrack.GetAnimationPose(PoseData, FAnimExtractContext(double(State.MontagePosition)));
+				const float EntryAlpha = FMath::SmoothStep(0.f, 0.07f, State.MontagePosition);
+				const float ExitAlpha = bExiting ? FMath::Clamp(State.BlendInfo.GetBlendedValue(), 0.f, 1.f) : 1.f;
+				for (const FCompactPoseBoneIndex Index : Output.Pose.ForEachBoneIndex())
+				{
+					if (EntryAlpha < 1.f && DashEntryPose.Num() == Output.Pose.GetNumBones()) Output.Pose[Index].BlendWith(DashEntryPose[Index.GetInt()], 1.f - EntryAlpha);
+					if (bExiting) Output.Pose[Index].BlendWith(ExitPose[Index.GetInt()], 1.f - ExitAlpha);
+				}
+				bHadLateralDashPose = true;
+				LastLateralDashPosition = State.MontagePosition;
+				RememberPose();
+				return true;
+			}
+		}
+	}
+	if (InRootNode == GetRootNode()) bHadLateralDashPose = false;
+	// A montagem de dash já fornece a pose completa. Não deformar seus braços, pernas ou tronco.
+	if (Inputs.bDashPose)
+	{
+		RememberPose();
+		return true;
+	}
 	if (InRootNode == GetRootNode())
 	{
 		ApplyCombatReady(Output);
@@ -351,6 +424,7 @@ bool FNinjaAnimInstanceProxy::Evaluate_WithRoot(FPoseContext& Output, FAnimNode_
 		ApplyRelaxedHands(Output);
 		ApplyNinjaPose(Output);
 	}
+	RememberPose();
 	return true;
 }
 
@@ -915,24 +989,24 @@ void FNinjaAnimInstanceProxy::ApplyCombatReady(FPoseContext& Output) const
 
 void FNinjaAnimInstanceProxy::ApplyCombatOrientationWarp(FPoseContext& Output)
 {
-	if (Inputs.CombatAlpha < 0.01f || Inputs.CombatMoving < 0.01f || FMath::Abs(Inputs.CombatWarpAngle) < 0.01f) return;
-	FAnimNode_OrientationWarping Warp;
-	Warp.Mode = EWarpingEvaluationMode::Manual;
-	Warp.OrientationAngle = Inputs.CombatWarpAngle * Inputs.CombatAlpha;
-	Warp.DistributedBoneOrientationAlpha = 1.f;
-	Warp.RotationInterpSpeed = 0.f;
-	Warp.SpineBones.Add(FBoneReference(TEXT("spine_01")));
-	Warp.IKFootRootBone = FBoneReference(TEXT("ik_foot_root"));
-	Warp.IKFootBones.Add(FBoneReference(TEXT("ik_foot_l")));
-	Warp.IKFootBones.Add(FBoneReference(TEXT("ik_foot_r")));
-	Warp.Initialize_AnyThread(FAnimationInitializeContext(this));
-	Warp.CacheBones_AnyThread(FAnimationCacheBonesContext(this));
-	if (!Warp.IsValidToEvaluate(Output.Pose.GetBoneContainer().GetSkeletonAsset(), Output.Pose.GetBoneContainer())) return;
-	FComponentSpacePoseContext Warped(this);
-	Warped.Pose.InitPose(Output.Pose);
-	TArray<FBoneTransform> Changes;
-	Warp.EvaluateSkeletalControl_AnyThread(Warped, Changes);
-	FCSPose<FCompactPose>::ConvertComponentPosesToLocalPoses(MoveTemp(Warped.Pose), Output.Pose);
+	if (Inputs.LocomotionWarpAlpha < 0.01f || FMath::Abs(Inputs.CombatWarpAngle) < 0.01f) return;
+	const FBoneContainer& Bones = Output.Pose.GetBoneContainer();
+	FBoneReference PelvisRef(TEXT("pelvis")), SpineRef(TEXT("spine_01"));
+	PelvisRef.Initialize(Bones);
+	SpineRef.Initialize(Bones);
+	const FCompactPoseBoneIndex Pelvis = PelvisRef.GetCompactPoseIndex(Bones);
+	const FCompactPoseBoneIndex Spine = SpineRef.GetCompactPoseIndex(Bones);
+	if (!Pelvis.IsValid() || !Spine.IsValid()) return;
+	FCSPose<FCompactPose> CS;
+	CS.InitPose(Output.Pose);
+	FTransform Hip = CS.GetComponentSpaceTransform(Pelvis);
+	const FTransform UpperBody = CS.GetComponentSpaceTransform(Spine);
+	const FQuat Turn(Inputs.UpCS.GetSafeNormal(), FMath::DegreesToRadians(Inputs.CombatWarpAngle * Inputs.LocomotionWarpAlpha));
+	Hip.SetRotation((Turn * Hip.GetRotation()).GetNormalized());
+	// As pernas herdam o giro do quadril; preservar a coluna mantém a orientação do tronco.
+	const FBoneTransform Changes[] = { FBoneTransform(Pelvis, Hip), FBoneTransform(Spine, UpperBody) };
+	CS.LocalBlendCSBoneTransforms(Changes, 1.f);
+	FCSPose<FCompactPose>::ConvertComponentPosesToLocalPoses(MoveTemp(CS), Output.Pose);
 }
 
 void FNinjaAnimInstanceProxy::ApplyBattleIdle(FPoseContext& Output) const

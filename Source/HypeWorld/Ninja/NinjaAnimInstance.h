@@ -12,6 +12,7 @@
 /** Dados que o jogo calcula e a pose usa (a pose é calculada em outra thread, por isso copiamos). */
 struct FNinjaPoseInputs
 {
+	bool bDashPose = false;
 	// Direções do personagem no espaço do boneco
 	FVector ForwardCS = FVector::ForwardVector;
 	FVector RightCS = FVector::RightVector;
@@ -36,6 +37,7 @@ struct FNinjaPoseInputs
 	float CombatLean = 0.f;						// graus de inclinação lateral do tronco na curva (+ = para a direita)
 	float CombatMoving = 0.f;
 	float CombatWarpAngle = 0.f;
+	float LocomotionWarpAlpha = 0.f;
 	float BattleAlpha = 0.f;					// 0..1 pose de luta parada (modo de batalha)
 	float BattleTime = 0.f;						// relógio da pose de luta (ela é um loop)
 	float Time = 0.f;							// relógio da animação (respiração)
@@ -77,6 +79,11 @@ private:
 	void OpenHand(FCompactPose& Pose, bool bRight, float Alpha, bool bOnlyIndexAndMiddle = false) const;
 
 	FNinjaPoseInputs Inputs;
+	const UAnimMontage* LateralDashMontage = nullptr;
+	TArray<FTransform> PreviousFinalPose;
+	TArray<FTransform> DashEntryPose;
+	float LastLateralDashPosition = -1.f;
+	bool bHadLateralDashPose = false;
 	bool bProceduralPose = true;
 	const UAnimSequenceBase* RelaxedHands = nullptr;
 	const UAnimSequenceBase* FistHands = nullptr;

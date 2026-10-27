@@ -18,6 +18,7 @@ class UTextBlock;
 class UProgressBar;
 class UTexture2D;
 class UWidget;
+class UNinjaJutsuData;
 
 UCLASS()
 class HYPEWORLD_API UNinjaHUDWidget : public UUserWidget
@@ -178,6 +179,9 @@ private:
 	UPROPERTY() TArray<TObjectPtr<UCanvasPanelSlot>> JutsuSlots;
 	UPROPERTY() TArray<TObjectPtr<UNinjaJutsuSlotWidget>> JutsuSlotWidgets;
 	TArray<FVector2D> JutsuSlotBase;
+	/** Jutsu mostrado em cada slot (do JutsuLoadout do personagem) e usos já vistos (pulso ao usar) */
+	TArray<TWeakObjectPtr<const UNinjaJutsuData>> ShownSlotJutsu;
+	TArray<int32> ShownJutsuUses;
 	float JutsuOffset = 78.f;
 
 	float Health = -1.f;

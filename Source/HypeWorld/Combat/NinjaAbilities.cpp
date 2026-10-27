@@ -25,7 +25,8 @@ void UGA_NinjaMeleeCombo::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 	AHypeWorldCharacter* Ninja = Cast<AHypeWorldCharacter>(GetAvatarActorFromActorInfo());
 	const int32 AttackId = TriggerEventData ? FMath::RoundToInt(TriggerEventData->EventMagnitude) : 0;
 	const FNinjaAttack* Attack = Ninja ? Ninja->GetAttack(AttackId) : nullptr;
-	if (!Ninja || !Attack || !Attack->Montage || Ninja->IsChargingChakra() || !CommitAbility(Handle, ActorInfo, ActivationInfo))
+	if (!Ninja || !Attack || !Attack->Montage || !Ninja->CanActivateAttack(AttackId)
+		|| Ninja->IsChargingChakra() || !CommitAbility(Handle, ActorInfo, ActivationInfo))
 	{
 		EndAbility(Handle, ActorInfo, ActivationInfo, true, true);
 		return;

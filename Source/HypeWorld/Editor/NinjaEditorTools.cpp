@@ -1,6 +1,7 @@
 // Ferramentas chamadas pelos scripts do editor.
 
 #include "NinjaEditorTools.h"
+#include "Curves/CurveLinearColor.h"
 #include "Animation/BlendSpace.h"
 #include "Animation/AnimMontage.h"
 #include "Animation/Skeleton.h"
@@ -29,6 +30,27 @@
 #include "EdGraphSchema_K2.h"
 #include "Kismet2/BlueprintEditorUtils.h"
 #include "Kismet2/KismetEditorUtilities.h"
+#include "AnimGraphNode_Slot.h"
+#include "NiagaraSystem.h"
+#include "NiagaraEmitter.h"
+#include "NiagaraEmitterHandle.h"
+#include "NiagaraScript.h"
+#include "NiagaraRendererProperties.h"
+#include "NiagaraSystemFactoryNew.h"
+#include "NiagaraEditorUtilities.h"
+#include "NiagaraScriptSource.h"
+#include "NiagaraGraph.h"
+#include "NiagaraNodeFunctionCall.h"
+#include "NiagaraDataInterface.h"
+#include "NiagaraScriptRuntimeData.h"
+#include "NiagaraBakerSettings.h"
+#include "NiagaraBakerOutputTexture2D.h"
+#include "EdGraph/EdGraphPin.h"
+#include "NiagaraNodeOutput.h"
+#include "ViewModels/Stack/NiagaraParameterHandle.h"
+#include "ViewModels/Stack/NiagaraStackGraphUtilities.h"
+#include "Curves/CurveLinearColor.h"
+#include "Curves/CurveLinearColorAtlas.h"
 #endif
 
 bool UNinjaEditorTools::RebuildBlendSpace(UBlendSpace* BlendSpace)
@@ -433,4 +455,559 @@ AActor* UNinjaEditorTools::SpawnBlockingBox(UObject* WorldContextObject, FVector
 #else
 	return nullptr;
 #endif
+}
+
+bool UNinjaEditorTools::InsertSlotBeforeOutput(UAnimBlueprint* AnimBP, FName SlotName)
+{
+#if WITH_EDITOR
+	UEdGraph* AnimGraph = nullptr;
+	for (UEdGraph* Graph : AnimBP ? AnimBP->FunctionGraphs : TArray<TObjectPtr<UEdGraph>>())
+	{
+		if (Graph->GetFName() == UEdGraphSchema_K2::GN_AnimGraph)
+		{
+			AnimGraph = Graph;
+		}
+	}
+	UAnimGraphNode_Root* Root = nullptr;
+	for (UEdGraphNode* GraphNode : AnimGraph ? AnimGraph->Nodes : TArray<TObjectPtr<UEdGraphNode>>())
+	{
+		Root = Root ? Root : Cast<UAnimGraphNode_Root>(GraphNode);
+		if (UAnimGraphNode_Slot* Existing = Cast<UAnimGraphNode_Slot>(GraphNode))
+		{
+			if (Existing->Node.SlotName == SlotName)
+			{
+				return true;
+			}
+		}
+	}
+	UEdGraphPin* ResultIn = nullptr;
+	for (UEdGraphPin* Pin : Root ? Root->Pins : TArray<UEdGraphPin*>())
+	{
+		ResultIn = (!ResultIn && Pin->Direction == EGPD_Input) ? Pin : ResultIn;
+	}
+	if (!ResultIn || ResultIn->LinkedTo.Num() != 1)
+	{
+		return false;
+	}
+	UEdGraphPin* PrevOut = ResultIn->LinkedTo[0];
+
+	UAnimGraphNode_Slot* SlotNode = NewObject<UAnimGraphNode_Slot>(AnimGraph, NAME_None, RF_Transactional);
+	SlotNode->Node.SlotName = SlotName;
+	AnimGraph->AddNode(SlotNode, false, false);
+	SlotNode->CreateNewGuid();
+	SlotNode->PostPlacedNewNode();
+	SlotNode->AllocateDefaultPins();
+	SlotNode->NodePosX = Root->NodePosX - 220;
+	SlotNode->NodePosY = Root->NodePosY;
+	UEdGraphPin* SlotIn = nullptr;
+	UEdGraphPin* SlotOut = nullptr;
+	for (UEdGraphPin* Pin : SlotNode->Pins)
+	{
+		if (Pin->Direction == EGPD_Input && !SlotIn) { SlotIn = Pin; }
+		if (Pin->Direction == EGPD_Output && !SlotOut) { SlotOut = Pin; }
+	}
+	const UEdGraphSchema* Schema = AnimGraph->GetSchema();
+	ResultIn->BreakAllPinLinks();
+	if (!SlotIn || !SlotOut || !Schema->TryCreateConnection(PrevOut, SlotIn) || !Schema->TryCreateConnection(SlotOut, ResultIn))
+	{
+		return false;
+	}
+	FBlueprintEditorUtils::MarkBlueprintAsStructurallyModified(AnimBP);
+	FKismetEditorUtilities::CompileBlueprint(AnimBP);
+	AnimBP->MarkPackageDirty();
+	return true;
+#else
+	return false;
+#endif
+}
+
+#if WITH_EDITOR
+namespace
+{
+	FNiagaraEmitterHandle* FindEmitterHandle(UNiagaraSystem* System, const FString& EmitterName)
+	{
+		if (!System)
+		{
+			return nullptr;
+		}
+		for (FNiagaraEmitterHandle& Handle : System->GetEmitterHandles())
+		{
+			if (Handle.GetName().ToString() == EmitterName)
+			{
+				return &Handle;
+			}
+		}
+		return nullptr;
+	}
+
+	/** Scripts que guardam constantes deste emissor: os dele e os do sistema (Emitter Spawn/Update vão para os do sistema) */
+	TArray<UNiagaraScript*> ScriptsOf(UNiagaraSystem* System, FNiagaraEmitterHandle& Handle)
+	{
+		TArray<UNiagaraScript*> Scripts;
+		if (FVersionedNiagaraEmitterData* Data = Handle.GetEmitterData())
+		{
+			Data->GetScripts(Scripts, false);
+		}
+		Scripts.Add(System->GetSystemSpawnScript());
+		Scripts.Add(System->GetSystemUpdateScript());
+		return Scripts;
+	}
+
+	FString ValueToString(const FNiagaraVariableBase& Var, const uint8* Data)
+	{
+		const FNiagaraTypeDefinition& T = Var.GetType();
+		if (!Data) { return TEXT("?"); }
+		if (T == FNiagaraTypeDefinition::GetFloatDef()) { return FString::SanitizeFloat(*(const float*)Data); }
+		if (T == FNiagaraTypeDefinition::GetIntDef() || T.IsEnum()) { return FString::FromInt(*(const int32*)Data); }
+		if (T == FNiagaraTypeDefinition::GetBoolDef()) { return (*(const int32*)Data) ? TEXT("true") : TEXT("false"); }
+		const int32 N = T.GetSize() / 4;
+		if (T.GetSize() % 4 == 0 && N <= 4)
+		{
+			TArray<FString> Parts;
+			for (int32 i = 0; i < N; ++i) { Parts.Add(FString::SanitizeFloat(((const float*)Data)[i])); }
+			return FString::Join(Parts, TEXT(","));
+		}
+		return FString::Printf(TEXT("<%d bytes>"), T.GetSize());
+	}
+}
+#endif
+
+UNiagaraSystem* UNinjaEditorTools::CreateNiagaraSystem(const FString& PackagePath, const FString& AssetName, const TArray<UNiagaraEmitter*>& Emitters, const TArray<FString>& EmitterNames)
+{
+#if WITH_EDITOR
+	const FString PackageName = PackagePath / AssetName;
+	UPackage* Package = CreatePackage(*PackageName);
+	UNiagaraSystem* System = NewObject<UNiagaraSystem>(Package, *AssetName, RF_Public | RF_Standalone | RF_Transactional);
+	UNiagaraSystemFactoryNew::InitializeSystem(System, true);
+	for (int32 i = 0; i < Emitters.Num(); ++i)
+	{
+		if (!Emitters[i])
+		{
+			continue;
+		}
+		const FGuid Id = FNiagaraEditorUtilities::AddEmitterToSystem(*System, *Emitters[i], Emitters[i]->GetExposedVersion().VersionGuid, true);
+		for (FNiagaraEmitterHandle& Handle : System->GetEmitterHandles())
+		{
+			if (Handle.GetId() == Id && EmitterNames.IsValidIndex(i))
+			{
+				Handle.SetName(*EmitterNames[i], *System);
+			}
+		}
+	}
+	FAssetRegistryModule::AssetCreated(System);
+	System->MarkPackageDirty();
+	System->RequestCompile(false);
+	System->WaitForCompilationComplete();
+	return System;
+#else
+	return nullptr;
+#endif
+}
+
+FString UNinjaEditorTools::DescribeNiagaraSystem(UNiagaraSystem* System, bool bRendererProperties)
+{
+	FString Out;
+#if WITH_EDITOR
+	if (!System)
+	{
+		return Out;
+	}
+	for (FNiagaraEmitterHandle& Handle : System->GetEmitterHandles())
+	{
+		Out += FString::Printf(TEXT("== Emissor %s\n"), *Handle.GetName().ToString());
+		TSet<FString> Seen;
+		for (UNiagaraScript* Script : ScriptsOf(System, Handle))
+		{
+			if (!Script) { continue; }
+			for (const FNiagaraVariableWithOffset& Var : Script->RapidIterationParameters.ReadParameterVariables())
+			{
+				const FString Name = Var.GetName().ToString();
+				if (Seen.Contains(Name)) { continue; }
+				Seen.Add(Name);
+				Out += FString::Printf(TEXT("  %s (%s) = %s\n"), *Name, *Var.GetType().GetName(),
+					*ValueToString(Var, Script->RapidIterationParameters.GetParameterData(Var)));
+			}
+		}
+		if (FVersionedNiagaraEmitterData* Data = Handle.GetEmitterData())
+		{
+			int32 Index = 0;
+			for (UNiagaraRendererProperties* Renderer : Data->GetRenderers())
+			{
+				Out += FString::Printf(TEXT("  Renderer %d: %s\n"), Index++, *GetNameSafe(Renderer ? Renderer->GetClass() : nullptr));
+				if (Renderer && bRendererProperties)
+				{
+					for (TFieldIterator<FProperty> It(Renderer->GetClass()); It; ++It)
+					{
+						if (It->HasAnyPropertyFlags(CPF_Edit))
+						{
+							FString Value;
+							It->ExportTextItem_Direct(Value, It->ContainerPtrToValuePtr<void>(Renderer), nullptr, Renderer, PPF_None);
+							Out += FString::Printf(TEXT("     %s = %s\n"), *It->GetName(), *Value.Left(120));
+						}
+					}
+				}
+			}
+		}
+	}
+#endif
+	return Out;
+}
+
+int32 UNinjaEditorTools::SetNiagaraConstant(UNiagaraSystem* System, const FString& EmitterName, const FString& ParamName, const FString& Value)
+{
+	int32 Count = 0;
+#if WITH_EDITOR
+	FNiagaraEmitterHandle* Handle = FindEmitterHandle(System, EmitterName);
+	if (!Handle)
+	{
+		return -1;
+	}
+	TArray<FString> Parts;
+	Value.ParseIntoArray(Parts, TEXT(","));
+	for (UNiagaraScript* Script : ScriptsOf(System, *Handle))
+	{
+		if (!Script) { continue; }
+		FNiagaraParameterStore& Store = Script->RapidIterationParameters;
+		TArray<FNiagaraVariableWithOffset> Vars(Store.ReadParameterVariables());
+		for (const FNiagaraVariableWithOffset& Var : Vars)
+		{
+			const FString Name = Var.GetName().ToString();
+			const bool bMatch = Name == ParamName
+				|| (Name.EndsWith(TEXT(".") + ParamName) && Name.StartsWith(TEXT("Constants.") + EmitterName + TEXT(".")));
+			if (!bMatch) { continue; }
+			const FNiagaraTypeDefinition& T = Var.GetType();
+			TArray<uint8> Bytes;
+			Bytes.SetNumZeroed(T.GetSize());
+			if (T == FNiagaraTypeDefinition::GetBoolDef())
+			{
+				*(int32*)Bytes.GetData() = (Value.ToBool() || Value == TEXT("1")) ? FNiagaraBool::True : FNiagaraBool::False;
+			}
+			else if (T == FNiagaraTypeDefinition::GetIntDef() || T.IsEnum())
+			{
+				*(int32*)Bytes.GetData() = FCString::Atoi(*Value);
+			}
+			else if (T.GetSize() % 4 == 0 && T.GetSize() / 4 <= 4)
+			{
+				for (int32 i = 0; i < T.GetSize() / 4; ++i)
+				{
+					((float*)Bytes.GetData())[i] = Parts.IsValidIndex(i) ? FCString::Atof(*Parts[i]) : (Parts.Num() == 1 ? FCString::Atof(*Parts[0]) : 0.f);
+				}
+			}
+			else
+			{
+				continue;
+			}
+			Script->Modify();
+			Store.SetParameterData(Bytes.GetData(), FNiagaraVariable(Var), false);
+			Count++;
+		}
+	}
+	System->MarkPackageDirty();
+#endif
+	return Count;
+}
+
+bool UNinjaEditorTools::SetNiagaraRendererProperty(UNiagaraSystem* System, const FString& EmitterName, int32 RendererIndex, const FString& Property, const FString& Value)
+{
+#if WITH_EDITOR
+	FNiagaraEmitterHandle* Handle = FindEmitterHandle(System, EmitterName);
+	FVersionedNiagaraEmitterData* Data = Handle ? Handle->GetEmitterData() : nullptr;
+	if (!Data || !Data->GetRenderers().IsValidIndex(RendererIndex))
+	{
+		return false;
+	}
+	UNiagaraRendererProperties* Renderer = Data->GetRenderers()[RendererIndex];
+	FProperty* Prop = Renderer ? Renderer->GetClass()->FindPropertyByName(*Property) : nullptr;
+	if (!Prop)
+	{
+		return false;
+	}
+	Renderer->Modify();
+	Renderer->PreEditChange(Prop);
+	const TCHAR* Result = Prop->ImportText_Direct(*Value, Prop->ContainerPtrToValuePtr<void>(Renderer), Renderer, PPF_None);
+	FPropertyChangedEvent Event(Prop);
+	Renderer->PostEditChangeProperty(Event);
+	System->MarkPackageDirty();
+	return Result != nullptr;
+#else
+	return false;
+#endif
+}
+
+bool UNinjaEditorTools::SetNiagaraEmitterProperty(UNiagaraSystem* System, const FString& EmitterName, const FString& Property, const FString& Value)
+{
+#if WITH_EDITOR
+	FNiagaraEmitterHandle* Handle = FindEmitterHandle(System, EmitterName);
+	FVersionedNiagaraEmitterData* Data = Handle ? Handle->GetEmitterData() : nullptr;
+	FProperty* Prop = Data ? FVersionedNiagaraEmitterData::StaticStruct()->FindPropertyByName(*Property) : nullptr;
+	if (!Prop)
+	{
+		return false;
+	}
+	const TCHAR* Result = Prop->ImportText_Direct(*Value, Prop->ContainerPtrToValuePtr<void>(Data), nullptr, PPF_None);
+	if (UNiagaraEmitter* Emitter = Handle->GetInstance().Emitter)
+	{
+		Emitter->Modify();
+		FPropertyChangedEvent Event(Prop);
+		Emitter->PostEditChangeProperty(Event);
+	}
+	System->MarkPackageDirty();
+	return Result != nullptr;
+#else
+	return false;
+#endif
+}
+
+bool UNinjaEditorTools::CompileNiagaraSystem(UNiagaraSystem* System, bool bFixedBounds, FVector BoundsExtent)
+{
+#if WITH_EDITOR
+	if (!System)
+	{
+		return false;
+	}
+	System->bFixedBounds = bFixedBounds;
+	if (bFixedBounds)
+	{
+		System->SetFixedBounds(FBox(-BoundsExtent, BoundsExtent));
+	}
+	System->RequestCompile(false);
+	System->WaitForCompilationComplete();
+	System->MarkPackageDirty();
+	return true;
+#else
+	return false;
+#endif
+}
+
+FString UNinjaEditorTools::DescribeNiagaraModulePins(UNiagaraSystem* System, const FString& EmitterName)
+{
+	FString Out;
+#if WITH_EDITOR
+	FNiagaraEmitterHandle* Handle = FindEmitterHandle(System, EmitterName);
+	FVersionedNiagaraEmitterData* Data = Handle ? Handle->GetEmitterData() : nullptr;
+	UNiagaraScriptSource* Source = Data ? Cast<UNiagaraScriptSource>(Data->GraphSource) : nullptr;
+	if (!Source || !Source->NodeGraph) { return Out; }
+	for (UEdGraphNode* Node : Source->NodeGraph->Nodes)
+	{
+		UNiagaraNodeFunctionCall* Function = Cast<UNiagaraNodeFunctionCall>(Node);
+		if (!Function) { continue; }
+		for (UEdGraphPin* Pin : Function->Pins)
+		{
+			if (Pin->Direction != EGPD_Input) { continue; }
+			Out += Function->GetFunctionName() + TEXT(" | ") + Pin->PinName.ToString() + TEXT(" = ") + Pin->DefaultValue;
+			if (const UEnum* Enum = Cast<UEnum>(Pin->PinType.PinSubCategoryObject.Get()))
+			{
+				for (int32 Index = 0; Index < Enum->NumEnums(); ++Index)
+				{
+					Out += FString::Printf(TEXT(" [%lld:%s]"), Enum->GetValueByIndex(Index), *Enum->GetNameStringByIndex(Index));
+				}
+			}
+			Out += TEXT("\n");
+		}
+	}
+#endif
+	return Out;
+}
+
+bool UNinjaEditorTools::SetNiagaraModulePin(UNiagaraSystem* System, const FString& EmitterName,
+	const FString& ModuleName, const FString& PinName, const FString& Value)
+{
+#if WITH_EDITOR
+	FNiagaraEmitterHandle* Handle = FindEmitterHandle(System, EmitterName);
+	FVersionedNiagaraEmitterData* Data = Handle ? Handle->GetEmitterData() : nullptr;
+	UNiagaraScriptSource* Source = Data ? Cast<UNiagaraScriptSource>(Data->GraphSource) : nullptr;
+	if (!Source || !Source->NodeGraph) { return false; }
+	for (UEdGraphNode* Node : Source->NodeGraph->Nodes)
+	{
+		UNiagaraNodeFunctionCall* Function = Cast<UNiagaraNodeFunctionCall>(Node);
+		if (!Function || Function->GetFunctionName() != ModuleName) { continue; }
+		for (UEdGraphPin* Pin : Function->Pins)
+		{
+			if (Pin->Direction == EGPD_Input && Pin->PinName.ToString() == PinName)
+			{
+				Function->Modify();
+				Pin->DefaultValue = Value;
+				Function->PinDefaultValueChanged(Pin);
+				Source->NodeGraph->NotifyGraphChanged();
+				System->MarkPackageDirty();
+				return true;
+			}
+		}
+	}
+#endif
+	return false;
+}
+
+bool UNinjaEditorTools::AddNiagaraUpdateModule(UNiagaraSystem* System, const FString& EmitterName, const FString& ScriptPath, int32 Index)
+{
+#if WITH_EDITOR
+	FNiagaraEmitterHandle* Handle = FindEmitterHandle(System, EmitterName);
+	FVersionedNiagaraEmitterData* Data = Handle ? Handle->GetEmitterData() : nullptr;
+	UNiagaraScriptSource* Source = Data ? Cast<UNiagaraScriptSource>(Data->GraphSource) : nullptr;
+	UNiagaraScript* Module = LoadObject<UNiagaraScript>(nullptr, *ScriptPath);
+	if (!Source || !Source->NodeGraph || !Module) { return false; }
+	for (UEdGraphNode* Node : Source->NodeGraph->Nodes)
+	{
+		if (UNiagaraNodeFunctionCall* Function = Cast<UNiagaraNodeFunctionCall>(Node))
+		{
+			if (Function->FunctionScript == Module) { return true; }
+		}
+	}
+	for (UEdGraphNode* Node : Source->NodeGraph->Nodes)
+	{
+		UNiagaraNodeOutput* Output = Cast<UNiagaraNodeOutput>(Node);
+		if (Output && Output->GetUsage() == ENiagaraScriptUsage::ParticleUpdateScript)
+		{
+			const bool bAdded = FNiagaraStackGraphUtilities::AddScriptModuleToStack(Module, *Output, Index) != nullptr;
+			Source->NodeGraph->NotifyGraphChanged();
+			System->MarkPackageDirty();
+			return bAdded;
+		}
+	}
+#endif
+	return false;
+}
+
+UTexture2D* UNinjaEditorTools::CreateFireColorAtlas(const FString& PackagePath)
+{
+#if WITH_EDITOR
+	const FString CurvePath = PackagePath + TEXT("/C_Katon_Temperatura");
+	UCurveLinearColor* Curve = LoadObject<UCurveLinearColor>(nullptr, *(CurvePath + TEXT(".C_Katon_Temperatura")));
+	if (!Curve) { Curve = NewObject<UCurveLinearColor>(CreatePackage(*CurvePath), TEXT("C_Katon_Temperatura"), RF_Public | RF_Standalone); FAssetRegistryModule::AssetCreated(Curve); }
+	const float Times[] = {0.f, .14f, .32f, .57f, .81f, 1.f};
+	const FLinearColor Colors[] = {{.022f,.012f,.009f,1.f},{.12f,.008f,.002f,1.f},{.8f,.025f,.002f,1.f},{2.8f,.23f,.008f,1.f},{4.5f,1.15f,.06f,1.f},{6.f,3.5f,.65f,1.f}};
+	for (int32 Channel = 0; Channel < 4; ++Channel)
+	{
+		Curve->FloatCurves[Channel].Reset();
+		for (int32 Key = 0; Key < UE_ARRAY_COUNT(Times); ++Key)
+		{
+			const FKeyHandle Handle = Curve->FloatCurves[Channel].AddKey(Times[Key], Colors[Key].Component(Channel));
+			Curve->FloatCurves[Channel].SetKeyInterpMode(Handle, RCIM_Linear);
+		}
+	}
+	Curve->MarkPackageDirty();
+	const FString AtlasPath = PackagePath + TEXT("/CA_Katon_Temperatura");
+	UCurveLinearColorAtlas* Atlas = LoadObject<UCurveLinearColorAtlas>(nullptr, *(AtlasPath + TEXT(".CA_Katon_Temperatura")));
+	if (!Atlas) { Atlas = NewObject<UCurveLinearColorAtlas>(CreatePackage(*AtlasPath), TEXT("CA_Katon_Temperatura"), RF_Public | RF_Standalone); FAssetRegistryModule::AssetCreated(Atlas); }
+	Atlas->TextureSize = 256;
+	Atlas->GradientCurves = {Curve};
+	Atlas->bDisableAllAdjustments = true;
+	Atlas->UpdateTextures();
+	Atlas->PostEditChange();
+	Atlas->MarkPackageDirty();
+	return Atlas;
+#else
+	return nullptr;
+#endif
+}
+
+bool UNinjaEditorTools::LinkNiagaraFloatInput(UNiagaraSystem* System, const FString& EmitterName, const FString& ModuleName, const FString& InputName, const FString& ParameterName)
+{
+#if WITH_EDITOR
+	FNiagaraEmitterHandle* Handle = FindEmitterHandle(System, EmitterName);
+	FVersionedNiagaraEmitterData* Data = Handle ? Handle->GetEmitterData() : nullptr;
+	UNiagaraScriptSource* Source = Data ? Cast<UNiagaraScriptSource>(Data->GraphSource) : nullptr;
+	if (!Source || !Source->NodeGraph) { return false; }
+	const FNiagaraVariable Variable(FNiagaraTypeDefinition::GetFloatDef(), FName(ParameterName));
+	if (ParameterName.StartsWith(TEXT("User."))) { System->GetExposedParameters().AddParameter(Variable); System->GetExposedParameters().SetParameterValue<float>(1.f, Variable); }
+	for (UEdGraphNode* Node : Source->NodeGraph->Nodes)
+	{
+		UNiagaraNodeFunctionCall* Function = Cast<UNiagaraNodeFunctionCall>(Node);
+		if (!Function || Function->GetFunctionName() != ModuleName) { continue; }
+		UEdGraphPin& Pin = FNiagaraStackGraphUtilities::GetOrCreateStackFunctionInputOverridePin(*Function, FNiagaraParameterHandle(FName(ModuleName + TEXT(".") + InputName)), FNiagaraTypeDefinition::GetFloatDef(), FGuid(), FGuid());
+		FNiagaraStackGraphUtilities::SetLinkedParameterValueForFunctionInput(Pin, Variable, {});
+		Source->NodeGraph->NotifyGraphChanged(); System->MarkPackageDirty(); return true;
+	}
+#endif
+	return false;
+}
+
+FString UNinjaEditorTools::PrepareFluidBaker(UNiagaraSystem* System, float StartSeconds, float DurationSeconds)
+{
+	FString Inventory;
+#if WITH_EDITOR
+	if (!System) { return TEXT("ERROR: no system"); }
+	TMap<FString, FString> Bindings;
+	for (const FNiagaraEmitterHandle& Handle : System->GetEmitterHandles())
+	{
+		FVersionedNiagaraEmitterData* Data = Handle.GetInstance().GetEmitterData();
+		if (!Handle.GetIsEnabled() || !Data) { continue; }
+		Data->ForEachScript([&](UNiagaraScript* Script)
+		{
+			const FNiagaraScriptRuntimeData* Runtime = System->GetScriptRuntimeData(&Handle, *Script).Get();
+			const FNiagaraScriptExecutionParameterStore* Store = Runtime ? Runtime->GetExecutionReadyParameterStore() : nullptr;
+			if (!Store) { return; }
+			for (const FNiagaraVariableWithOffset& Variable : Store->ReadParameterVariables())
+			{
+				if (!Variable.IsDataInterface()) { continue; }
+				UNiagaraDataInterface* DI = Store->GetDataInterface(Variable.Offset);
+				if (!DI || !DI->CanRenderVariablesToCanvas()) { continue; }
+				TArray<FNiagaraVariableBase> Attributes;
+				DI->GetCanvasVariables(Attributes);
+				for (const FNiagaraVariableBase& Attribute : Attributes)
+				{
+					const FString Name = Attribute.GetName().ToString();
+					const FString Binding = TEXT("EmitterDI.") + Variable.GetName().ToString() + TEXT(".") + Name;
+					Inventory += Binding + TEXT("\n");
+					if (Name == TEXT("Density") || Name == TEXT("Temperature") || Name == TEXT("Velocity"))
+					{
+						FString* Existing = Bindings.Find(Name);
+						if (!Existing || Binding.Len() < Existing->Len()) { Bindings.Add(Name, Binding); }
+					}
+				}
+			}
+		});
+	}
+	if (Bindings.Num() != 3) { return TEXT("ERROR: missing channels\n") + Inventory; }
+	UNiagaraBakerSettings* Settings = System->GetBakerSettings();
+	Settings->StartSeconds = StartSeconds;
+	Settings->DurationSeconds = DurationSeconds;
+	Settings->FramesPerSecond = 60;
+	Settings->FramesPerDimension = FIntPoint(8, 8);
+	Settings->bLockToSimulationFrameRate = true;
+	Settings->Outputs.Reset();
+	for (const TCHAR* Name : {TEXT("Density"), TEXT("Temperature"), TEXT("Velocity")})
+	{
+		UNiagaraBakerOutputTexture2D* Output = NewObject<UNiagaraBakerOutputTexture2D>(Settings);
+		Output->OutputName = Name;
+		Output->SourceBinding.SourceName = FName(Bindings[Name]);
+		Output->SourceBinding.DisplayString = Bindings[Name];
+		Output->FrameSize = FIntPoint(256, 256);
+		Output->AtlasTextureSize = FIntPoint(2048, 2048);
+		Output->bGenerateAtlas = true;
+		Output->bExportFrames = true;
+		Output->FramesExportPathFormat = TEXT("{SavedDir}/NiagaraBaker/{AssetName}/") + FString(Name) + TEXT("_{FrameIndex}.exr");
+		Output->AtlasAssetPathFormat = TEXT("{AssetFolder}/{AssetName}_{OutputName}_8x8");
+		Settings->Outputs.Add(Output);
+	}
+	System->MarkPackageDirty();
+	return TEXT("READY\n") + Inventory;
+#else
+	return TEXT("ERROR: editor only");
+#endif
+}
+
+
+bool UNinjaEditorTools::SetSteppedColorCurve(UCurveLinearColor* Curve, const TArray<FLinearColor>& Colors)
+{
+	if (!Curve || Colors.Num() == 0)
+	{
+		return false;
+	}
+	Curve->Modify();
+	for (int32 Channel = 0; Channel < 4; ++Channel)
+	{
+		FRichCurve& Rich = Curve->FloatCurves[Channel];
+		Rich.Reset();
+		for (int32 i = 0; i < Colors.Num(); ++i)
+		{
+			const FLinearColor& C = Colors[i];
+			const float Value = Channel == 0 ? C.R : Channel == 1 ? C.G : Channel == 2 ? C.B : C.A;
+			const FKeyHandle Key = Rich.AddKey(float(i) / Colors.Num(), Value);
+			Rich.SetKeyInterpMode(Key, RCIM_Constant);
+		}
+	}
+	Curve->OnCurveChanged(TArray<FRichCurveEditInfo>());
+	Curve->MarkPackageDirty();
+	return true;
 }

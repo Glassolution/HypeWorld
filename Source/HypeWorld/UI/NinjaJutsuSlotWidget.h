@@ -51,6 +51,9 @@ public:
 	void SetHasChakra(bool bInHasChakra) { bHasChakra = bInHasChakra; }
 	void SetCooldown(float Remaining, float Duration);
 	void SetNumber(int32 Number);
+	/** Troca o jutsu do slot já na tela (arte, cor, custo) */
+	void SetData(const FNinjaJutsuSlotData& InData);
+	const FNinjaJutsuSlotData& GetData() const { return Data; }
 	int32 GetNumber() const { return Data.Number; }
 	void PlayUsed() { UsedTime = 0.f; }
 

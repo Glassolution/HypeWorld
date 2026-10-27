@@ -138,6 +138,30 @@ void UNinjaJutsuSlotWidget::SetNumber(int32 Number)
 	}
 }
 
+void UNinjaJutsuSlotWidget::SetData(const FNinjaJutsuSlotData& InData)
+{
+	using namespace NinjaJutsuSlot;
+	Data = InData;
+	const bool bEmpty = Data.Icon == nullptr;
+	if (ArtMID)
+	{
+		if (UTexture2D* Texture = bEmpty ? LoadObject<UTexture2D>(nullptr, EmptyArt) : Data.Icon.Get())
+		{
+			ArtMID->SetTextureParameterValue(TEXT("Slot"), Texture);
+		}
+		ArtMID->SetScalarParameterValue(TEXT("Empty"), bEmpty ? 1.f : 0.f);
+	}
+	if (GlowMID)
+	{
+		GlowMID->SetVectorParameterValue(TEXT("Color"), Data.ThemeColor);
+	}
+	if (NumberText)
+	{
+		NumberText->SetText(FText::AsNumber(Data.Number));
+		NumberText->SetVisibility(bEmpty ? ESlateVisibility::Collapsed : ESlateVisibility::HitTestInvisible);
+	}
+}
+
 void UNinjaJutsuSlotWidget::TickSlot(float DeltaTime)
 {
 	using namespace NinjaJutsuSlot;

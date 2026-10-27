@@ -12,6 +12,7 @@
 #include "InputActionValue.h"
 #include "HypeWorld.h"
 #include "NinjaMovementComponent.h"
+#include "Ninja/NinjaDodgeDefinition.h"
 #include "Animation/AnimMontage.h"
 #include "Animation/AnimInstance.h"
 #include "AbilitySystemComponent.h"
@@ -32,6 +33,12 @@
 #include "Materials/MaterialInstanceDynamic.h"
 #include "NinjaCombatTypes.h"
 #include "HypeWorldPlayerController.h"
+#include "NinjaJutsuData.h"
+#include "NinjaJutsuAbility.h"
+#include "NinjaJutsuProjectile.h"
+#include "NinjaVisibleBody.h"
+#include "NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
 
 AHypeWorldCharacter::AHypeWorldCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UNinjaMovementComponent>(ACharacter::CharacterMovementComponentName))
@@ -53,8 +60,8 @@ AHypeWorldCharacter::AHypeWorldCharacter(const FObjectInitializer& ObjectInitial
 	// Note: For faster iteration times these variables, and many more, can be tweaked in the Character Blueprint
 	// instead of recompiling to adjust them
 	// Ninja: pulo alto e rápido (gravidade maior), bom controle no ar, pulo duplo
-	GetCharacterMovement()->GravityScale = 1.6f;
-	GetCharacterMovement()->JumpZVelocity = 900.f;
+	GetCharacterMovement()->GravityScale = 1.f;
+	GetCharacterMovement()->JumpZVelocity = 980.f;
 	GetCharacterMovement()->AirControl = 0.6f;
 	GetCharacterMovement()->MaxWalkSpeed = 600.f;
 	GetCharacterMovement()->MaxAcceleration = 3000.f;
@@ -106,6 +113,17 @@ AHypeWorldCharacter::AHypeWorldCharacter(const FObjectInitializer& ObjectInitial
 
 void AHypeWorldCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
+	// Atalho direto para abrir/fechar a seleção de estilos e poses de combate.
+	PlayerInputComponent->BindKey(EKeys::I, IE_Pressed, this, &AHypeWorldCharacter::DoCombatMenu);
+
+	// Barra de jutsus: tecla do slot = usa o jutsu do slot
+	for (int32 SlotIndex = 0; SlotIndex < JutsuSlotKeys.Num(); ++SlotIndex)
+	{
+		FInputKeyBinding Binding(FInputChord(JutsuSlotKeys[SlotIndex]), IE_Pressed);
+		Binding.KeyDelegate.GetDelegateForManualSet().BindWeakLambda(this, [this, SlotIndex]() { TryUseJutsuSlot(SlotIndex); });
+		PlayerInputComponent->KeyBindings.Add(Binding);
+	}
+
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
 		
@@ -115,6 +133,8 @@ void AHypeWorldCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 
 		// Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AHypeWorldCharacter::Move);
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Completed, this, &AHypeWorldCharacter::Move);
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Canceled, this, &AHypeWorldCharacter::Move);
 		EnhancedInputComponent->BindAction(MouseLookAction, ETriggerEvent::Triggered, this, &AHypeWorldCharacter::Look);
 
 		// Looking
@@ -205,9 +225,16 @@ void AHypeWorldCharacter::DoMove(float Right, float Forward)
 		const FVector RightDirection = YawRotation.GetAxisY();
 
 		FVector Wish = ForwardDirection * Forward + RightDirection * Right;
+		if (!Wish.IsNearlyZero() && !Wish.Equals(RawMoveDirection, 0.01f) && GetNinjaMovement()->CanCancelCombatDodge()) GetNinjaMovement()->TryCancelCombatDodge();
+		RawMoveDirection = Wish;
+		if (GetNinjaMovement()->HasDashRequest() && DashMoveFrame == GFrameCounter)
+		{
+			DashMoveDirection = Wish;
+		}
+		RawMoveTime = GetWorld()->GetTimeSeconds();
 
-		// Carregando chakra / super pulo ou atordoado: não anda. Atacando: só ajusta um pouco a direção (o golpe já empurra para a frente)
-		if (bChargingChakra || bChargingSuperJump || IsStunned())
+		// Carregando chakra / super pulo, fazendo jutsu ou atordoado: não anda. Atacando: só ajusta um pouco a direção (o golpe já empurra para a frente)
+		if (bChargingChakra || bChargingSuperJump || IsStunned() || IsCastingJutsu())
 		{
 			return;
 		}
@@ -221,7 +248,7 @@ void AHypeWorldCharacter::DoMove(float Right, float Forward)
 		// não sair correndo de lado na frente da câmera. Para trás (S) continua valendo: freia e vira na hora.
 		// O trote não entra aqui (corpo de frente para a câmera, passos laterais)
 		const FVector VelocityDir = GetVelocity().GetSafeNormal2D();
-		if (!GetCharacterMovement()->HasCustomGravity() && GetNinjaMovement()->IsSprinting() && GetVelocity().Size2D() > CameraFollowMinSpeed && !Wish.IsNearlyZero())
+		if (!GetNinjaMovement()->HasDashRequest() && !GetCharacterMovement()->HasCustomGravity() && GetNinjaMovement()->IsSprinting() && GetVelocity().Size2D() > CameraFollowMinSpeed && !Wish.IsNearlyZero())
 		{
 			const float WishSize = FMath::Min(Wish.Size(), 1.f);
 			const FVector WishDir = Wish.GetSafeNormal2D();
@@ -255,6 +282,10 @@ void AHypeWorldCharacter::DoLook(float Yaw, float Pitch)
 
 void AHypeWorldCharacter::DoJumpStart()
 {
+	if (IsCastingJutsu())
+	{
+		return;
+	}
 	bSpaceHeld = true;
 	// Modo de batalha, no chão: S (para trás em relação à câmera) + Espaço = mortal para trás; toque rápido = pulo normal;
 	// segurar (LauncherHoldTime) = lançador (joga o adversário para cima e sobe junto), também no meio do combo
@@ -271,12 +302,14 @@ void AHypeWorldCharacter::DoJumpStart()
 			}
 		}
 		const UNinjaFightingStyle* Style = GetFightingStyle();
-		if (Style && Style->Launchers.Num() > 0)
+		if (Style && Style->Launchers.Num() > 0 && CanStartLauncher())
 		{
 			bLauncherHoldPending = true;   // decide no UpdateLauncherHold (segurou) ou no DoJumpEnd (soltou antes)
 			LauncherHoldElapsed = 0.f;
 			return;
 		}
+		if (!IsAttacking()) Jump();
+		return;
 	}
 	// No chão (fora do modo de batalha): segurar carrega o super pulo; um toque rápido ainda é o pulo normal (decidido ao soltar)
 	if (CanStartSuperJump())
@@ -331,7 +364,7 @@ void AHypeWorldCharacter::UpdateLauncherHold(float DeltaSeconds)
 		return;
 	}
 	// Saiu do chão ou do modo de batalha segurando: desiste (sem pular)
-	if (!GetCharacterMovement()->IsMovingOnGround() || !IsInBattleMode())
+	if (!CanStartLauncher())
 	{
 		bLauncherHoldPending = false;
 		return;
@@ -429,6 +462,10 @@ void AHypeWorldCharacter::DoSprintEnd()
 
 void AHypeWorldCharacter::DoDash()
 {
+	if (IsCastingJutsu())
+	{
+		return;
+	}
 	if (IsStunned())
 	{
 		TrySubstitution();   // apanhando: o botão do dash vira a fuga (substituição)
@@ -436,6 +473,9 @@ void AHypeWorldCharacter::DoDash()
 	}
 	if (UNinjaMovementComponent* NinjaMovement = GetNinjaMovement())
 	{
+		// Apenas agenda: a direção é lida depois de todos os inputs deste quadro.
+		DashMoveDirection = RawMoveDirection;
+		DashMoveFrame = GFrameCounter;
 		NinjaMovement->RequestDash();
 	}
 }
@@ -473,7 +513,18 @@ void AHypeWorldCharacter::BeginPlay()
 	{
 		if (ComboAbility) { AbilitySystem->GiveAbility(FGameplayAbilitySpec(ComboAbility, 1, INDEX_NONE, this)); }
 		if (ChargeChakraAbility) { AbilitySystem->GiveAbility(FGameplayAbilitySpec(ChargeChakraAbility, 1, INDEX_NONE, this)); }
+		// Um spec por jutsu da barra (a ficha vai como SourceObject; custo, cooldown e animação saem dela)
+		const TSubclassOf<UGameplayAbility> JutsuClass = JutsuAbility ? JutsuAbility : TSubclassOf<UGameplayAbility>(UGA_NinjaJutsu::StaticClass());
+		for (UNinjaJutsuData* Jutsu : JutsuLoadout)
+		{
+			if (Jutsu)
+			{
+				AbilitySystem->GiveAbility(FGameplayAbilitySpec(JutsuClass, 1, INDEX_NONE, Jutsu));
+			}
+		}
 	}
+	JutsuUseCounts.Init(0, FMath::Max(JutsuLoadout.Num(), JutsuSlotKeys.Num()));
+	CameraBaseRotation = FollowCamera->GetRelativeRotation();
 	AbilitySystem->GetGameplayAttributeValueChangeDelegate(UNinjaAttributeSet::GetHealthAttribute()).AddUObject(this, &AHypeWorldCharacter::OnHealthChanged);
 	GetCharacterMovement()->ProcessRootMotionPreConvertToWorld.BindUObject(this, &AHypeWorldCharacter::ProcessAttackRootMotion);
 }
@@ -486,6 +537,21 @@ void AHypeWorldCharacter::Tick(float DeltaSeconds)
 	UpdateRunAnimRate();
 	UpdateIdleBreak(DeltaSeconds);
 	UpdateDoubleJump();
+	// A queda assume a pose antes do pouso; montagens de impulso não prendem o corpo no ar.
+	if (GetNinjaMovement()->IsFalling() && FVector::DotProduct(GetVelocity(), GetNinjaMovement()->GetGravityDirection()) > -75.f)
+	{
+		if (UAnimInstance* Anim = GetMesh()->GetAnimInstance())
+		{
+			for (UAnimMontage* Montage : {SuperJumpLaunchMontage, BackflipMontage, DoubleJumpMontage})
+			{
+				if (Montage && Anim->Montage_IsPlaying(Montage) && !Anim->Montage_GetIsStopped(Montage)
+					&& Anim->Montage_GetPosition(Montage) >= Montage->GetPlayLength() * 0.8f)
+				{
+					Anim->Montage_Stop(0.25f, Montage);
+				}
+			}
+		}
+	}
 	UpdateSuperJump(DeltaSeconds);
 	UpdateLauncherHold(DeltaSeconds);
 	UpdateAutoRun(DeltaSeconds);
@@ -495,6 +561,8 @@ void AHypeWorldCharacter::Tick(float DeltaSeconds)
 	UpdateGuard();
 	UpdateBattleMode();
 	UpdateCombatState(DeltaSeconds);
+	UpdateJutsuSeals(DeltaSeconds);
+	UpdateCameraShake(DeltaSeconds);
 
 	// Aura: nível de carga e "no máximo" pelos atributos replicados, então todos veem igual
 	if (ChakraAura && Attributes)
@@ -567,6 +635,17 @@ void AHypeWorldCharacter::UpdateBattleMode()
 	bBattleMode = !bKnockedOut && (bBattleToggle || bGuarding || IsAttacking() || GetWorld()->GetTimeSeconds() - LastBattleTime < BattleModeDuration);
 }
 
+void AHypeWorldCharacter::PlayJumpMontage(UAnimMontage* Montage, float UpSpeed)
+{
+	if (!Montage) return;
+	const float Gravity = FMath::Max(1.f, FMath::Abs(GetCharacterMovement()->GetGravityZ()));
+	const float ApexTime = FMath::Max(0.45f, UpSpeed / Gravity);
+	// Completa a acrobacia perto do ápice, antes de entregar a pose à queda.
+	const float Rate = FMath::Clamp(Montage->GetPlayLength() / (ApexTime + 0.15f), 0.65f, 2.2f);
+	GetMesh()->GlobalAnimRateScale = 1.f;
+	PlayAnimMontage(Montage, Rate);
+}
+
 void AHypeWorldCharacter::UpdateDoubleJump()
 {
 	// No ar nos dois quadros e a velocidade para cima saltou de repente = pulo duplo (o pulo do chão e o da parede
@@ -577,7 +656,7 @@ void AHypeWorldCharacter::UpdateDoubleJump()
 	if (bFalling && bWasFalling && DoubleJumpMontage && !IsStunned() && !IsAttacking()
 		&& VelocityZ - DoubleJumpLastVelZ > Move->JumpZVelocity * 0.5f)
 	{
-		PlayAnimMontage(DoubleJumpMontage);
+		PlayJumpMontage(DoubleJumpMontage, VelocityZ);
 	}
 	bWasFalling = bFalling;
 	DoubleJumpLastVelZ = VelocityZ;
@@ -594,7 +673,7 @@ void AHypeWorldCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, 
 		return;
 	}
 
-	const bool bWasDashing = PrevMovementMode == MOVE_Custom && PreviousCustomMode == NMOVE_Dash;
+	const bool bWasDashing = PrevMovementMode == MOVE_Custom && (PreviousCustomMode == NMOVE_Dash || PreviousCustomMode == NMOVE_CombatDodge);
 	const bool bWasWallRunning = PrevMovementMode == MOVE_Custom && PreviousCustomMode == NMOVE_WallRun;
 
 	// Saiu de um modo: para a animação dele (o dash termina pela seção "End" da montagem, se ela tiver: aterrissagem)
@@ -603,9 +682,19 @@ void AHypeWorldCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, 
 	{
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 		static const FName EndSection("End");
+		// O impulso termina antes da recuperação visual. Deixe o salto lateral completar
+		// o pouso enquanto walking já recebe o input; não cortar nem reiniciar a seção End.
+		const bool bCompleteLateralLanding = PreviousCustomMode == NMOVE_Dash && NinjaMovement->IsDashStrafe()
+			&& NinjaMovement->IsMovingOnGround() && AnimInstance && AnimInstance->Montage_IsPlaying(EndingDash)
+			&& EndingDash->IsValidSectionName(EndSection);
 		// Saiu correndo do dash: volta direto à corrida (aterrissagem parada deslizaria)
 		const bool bKeepsRunning = NinjaMovement->IsMovingOnGround() && GetVelocity().Size2D() > NinjaMovement->MaxWalkSpeed * 1.5f;
-		if (!bKeepsRunning && AnimInstance && AnimInstance->Montage_IsPlaying(EndingDash) && EndingDash->IsValidSectionName(EndSection))
+		if (bCompleteLateralLanding)
+		{
+			const FName Current = AnimInstance->Montage_GetCurrentSection(EndingDash);
+			if (Current != EndSection) AnimInstance->Montage_SetNextSection(Current, EndSection, EndingDash);
+		}
+		else if (NinjaMovement->IsMovingOnGround() && !bKeepsRunning && AnimInstance && AnimInstance->Montage_IsPlaying(EndingDash) && EndingDash->IsValidSectionName(EndSection))
 		{
 			if (AnimInstance->Montage_GetCurrentSection(EndingDash) != EndSection)
 			{
@@ -620,6 +709,7 @@ void AHypeWorldCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, 
 	// Pousou: o mortal do pulo duplo (que segura a pose de descida) dá lugar ao pouso
 	if (PrevMovementMode == MOVE_Falling && !NinjaMovement->IsFalling() && DoubleJumpMontage)
 	{
+		AirComboReadyUntil = -100.f;
 		StopAnimMontage(DoubleJumpMontage);
 	}
 	if (PrevMovementMode == MOVE_Falling && !NinjaMovement->IsFalling() && SuperJumpLaunchMontage)
@@ -647,7 +737,23 @@ void AHypeWorldCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, 
 	// Entrou num modo: toca a animação dele
 	if (NinjaMovement->IsDashing())
 	{
+		if (NinjaMovement->IsCombatDodging())
+		{
+			PlayCombatDodge(NinjaMovement->GetCombatDodgeDefinition());
+			if (HasAuthority()) MulticastCombatDodge(NinjaMovement->GetCombatDodgeDefinition(), GetControlRotation().Yaw);
+			return;
+		}
 		ActiveDashMontage = PickDashMontage(PrevMovementMode);
+		if (ActiveDashMontage && NinjaMovement->IsDashStrafe())
+		{
+			const int32 EndIndex = ActiveDashMontage->GetSectionIndex(FName("End"));
+			if (EndIndex != INDEX_NONE)
+			{
+				float StartTime, EndTime;
+				ActiveDashMontage->GetSectionStartAndEndTime(EndIndex, StartTime, EndTime);
+				NinjaMovement->MatchDashDuration(StartTime);
+			}
+		}
 		PlayAnimMontage(ActiveDashMontage, NinjaMovement->DashAnimRate);
 	}
 	else if (NinjaMovement->IsWallRunning() && WallRunMontage)
@@ -716,7 +822,13 @@ void AHypeWorldCharacter::UpdateAcrobatics(float DeltaSeconds)
 	const float VelZ = GetVelocity().Z;
 
 	// Dash: mergulha (primeiros 15%), gira de ponta-cabeça no meio e pousa no fim — como a estrela/handspring da referência
-	if (NinjaMovement->IsDashing())
+	if (NinjaMovement->IsDashing() && (NinjaMovement->IsCombatDodging() || NinjaMovement->IsDashStrafe()))
+	{
+		// O passo lateral já anima o corpo inteiro: não sobrepor a cambalhota frontal.
+		DashElapsed = 0.f;
+		FlipAngle = 0.f;
+	}
+	else if (NinjaMovement->IsDashing())
 	{
 		DashElapsed += DeltaSeconds;
 		const float T = FMath::Clamp(DashElapsed / FMath::Max(NinjaMovement->GetDashDuration(), 0.05f), 0.f, 1.f);
@@ -779,7 +891,7 @@ void AHypeWorldCharacter::UpdateRunAnimRate()
 	}
 
 	// Dash: a montagem toca no tempo certo (a taxa da corrida/andar acelerava o voo, que passava do ponto e estalava)
-	if (NinjaMovement->IsDashing())
+	if (NinjaMovement->IsDashing() || IsPlayingDashMontage())
 	{
 		GetMesh()->GlobalAnimRateScale = 1.f;
 		return;
@@ -857,6 +969,10 @@ void AHypeWorldCharacter::UpdateCameraFollow(float DeltaSeconds)
 {
 	AController* PC = GetController();
 	UNinjaMovementComponent* NinjaMovement = GetNinjaMovement();
+	if (NinjaMovement && (NinjaMovement->IsDashing() || IsPlayingDashMontage()))
+	{
+		return; // O acompanhamento automático não muda a referência do desvio lateral.
+	}
 	if (!IsLocallyControlled() || !PC || !NinjaMovement || NinjaMovement->HasCustomGravity())
 	{
 		return;
@@ -1076,7 +1192,7 @@ int32 AHypeWorldCharacter::ChooseAttack(ENinjaAttackInput Input) const
 		};
 		if (Input == ENinjaAttackInput::Launcher)
 		{
-			if (Style->Launchers.Num() == 0 || !GetCharacterMovement()->IsMovingOnGround())
+			if (Style->Launchers.Num() == 0 || !CanStartLauncher())
 			{
 				return INDEX_NONE;
 			}
@@ -1151,16 +1267,23 @@ int32 AHypeWorldCharacter::ChooseAttack(ENinjaAttackInput Input) const
 
 void AHypeWorldCharacter::DoAttackPressed()
 {
-	StartAttack(ENinjaAttackInput::Light);
+	if (!IsCastingJutsu())
+	{
+		StartAttack(ENinjaAttackInput::Light);
+	}
 }
 
 void AHypeWorldCharacter::DoHeavyAttackPressed()
 {
-	StartAttack(ENinjaAttackInput::Heavy);
+	if (!IsCastingJutsu())
+	{
+		StartAttack(ENinjaAttackInput::Heavy);
+	}
 }
 
 void AHypeWorldCharacter::StartAttack(ENinjaAttackInput Input)
 {
+	if (!TryCancelDodgeForAction()) return;
 	if (bKnockedOut || bChargingChakra || IsStunned() || !ComboAbility)
 	{
 		return;
@@ -1171,7 +1294,7 @@ void AHypeWorldCharacter::StartAttack(ENinjaAttackInput Input)
 		return;   // menu de combate aberto: o clique é do menu
 	}
 	// Modo de batalha, no chão, segurando Espaço + ataque = lançador (começa o combo aéreo)
-	if (Input == ENinjaAttackInput::Light && bSpaceHeld && IsInBattleMode() && GetCharacterMovement()->IsMovingOnGround())
+	if (Input == ENinjaAttackInput::Light && bSpaceHeld && CanStartLauncher())
 	{
 		const UNinjaFightingStyle* Style = GetFightingStyle();
 		if (Style && Style->Launchers.Num() > 0)
@@ -1180,6 +1303,7 @@ void AHypeWorldCharacter::StartAttack(ENinjaAttackInput Input)
 			bLauncherHoldPending = false;   // já virou lançador: soltar o Espaço depois não pula
 		}
 	}
+	if (Input == ENinjaAttackInput::Launcher && !CanStartLauncher()) return;
 	if (IsAttacking() && !bComboWindowOpen)
 	{
 		// No meio do golpe: guarda o clique; ele vale quando a janela do próximo golpe abrir (CheckCombo).
@@ -1209,8 +1333,34 @@ void AHypeWorldCharacter::StartAttack(ENinjaAttackInput Input)
 	AbilitySystem->TriggerAbilityFromGameplayEvent(Spec->Handle, AbilitySystem->AbilityActorInfo.Get(), TAG_Ninja_Event_Attack, &Payload, *AbilitySystem);
 }
 
+float AHypeWorldCharacter::GetAirComboCooldownRemaining() const
+{
+	return FMath::Max(0.f, NextLauncherTime - GetWorld()->GetTimeSeconds());
+}
+
+float AHypeWorldCharacter::GetSuperJumpCooldownRemaining() const
+{
+	return FMath::Max(0.f, NextSuperJumpTime - GetWorld()->GetTimeSeconds());
+}
+
+bool AHypeWorldCharacter::CanStartLauncher() const
+{
+	const float Now = GetWorld()->GetTimeSeconds();
+	return CanAct() && IsInBattleMode() && GetCharacterMovement()->IsMovingOnGround()
+		&& Now >= NextLauncherTime && Now <= GroundComboReadyUntil;
+}
+
+bool AHypeWorldCharacter::CanActivateAttack(int32 AttackId) const
+{
+	if (AttackId >= NinjaAttackId::Launcher && AttackId < NinjaAttackId::Launcher + 100) return CanStartLauncher();
+	if (AttackId >= NinjaAttackId::Air && AttackId < NinjaAttackId::Launcher)
+		return GetCharacterMovement()->IsFalling() && GetWorld()->GetTimeSeconds() <= AirComboReadyUntil;
+	return true;
+}
+
 void AHypeWorldCharacter::BeginAttack(int32 AttackId)
 {
+	if (!CanActivateAttack(AttackId) || !TryCancelDodgeForAction()) return;
 	const FNinjaAttack* Attack = GetAttack(AttackId);
 	if (!Attack || !Attack->Montage)
 	{
@@ -1220,6 +1370,16 @@ void AHypeWorldCharacter::BeginAttack(int32 AttackId)
 	LastChainAttackId = INDEX_NONE;
 	LastBattleTime = GetWorld()->GetTimeSeconds();
 	AttackStartTime = LastBattleTime;
+	if (AttackId >= NinjaAttackId::Launcher && AttackId < NinjaAttackId::Launcher + 100)
+	{
+		NextLauncherTime = AttackStartTime + AirComboCooldown;
+		GroundComboReadyUntil = -100.f;
+		AirComboReadyUntil = AttackStartTime + 6.f;
+	}
+	else if (AttackId >= NinjaAttackId::Air && AttackId < NinjaAttackId::Launcher)
+	{
+		AirComboReadyUntil = AttackStartTime + 2.f;
+	}
 	AttackHitIndex = 0;
 	bComboWindowOpen = false;
 
@@ -1252,6 +1412,8 @@ void AHypeWorldCharacter::EndAttack(bool bWasCancelled)
 	// Golpe que terminou sem ser interrompido: o próximo clique ainda emenda por um instante depois do fim
 	LastChainAttackId = bWasCancelled ? INDEX_NONE : CurrentAttackId;
 	ChainExpireTime = GetWorld()->GetTimeSeconds() + ComboChainGrace;
+	if (!bWasCancelled && CurrentAttackId >= 0 && CurrentAttackId < NinjaAttackId::Heavy
+		&& GroundComboReadyUntil >= GetWorld()->GetTimeSeconds()) GroundComboReadyUntil = ChainExpireTime;
 	if (bWasCancelled)
 	{
 		BufferedInput = ENinjaAttackInput::None;
@@ -1349,6 +1511,12 @@ void AHypeWorldCharacter::DoAttackTrace(FName DamageSourceBone)
 		return;
 	}
 	const bool bFinalHit = ++AttackHitIndex >= AttackHitCount;
+	// Habilita o lançador depois de executar um soco, mesmo sem acertar um alvo.
+	if (CurrentAttackId >= 0 && CurrentAttackId < NinjaAttackId::Heavy && GetCharacterMovement()->IsMovingOnGround())
+	{
+		GroundComboReadyUntil = GetWorld()->GetTimeSeconds()
+			+ Attack->Montage->GetPlayLength() / FMath::Max(0.1f, Attack->PlayRate) + ComboChainGrace;
+	}
 
 	const FVector Start = GetActorLocation() + GetActorForwardVector() * 30.f;
 	const FVector End = Start + GetActorForwardVector() * Attack->Reach;
@@ -1705,11 +1873,362 @@ bool AHypeWorldCharacter::CanJumpInternal_Implementation() const
 
 bool AHypeWorldCharacter::CanChargeChakra() const
 {
-	return !bKnockedOut && !IsAttacking() && GetCharacterMovement()->IsMovingOnGround();
+	return !bKnockedOut && !IsAttacking() && !IsCastingJutsu() && GetCharacterMovement()->IsMovingOnGround();
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Jutsus
+// ---------------------------------------------------------------------------------------------------------------------
+
+bool AHypeWorldCharacter::TryUseJutsuSlot(int32 Slot)
+{
+	const UNinjaJutsuData* Jutsu = GetJutsuInSlot(Slot);
+	if (!Jutsu || !AbilitySystem || !CanStartJutsu())
+	{
+		return false;
+	}
+	for (const FGameplayAbilitySpec& Spec : AbilitySystem->GetActivatableAbilities())
+	{
+		if (Spec.SourceObject.Get() == Jutsu)
+		{
+			if (AbilitySystem->TryActivateAbility(Spec.Handle))
+			{
+				if (JutsuUseCounts.IsValidIndex(Slot))
+				{
+					JutsuUseCounts[Slot]++;
+				}
+				return true;
+			}
+			return false;
+		}
+	}
+	return false;
+}
+
+float AHypeWorldCharacter::GetJutsuCooldownRemaining(int32 Slot, float& OutDuration) const
+{
+	OutDuration = 0.f;
+	const UNinjaJutsuData* Jutsu = GetJutsuInSlot(Slot);
+	if (!Jutsu || !AbilitySystem || !Jutsu->CooldownTag.IsValid())
+	{
+		return 0.f;
+	}
+	const FGameplayEffectQuery Query = FGameplayEffectQuery::MakeQuery_MatchAnyOwningTags(FGameplayTagContainer(Jutsu->CooldownTag));
+	float Remaining = 0.f;
+	for (const TPair<float, float>& Entry : AbilitySystem->GetActiveEffectsTimeRemainingAndDuration(Query))
+	{
+		if (Entry.Key > Remaining)
+		{
+			Remaining = Entry.Key;
+			OutDuration = Entry.Value;
+		}
+	}
+	return Remaining;
+}
+
+bool AHypeWorldCharacter::CanStartJutsu() const
+{
+	return CanAct() && !IsCastingJutsu() && !IsAttacking() && !bChargingChakra && !bChargingSuperJump
+		&& GetCharacterMovement() && !GetCharacterMovement()->IsFalling();
+}
+
+USkeletalMeshComponent* AHypeWorldCharacter::GetJutsuBody() const
+{
+	// Aura/feet create visible mesh copies too, but these follow a leader pose and have no anim instance.
+	TInlineComponentArray<USkeletalMeshComponent*> Meshes(this);
+	for (USkeletalMeshComponent* JutsuMesh : Meshes)
+	{
+		if (JutsuMesh != GetMesh() && JutsuMesh->IsVisible() && JutsuMesh->GetAnimInstance() && JutsuMesh->GetSkeletalMeshAsset())
+		{
+			return JutsuMesh;
+		}
+	}
+	return GetMesh();
+}
+
+void AHypeWorldCharacter::BeginJutsu(const UNinjaJutsuData* Jutsu)
+{
+	CurrentJutsu = Jutsu;
+	GetCharacterMovement()->StopMovementImmediately();
+	// Vira para onde a câmera olha (o jutsu sai nessa direção)
+	if (Controller)
+	{
+		SetActorRotation(FRotator(0.f, Controller->GetControlRotation().Yaw, 0.f));
+	}
+	LastBattleTime = GetWorld()->GetTimeSeconds();   // jutsu conta como ação de batalha
+	PlayJutsuSeals(Jutsu);
+	if (HasAuthority())
+	{
+		MulticastJutsuSeals(Jutsu);
+	}
+}
+
+void AHypeWorldCharacter::MulticastJutsuSeals_Implementation(const UNinjaJutsuData* Jutsu)
+{
+	// Quem já tocou (o próprio jogador, que prevê, e o servidor) não toca de novo
+	if (!HasAuthority() && !IsLocallyControlled())
+	{
+		PlayJutsuSeals(Jutsu);
+	}
+}
+
+void AHypeWorldCharacter::PlayJutsuSeals(const UNinjaJutsuData* Jutsu)
+{
+	PresentedJutsu = Jutsu;
+	bJutsuReleased = false;
+	SealIndex = INDEX_NONE;
+	if (Jutsu && Jutsu->BodyCastAnimation)
+	{
+		USkeletalMeshComponent* Body = GetJutsuBody();
+		UAnimInstance* Anim = Body ? Body->GetAnimInstance() : nullptr;
+		if (!Anim) { return; }
+		UAnimMontage* Montage = NewObject<UAnimMontage>(Anim);
+		Montage->SetSkeleton(Jutsu->BodyCastAnimation->GetSkeleton());
+		Montage->SlotAnimTracks.Reset();
+		FSlotAnimationTrack& Slot = Montage->SlotAnimTracks.AddDefaulted_GetRef();
+		Slot.SlotName = FAnimSlotGroup::DefaultSlotName;
+		float Position = 0.f;
+		auto AddSegment = [&](UAnimSequenceBase* Sequence, float Duration)
+		{
+			if (!Sequence || Duration <= 0.f) { return; }
+			FAnimSegment& Segment = Slot.AnimTrack.AnimSegments.AddDefaulted_GetRef();
+			Segment.SetAnimReference(Sequence, true);
+			Segment.AnimStartTime = 0.f;
+			Segment.AnimEndTime = Sequence->GetPlayLength();
+			Segment.AnimPlayRate = Sequence->GetPlayLength() / FMath::Max(Duration, 0.01f);
+			Segment.LoopingCount = 1;
+			Segment.StartPos = Position;
+			Position += Duration;
+		};
+		for (const FNinjaJutsuSeal& Seal : Jutsu->Seals) { AddSegment(Seal.Pose, Seal.Duration); }
+		AddSegment(Jutsu->BodyCastAnimation, Jutsu->BodyCastAnimation->GetPlayLength());
+		Montage->SetCompositeLength(Position);
+		Montage->AddAnimCompositeSection(TEXT("Default"), 0.f);
+		Montage->BlendIn.SetBlendTime(Jutsu->Seals.Num() ? Jutsu->Seals[0].BlendIn : 0.1f);
+		Montage->BlendOut.SetBlendTime(Jutsu->CastBlendOut);
+		Montage->bEnableAutoBlendOut = true;
+		SealMontage = Montage;
+		const float Played = Anim->Montage_Play(Montage);
+		if (Played <= 0.f)
+		{
+			UE_LOG(LogHypeWorld, Error, TEXT("Jutsu montage rejected: body=%s skeleton=%s montage=%s length=%.3f slots=%d segments=%d"),
+				*GetNameSafe(Body->GetSkeletalMeshAsset()), *GetNameSafe(Montage->GetSkeleton()), *GetNameSafe(Montage),
+				Montage->GetPlayLength(), Montage->SlotAnimTracks.Num(), Slot.AnimTrack.AnimSegments.Num());
+		}
+		return;
+	}
+	if (Jutsu && Jutsu->Seals.Num() > 0)
+	{
+		StartSeal(0);
+	}
+}
+
+void AHypeWorldCharacter::StartSeal(int32 Index)
+{
+	SealIndex = Index;
+	SealElapsed = 0.f;
+	const FNinjaJutsuSeal& Seal = PresentedJutsu->Seals[Index];
+	USkeletalMeshComponent* Body = GetJutsuBody();
+	UAnimInstance* Anim = Body ? Body->GetAnimInstance() : nullptr;
+	if (Anim && Seal.Pose)
+	{
+		// Em loop para não sair sozinho no fim do clipe: UpdateJutsuSeals congela no último quadro e para no fim dos selos
+		SealMontage = Anim->PlaySlotAnimationAsDynamicMontage(Seal.Pose, TEXT("DefaultSlot"), Seal.BlendIn, PresentedJutsu->SealBlendOut, 1.f, 100);
+	}
+}
+
+void AHypeWorldCharacter::UpdateJutsuSeals(float DeltaSeconds)
+{
+	if (SealIndex == INDEX_NONE || !PresentedJutsu || !PresentedJutsu->Seals.IsValidIndex(SealIndex))
+	{
+		return;
+	}
+	SealElapsed += DeltaSeconds;
+	const FNinjaJutsuSeal& Seal = PresentedJutsu->Seals[SealIndex];
+	USkeletalMeshComponent* Body = GetJutsuBody();
+	UAnimInstance* Anim = Body ? Body->GetAnimInstance() : nullptr;
+	if (Anim && SealMontage && Seal.Pose && Anim->Montage_IsPlaying(SealMontage)
+		&& Anim->Montage_GetPosition(SealMontage) >= Seal.Pose->GetPlayLength() - 0.04f)
+	{
+		Anim->Montage_Pause(SealMontage);   // segura a pose do selo
+	}
+	if (SealElapsed >= Seal.Duration)
+	{
+		if (PresentedJutsu->Seals.IsValidIndex(SealIndex + 1))
+		{
+			StartSeal(SealIndex + 1);
+		}
+		else if (!IsLocallyControlled() && !HasAuthority())
+		{
+			StopJutsuSeals(PresentedJutsu->SealBlendOut);   // nos outros jogadores a habilidade não roda: para sozinho
+		}
+		else
+		{
+			SealIndex = INDEX_NONE;   // a habilidade chama EndJutsuSeals quando o lançamento começa
+		}
+	}
+}
+
+void AHypeWorldCharacter::StopJutsuSeals(float BlendOut)
+{
+	SealIndex = INDEX_NONE;
+	USkeletalMeshComponent* Body = GetJutsuBody();
+	UAnimInstance* Anim = Body ? Body->GetAnimInstance() : nullptr;
+	if (Anim && SealMontage)
+	{
+		Anim->Montage_Stop(BlendOut, SealMontage);
+	}
+	SealMontage = nullptr;
+}
+
+void AHypeWorldCharacter::EndJutsuSeals()
+{
+	StopJutsuSeals(CurrentJutsu ? CurrentJutsu->SealBlendOut : 0.18f);
+}
+
+void AHypeWorldCharacter::EndJutsu(bool bWasCancelled)
+{
+	StopJutsuSeals(bWasCancelled ? 0.12f : (CurrentJutsu ? CurrentJutsu->CastBlendOut : 0.2f));
+	CurrentJutsu = nullptr;
+	PresentedJutsu = nullptr;
+	if (HasAuthority()) { MulticastJutsuEnd(bWasCancelled); }
+}
+
+void AHypeWorldCharacter::MulticastJutsuEnd_Implementation(bool bCancelled)
+{
+	if (!HasAuthority() && !IsLocallyControlled())
+	{
+		StopJutsuSeals(bCancelled ? 0.12f : (PresentedJutsu ? PresentedJutsu->CastBlendOut : 0.2f));
+		PresentedJutsu = nullptr;
+	}
+}
+
+void AHypeWorldCharacter::OnJutsuRelease()
+{
+	const UNinjaJutsuData* Jutsu = CurrentJutsu ? CurrentJutsu.Get() : PresentedJutsu.Get();
+	if (!Jutsu || !Jutsu->ProjectileClass || bJutsuReleased)
+	{
+		return;
+	}
+	bJutsuReleased = true;
+	USkeletalMeshComponent* Body = GetJutsuBody();
+	FVector Mouth = GetActorLocation() + FVector(0.f, 0.f, 70.f);
+	if (Body && Body->DoesSocketExist(Jutsu->MuzzleSocket))
+	{
+		Mouth = Body->GetSocketLocation(Jutsu->MuzzleSocket);
+	}
+	// Mira: para onde a câmera olha (com limite de inclinação); sem controle, para a frente do corpo
+	FRotator Aim = GetActorRotation();
+	if (Controller)
+	{
+		Aim = Controller->GetControlRotation();
+	}
+	Aim.Roll = 0.f;
+	const ANinjaJutsuProjectile* Defaults = Jutsu->ProjectileClass->GetDefaultObject<ANinjaJutsuProjectile>();
+	// Convergencia da boca para o ponto sob a mira, inclusive quando a camera esta acima do personagem.
+	FVector ViewLocation = Mouth;
+	if (APlayerController* PC = Cast<APlayerController>(Controller)) { PC->GetPlayerViewPoint(ViewLocation, Aim); }
+	FHitResult AimHit;
+	FCollisionQueryParams AimParams(SCENE_QUERY_STAT(NinjaJutsuAim), false, this);
+	const FVector AimEnd = ViewLocation + Aim.Vector() * Defaults->Range;
+	const bool bAimHit = GetWorld()->LineTraceSingleByChannel(AimHit, ViewLocation, AimEnd, ECC_Visibility, AimParams);
+	const FVector Dir = ((bAimHit ? AimHit.ImpactPoint : AimEnd) - Mouth).GetSafeNormal();
+	Aim = Dir.Rotation();
+
+	if (GetNetMode() != NM_DedicatedServer && Defaults->MuzzleSystem && Body)
+	{
+		// Faíscas e chama pequena saindo da boca, presas ao socket e apontadas para onde a bola vai
+		UNiagaraComponent* Muzzle = UNiagaraFunctionLibrary::SpawnSystemAttached(Defaults->MuzzleSystem, Body,
+			Body->DoesSocketExist(Jutsu->MuzzleSocket) ? Jutsu->MuzzleSocket : NAME_None, FVector::ZeroVector, FRotator::ZeroRotator,
+			EAttachLocation::SnapToTarget, true, true, ENCPoolMethod::AutoRelease);
+		if (Muzzle)
+		{
+			Muzzle->SetUsingAbsoluteRotation(true);
+			Muzzle->SetWorldRotation(Aim);
+			FTimerHandle StopMuzzle;
+			GetWorldTimerManager().SetTimer(StopMuzzle, FTimerDelegate::CreateWeakLambda(Muzzle, [Muzzle]() { Muzzle->Deactivate(); }),
+				FMath::Max(Defaults->MuzzleDuration, 0.05f), false);
+		}
+	}
+	if (IsLocallyControlled())
+	{
+		AddCameraShake(Jutsu->CastShake, 0.45f);
+	}
+	if (HasAuthority())
+	{
+		FActorSpawnParameters Params;
+		Params.Owner = this;
+		Params.Instigator = this;
+		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		const FTransform SpawnAt(Dir.Rotation(), Mouth);
+		if (ANinjaJutsuProjectile* Projectile = GetWorld()->SpawnActorDeferred<ANinjaJutsuProjectile>(Jutsu->ProjectileClass, SpawnAt, this, this,
+			ESpawnActorCollisionHandlingMethod::AlwaysSpawn))
+		{
+			Projectile->InitLaunch(Jutsu, Mouth + Dir * 20.f, Dir);
+			Projectile->FinishSpawning(SpawnAt);
+		}
+	}
+}
+
+void AHypeWorldCharacter::ApplyJutsuHit(AHypeWorldCharacter* Target, const UNinjaJutsuData* Jutsu, float Scale, const FHitResult& Hit)
+{
+	if (!Target || !Jutsu || Target->bKnockedOut)
+	{
+		return;
+	}
+	FNinjaAttack Attack;
+	Attack.Name = Jutsu->GetFName();
+	Attack.Damage = Jutsu->Damage * Scale;
+	Attack.Reaction = Jutsu->Reaction;
+	Attack.Knockback = Jutsu->Knockback * Scale;
+	Attack.Launch = Jutsu->Launch * Scale;
+	Attack.Stun = Jutsu->Stun;
+	Attack.bBreaksGuard = true;
+	LastBattleTime = GetWorld()->GetTimeSeconds();
+	ApplyHit(Target, Attack, true, Hit);
+}
+
+void AHypeWorldCharacter::AddCameraShake(float Degrees, float Duration)
+{
+	if (!IsLocallyControlled() || Degrees <= 0.f)
+	{
+		return;
+	}
+	// Uma tremida maior por cima de uma menor ganha; nunca soma até ficar exagerada
+	const float Current = ShakeDuration > 0.f ? ShakeAmplitude * FMath::Square(1.f - FMath::Clamp(ShakeElapsed / ShakeDuration, 0.f, 1.f)) : 0.f;
+	if (Degrees >= Current)
+	{
+		ShakeAmplitude = Degrees;
+		ShakeDuration = FMath::Max(Duration, 0.05f);
+		ShakeElapsed = 0.f;
+	}
+}
+
+void AHypeWorldCharacter::UpdateCameraShake(float DeltaSeconds)
+{
+	if (ShakeDuration <= 0.f)
+	{
+		return;
+	}
+	ShakeElapsed += DeltaSeconds;
+	const float Alpha = FMath::Clamp(ShakeElapsed / ShakeDuration, 0.f, 1.f);
+	if (Alpha >= 1.f)
+	{
+		ShakeDuration = 0.f;
+		FollowCamera->SetRelativeRotation(CameraBaseRotation);
+		return;
+	}
+	const float Amp = ShakeAmplitude * FMath::Square(1.f - Alpha);
+	const float T = ShakeElapsed;
+	const FRotator Offset(Amp * (FMath::Sin(T * 61.f) * 0.7f + FMath::Sin(T * 37.f) * 0.3f),
+		Amp * (FMath::Sin(T * 47.f + 1.3f) * 0.6f + FMath::Sin(T * 29.f) * 0.4f),
+		Amp * 0.4f * FMath::Sin(T * 53.f + 0.7f));
+	FollowCamera->SetRelativeRotation(CameraBaseRotation + Offset);
 }
 
 void AHypeWorldCharacter::DoChargePressed()
 {
+	if (!TryCancelDodgeForAction()) return;
 	AbilitySystem->TryActivateAbilityByClass(ChargeChakraAbility);
 }
 
@@ -1809,7 +2328,8 @@ void AHypeWorldCharacter::UpdateCombatState(float DeltaSeconds)
 	}
 
 	// Aterrissagem do dash (seção "End", vai até ele se levantar): se o jogador se mexer, sai suave na hora (não desliza agachado)
-	if (ActiveDashMontage && GetCharacterMovement()->IsMovingOnGround() && !GetCharacterMovement()->GetCurrentAcceleration().IsNearlyZero())
+	if (ActiveDashMontage && !GetNinjaMovement()->IsDashing() && !GetNinjaMovement()->IsDashStrafe()
+		&& GetCharacterMovement()->IsMovingOnGround() && !GetCharacterMovement()->GetCurrentAcceleration().IsNearlyZero())
 	{
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 		if (AnimInstance && AnimInstance->Montage_IsPlaying(ActiveDashMontage) && AnimInstance->Montage_GetCurrentSection(ActiveDashMontage) == FName("End"))
@@ -1966,7 +2486,7 @@ UAnimSequenceBase* AHypeWorldCharacter::GetBattleIdlePose() const
 void AHypeWorldCharacter::BlendOutDashMontage(UAnimMontage* Montage)
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	if (!Montage || !AnimInstance || !AnimInstance->Montage_IsPlaying(Montage))
+	if (!Montage || !AnimInstance || !AnimInstance->Montage_IsPlaying(Montage) || AnimInstance->Montage_GetIsStopped(Montage))
 	{
 		return;
 	}
@@ -1979,7 +2499,41 @@ void AHypeWorldCharacter::BlendOutDashMontage(UAnimMontage* Montage)
 		AnimInstance->Montage_SetNextSection(Current, EndSection, Montage);
 	}
 	// O tempo da mistura corre na velocidade da animação (andando ela vai a 2x): compensa para durar DashExitBlendTime de verdade
-	AnimInstance->Montage_Stop(DashExitBlendTime * FMath::Max(GetMesh()->GlobalAnimRateScale, 0.1f), Montage);
+	const float ExitTime = GetNinjaMovement()->IsDashStrafe() ? 0.14f : DashExitBlendTime;
+	AnimInstance->Montage_Stop(ExitTime * FMath::Max(GetMesh()->GlobalAnimRateScale, 0.1f), Montage);
+}
+
+bool AHypeWorldCharacter::IsPlayingDashMontage() const
+{
+	const UAnimInstance* Anim = GetMesh()->GetAnimInstance();
+	return ActiveDashMontage && Anim && Anim->Montage_IsActive(ActiveDashMontage);
+}
+
+UNinjaDodgeDefinition* AHypeWorldCharacter::GetCombatDodgeForDirection(int32 Index) const
+{
+	return CombatDodges.IsValidIndex(Index) ? CombatDodges[Index].Get() : nullptr;
+}
+
+bool AHypeWorldCharacter::TryCancelDodgeForAction()
+{
+	return !GetNinjaMovement() || GetNinjaMovement()->TryCancelCombatDodge();
+}
+
+void AHypeWorldCharacter::PlayCombatDodge(UNinjaDodgeDefinition* Definition)
+{
+	if (!Definition || !Definition->Montage) return;
+	ActiveDashMontage = Definition->Montage;
+	GetMesh()->GlobalAnimRateScale = 1.f;
+	SetAnimRootMotionTranslationScale(Definition->bUseRootMotion ? Definition->Distance / FMath::Max(1.f, Definition->AuthoredRootDistance) : 1.f);
+	if (UAnimInstance* Anim = GetMesh()->GetAnimInstance()) Anim->SetRootMotionMode(Definition->bUseRootMotion ? ERootMotionMode::RootMotionFromMontagesOnly : ERootMotionMode::IgnoreRootMotion);
+	PlayAnimMontage(Definition->Montage, Definition->Montage->GetPlayLength() / Definition->Duration);
+}
+
+void AHypeWorldCharacter::MulticastCombatDodge_Implementation(UNinjaDodgeDefinition* Definition, float FacingYaw)
+{
+	if (HasAuthority() || IsLocallyControlled()) return;
+	GetNinjaMovement()->SetSimulatedCombatDodge(Definition, FacingYaw);
+	PlayCombatDodge(Definition);
 }
 
 UAnimMontage* AHypeWorldCharacter::PickDashMontage(EMovementMode PrevMovementMode)
@@ -1998,10 +2552,11 @@ UAnimMontage* AHypeWorldCharacter::PickDashMontage(EMovementMode PrevMovementMod
 		Dir = GetVelocity().GetSafeNormal2D();   // outros jogadores: pela velocidade e rotação recebidas
 		FacingYaw = GetActorRotation().Yaw;
 	}
-	const float Rel = Dir.IsNearlyZero() ? 0.f : FMath::FindDeltaAngleDegrees(FacingYaw, Dir.Rotation().Yaw);
+	const float Rel = NinjaMovement && (IsLocallyControlled() || HasAuthority()) ? NinjaMovement->GetDashInputAngle()
+		: (Dir.IsNearlyZero() ? 0.f : FMath::FindDeltaAngleDegrees(FacingYaw, Dir.Rotation().Yaw));
 
 	const TArray<TObjectPtr<UAnimMontage>>* List = &DashVariants.Front;
-	if (PrevMovementMode == MOVE_Falling && DashVariants.Air.Num() > 0)
+	if (PrevMovementMode == MOVE_Falling && !(NinjaMovement && NinjaMovement->IsDashStrafe()) && DashVariants.Air.Num() > 0)
 	{
 		List = &DashVariants.Air;
 	}
@@ -2009,11 +2564,11 @@ UAnimMontage* AHypeWorldCharacter::PickDashMontage(EMovementMode PrevMovementMod
 	{
 		List = &DashVariants.Back;
 	}
-	else if (Rel > 45.f && DashVariants.Right.Num() > 0)
+	else if (Rel >= 40.f && DashVariants.Right.Num() > 0)
 	{
 		List = &DashVariants.Right;
 	}
-	else if (Rel < -45.f && DashVariants.Left.Num() > 0)
+	else if (Rel <= -40.f && DashVariants.Left.Num() > 0)
 	{
 		List = &DashVariants.Left;
 	}
@@ -2096,7 +2651,8 @@ float AHypeWorldCharacter::GetSurfaceSpeed() const
 bool AHypeWorldCharacter::CanStartSuperJump() const
 {
 	// Pulo carregado vale sempre (fora do modo de batalha); não depende mais da infusão nos pés (pedido do Felipe)
-	return GetCharacterMovement()->IsMovingOnGround() && CanAct() && !IsAttacking() && !bChargingChakra;
+	return GetCharacterMovement()->IsMovingOnGround() && CanAct() && !IsAttacking() && !bChargingChakra
+		&& !IsInBattleMode() && GetWorld()->GetTimeSeconds() >= NextSuperJumpTime;
 }
 
 void AHypeWorldCharacter::UpdateSuperJump(float DeltaSeconds)
@@ -2129,6 +2685,7 @@ void AHypeWorldCharacter::UpdateSuperJump(float DeltaSeconds)
 
 void AHypeWorldCharacter::ReleaseSuperJump()
 {
+	if (!CanStartSuperJump()) { CancelSuperJumpCharge(); return; }
 	// Para a frente (para onde a câmera olha, no plano do chão atual) e para cima: mais carga = mais longe e mais alto
 	const float A = SuperJumpCharge;
 	const FVector Up = -GetCharacterMovement()->GetGravityDirection();
@@ -2143,6 +2700,7 @@ void AHypeWorldCharacter::ReleaseSuperJump()
 	const float ForwardSpeed = FMath::Lerp(SuperJumpForwardSpeed.X, SuperJumpForwardSpeed.Y, A) * (1.f - Vertical);
 	const float UpSpeed = FMath::Lerp(FMath::Lerp(SuperJumpUpSpeed.X, SuperJumpUpSpeed.Y, A), FMath::Lerp(SuperJumpVerticalSpeed.X, SuperJumpVerticalSpeed.Y, A), Vertical);
 	const FVector LaunchVelocity = Forward * ForwardSpeed + Up * UpSpeed;
+	NextSuperJumpTime = GetWorld()->GetTimeSeconds() + SuperJumpCooldown;
 
 	bChargingSuperJump = false;
 	SuperJumpCharge = 0.f;
@@ -2150,7 +2708,7 @@ void AHypeWorldCharacter::ReleaseSuperJump()
 	SetActorRotation(FRotationMatrix::MakeFromXZ(Forward, Up).Rotator());
 	if (SuperJumpLaunchMontage)
 	{
-		PlayAnimMontage(SuperJumpLaunchMontage);
+		PlayJumpMontage(SuperJumpLaunchMontage, UpSpeed);
 	}
 	GetNinjaMovement()->bInSuperJump = true;
 	GetNinjaMovement()->StartFloatJump(SuperJumpGravity.X, SuperJumpGravity.Y, SuperJumpGravity.Z);
@@ -2161,7 +2719,7 @@ void AHypeWorldCharacter::ReleaseSuperJump()
 	}
 	else
 	{
-		MulticastSuperJumpLaunch();
+		MulticastSuperJumpLaunch(UpSpeed);
 	}
 }
 
@@ -2174,25 +2732,26 @@ void AHypeWorldCharacter::ServerSetChargingSuperJump_Implementation(bool bChargi
 void AHypeWorldCharacter::ServerSuperJump_Implementation(FVector_NetQuantize10 LaunchVelocity)
 {
 	// Servidor confere: nunca mais forte que a barra cheia
-	if (!CanAct())
+	if (!CanAct() || GetWorld()->GetTimeSeconds() < NextSuperJumpTime || !GetCharacterMovement()->IsMovingOnGround())
 	{
 		return;
 	}
 	const float MaxSpeed = FMath::Max(FVector2D(SuperJumpForwardSpeed.Y, SuperJumpUpSpeed.Y).Size(), SuperJumpVerticalSpeed.Y) * 1.05f;
+	NextSuperJumpTime = GetWorld()->GetTimeSeconds() + SuperJumpCooldown;
 	bChargingSuperJump = false;
 	OnRep_ChargingSuperJump();
 	GetNinjaMovement()->bInSuperJump = true;
 	GetNinjaMovement()->StartFloatJump(SuperJumpGravity.X, SuperJumpGravity.Y, SuperJumpGravity.Z);
 	LaunchCharacter(LaunchVelocity.GetClampedToMaxSize(MaxSpeed), true, true);
-	MulticastSuperJumpLaunch();
+	MulticastSuperJumpLaunch(FVector::DotProduct(LaunchVelocity.GetClampedToMaxSize(MaxSpeed), -GetCharacterMovement()->GetGravityDirection()));
 }
 
-void AHypeWorldCharacter::MulticastSuperJumpLaunch_Implementation()
+void AHypeWorldCharacter::MulticastSuperJumpLaunch_Implementation(float UpSpeed)
 {
 	// Os outros jogadores veem o salto (quem pulou já tocou a animação)
 	if (!IsLocallyControlled() && SuperJumpLaunchMontage)
 	{
-		PlayAnimMontage(SuperJumpLaunchMontage);
+		PlayJumpMontage(SuperJumpLaunchMontage, UpSpeed);
 	}
 }
 
@@ -2244,7 +2803,7 @@ void AHypeWorldCharacter::DoBackflipJump()
 	const FVector LaunchVelocity = Back * BackflipBackSpeed + FVector(0.f, 0.f, BackflipUpSpeed);
 	if (BackflipMontage)
 	{
-		PlayAnimMontage(BackflipMontage);
+		PlayJumpMontage(BackflipMontage, BackflipUpSpeed);
 	}
 	GetNinjaMovement()->bInSuperJump = true;   // sem frenagem no ar (senão o embalo para trás some)
 	GetNinjaMovement()->bInBackflip = true;
@@ -2277,6 +2836,6 @@ void AHypeWorldCharacter::MulticastBackflip_Implementation()
 {
 	if (!IsLocallyControlled() && BackflipMontage)
 	{
-		PlayAnimMontage(BackflipMontage);
+		PlayJumpMontage(BackflipMontage, BackflipUpSpeed);
 	}
 }

@@ -1,0 +1,1919 @@
+{
+  "fps": 30,
+  "frames": 220,
+  "slot_accepted": true,
+  "print_frame": 52,
+  "camera": "Behind + slightly above, reused previous rear framing; no new reference attachment was present in this message.",
+  "rows": [
+    {
+      "frame": 0,
+      "chakra": 100.0,
+      "actors": []
+    },
+    {
+      "frame": 1,
+      "chakra": 100.0,
+      "actors": []
+    },
+    {
+      "frame": 2,
+      "chakra": 100.0,
+      "actors": []
+    },
+    {
+      "frame": 3,
+      "chakra": 100.0,
+      "actors": []
+    },
+    {
+      "frame": 4,
+      "chakra": 100.0,
+      "actors": []
+    },
+    {
+      "frame": 5,
+      "chakra": 100.0,
+      "actors": []
+    },
+    {
+      "frame": 6,
+      "chakra": 100.0,
+      "actors": []
+    },
+    {
+      "frame": 7,
+      "chakra": 100.0,
+      "actors": []
+    },
+    {
+      "frame": 8,
+      "chakra": 100.0,
+      "actors": []
+    },
+    {
+      "frame": 9,
+      "chakra": 100.0,
+      "actors": []
+    },
+    {
+      "frame": 10,
+      "chakra": 100.0,
+      "actors": []
+    },
+    {
+      "frame": 11,
+      "chakra": 100.0,
+      "actors": []
+    },
+    {
+      "frame": 12,
+      "chakra": 100.0,
+      "actors": []
+    },
+    {
+      "frame": 13,
+      "chakra": 100.0,
+      "actors": []
+    },
+    {
+      "frame": 14,
+      "chakra": 100.0,
+      "actors": []
+    },
+    {
+      "frame": 15,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 16,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 17,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 18,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 19,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 20,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 21,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 22,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 23,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 24,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 25,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 26,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 27,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 28,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 29,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 30,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 31,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 32,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 33,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 34,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 35,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 36,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 37,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 38,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 39,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 40,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 41,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 42,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 43,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 0.0,
+          "exploded": false,
+          "pos": "<Struct 'Vector' (0x00000256706A9D20) {x: -0.000000, y: 79.827028, z: 158.290935}>"
+        }
+      ]
+    },
+    {
+      "frame": 44,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 0.03333333507180214,
+          "exploded": false,
+          "pos": "<Struct 'Vector' (0x00000256706A9D20) {x: -0.000000, y: 190.552883, z: 163.877298}>"
+        }
+      ]
+    },
+    {
+      "frame": 45,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 0.06666667014360428,
+          "exploded": false,
+          "pos": "<Struct 'Vector' (0x00000256706A9D20) {x: -0.000000, y: 271.952400, z: 167.984079}>"
+        }
+      ]
+    },
+    {
+      "frame": 46,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 0.10000000894069672,
+          "exploded": false,
+          "pos": "<Struct 'Vector' (0x00000256706A9D20) {x: -0.000000, y: 328.537272, z: 170.838914}>"
+        }
+      ]
+    },
+    {
+      "frame": 47,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 0.13333334028720856,
+          "exploded": false,
+          "pos": "<Struct 'Vector' (0x00000256706A9D20) {x: -0.000000, y: 364.819257, z: 172.669419}>"
+        }
+      ]
+    },
+    {
+      "frame": 48,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 0.1666666716337204,
+          "exploded": false,
+          "pos": "<Struct 'Vector' (0x00000256706A9D20) {x: -0.000000, y: 385.310140, z: 173.703224}>"
+        }
+      ]
+    },
+    {
+      "frame": 49,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 0.20000001788139343,
+          "exploded": false,
+          "pos": "<Struct 'Vector' (0x00000256706A9D20) {x: -0.000000, y: 394.521619, z: 174.167964}>"
+        }
+      ]
+    },
+    {
+      "frame": 50,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 0.23333334922790527,
+          "exploded": false,
+          "pos": "<Struct 'Vector' (0x00000256706A9D20) {x: -0.000000, y: 396.965478, z: 174.291264}>"
+        }
+      ]
+    },
+    {
+      "frame": 51,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 0.2666666805744171,
+          "exploded": false,
+          "pos": "<Struct 'Vector' (0x00000256706A9D20) {x: -0.000000, y: 446.627076, z: 167.734294}>"
+        }
+      ]
+    },
+    {
+      "frame": 52,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 0.30000001192092896,
+          "exploded": false,
+          "pos": "<Struct 'Vector' (0x00000256706A9D20) {x: -0.000000, y: 545.762216, z: 154.610879}>"
+        }
+      ]
+    },
+    {
+      "frame": 53,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 0.3333333432674408,
+          "exploded": false,
+          "pos": "<Struct 'Vector' (0x00000256706A9D20) {x: -0.000000, y: 644.897326, z: 141.487467}>"
+        }
+      ]
+    },
+    {
+      "frame": 54,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 0.36666667461395264,
+          "exploded": false,
+          "pos": "<Struct 'Vector' (0x00000256706A9D20) {x: -0.000000, y: 744.032466, z: 128.364052}>"
+        }
+      ]
+    },
+    {
+      "frame": 55,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 0.40000003576278687,
+          "exploded": false,
+          "pos": "<Struct 'Vector' (0x00000256706A9D20) {x: -0.000000, y: 843.167727, z: 115.240621}>"
+        }
+      ]
+    },
+    {
+      "frame": 56,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 0.4333333671092987,
+          "exploded": false,
+          "pos": "<Struct 'Vector' (0x00000256706A9D20) {x: -0.000000, y: 942.302866, z: 102.117205}>"
+        }
+      ]
+    },
+    {
+      "frame": 57,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 0.46666669845581055,
+          "exploded": false,
+          "pos": "<Struct 'Vector' (0x00000256706A9D20) {x: -0.000000, y: 1041.438006, z: 88.993790}>"
+        }
+      ]
+    },
+    {
+      "frame": 58,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 0.5,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x00000256706A9D20) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 59,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 0.5333333611488342,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 60,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 0.5666667222976685,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 61,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 0.6000000238418579,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 62,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 0.6333333849906921,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 63,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 0.6666666865348816,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 64,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 0.7000000476837158,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 65,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 0.7333333492279053,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 66,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 0.7666667103767395,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 67,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 0.8000000715255737,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 68,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 0.8333333730697632,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 69,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 0.8666667342185974,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 70,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 0.9000000357627869,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 71,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 0.9333333969116211,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 72,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 0.9666666984558105,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 73,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 1.0,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 74,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 1.033333420753479,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 75,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 1.0666667222976685,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 76,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 1.100000023841858,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 77,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 1.133333444595337,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 78,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 1.1666667461395264,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 79,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 1.2000000476837158,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 80,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 1.2333333492279053,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 81,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 1.2666667699813843,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 82,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 1.3000000715255737,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 83,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 1.3333333730697632,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 84,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 1.3666667938232422,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 85,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 1.4000000953674316,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 86,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 1.433333396911621,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 87,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 1.4666666984558105,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 88,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 1.5000001192092896,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 89,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 1.533333420753479,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 90,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 1.5666667222976685,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 91,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 1.6000001430511475,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 92,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 1.633333444595337,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 93,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 1.6666667461395264,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 94,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 1.7000000476837158,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 95,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 1.7333334684371948,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 96,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 1.7666667699813843,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 97,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 1.8000000715255737,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 98,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 1.8333333730697632,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 99,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 1.8666667938232422,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 100,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 1.9000000953674316,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 101,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 1.933333396911621,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 102,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 1.9666668176651,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 103,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 2.0,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 104,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 2.0333335399627686,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 105,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 2.066666841506958,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 106,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 2.1000001430511475,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 107,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 2.133333444595337,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 108,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 2.1666667461395264,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 109,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 2.200000047683716,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 110,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 2.2333333492279053,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 111,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 2.266666889190674,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 112,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 2.3000001907348633,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 113,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 2.3333334922790527,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 114,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 2.366666793823242,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 115,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 2.4000000953674316,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 116,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 2.433333396911621,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 117,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 2.4666666984558105,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 118,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 2.500000238418579,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 119,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 2.5333335399627686,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 120,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 2.566666841506958,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 121,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 2.6000001430511475,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 122,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 2.633333444595337,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 123,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 2.6666667461395264,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 124,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 2.700000047683716,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 125,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 2.7333335876464844,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 126,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 2.766666889190674,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 127,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 2.8000001907348633,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 128,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 2.8333334922790527,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 129,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 2.866666793823242,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 130,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 2.9000000953674316,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 131,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 2.933333396911621,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 132,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 2.9666669368743896,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 133,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 3.000000238418579,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 134,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 3.0333335399627686,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 135,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 3.066666841506958,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 136,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 3.1000001430511475,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 137,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 3.133333444595337,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 138,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 3.1666667461395264,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 139,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 3.200000286102295,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 140,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 3.2333335876464844,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 141,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 3.266666889190674,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 142,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 3.3000001907348633,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 143,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 3.3333334922790527,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 144,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 3.366666793823242,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 145,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 3.4000000953674316,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 146,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 3.433333396911621,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 147,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 3.4666669368743896,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 148,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 3.500000238418579,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 149,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 3.5333335399627686,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 150,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 3.566666841506958,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 151,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 3.6000001430511475,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 152,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 3.633333444595337,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 153,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 3.6666667461395264,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 154,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 3.700000286102295,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 155,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 3.7333335876464844,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 156,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 3.766666889190674,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 157,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 3.8000001907348633,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 158,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 3.8333334922790527,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 159,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 3.866666793823242,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 160,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 3.9000000953674316,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 161,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 3.9333336353302,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 162,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 3.9666669368743896,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 163,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 4.0,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 164,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 4.033333778381348,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 165,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 4.066667079925537,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 166,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 4.100000381469727,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 167,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 4.133333683013916,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 168,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 4.1666669845581055,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 169,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 4.200000286102295,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 170,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 4.233333587646484,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 171,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 4.266666889190674,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 172,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 4.300000190734863,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 173,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 4.333333492279053,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 174,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 4.366666793823242,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 175,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 4.400000095367432,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 176,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 4.433333396911621,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 177,
+      "chakra": 70.0,
+      "actors": [
+        {
+          "time": 4.4666666984558105,
+          "exploded": true,
+          "pos": "<Struct 'Vector' (0x0000025679794420) {x: -1.166408, y: 1117.374119, z: 4.305297}>"
+        }
+      ]
+    },
+    {
+      "frame": 178,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 179,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 180,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 181,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 182,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 183,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 184,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 185,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 186,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 187,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 188,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 189,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 190,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 191,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 192,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 193,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 194,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 195,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 196,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 197,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 198,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 199,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 200,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 201,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 202,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 203,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 204,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 205,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 206,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 207,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 208,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 209,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 210,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 211,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 212,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 213,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 214,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 215,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 216,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 217,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 218,
+      "chakra": 70.0,
+      "actors": []
+    },
+    {
+      "frame": 219,
+      "chakra": 70.0,
+      "actors": []
+    }
+  ]
+}

@@ -7,6 +7,7 @@
 #include "NinjaMovementComponent.generated.h"
 
 class UAnimSequenceBase;
+class UNinjaDodgeDefinition;
 
 /** Modos de movimento próprios (usados com MOVE_Custom). */
 UENUM(BlueprintType)
@@ -15,6 +16,7 @@ enum ENinjaMoveMode : uint8
 	NMOVE_None		UMETA(Hidden),
 	NMOVE_Dash		UMETA(DisplayName = "Dash"),
 	NMOVE_WallRun	UMETA(DisplayName = "Corrida na parede"),
+	NMOVE_CombatDodge UMETA(DisplayName = "Esquiva de combate"),
 };
 
 UCLASS()
@@ -30,11 +32,11 @@ public:
 
 	/** Velocidade da corrida ninja (segurando o botão de correr). */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Corrida")
-	float SprintSpeed = 800.f;
+	float SprintSpeed = 1400.f;
 
 	/** Corrida normal (segurar Shift). */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Corrida")
-	float RunSpeed = 500.f;
+	float RunSpeed = 900.f;
 
 	/** Correndo de lado (strafe) — as animações de lado são mais lentas que a de frente. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Corrida")
@@ -50,7 +52,7 @@ public:
 
 	/** Aceleração acima da velocidade de corrida normal (sobe para a corrida ninja em ~0,35 s, sem tranco). */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Corrida")
-	float SprintAcceleration = 1100.f;
+	float SprintAcceleration = 1800.f;
 
 	/** Modo foco (segurar botão direito): de frente para a câmera, andando de lado/de costas. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Foco")
@@ -99,7 +101,7 @@ public:
 
 	/** Tempo de espera entre dashes (segundos), contado do início do dash. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Dash")
-	float DashCooldown = 0.8f;
+	float DashCooldown = 3.f;
 
 	/** Sem animação: o dash sai forte e vai assentando — velocidade no início e no fim (× DashSpeed) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Dash")
@@ -123,6 +125,7 @@ public:
 
 	/** Duração real do dash (segue a animação quando houver uma). */
 	float GetDashDuration() const;
+	void MatchDashDuration(float AnimationMoveTime);
 
 	/** Dash com a tecla mais que este ângulo fora da câmera (lado/trás): o corpo fica de frente para a câmera e o dash vai de lado/de costas */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Dash")
@@ -157,9 +160,7 @@ public:
 	bool bInBackflip = false;
 	/** Embalo no ar (depois do dash no ar): sem frenagem até pousar */
 	bool bAirMomentum = false;
-	/** Voo planado (super pulo e mortal para trás), com gravidade própria de cada salto (o personagem escolhe):
-	 *  subindo = gravidade × RiseScale; perto do topo vai virando × FallScale; a queda não passa de MaxFallSpeed.
-	 *  Acaba ao pousar */
+	/** Estado legado dos saltos especiais. Os parâmetros antigos não alteram mais a gravidade nem limitam a queda. */
 	void StartFloatJump(float RiseScale, float FallScale, float MaxFallSpeed);
 	bool bFloatJump = false;
 	/** Subindo mais devagar que isso (cm/s), a gravidade começa a suavizar (transição para a flutuação, sem tranco no topo) */
@@ -171,6 +172,8 @@ public:
 	virtual void ApplyVelocityBraking(float DeltaTime, float Friction, float BrakingDeceleration) override;
 	bool IsDashStrafe() const { return bDashStrafe; }
 	float GetDashFacingYaw() const { return DashFacingYaw; }
+	float GetDashInputAngle() const { return DashInputAngle; }
+	float DashInputAngle = 0.f;
 
 	/** Combo aéreo: a cada acerto no ar, atacante e adversário ficam suspensos (gravidade fraca) por um tempo; acaba ao pousar */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Combate")
@@ -213,6 +216,7 @@ public:
 
 	void SetSprinting(bool bSprint) { bWantsToSprint = bSprint; }
 	void RequestDash() { bWantsToDash = true; }
+	bool HasDashRequest() const { return bWantsToDash; }
 	void SetFocusing(bool bFocus) { bWantsToFocus = bFocus; }
 	void SetRunning(bool bRun) { bWantsToRun = bRun; }
 	bool WantsToRun() const { return bWantsToRun; }
@@ -240,7 +244,14 @@ public:
 	bool IsSprinting() const { return bWantsToSprint && IsMovingOnGround(); }
 
 	UFUNCTION(BlueprintPure, Category="Ninja")
-	bool IsDashing() const { return IsCustomMode(NMOVE_Dash); }
+	bool IsDashing() const { return IsCustomMode(NMOVE_Dash) || IsCustomMode(NMOVE_CombatDodge); }
+	UFUNCTION(BlueprintPure, Category="Ninja") float GetDashCooldownRemaining() const { return DashCooldownLeft; }
+	UFUNCTION(BlueprintPure, Category="Ninja|Esquiva") bool IsCombatDodging() const { return IsCustomMode(NMOVE_CombatDodge); }
+	UFUNCTION(BlueprintPure, Category="Ninja|Esquiva") bool CanCancelCombatDodge() const;
+	UFUNCTION(BlueprintCallable, Category="Ninja|Esquiva") bool TryCancelCombatDodge();
+	UNinjaDodgeDefinition* GetCombatDodgeDefinition() const { return CombatDodgeDefinition; }
+	float GetCombatDodgeElapsed() const { return ActiveDashDuration - DashTimeLeft; }
+	void SetSimulatedCombatDodge(UNinjaDodgeDefinition* Definition, float FacingYaw);
 
 	UFUNCTION(BlueprintPure, Category="Ninja")
 	bool IsWallRunning() const { return IsCustomMode(NMOVE_WallRun); }
@@ -278,8 +289,14 @@ private:
 	virtual void HandleImpact(const FHitResult& Hit, float TimeSlice = 0.f, const FVector& MoveDelta = FVector::ZeroVector) override;
 	float DashFacingYaw = 0.f;
 	float AirSuspendUntil = -1.f;	// hora do mundo até quando fica suspenso no ar
+	float AirSuspendStart = -1.f;
 
 	void PhysDash(float DeltaTime, int32 Iterations);
+	void PhysCombatDodge(float DeltaTime, int32 Iterations);
+	bool TryStartCombatDodge();
+	void FinishCombatDodge();
+	UPROPERTY(Transient) TObjectPtr<UNinjaDodgeDefinition> CombatDodgeDefinition;
+	float CombatDodgeDistance = 0.f;
 	void PhysWallRun(float DeltaTime, int32 Iterations);
 
 	void StartDash();
@@ -300,10 +317,12 @@ private:
 
 	// Estado do movimento (também guardado em FSavedMove_Ninja para refazer movimentos após correção do servidor)
 	float DashTimeLeft = 0.f;
+	float ActiveDashDuration = 0.f;
 	float DashCooldownLeft = 0.f;
 	FVector DashDirection = FVector::ForwardVector;
 	bool bAirDashUsed = false;
 	float DashEntrySpeed = 0.f;		// velocidade de quando o dash começou (o dash nunca deixa mais lento)
+	float DashEntryUpSpeed = 0.f;
 
 	float WallRunTimeLeft = 0.f;
 	float WallRunCooldownLeft = 0.f;
@@ -328,6 +347,14 @@ public:
 	uint8 bSavedWantsToRun : 1 = 0;
 	uint8 bSavedAirDashUsed : 1 = 0;
 	float SavedDashTimeLeft = 0.f;
+	float SavedActiveDashDuration = 0.f;
+	UNinjaDodgeDefinition* SavedCombatDodgeDefinition = nullptr;
+	float SavedCombatDodgeDistance = 0.f;
+	float SavedDashEntrySpeed = 0.f;
+	float SavedDashEntryUpSpeed = 0.f;
+	float SavedDashFacingYaw = 0.f;
+	float SavedDashInputAngle = 0.f;
+	bool bSavedDashStrafe = false;
 	float SavedDashCooldownLeft = 0.f;
 	FVector SavedDashDirection = FVector::ForwardVector;
 	float SavedWallRunTimeLeft = 0.f;
