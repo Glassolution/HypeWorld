@@ -1011,3 +1011,15 @@ bool UNinjaEditorTools::SetSteppedColorCurve(UCurveLinearColor* Curve, const TAr
 	Curve->MarkPackageDirty();
 	return true;
 }
+
+AActor* UNinjaEditorTools::SpawnLocalActor(UObject* WorldContext, TSubclassOf<AActor> ActorClass, FVector Location, FRotator Rotation)
+{
+	UWorld* World = WorldContext ? WorldContext->GetWorld() : nullptr;
+	if (!World || !ActorClass)
+	{
+		return nullptr;
+	}
+	FActorSpawnParameters Params;
+	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	return World->SpawnActor<AActor>(ActorClass, Location, Rotation, Params);
+}

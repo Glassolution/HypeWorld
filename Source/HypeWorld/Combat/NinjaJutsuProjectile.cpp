@@ -152,6 +152,39 @@ void ANinjaJutsuProjectile::InitLaunch(const UNinjaJutsuData* InJutsu, const FVe
 	if (HasActorBegunPlay() && HasAuthority()) { OnRep_Launch(); }
 }
 
+void ANinjaJutsuProjectile::Prewarm(AActor* Context, const UNinjaJutsuData* Jutsu)
+{
+	UWorld* World = Context ? Context->GetWorld() : nullptr;
+	if (!World || !Jutsu || !Jutsu->ProjectileClass || World->GetNetMode() == NM_DedicatedServer)
+	{
+		return;
+	}
+	static TArray<TPair<TWeakObjectPtr<UWorld>, TWeakObjectPtr<UClass>>> Done;
+	Done.RemoveAll([](const TPair<TWeakObjectPtr<UWorld>, TWeakObjectPtr<UClass>>& Entry) { return !Entry.Key.IsValid() || !Entry.Value.IsValid(); });
+	const TPair<TWeakObjectPtr<UWorld>, TWeakObjectPtr<UClass>> Key(World, Jutsu->ProjectileClass.Get());
+	if (Done.Contains(Key))
+	{
+		return;
+	}
+	Done.Add(Key);
+	const FVector Start = Context->GetActorLocation() - FVector(0.f, 0.f, 20000.f);
+	const FTransform At(Start);
+	if (ANinjaJutsuProjectile* Copy = World->SpawnActorDeferred<ANinjaJutsuProjectile>(Jutsu->ProjectileClass, At, nullptr, nullptr,
+		ESpawnActorCollisionHandlingMethod::AlwaysSpawn))
+	{
+		Copy->bPrewarm = true;
+		Copy->SetReplicates(false);   // no host não pode virar um projétil de verdade nos clientes
+		Copy->Launch.Jutsu = Jutsu;
+		Copy->Launch.Start = Start;
+		Copy->Launch.Direction = FVector::ForwardVector;
+		Copy->FinishSpawning(At);
+		if (Copy->MuzzleSystem)
+		{
+			UNiagaraFunctionLibrary::SpawnSystemAtLocation(Copy, Copy->MuzzleSystem, Start, FRotator::ZeroRotator, FVector(1.f), true, true, ENCPoolMethod::AutoRelease);
+		}
+	}
+}
+
 void ANinjaJutsuProjectile::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -168,7 +201,7 @@ double ANinjaJutsuProjectile::Now() const
 
 float ANinjaJutsuProjectile::GetFlightTime() const
 {
-	return bLaunched ? float(Now() - Launch.StartTime) : 0.f;
+	return bLaunched ? float(GetWorld()->GetTimeSeconds() - LocalLaunchTime) : 0.f;
 }
 
 AHypeWorldCharacter* ANinjaJutsuProjectile::GetCaster() const
@@ -180,7 +213,7 @@ void ANinjaJutsuProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	SetupVisuals();
-	if (HasAuthority())
+	if (HasAuthority() || bPrewarm)
 	{
 		OnRep_Launch();
 	}
@@ -235,6 +268,11 @@ void ANinjaJutsuProjectile::OnRep_Launch()
 		return;
 	}
 	bLaunched = true;
+	// O cliente recebe a bola já atrasada: recupera um pouco na hora e o resto aos poucos, sem pular nem ficar parado
+	const float Lag = FMath::Max(0.f, float(Now() - Launch.StartTime));
+	const float CatchUpNow = FMath::Min(Lag, MaxCatchUp);
+	CatchUpDebt = FMath::Min(Lag - CatchUpNow, 0.3f);   // atraso maior é erro do relógio: não dispara a bola
+	LocalLaunchTime = GetWorld()->GetTimeSeconds() - CatchUpNow;
 	LastCenter = Launch.Start;
 	SetActorLocation(Launch.Start);
 	SetActorRotation(FVector(Launch.Direction).Rotation());
@@ -256,7 +294,13 @@ void ANinjaJutsuProjectile::Evaluate(float T, FVector& OutCenter, float& OutRadi
 {
 	const FVector Dir = Launch.Direction;
 	const float Grow = EaseOutCubic(T / FMath::Max(GrowTime, 0.01f));
-	float Distance = GrowDistance * Grow + Speed * FMath::Max(T - GrowTime, 0.f);
+	// Velocidade sobe de LaunchSpeedScale*Speed até Speed em AccelTime (smoothstep) e não para nunca;
+	// a distância é a integral exata dessa velocidade
+	const float Accel = FMath::Max(AccelTime, 0.01f);
+	const float A = FMath::Clamp(LaunchSpeedScale, 0.f, 1.f);
+	const float U = FMath::Clamp(T / Accel, 0.f, 1.f);
+	float Distance = Speed * Accel * (A * U + (1.f - A) * (FMath::Cube(U) - 0.5f * FMath::Square(FMath::Square(U))))
+		+ Speed * FMath::Max(T - Accel, 0.f);
 	bOutReachedRange = Distance >= Range;
 	Distance = FMath::Min(Distance, Range);
 	OutRadius = FMath::Lerp(StartRadius, FullRadius, Grow);
@@ -304,7 +348,8 @@ void ANinjaJutsuProjectile::ApplyBallVisual(const FVector& Center, float Radius,
 	Ignition->SetVisibility(IgnitionMesh && IgnitionMaterial && T < 0.25f);
 	if (T < 0.25f)
 	{
-		const FVector Position = FVector(Launch.Start) + FVector(Launch.Direction) * (80.f + T * 320.f);
+		// Clarão entre a boca e a bola, acompanhando a saída
+		const FVector Position = FMath::Lerp(FVector(Launch.Start), Center, 0.45f);
 		Ignition->SetWorldLocation(Position);
 		if (APlayerCameraManager* Camera = UGameplayStatics::GetPlayerCameraManager(this, 0))
 		{
@@ -331,7 +376,7 @@ void ANinjaJutsuProjectile::ApplyBallVisual(const FVector& Center, float Radius,
 	UpdateSceneIntegration(Center, Radius, T, false);
 	const float Flicker = 1.f + .065f * FMath::Sin(T * 41.f) + .035f * FMath::Sin(T * 73.f);
 	Light->SetIntensity(LightIntensity * Flicker * FMath::Lerp(0.5f, 1.f, Grow) * (T < .08f ? 1.8f : 1.f));
-	if (!Trail->IsActive() && Grow >= 0.6f && TrailSystem)
+	if (!Trail->IsActive() && TrailSystem)
 	{
 		Trail->Activate(true);
 	}
@@ -392,13 +437,29 @@ void ANinjaJutsuProjectile::Tick(float DeltaSeconds)
 
 	if (!bExploded)
 	{
-		const float T = float(Now() - Launch.StartTime);
+		if (CatchUpDebt > 0.f)
+		{
+			// Corre 1,5x até alcançar o tempo do servidor
+			const float Recover = FMath::Min(CatchUpDebt, DeltaSeconds * 0.5f);
+			LocalLaunchTime -= Recover;
+			CatchUpDebt -= Recover;
+		}
+		const float T = GetFlightTime();
 		FVector Center;
 		float Radius;
 		bool bReachedRange;
 		Evaluate(FMath::Max(T, 0.f), Center, Radius, bReachedRange);
 		ApplyBallVisual(Center, Radius, T);
-		if (HasAuthority())
+		if (bPrewarm)
+		{
+			// Cópia de pré-carregamento: só visual, explode sozinha logo depois de sair
+			if (T > 0.3f)
+			{
+				PlayExplosion(Center);
+				SetLifeSpan(LingerTime + 0.5f);
+			}
+		}
+		else if (HasAuthority())
 		{
 			ServerCheckHit(LastCenter, Center, Radius, T);
 			if (!bExploded && bReachedRange)
@@ -556,7 +617,7 @@ void ANinjaJutsuProjectile::PlayExplosion(const FVector& Location)
 	}
 
 	// Tremida para quem está perto (cada jogador local)
-	if (const UNinjaJutsuData* Jutsu = Launch.Jutsu)
+	if (const UNinjaJutsuData* Jutsu = bPrewarm ? nullptr : Launch.Jutsu.Get())
 	{
 		for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
 		{

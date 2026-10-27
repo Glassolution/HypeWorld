@@ -133,4 +133,8 @@ public:
 	/** Curva de cor em degraus: Colors[i] vale a partir de i/N (interpolação constante), para Curve Atlas de faixas fixas */
 	UFUNCTION(BlueprintCallable, Category="Ninja|Editor")
 	static bool SetSteppedColorCurve(UCurveLinearColor* Curve, const TArray<FLinearColor>& Colors);
+
+	/** Cria um ator localmente no mundo do jogo (inclusive num cliente de rede, onde summon não funciona), para capturas de teste */
+	UFUNCTION(BlueprintCallable, Category="Ninja|Editor", meta=(WorldContext="WorldContext"))
+	static AActor* SpawnLocalActor(UObject* WorldContext, TSubclassOf<AActor> ActorClass, FVector Location, FRotator Rotation);
 };

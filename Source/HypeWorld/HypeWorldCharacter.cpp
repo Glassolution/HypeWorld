@@ -524,6 +524,11 @@ void AHypeWorldCharacter::BeginPlay()
 		}
 	}
 	JutsuUseCounts.Init(0, FMath::Max(JutsuLoadout.Num(), JutsuSlotKeys.Num()));
+	// Cada máquina que renderiza aquece os jutsus da barra escondidos, para o primeiro lançamento não travar
+	for (const UNinjaJutsuData* Jutsu : JutsuLoadout)
+	{
+		ANinjaJutsuProjectile::Prewarm(this, Jutsu);
+	}
 	CameraBaseRotation = FollowCamera->GetRelativeRotation();
 	AbilitySystem->GetGameplayAttributeValueChangeDelegate(UNinjaAttributeSet::GetHealthAttribute()).AddUObject(this, &AHypeWorldCharacter::OnHealthChanged);
 	GetCharacterMovement()->ProcessRootMotionPreConvertToWorld.BindUObject(this, &AHypeWorldCharacter::ProcessAttackRootMotion);

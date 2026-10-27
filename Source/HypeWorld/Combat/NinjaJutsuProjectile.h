@@ -59,16 +59,24 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category="Jutsu")
 	void InitLaunch(const UNinjaJutsuData* InJutsu, const FVector& InStart, const FVector& InDirection);
 
+	/** Pré-carregamento (só em máquinas que renderizam, uma vez por mundo e classe): uma cópia local, sem rede e sem dano,
+	 *  voa e explode escondida bem abaixo do Context, para o primeiro lançamento de verdade não travar carregando
+	 *  materiais, PSOs e sistemas Niagara */
+	static void Prewarm(AActor* Context, const UNinjaJutsuData* Jutsu);
+
 	// ---------- Trajetória ----------
 
-	/** Fase 2: a chama cresce de StartRadius até FullRadius em GrowTime, andando GrowDistance para a frente (e subindo GrowLift) */
+	/** A chama cresce de StartRadius até FullRadius em GrowTime (subindo GrowLift) enquanto já avança */
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Trajetória") float GrowTime = 0.4f;
-	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Trajetória") float GrowDistance = 330.f;
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Trajetória") float GrowLift = 35.f;
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Trajetória") float StartRadius = 12.f;
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Trajetória") float FullRadius = 150.f;
-	/** Fase 3: avança a Speed (cm/s) até Range (cm, contado da boca) */
+	/** Avança até Range (cm, contado da boca): sai a LaunchSpeedScale x Speed e acelera (ease-in) até Speed (cm/s) em AccelTime */
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Trajetória") float Speed = 1700.f;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Trajetória") float LaunchSpeedScale = 0.35f;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Trajetória") float AccelTime = 0.3f;
+	/** No cliente: atraso da replicação que a bola recupera ao aparecer (s); o resto ela recupera aos poucos, sem pulo */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Trajetória") float MaxCatchUp = 0.05f;
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Trajetória") float Range = 2300.f;
 	/** Raio da colisão em relação ao raio visível (a casca de chamas pode encostar no chão sem explodir) */
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Trajetória") float CollisionRadiusScale = 0.5f;
@@ -182,6 +190,10 @@ private:
 	double LastGroundTrace = -100.0;
 	bool bHasGround = false;
 	bool bLaunched = false;
+	bool bPrewarm = false;
+	/** Relógio local do voo (o do servidor dá saltos no cliente): início local e atraso ainda a recuperar */
+	double LocalLaunchTime = 0.0;
+	float CatchUpDebt = 0.f;
 	bool bExploded = false;
 	double ExplodeTime = 0.0;
 	FVector LastCenter = FVector::ZeroVector;
