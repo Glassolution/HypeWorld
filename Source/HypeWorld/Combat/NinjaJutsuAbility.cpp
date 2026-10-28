@@ -121,7 +121,7 @@ void UGA_NinjaJutsu::ActivateAbility(const FGameplayAbilitySpecHandle Handle, co
 	{
 		// A montagem unica do corpo e apresentada tambem nos proxies. O notify do clipe solta o jutsu.
 		UAbilityTask_WaitDelay* Wait = UAbilityTask_WaitDelay::WaitDelay(this,
-			Jutsu->GetSealsDuration() + Jutsu->BodyCastAnimation->GetPlayLength());
+			Jutsu->GetSealsDuration() + Jutsu->GetCastDuration());
 		Wait->OnFinish.AddDynamic(this, &UGA_NinjaJutsu::OnCastFinished);
 		Wait->ReadyForActivation();
 		return;

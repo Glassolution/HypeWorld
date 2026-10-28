@@ -1981,6 +1981,7 @@ void AHypeWorldCharacter::PlayJutsuSeals(const UNinjaJutsuData* Jutsu)
 {
 	PresentedJutsu = Jutsu;
 	bJutsuReleased = false;
+	JutsuShotsFired = 0;
 	SealIndex = INDEX_NONE;
 	ClearJutsuAnticipation();
 	if (Jutsu)
@@ -2001,20 +2002,39 @@ void AHypeWorldCharacter::PlayJutsuSeals(const UNinjaJutsuData* Jutsu)
 		FSlotAnimationTrack& Slot = Montage->SlotAnimTracks.AddDefaulted_GetRef();
 		Slot.SlotName = FAnimSlotGroup::DefaultSlotName;
 		float Position = 0.f;
-		auto AddSegment = [&](UAnimSequenceBase* Sequence, float Duration)
+		// Trecho [Start, End] do clipe tocado em Duration segundos
+		auto AddRange = [&](UAnimSequenceBase* Sequence, float Start, float End, float Duration)
 		{
-			if (!Sequence || Duration <= 0.f) { return; }
+			if (!Sequence || Duration <= 0.f || End <= Start) { return; }
 			FAnimSegment& Segment = Slot.AnimTrack.AnimSegments.AddDefaulted_GetRef();
 			Segment.SetAnimReference(Sequence, true);
-			Segment.AnimStartTime = 0.f;
-			Segment.AnimEndTime = Sequence->GetPlayLength();
-			Segment.AnimPlayRate = Sequence->GetPlayLength() / FMath::Max(Duration, 0.01f);
+			Segment.AnimStartTime = Start;
+			Segment.AnimEndTime = End;
+			Segment.AnimPlayRate = (End - Start) / FMath::Max(Duration, 0.01f);
 			Segment.LoopingCount = 1;
 			Segment.StartPos = Position;
 			Position += Duration;
 		};
+		auto AddSegment = [&](UAnimSequenceBase* Sequence, float Duration)
+		{
+			if (Sequence) { AddRange(Sequence, 0.f, Sequence->GetPlayLength(), Duration); }
+		};
 		for (const FNinjaJutsuSeal& Seal : Jutsu->Seals) { AddSegment(Seal.Pose, Seal.Duration); }
-		AddSegment(Jutsu->BodyCastAnimation, Jutsu->BodyCastAnimation->GetPlayLength());
+		UAnimSequenceBase* Cast = Jutsu->BodyCastAnimation;
+		const float CastLength = Cast->GetPlayLength();
+		const float Recovery = FMath::Max(Jutsu->CastRecoveryRate, 0.05f);
+		if (Jutsu->HasShotWindow())
+		{
+			// Rajada: entra no sopro, repete o trecho do impulso (com o notify de saída) uma vez por tiro e volta
+			const float A = float(Jutsu->ShotWindow.X), B = float(Jutsu->ShotWindow.Y);
+			AddRange(Cast, 0.f, A, A);
+			for (int32 Shot = 0; Shot < Jutsu->Shots; ++Shot) { AddRange(Cast, A, B, Jutsu->ShotInterval); }
+			AddRange(Cast, B, CastLength, (CastLength - B) / Recovery);
+		}
+		else
+		{
+			AddSegment(Cast, CastLength / Recovery);
+		}
 		Montage->SetCompositeLength(Position);
 		Montage->AddAnimCompositeSection(TEXT("Default"), 0.f);
 		Montage->BlendIn.SetBlendTime(Jutsu->Seals.Num() ? Jutsu->Seals[0].BlendIn : 0.1f);
@@ -2141,7 +2161,8 @@ void AHypeWorldCharacter::OnJutsuRelease()
 	{
 		return;
 	}
-	bJutsuReleased = true;
+	// Rajada: cada impulso do sopro dispara um projétil, até Shots
+	bJutsuReleased = ++JutsuShotsFired >= FMath::Max(Jutsu->Shots, 1);
 	ClearJutsuAnticipation();
 	USkeletalMeshComponent* Body = GetJutsuBody();
 	FVector Mouth = GetActorLocation() + FVector(0.f, 0.f, 70.f);
@@ -2162,7 +2183,7 @@ void AHypeWorldCharacter::OnJutsuRelease()
 	if (APlayerController* PC = Cast<APlayerController>(Controller)) { PC->GetPlayerViewPoint(ViewLocation, Aim); }
 	FHitResult AimHit;
 	FCollisionQueryParams AimParams(SCENE_QUERY_STAT(NinjaJutsuAim), false, this);
-	const FVector AimEnd = ViewLocation + Aim.Vector() * Defaults->Range;
+	const FVector AimEnd = ViewLocation + Aim.Vector() * (Jutsu->ProjectileRange > 0.f ? Jutsu->ProjectileRange : Defaults->Range);
 	const bool bAimHit = GetWorld()->LineTraceSingleByChannel(AimHit, ViewLocation, AimEnd, ECC_Visibility, AimParams);
 	const FVector Dir = ((bAimHit ? AimHit.ImpactPoint : AimEnd) - Mouth).GetSafeNormal();
 	Aim = Dir.Rotation();

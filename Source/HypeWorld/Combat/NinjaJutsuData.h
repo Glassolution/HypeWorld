@@ -7,6 +7,7 @@
 #include "Engine/DataAsset.h"
 #include "GameplayTagContainer.h"
 #include "NinjaCombatTypes.h"
+#include "Animation/AnimSequenceBase.h"
 #include "NinjaJutsuData.generated.h"
 
 class UAnimSequenceBase;
@@ -78,6 +79,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Animação")
 	float CastOverlap = 0.1f;
 
+	/** Rajada: projéteis por uso. Com BodyCastAnimation e ShotWindow válido (trecho do clipe, em s, que contém o notify
+	 *  de saída), o trecho se repete uma vez por tiro, durando ShotInterval cada: um impulso de sopro por projétil */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Animação", meta=(ClampMin=1))
+	int32 Shots = 1;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Animação")
+	float ShotInterval = 0.15f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Animação")
+	FVector2D ShotWindow = FVector2D::ZeroVector;
+	/** Velocidade da volta à prontidão depois do último tiro (x) */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Animação")
+	float CastRecoveryRate = 1.f;
 	/** Socket de onde o jutsu sai (no corpo visível; se faltar, usa o osso da cabeça) */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Animação")
 	FName MuzzleSocket = TEXT("Boca");
@@ -95,6 +107,11 @@ public:
 	/** Projétil (o efeito, o movimento e a explosão moram nele) */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Projétil")
 	TSubclassOf<ANinjaJutsuProjectile> ProjectileClass;
+	/** Velocidade (cm/s) e alcance (cm, da boca) do projétil; 0 = os do próprio projétil */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Projétil")
+	float ProjectileSpeed = 0.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Projétil")
+	float ProjectileRange = 0.f;
 
 	/** Dano em área na explosão: dano no centro, raio (cm) e quanto sobra na borda (0..1) */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Dano")
@@ -125,6 +142,21 @@ public:
 	float ExplosionShake = 1.6f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Câmera")
 	float ExplosionShakeRadius = 3000.f;
+
+	bool HasShotWindow() const
+	{
+		return BodyCastAnimation && Shots > 1 && ShotWindow.Y > ShotWindow.X && ShotWindow.Y <= BodyCastAnimation->GetPlayLength();
+	}
+
+	/** Duração do lançamento (sopro com os impulsos da rajada + volta à prontidão) */
+	float GetCastDuration() const
+	{
+		if (!BodyCastAnimation) { return 0.f; }
+		const float Length = BodyCastAnimation->GetPlayLength();
+		const float Recovery = FMath::Max(CastRecoveryRate, 0.05f);
+		if (!HasShotWindow()) { return Length / Recovery; }
+		return float(ShotWindow.X) + Shots * ShotInterval + (Length - float(ShotWindow.Y)) / Recovery;
+	}
 
 	/** Duração total dos selos */
 	float GetSealsDuration() const

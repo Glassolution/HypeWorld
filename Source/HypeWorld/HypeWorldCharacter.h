@@ -863,6 +863,8 @@ protected:
 	int32 SealIndex = INDEX_NONE;
 	float SealElapsed = 0.f;
 	bool bJutsuReleased = false;
+	/** Projéteis já soltos neste uso (rajadas) */
+	int32 JutsuShotsFired = 0;
 	TArray<int32> JutsuUseCounts;
 	/** Antecipação do jutsu na boca durante os selos (só visual); some no lançamento ou no cancelamento */
 	UPROPERTY() TArray<TObjectPtr<USceneComponent>> JutsuAnticipation;

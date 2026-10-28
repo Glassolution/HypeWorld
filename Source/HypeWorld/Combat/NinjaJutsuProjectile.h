@@ -128,6 +128,31 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") TObjectPtr<UMaterialInterface> InnerTongueMaterial;
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") int32 TongueCount = 24;
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") int32 InnerTongueCount = 3;
+	/** Silhuetas de chama vermelho-escuras por dentro (borda definida) */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") TObjectPtr<UMaterialInterface> DarkTongueMaterial;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") int32 DarkTongueCount = 2;
+	/** Lóbulos de chama arredondados ("couve-flor") atrás e entre as línguas, dão corpo opaco (malha = GlowMesh) */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") TObjectPtr<UMaterialInterface> LobeMaterial;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") int32 LobeCount = 8;
+	/** Ignição na boca: raios finos saindo do centro (malha = TongueMesh) e o pico da luz (x intensidade, s) */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") TObjectPtr<UMaterialInterface> IgnitionRayMaterial;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") int32 IgnitionRays = 7;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") float IgnitionLightBoost = 6.f;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") float IgnitionLightTime = 0.3f;
+	/** Ignição: brilho aditivo HDR na boca que engole o personagem (material sem teste de profundidade, 2 esferas:
+	 *  miolo e halo) e chamas aditivas subindo em coluna. Raio do brilho e altura da coluna (cm) */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") TObjectPtr<UMaterialInterface> IgniteGlowMaterial;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") TObjectPtr<UMaterialInterface> IgniteHaloMaterial;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") TObjectPtr<UMaterialInterface> IgniteFlameMaterial;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") int32 IgniteFlameCount = 7;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") float IgniteRadius = 360.f;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") float IgniteColumn = 450.f;
+	/** Alcance da luz no pico da ignição (cm) */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") float IgniteLightRadius = 1500.f;
+	/** Blendable temporário da ignição (só enquanto o clarão dura): quanto o tom laranja clareia a tela (0 = nada) */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") float IgnitionExposure = 0.6f;
+	/** Bloom no pico da ignição (o normal do projétil é 0,55) */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") float IgnitionBloom = 1.6f;
 	/** Vida de cada língua (s, mín/máx), subida e arrasto para trás (x raio por segundo) */
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") FVector2D TongueLife = FVector2D(0.25f, 0.4f);
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") float TongueRise = 2.4f;
@@ -240,10 +265,22 @@ private:
 		float Width = 0.3f;
 		float Phase = 0.f;
 		bool bInner = false;
+		bool bDark = false;
+		bool bLobe = false;
+		/** Direção do leque na ignição (espaço do ator) */
+		FVector Fan = FVector::ForwardVector;
 	};
 	TArray<FTongue> Tongues;
+	/** Ignição: brilho (miolo, halo), chamas subindo (componente + deslocamento lateral e fase) e exposição base do mapa */
+	TArray<TObjectPtr<UStaticMeshComponent>> IgniteGlows;
+	TArray<TPair<TObjectPtr<UStaticMeshComponent>, FVector>> IgniteFlames;
+	float BaseExposure = 0.f;
+	void UpdateIgnition(float T);
+	/** Raios finos da ignição (direção no espaço do ator) */
+	TArray<TPair<TObjectPtr<UStaticMeshComponent>, FVector>> Rays;
 	void RespawnTongue(FTongue& Tongue, bool bStagger);
-	void UpdateTongues(float DeltaSeconds, float Radius, float Visible);
+	/** Burst 1..0: ignição (chamas em leque saindo da boca, superexpostas) virando a bola */
+	void UpdateTongues(float DeltaSeconds, float Radius, float Visible, float Burst);
 	void HideTongues();
 	FVector GroundPoint = FVector::ZeroVector;
 	FVector GroundNormal = FVector::UpVector;

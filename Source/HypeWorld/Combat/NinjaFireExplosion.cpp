@@ -77,7 +77,7 @@ void ANinjaFireExplosion::BeginPlay()
 	// Explodindo rente ao chão, o centro sobe um pouco: a bola de fogo não fica meio enterrada
 	const FVector Mid = bHasFloor ? FVector(Center.X, Center.Y, FMath::Max(Center.Z, FloorPoint.Z + BallRadius * 0.45f)) : Center;
 	if (FPiece* Halo = AddPiece(SphereMesh, HaloMaterial, 1, Mid, 0.f, HaloLife)) { Halo->Size = BallRadius; }
-	if (FPiece* Dome = AddPiece(SphereMesh, DomeMaterial, 0, Mid, 0.f, DomeLife)) { Dome->Size = BallRadius; }
+	if (FPiece* Dome = AddPiece(DomeMesh ? DomeMesh.Get() : SphereMesh.Get(), DomeMaterial, 0, Mid, 0.f, DomeLife)) { Dome->Size = BallRadius; }
 	if (FPiece* Heat = AddPiece(SphereMesh, HeatMaterial, 5, Mid, 0.02f, 0.5f)) { Heat->Size = BallRadius; }
 
 	// Riscos finos em raios (meia esfera de cima, mais abertos para os lados)

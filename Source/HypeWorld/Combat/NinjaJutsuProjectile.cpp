@@ -22,6 +22,7 @@
 #include "LandscapeProxy.h"
 #include "NinjaFireExplosion.h"
 #include "Components/InstancedStaticMeshComponent.h"
+#include "Interfaces/Interface_PostProcessVolume.h"
 
 namespace
 {
@@ -141,6 +142,10 @@ ANinjaJutsuProjectile::ANinjaJutsuProjectile()
 	FirePostProcess = CreateDefaultSubobject<UPostProcessComponent>(TEXT("FirePostProcess"));
 	FirePostProcess->SetupAttachment(BloomBounds);
 	FirePostProcess->bUnbound = false;
+	FirePostProcess->Settings.bOverride_AutoExposureBias = false;
+	FirePostProcess->Settings.BloomThreshold = 2.f;
+	for (UStaticMeshComponent* Glow : IgniteGlows) { Glow->SetVisibility(false); }
+	for (const TPair<TObjectPtr<UStaticMeshComponent>, FVector>& Flame : IgniteFlames) { Flame.Key->SetVisibility(false); }
 	FirePostProcess->BlendRadius = 350.f;
 	FirePostProcess->Priority = 1.f;
 	FirePostProcess->Settings.bOverride_BloomIntensity = true;
@@ -330,64 +335,165 @@ void ANinjaJutsuProjectile::SetupVisuals()
 	}
 	if (TongueMesh && TongueMaterial && GetNetMode() != NM_DedicatedServer)
 	{
-		for (int32 Index = 0; Index < TongueCount + InnerTongueCount; ++Index)
+		auto MakePiece = [this](UStaticMesh* Mesh, UMaterialInterface* Material, int32 Priority)
+		{
+			UStaticMeshComponent* Comp = NewObject<UStaticMeshComponent>(this);
+			Comp->SetStaticMesh(Mesh);
+			Comp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			Comp->SetCastShadow(false);
+			Comp->bReceivesDecals = false;
+			Comp->SetCanEverAffectNavigation(false);
+			Comp->TranslucencySortPriority = Priority;
+			Comp->SetupAttachment(Root);
+			Comp->RegisterComponent();
+			Comp->SetVisibility(false);
+			UMaterialInstanceDynamic* MID = UMaterialInstanceDynamic::Create(Material, this);
+			MID->SetScalarParameterValue(TEXT("Seed"), FMath::FRand() * 10.f);
+			Comp->SetMaterial(0, MID);
+			return TPair<UStaticMeshComponent*, UMaterialInstanceDynamic*>(Comp, MID);
+		};
+		// Ordem de desenho: lóbulos (corpo opaco) < línguas < línguas amarelas de dentro < silhuetas escuras
+		const int32 Lobes = GlowMesh && LobeMaterial ? LobeCount : 0;
+		const int32 Inner = InnerTongueMaterial ? InnerTongueCount : 0;
+		const int32 Dark = DarkTongueMaterial ? DarkTongueCount : 0;
+		for (int32 Index = 0; Index < Lobes + TongueCount + Inner + Dark; ++Index)
 		{
 			FTongue& Tongue = Tongues.AddDefaulted_GetRef();
-			Tongue.bInner = Index >= TongueCount && InnerTongueMaterial;
-			UStaticMeshComponent* Mesh = NewObject<UStaticMeshComponent>(this);
-			Mesh->SetStaticMesh(TongueMesh);
-			Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-			Mesh->SetCastShadow(false);
-			Mesh->bReceivesDecals = false;
-			Mesh->SetCanEverAffectNavigation(false);
-			Mesh->TranslucencySortPriority = Tongue.bInner ? 1 : 0;   // línguas amarelas de dentro por cima do corpo
-			Mesh->SetupAttachment(Root);
-			Mesh->RegisterComponent();
-			Mesh->SetVisibility(false);
-			Tongue.MID = UMaterialInstanceDynamic::Create(Tongue.bInner ? InnerTongueMaterial.Get() : TongueMaterial.Get(), this);
-			Tongue.MID->SetScalarParameterValue(TEXT("Seed"), FMath::FRand() * 10.f);
-			Mesh->SetMaterial(0, Tongue.MID);
-			Tongue.Mesh = Mesh;
+			Tongue.bLobe = Index < Lobes;
+			Tongue.bInner = !Tongue.bLobe && Index >= Lobes + TongueCount && Index < Lobes + TongueCount + Inner;
+			Tongue.bDark = Index >= Lobes + TongueCount + Inner;
+			UMaterialInterface* Material = Tongue.bLobe ? LobeMaterial.Get() : Tongue.bInner ? InnerTongueMaterial.Get()
+				: Tongue.bDark ? DarkTongueMaterial.Get() : TongueMaterial.Get();
+			const auto Piece = MakePiece(Tongue.bLobe ? GlowMesh.Get() : TongueMesh.Get(), Material,
+				Tongue.bLobe ? 0 : Tongue.bInner ? 2 : Tongue.bDark ? 3 : 1);
+			Tongue.Mesh = Piece.Key;
+			Tongue.MID = Piece.Value;
 			RespawnTongue(Tongue, true);
+		}
+		if (IgnitionRayMaterial)
+		{
+			for (int32 Index = 0; Index < IgnitionRays; ++Index)
+			{
+				// Raios num leque em volta da direção do voo (mais para os lados e para cima)
+				const float Angle = (Index + FMath::FRandRange(-0.3f, 0.3f)) * UE_TWO_PI / FMath::Max(IgnitionRays, 1);
+				const FVector Dir = FVector(FMath::FRandRange(0.1f, 0.6f), FMath::Cos(Angle), FMath::Sin(Angle) * 0.8f + 0.2f).GetSafeNormal();
+				Rays.Add(TPair<TObjectPtr<UStaticMeshComponent>, FVector>(MakePiece(TongueMesh, IgnitionRayMaterial, 4).Key, Dir));
+			}
+		}
+	}
+	// Ignição: brilho que engole o personagem (desenhado por cima de tudo) e chamas subindo em coluna
+	if (GetNetMode() != NM_DedicatedServer)
+	{
+		auto MakeIgnite = [this](UStaticMesh* Mesh, UMaterialInterface* Material, int32 Priority)
+		{
+			UStaticMeshComponent* Comp = NewObject<UStaticMeshComponent>(this);
+			Comp->SetStaticMesh(Mesh);
+			Comp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			Comp->SetCastShadow(false);
+			Comp->bReceivesDecals = false;
+			Comp->SetCanEverAffectNavigation(false);
+			Comp->TranslucencySortPriority = Priority;
+			Comp->SetUsingAbsoluteLocation(true);
+			Comp->SetUsingAbsoluteRotation(true);
+			Comp->SetUsingAbsoluteScale(true);
+			Comp->SetupAttachment(Root);
+			Comp->RegisterComponent();
+			Comp->SetVisibility(false);
+			UMaterialInstanceDynamic* MID = UMaterialInstanceDynamic::Create(Material, this);
+			MID->SetScalarParameterValue(TEXT("Seed"), FMath::FRand() * 10.f);
+			Comp->SetMaterial(0, MID);
+			return Comp;
+		};
+		if (GlowMesh && IgniteHaloMaterial) { IgniteGlows.Add(MakeIgnite(GlowMesh, IgniteHaloMaterial, 10)); }
+		if (GlowMesh && IgniteGlowMaterial) { IgniteGlows.Add(MakeIgnite(GlowMesh, IgniteGlowMaterial, 11)); }
+		if (TongueMesh && IgniteFlameMaterial)
+		{
+			for (int32 Index = 0; Index < IgniteFlameCount; ++Index)
+			{
+				// x/y = deslocamento em volta da boca (x raio do brilho), z = tamanho relativo
+				const float Angle = FMath::FRand() * UE_TWO_PI;
+				const float Dist = Index == 0 ? 0.f : FMath::Sqrt(FMath::FRand()) * 0.35f;
+				IgniteFlames.Add(TPair<TObjectPtr<UStaticMeshComponent>, FVector>(MakeIgnite(TongueMesh, IgniteFlameMaterial, 9),
+					FVector(FMath::Cos(Angle) * Dist, FMath::Sin(Angle) * Dist, FMath::FRandRange(0.7f, 1.15f))));
+			}
+		}
+		// Exposição do mapa (volume sem limite de maior prioridade): o +1 EV da ignição soma em cima dela
+		float BestPriority = -FLT_MAX;
+		for (IInterface_PostProcessVolume* Volume : GetWorld()->PostProcessVolumes)
+		{
+			const FPostProcessVolumeProperties Props = Volume ? Volume->GetProperties() : FPostProcessVolumeProperties();
+			if (Volume && Props.bIsEnabled && Props.bIsUnbound && Props.Settings && Props.Settings->bOverride_AutoExposureBias
+				&& Props.Priority > BestPriority && Props.Settings != &FirePostProcess->Settings)
+			{
+				BestPriority = Props.Priority;
+				BaseExposure = Props.Settings->AutoExposureBias;
+			}
 		}
 	}
 }
 
 void ANinjaJutsuProjectile::RespawnTongue(FTongue& Tongue, bool bStagger)
 {
-	// Nasce na base/interior: as de fora num anel mais largo e menores, as do centro maiores
-	const float Spread = Tongue.bInner ? 0.15f : 0.5f;
 	const float R01 = FMath::Sqrt(FMath::FRand());
 	const float Angle = FMath::FRand() * UE_TWO_PI;
+	Tongue.Phase = FMath::FRand() * 10.f;
+	// Leque da ignição: para a frente, aberto para os lados e um pouco para cima
+	Tongue.Fan = FVector(1.f, FMath::FRandRange(-1.f, 1.f), FMath::FRandRange(-0.45f, 0.75f)).GetSafeNormal();
+	if (Tongue.bLobe)
+	{
+		// Lóbulo: bolha de chama grande no miolo da coluna, sobe devagar, incha e se renova
+		Tongue.Pos = FVector(FMath::FRandRange(-0.35f, 0.15f), FMath::Cos(Angle) * R01 * 0.35f, FMath::FRandRange(-0.35f, 0.45f));
+		Tongue.Vel = FVector(-TongueDrag * 0.4f, 0.f, TongueRise * FMath::FRandRange(0.25f, 0.45f));
+		Tongue.Life = FMath::FRandRange(0.45f, 0.75f);
+		Tongue.Height = FMath::FRandRange(0.3f, 0.45f);   // raio do lóbulo (x raio da bola)
+		Tongue.Age = bStagger ? FMath::FRand() * Tongue.Life : 0.f;
+		return;
+	}
+	// Língua: nasce na base/interior; as de fora num anel mais largo e menores, as do centro maiores
+	const float Spread = Tongue.bInner || Tongue.bDark ? 0.18f : 0.5f;
 	Tongue.Pos = FVector(FMath::FRandRange(-0.3f, 0.25f), FMath::Cos(Angle) * R01 * Spread, FMath::Sin(Angle) * R01 * Spread * 0.5f - 0.45f);
 	Tongue.Vel = FVector(-TongueDrag * FMath::FRandRange(0.7f, 1.2f), FMath::FRandRange(-0.25f, 0.25f), TongueRise * FMath::FRandRange(0.8f, 1.2f));
-	Tongue.Life = FMath::FRandRange(TongueLife.X, TongueLife.Y) * (Tongue.bInner ? 1.3f : 1.f);
-	Tongue.Height = (Tongue.bInner ? 1.3f : FMath::Lerp(1.5f, 0.7f, R01)) * FMath::FRandRange(0.8f, 1.2f);
-	Tongue.Width = (Tongue.bInner ? 0.26f : FMath::Lerp(0.62f, 0.38f, R01)) * FMath::FRandRange(0.85f, 1.15f);
-	Tongue.Phase = FMath::FRand() * 10.f;
+	Tongue.Life = FMath::FRandRange(TongueLife.X, TongueLife.Y) * (Tongue.bInner || Tongue.bDark ? 1.3f : 1.f);
+	Tongue.Height = (Tongue.bInner ? 1.3f : Tongue.bDark ? 1.1f : FMath::Lerp(1.5f, 0.7f, R01)) * FMath::FRandRange(0.8f, 1.2f);
+	Tongue.Width = (Tongue.bInner ? 0.26f : Tongue.bDark ? 0.3f : FMath::Lerp(0.62f, 0.38f, R01)) * FMath::FRandRange(0.85f, 1.15f);
 	Tongue.Age = bStagger ? FMath::FRand() * Tongue.Life : 0.f;
 }
 
-void ANinjaJutsuProjectile::UpdateTongues(float DeltaSeconds, float Radius, float Visible)
+void ANinjaJutsuProjectile::UpdateTongues(float DeltaSeconds, float Radius, float Visible, float Burst)
 {
 	for (FTongue& Tongue : Tongues)
 	{
 		Tongue.Age += DeltaSeconds;
 		if (Tongue.Age > Tongue.Life) { RespawnTongue(Tongue, false); }
 		const float X = Tongue.Age / Tongue.Life;
+		UStaticMeshComponent* Mesh = Tongue.Mesh;
+		Mesh->SetVisibility(Visible > 0.01f);
+		if (Tongue.bLobe)
+		{
+			// Lóbulo: incha rápido, gira e encolhe um pouco antes de se renovar (sempre há vários cheios)
+			Tongue.Pos += Tongue.Vel * DeltaSeconds;
+			const float Size = Tongue.Height * Radius * FMath::Lerp(0.55f, 1.f, FMath::SmoothStep(0.f, 0.35f, X)) * FMath::Lerp(1.f, 0.7f, FMath::SmoothStep(0.6f, 1.f, X)) * Visible;
+			const float GlowRadius = FMath::Max(GlowMesh->GetBounds().BoxExtent.GetMax(), 1.f);
+			Mesh->SetRelativeLocationAndRotation((Tongue.Pos + Tongue.Fan * 0.6f * Burst) * Radius, FRotator(Tongue.Phase * 30.f, Tongue.Age * 120.f + Tongue.Phase * 36.f, 0.f));
+			Tongue.MID->SetScalarParameterValue(TEXT("Intensity"), 1.f + 1.8f * Burst);
+			Mesh->SetRelativeScale3D(FVector(Size / GlowRadius) * FVector(1.f, 1.f, 1.15f));
+			Tongue.MID->SetScalarParameterValue(TEXT("Erosion"), FMath::SmoothStep(0.7f, 1.f, X) * 0.6f);
+			continue;
+		}
 		// Empuxo para cima acelerando + enrolar leve (curl barato: velocidade lateral girando com a fase)
 		Tongue.Vel.Z += TongueRise * 1.5f * DeltaSeconds;
 		const float Curl = Tongue.Phase + Tongue.Age * 11.f;
 		Tongue.Pos += (Tongue.Vel + FVector(0.f, FMath::Cos(Curl), FMath::Sin(Curl) * 0.3f) * 0.6f) * DeltaSeconds;
 		// Eixo da língua = direção da velocidade (sobe e deita para trás com o voo)
-		const FVector Dir = (Tongue.Vel + FVector(0.f, 0.f, TongueRise * 0.6f)).GetSafeNormal();
+		// Na ignição as línguas apontam no leque (rajada saindo da boca) e giram aos poucos para cima, virando a bola
+		const FVector Dir = FMath::Lerp((Tongue.Vel + FVector(0.f, 0.f, TongueRise * 0.6f)).GetSafeNormal(), Tongue.Fan, Burst).GetSafeNormal();
 		const float Grow = FMath::SmoothStep(0.f, 0.3f, X);
 		const float Height = Tongue.Height * Radius * FMath::Lerp(0.45f, 1.f, Grow) * (1.f + 0.35f * X) * Visible;
 		const float Width = Tongue.Width * Radius * FMath::Lerp(0.6f, 1.f, Grow) * (1.f - 0.45f * X) * Visible;
-		UStaticMeshComponent* Mesh = Tongue.Mesh;
-		Mesh->SetVisibility(Visible > 0.01f);
-		const FQuat Wobble(Dir, Tongue.bInner ? 0.6f * FMath::Sin(Tongue.Age * 14.f + Tongue.Phase) : 0.f);   // as de dentro ondulam
-		Mesh->SetRelativeLocationAndRotation(Tongue.Pos * Radius, Wobble * FRotationMatrix::MakeFromZ(Dir).ToQuat());
+		const bool bWave = Tongue.bInner || Tongue.bDark;
+		const FQuat Wobble(Dir, bWave ? 0.6f * FMath::Sin(Tongue.Age * 14.f + Tongue.Phase) : 0.f);   // as de dentro ondulam
+		Mesh->SetRelativeLocationAndRotation((Tongue.Pos + Tongue.Fan * 0.75f * Burst) * Radius, Wobble * FRotationMatrix::MakeFromZ(Dir).ToQuat());
+		Tongue.MID->SetScalarParameterValue(TEXT("Intensity"), 1.f + 1.8f * Burst);
 		Mesh->SetRelativeScale3D(FVector(Width / 40.f, Width / 40.f, FMath::Max(Height, 1.f) / 100.f));
 		Tongue.MID->SetScalarParameterValue(TEXT("Erosion"), FMath::SmoothStep(0.4f, 1.f, X));
 	}
@@ -399,6 +505,10 @@ void ANinjaJutsuProjectile::HideTongues()
 	{
 		if (Tongue.Mesh) { Tongue.Mesh->SetVisibility(false); }
 	}
+	for (const TPair<TObjectPtr<UStaticMeshComponent>, FVector>& Ray : Rays)
+	{
+		Ray.Key->SetVisibility(false);
+	}
 }
 
 void ANinjaJutsuProjectile::OnRep_Launch()
@@ -408,6 +518,9 @@ void ANinjaJutsuProjectile::OnRep_Launch()
 		return;
 	}
 	bLaunched = true;
+	// Velocidade/alcance do Data Asset (mesmo valor em todas as máquinas: o Jutsu vem na saída replicada)
+	if (Launch.Jutsu->ProjectileSpeed > 0.f) { Speed = Launch.Jutsu->ProjectileSpeed; }
+	if (Launch.Jutsu->ProjectileRange > 0.f) { Range = Launch.Jutsu->ProjectileRange; }
 	// O cliente recebe a bola já atrasada: recupera um pouco na hora e o resto aos poucos, sem pular nem ficar parado
 	const float Lag = FMath::Max(0.f, float(Now() - Launch.StartTime));
 	const float CatchUpNow = FMath::Min(Lag, MaxCatchUp);
@@ -447,6 +560,55 @@ void ANinjaJutsuProjectile::Evaluate(float T, FVector& OutCenter, float& OutRadi
 	OutCenter = FVector(Launch.Start) + Dir * Distance + FVector(0.f, 0.f, GrowLift * Grow);
 }
 
+void ANinjaJutsuProjectile::UpdateIgnition(float T)
+{
+	// Envelope: sobe em 0,05 s, segura até 0,1 s e cai até 0,3 s (por baixo a bola já está se formando)
+	const float Env = FMath::SmoothStep(0.f, 0.05f, T) * (1.f - FMath::SmoothStep(0.1f, 0.3f, T));
+	const FVector Mouth = FVector(Launch.Start) + FVector(0.f, 0.f, 40.f);
+	const float GlowRadius = GlowMesh ? FMath::Max(GlowMesh->GetBounds().BoxExtent.GetMax(), 1.f) : 50.f;
+	for (int32 Index = 0; Index < IgniteGlows.Num(); ++Index)
+	{
+		// 0 = halo grande (laranja -> vermelho-rosado), 1 = miolo branco-amarelado; os dois por cima do personagem
+		UStaticMeshComponent* Glow = IgniteGlows[Index];
+		Glow->SetVisibility(Env > 0.01f);
+		if (Env <= 0.01f) { continue; }
+		const float Size = IgniteRadius * (Index == 0 ? 1.f : 0.55f) * FMath::Lerp(0.6f, 1.f, FMath::SmoothStep(0.f, 0.08f, T));
+		Glow->SetWorldLocationAndRotation(Mouth + FVector(0.f, 0.f, Index == 0 ? 60.f : 20.f), FRotator(0.f, T * 200.f, 0.f));
+		Glow->SetWorldScale3D(FVector(Size / GlowRadius) * FVector(1.f, 1.f, 1.2f));
+		if (UMaterialInstanceDynamic* MID = Cast<UMaterialInstanceDynamic>(Glow->GetMaterial(0)))
+		{
+			MID->SetScalarParameterValue(TEXT("Intensity"), Env);
+		}
+	}
+	// Chamas da ignição: sobem com força da boca, formando uma coluna de IgniteColumn em ~0,3 s, e se desfazem
+	const float Rise = FMath::SmoothStep(0.f, 0.3f, T);
+	const float FlameEnv = FMath::SmoothStep(0.f, 0.04f, T) * (1.f - FMath::SmoothStep(0.2f, 0.4f, T));
+	for (const TPair<TObjectPtr<UStaticMeshComponent>, FVector>& Flame : IgniteFlames)
+	{
+		Flame.Key->SetVisibility(FlameEnv > 0.01f);
+		if (FlameEnv <= 0.01f) { continue; }
+		const FVector Info = Flame.Value;
+		const FVector Base = Mouth + FVector(Info.X, Info.Y, 0.f) * IgniteRadius + FVector(0.f, 0.f, 120.f * Rise - 150.f);
+		const float Height = IgniteColumn * Info.Z * FMath::Lerp(0.25f, 1.f, Rise);
+		const float Width = IgniteRadius * 0.2f * (1.15f - 0.4f * Rise) / Info.Z;
+		const FVector Up = FVector(Info.X * 0.6f, Info.Y * 0.6f, 1.f).GetSafeNormal();
+		Flame.Key->SetWorldLocationAndRotation(Base, FRotationMatrix::MakeFromZ(Up).Rotator() + FRotator(0.f, T * 150.f, 0.f));
+		Flame.Key->SetWorldScale3D(FVector(Width / 40.f, Width / 40.f, Height / 100.f));
+		if (UMaterialInstanceDynamic* MID = Cast<UMaterialInstanceDynamic>(Flame.Key->GetMaterial(0)))
+		{
+			MID->SetScalarParameterValue(TEXT("Intensity"), FlameEnv);
+			MID->SetScalarParameterValue(TEXT("Erosion"), FMath::SmoothStep(0.2f, 0.5f, T));
+		}
+	}
+	// Blendable temporário só da ignição: +1 EV sobre a exposição do mapa, bloom mais forte e limiar menor
+	FirePostProcess->bUnbound = true;
+	FirePostProcess->Settings.bOverride_AutoExposureBias = Env > 0.001f;
+	FirePostProcess->Settings.AutoExposureBias = BaseExposure + IgnitionExposure * Env;
+	FirePostProcess->Settings.bOverride_SceneColorTint = false;
+	FirePostProcess->Settings.BloomIntensity = FMath::Lerp(0.55f, IgnitionBloom, Env);
+	FirePostProcess->Settings.BloomThreshold = FMath::Lerp(2.f, 0.6f, Env);
+}
+
 void ANinjaJutsuProjectile::ApplyBallVisual(const FVector& Center, float Radius, float T)
 {
 	// Corpo anterior dentro das chamas vivas, com mais presença sem aumentar a emissão.
@@ -456,7 +618,8 @@ void ANinjaJutsuProjectile::ApplyBallVisual(const FVector& Center, float Radius,
 	const float Base = Radius / MeshRadius;
 	const float Grow = FMath::Clamp(T / FMath::Max(GrowTime, 0.01f), 0.f, 1.f);
 	Core->SetVisibility(true);
-	Flames->SetVisibility(Tongues.Num() == 0);   // com línguas não há esfera de corpo
+	// Com línguas não há esfera de corpo (nem no voo nem na ignição)
+	Flames->SetVisibility(Tongues.Num() == 0);
 	OuterFlames->SetVisibility(!BodySystem);
 	if (BodySystem)
 	{
@@ -475,16 +638,19 @@ void ANinjaJutsuProjectile::ApplyBallVisual(const FVector& Center, float Radius,
 	// X = direção do voo; um pouco de Z para a chama "subir" (vista de cima e de trás, vira gota/coluna na tela)
 	const float StretchIn = FMath::SmoothStep(0.12f, 0.5f, T);
 	const FVector Stretch(1.f + FlightStretch * StretchIn, 1.f, 1.f + 0.25f * StretchIn);
-	Heat->SetVisibility(Grow > 0.5f);
+	Heat->SetVisibility(T > 0.45f);   // distorção só depois da ignição: o passe de distorção não soma no pico dela
 	const float InnerScale = BodySystem ? 0.85f : 1.f;
 	Core->SetRelativeScale3D(Stretch * Base * ShellScales.X * InnerScale * (1.f + 0.3f * Flash));
 	Flames->SetRelativeScale3D(Stretch * Base * ShellScales.Y * InnerScale);
 	Flames->SetRelativeLocation(FVector(-Radius * 0.25f * (Stretch.X - 1.f), 0.f, 0.f));   // corpo puxado para trás: gota
 	if (Tongues.Num() > 0)
 	{
-		// Núcleo pequeno e baixo, na base das línguas (a borda some por Fresnel no material)
-		Core->SetRelativeLocation(FVector(0.f, 0.f, -Radius * 0.25f));
-		UpdateTongues(GetWorld()->GetDeltaSeconds(), Radius, FMath::SmoothStep(0.04f, 0.18f, T));
+		// Núcleo no centro da coluna (a borda some por Fresnel no material); brilho laranja radial grande na ignição
+		Core->SetRelativeLocation(FVector(0.f, 0.f, Radius * 0.05f));
+		Flames->SetRelativeLocation(FVector::ZeroVector);
+		Flames->SetRelativeScale3D(FVector(Base * 1.2f * (0.6f + 0.4f * Flash)));
+		// Ignição = começo da bola: as mesmas chamas nascem na boca já grandes, em leque e superexpostas, e encolhem para a bola
+		UpdateTongues(GetWorld()->GetDeltaSeconds(), Radius, FMath::SmoothStep(0.06f, 0.25f, T), 0.f);
 	}
 	if (FireballMesh && FireballMaterial)
 	{
@@ -494,7 +660,7 @@ void ANinjaJutsuProjectile::ApplyBallVisual(const FVector& Center, float Radius,
 		FireBody->SetVisibility(true);
 		FireBody->SetRelativeLocation(FVector(-Radius * 0.1f, 0.f, Radius * 0.3f));
 		FireBody->SetRelativeRotation(FRotator(FireballLean, 0.f, 0.f).Quaternion() * FQuat(FVector::UpVector, FMath::DegreesToRadians(SpinAngle * 0.35f)));
-		FireBody->SetRelativeScale3D(FVector(Radius * FireballScale / BodyRadius * Pulse * FMath::SmoothStep(0.02f, 0.16f, T)));
+		FireBody->SetRelativeScale3D(FVector(Radius * FireballScale / BodyRadius * Pulse * FMath::SmoothStep(0.04f, 0.2f, T)));
 	}
 	OuterFlames->SetRelativeScale3D(FVector(1.1f, 1.f, 1.f) * Base * ShellScales.Z);
 	Heat->SetRelativeScale3D(FVector(1.5f, 1.f, 1.f) * Base * HeatScale);
@@ -532,7 +698,6 @@ void ANinjaJutsuProjectile::ApplyBallVisual(const FVector& Center, float Radius,
 		Ignition->SetWorldScale3D(FVector(Radius * 0.6f / 50.f, Radius * 0.6f / 50.f, ToMouth.Size() / 100.f));
 		TailMID->SetScalarParameterValue(TEXT("Erosion"), FMath::SmoothStep(0.05f, TailTime, T));
 	}
-	FirePostProcess->Settings.BloomIntensity = 0.55f + 0.25f * Flash;
 	FirePostProcess->bEnabled = true;
 	for (UMaterialInstanceDynamic* MID : MIDs)
 	{
@@ -550,9 +715,29 @@ void ANinjaJutsuProjectile::ApplyBallVisual(const FVector& Center, float Radius,
 		// Casca: entra inteira e se rasga até sumir no fim da janela
 		MIDs[2]->SetScalarParameterValue(TEXT("Erosion"), FMath::SmoothStep(float(ShellWindow.X) + 0.04f, float(ShellWindow.Y), T));
 	}
+	// Núcleo apagado no clarão (sem disco branco liso): a luz da ignição vem das próprias chamas
 	for (int32 Index = 0; Index < FMath::Min(MIDs.Num(), 3); ++Index)
 	{
-		if (MIDs[Index]) { MIDs[Index]->SetScalarParameterValue(TEXT("Intensity"), Index == 0 ? 1.f + 2.f * Flash : 1.f + Flash); }
+		if (MIDs[Index]) { MIDs[Index]->SetScalarParameterValue(TEXT("Intensity"), Index == 0 ? 1.f - 0.9f * Flash : 1.f + Flash); }
+	}
+	if (Tongues.Num() > 0 && MIDs.IsValidIndex(1) && MIDs[1])
+	{
+		MIDs[1]->SetScalarParameterValue(TEXT("Intensity"), 2.f * Flash);   // brilho radial da ignição apagando
+	}
+	// Raios finos da ignição: disparam do centro e somem com o clarão
+	for (const TPair<TObjectPtr<UStaticMeshComponent>, FVector>& Ray : Rays)
+	{
+		Ray.Key->SetVisibility(Flash > 0.02f);
+		if (Flash > 0.02f)
+		{
+			const float Len = Radius * FMath::Lerp(1.2f, 2.6f, FMath::SmoothStep(0.f, 0.1f, T));
+			Ray.Key->SetRelativeLocationAndRotation(Ray.Value * Radius * 0.2f, FRotationMatrix::MakeFromZ(Ray.Value).ToQuat());
+			Ray.Key->SetRelativeScale3D(FVector(0.09f, 0.09f, Len / 100.f));
+			if (UMaterialInstanceDynamic* RayMID = Cast<UMaterialInstanceDynamic>(Ray.Key->GetMaterial(0)))
+			{
+				RayMID->SetScalarParameterValue(TEXT("Intensity"), Flash);
+			}
+		}
 	}
 	UpdateSceneIntegration(Center, Radius, T, false);
 	if (GlowMesh)
@@ -561,15 +746,20 @@ void ANinjaJutsuProjectile::ApplyBallVisual(const FVector& Center, float Radius,
 		const float GlowRadius = FMath::Max(GlowMesh->GetBounds().BoxExtent.GetMax(), 1.f);
 		// Com línguas: halo alto (acompanha a coluna de chamas) e sem esticar para a frente
 		const bool bColumn = Tongues.Num() > 0;
-		const FVector HaloShape = bColumn ? FVector(1.f, 1.f, 1.45f) : Stretch;
+		// na ignição o halo é redondo e grande (brilho radial), depois vira a forma alta da coluna
+		const FVector HaloShape = FMath::Lerp(bColumn ? FVector(1.f, 1.f, 1.45f) : Stretch, FVector(1.f), Flash);
 		Halo->SetRelativeLocation(FVector(bColumn ? -Radius * 0.3f : 0.f, 0.f, bColumn ? Radius * 0.35f : 0.f));
 		Halo->SetRelativeRotation(FRotator::ZeroRotator);
-		Halo->SetRelativeScale3D(HaloShape * Radius * FMath::Lerp(bColumn ? 1.4f : 1.9f, bColumn ? 1.9f : 2.7f, Flash) / GlowRadius);
+		Halo->SetRelativeScale3D(HaloShape * Radius * FMath::Lerp(bColumn ? 1.4f : 1.9f, bColumn ? 2.1f : 2.7f, Flash) / GlowRadius);
 		Halo->SetVisibility(HaloMID != nullptr);
 		if (HaloMID) { HaloMID->SetScalarParameterValue(TEXT("Intensity"), 1.f + 1.5f * Flash); }
 	}
 	const float Flicker = 1.f + .065f * FMath::Sin(T * 41.f) + .035f * FMath::Sin(T * 73.f);
-	Light->SetIntensity(LightIntensity * Flicker * FMath::Lerp(0.5f, 1.f, Grow) * (1.f + 1.2f * Flash));
+	// Pico da luz na ignição (tinge personagem, chão e cenário), caindo em IgnitionLightTime
+	const float LightFlash = FMath::Square(1.f - FMath::SmoothStep(0.f, FMath::Max(IgnitionLightTime, 0.01f), T));
+	Light->SetIntensity(LightIntensity * Flicker * FMath::Lerp(0.5f, 1.f, Grow) * (1.f + IgnitionLightBoost * LightFlash));
+	Light->SetAttenuationRadius(FMath::Lerp(LightRadius, FMath::Max(IgniteLightRadius, LightRadius), LightFlash));
+	UpdateIgnition(T);
 	if (!Trail->IsActive() && TrailSystem)
 	{
 		Trail->Activate(true);
@@ -770,6 +960,9 @@ void ANinjaJutsuProjectile::PlayExplosion(const FVector& Location)
 	HideTongues();
 	for (UNiagaraComponent* Spiral : Spirals) { Spiral->Deactivate(); }
 	FirePostProcess->Settings.BloomIntensity = 0.65f;
+	// A explosão volta ao pós-processo de antes (só perto, sem exposição/tom da ignição)
+	FirePostProcess->bUnbound = false;
+	FirePostProcess->Settings.bOverride_SceneColorTint = false;
 	FirePostProcess->bEnabled = true;
 	if (GetNetMode() == NM_DedicatedServer)
 	{

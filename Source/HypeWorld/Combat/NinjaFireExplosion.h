@@ -31,6 +31,8 @@ public:
 	/** Malhas (a esfera tem centro na origem e raio 50; a chama tem base na origem e altura 100) */
 	UPROPERTY(EditDefaultsOnly, Category="Explosão") TObjectPtr<UStaticMesh> SphereMesh;
 	UPROPERTY(EditDefaultsOnly, Category="Explosão") TObjectPtr<UStaticMesh> FlameMesh;
+	/** Malha do clarão do núcleo (vazia = SphereMesh); uma chama irregular evita o contorno redondo no impacto */
+	UPROPERTY(EditDefaultsOnly, Category="Explosão") TObjectPtr<UStaticMesh> DomeMesh;
 
 	/** Núcleo (aditivo), halo vermelho, riscos (borda dura), fumaça escura, puffs vermelhos e distorção de calor */
 	UPROPERTY(EditDefaultsOnly, Category="Explosão") TObjectPtr<UMaterialInterface> DomeMaterial;
