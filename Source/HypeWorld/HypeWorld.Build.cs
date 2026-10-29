@@ -25,7 +25,7 @@ public class HypeWorld : ModuleRules
 			"Niagara"
 		});
 
-		PrivateDependencyModuleNames.AddRange(new string[] { "AnimationCore", "SlateCore", "Landscape", "AnimationWarpingRuntime", "AnimGraphRuntime" });
+		PrivateDependencyModuleNames.AddRange(new string[] { "AnimationCore", "SlateCore", "Landscape", "AnimationWarpingRuntime", "AnimGraphRuntime", "AssetRegistry" });
 		if (Target.bBuildEditor)
 		{
 			PrivateDependencyModuleNames.Add("UnrealEd");   // ferramentas de editor (NinjaEditorTools: Blocking Volume)

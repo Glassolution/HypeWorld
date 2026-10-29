@@ -1,0 +1,8 @@
+# Scripts do editor que o "Atualizar e Abrir" (Mac) roda UMA vez em cada máquina, depois de compilar.
+# O Claude da nuvem não roda a Unreal: quando cria ou muda um script que monta assets (materiais, WBP_, mapas,
+# texturas), ele acrescenta o caminho aqui (relativo à pasta do projeto), uma linha por script.
+# Os já rodados ficam em Saved/scripts_rodados.txt (de cada máquina). Para rodar um de novo, apague a linha dele lá.
+# Os scripts precisam poder rodar de novo sem estragar nada (refazer o asset em vez de duplicar).
+
+Tools/editor/criar_tela_carregamento.py
+Tools/editor/criar_tela_selecao.py

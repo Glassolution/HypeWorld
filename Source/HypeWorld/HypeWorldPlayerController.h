@@ -59,7 +59,19 @@ public:
 	UFUNCTION(BlueprintPure, Category="HUD")
 	bool IsCombatMenuOpen() const;
 
+	/** Esc: solta o mouse (cursor aparece, câmera para) para clicar fora do jogo; Esc de novo volta a jogar.
+	 *  Com o menu de combate aberto, Esc fecha o menu. */
+	UFUNCTION(BlueprintCallable, Category="HUD")
+	void ToggleFreeMouse();
+
+	/** Esconde/mostra o HUD (a tela de seleção do personagem esconde enquanto está aberta) */
+	UFUNCTION(BlueprintCallable, Category="HUD")
+	void SetHUDHidden(bool bHideHUD);
+
 protected:
+
+	bool bMouseFree = false;
+
 
 	/** If true, the player will use UMG touch controls even if not playing on mobile platforms */
 	UPROPERTY(EditAnywhere, Config, Category = "Input|Touch Controls")
