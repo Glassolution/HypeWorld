@@ -1023,3 +1023,20 @@ AActor* UNinjaEditorTools::SpawnLocalActor(UObject* WorldContext, TSubclassOf<AA
 	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	return World->SpawnActor<AActor>(ActorClass, Location, Rotation, Params);
 }
+
+bool UNinjaEditorTools::UpdateSkeletonRefPoseFromMesh(USkeletalMesh* Mesh)
+{
+#if WITH_EDITOR
+	USkeleton* Skeleton = Mesh ? Mesh->GetSkeleton() : nullptr;
+	if (!Skeleton)
+	{
+		return false;
+	}
+	Skeleton->Modify();
+	Skeleton->UpdateReferencePoseFromMesh(Mesh);
+	Skeleton->MarkPackageDirty();
+	return true;
+#else
+	return false;
+#endif
+}

@@ -1,0 +1,5 @@
+{
+  "mesh": "/Game/HypeWorld/Jutsus/Katon/Modelo/SM_Katon_EnergySphere.SM_Katon_EnergySphere",
+  "bounds": "<Struct 'BoxSphereBounds' (0x000001FCA765E280) {origin: {x: 0.000000, y: 0.000000, z: 0.000000}, box_extent: {x: 8.395062, y: 8.395062, z: 8.395062}, sphere_radius: 8.660255}>",
+  "lod0_vertices": 24576
+}

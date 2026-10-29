@@ -1,0 +1,23 @@
+{
+  "trees": [
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_0",
+      "index": 1,
+      "transform": "<Struct 'Transform' (0x0000021F05F6FC90) {rotation: {x: 0.000000, y: 0.000000, z: 0.950955, w: 0.309330}, translation: {x: 680.653713, y: 2405.706454, z: -25.310865}, scale3d: {x: 1.748895, y: 1.748895, z: 0.970355}}>"
+    }
+  ],
+  "bushes": [
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_2",
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_3",
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_66",
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_67",
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_68",
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_69"
+  ],
+  "contact_before": {
+    "contact_shadow_length": "0.009999999776482582",
+    "contact_shadow_length_in_ws": "False",
+    "contact_shadow_casting_intensity": "1.0",
+    "contact_shadow_non_casting_intensity": "0.0"
+  }
+}

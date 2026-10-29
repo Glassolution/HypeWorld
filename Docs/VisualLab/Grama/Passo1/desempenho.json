@@ -1,0 +1,473 @@
+{
+  "method": "3 alternating 30-second stationary captures per density; no screenshot inside profile intervals; no outlier removal. FPS=1000/mean frame ms; 1% low=1000/mean slowest 1% frames.",
+  "runs": {
+    "grass_40_r1": {
+      "FrameTime": {
+        "median": 15.88445,
+        "p95": 17.348,
+        "mean": 15.97914536741214
+      },
+      "GPUTime": {
+        "median": 15.27795,
+        "p95": 16.22326,
+        "mean": 15.41278626198083
+      },
+      "GameThreadTime": {
+        "median": 4.5047,
+        "p95": 5.590979999999999,
+        "mean": 4.627454792332268
+      },
+      "RenderThreadTime": {
+        "median": 15.8701,
+        "p95": 17.338070000000002,
+        "mean": 15.943998828541002
+      },
+      "GPU/Basepass": {
+        "median": 0.759,
+        "p95": 1.56263,
+        "mean": 0.8499624068157614
+      },
+      "GPU/ShadowDepths": {
+        "median": 1.7474500000000002,
+        "p95": 2.7077299999999997,
+        "mean": 1.9952103301384452
+      },
+      "GPU/TemporalSuperResolution": {
+        "median": 3.28595,
+        "p95": 3.8011,
+        "mean": 3.2612793397231097
+      },
+      "GPU/Postprocessing": {
+        "median": 0.8915,
+        "p95": 1.68076,
+        "mean": 1.0011997337593184
+      },
+      "GPU/CustomDepth": {
+        "median": 0.0221,
+        "p95": 0.0267,
+        "mean": 0.029097124600638978
+      },
+      "GPU/SlateUI": {
+        "median": 0.0289,
+        "p95": 0.0321,
+        "mean": 0.03145330138445154
+      },
+      "frames": 1878,
+      "duration_s": 30.008834999999998,
+      "fps": 62.581569727715184,
+      "low1_fps": 48.25997393961407
+    },
+    "grass_40_r2": {
+      "FrameTime": {
+        "median": 15.8931,
+        "p95": 17.32396,
+        "mean": 15.966171261309206
+      },
+      "GPUTime": {
+        "median": 15.2961,
+        "p95": 16.21685,
+        "mean": 15.415300266098988
+      },
+      "GameThreadTime": {
+        "median": 4.5079,
+        "p95": 5.875819999999999,
+        "mean": 4.650096327833954
+      },
+      "RenderThreadTime": {
+        "median": 15.8714,
+        "p95": 17.32366,
+        "mean": 15.948130282064929
+      },
+      "GPU/Basepass": {
+        "median": 0.759,
+        "p95": 1.56321,
+        "mean": 0.8495436934539649
+      },
+      "GPU/ShadowDepths": {
+        "median": 1.7489,
+        "p95": 2.698,
+        "mean": 1.9938833954230974
+      },
+      "GPU/TemporalSuperResolution": {
+        "median": 3.4225,
+        "p95": 3.77808,
+        "mean": 3.253964662054284
+      },
+      "GPU/Postprocessing": {
+        "median": 0.8925,
+        "p95": 1.68492,
+        "mean": 1.0103114954763173
+      },
+      "GPU/CustomDepth": {
+        "median": 0.022,
+        "p95": 0.0267,
+        "mean": 0.028047312400212878
+      },
+      "GPU/SlateUI": {
+        "median": 0.0291,
+        "p95": 0.03220999999999999,
+        "mean": 0.03195327301756253
+      },
+      "frames": 1879,
+      "duration_s": 30.000435799999998,
+      "fps": 62.632423492994725,
+      "low1_fps": 52.12701542932222
+    },
+    "grass_40_r3": {
+      "FrameTime": {
+        "median": 15.8556,
+        "p95": 17.10728,
+        "mean": 15.934872331386085
+      },
+      "GPUTime": {
+        "median": 15.2745,
+        "p95": 16.17758,
+        "mean": 15.392054221986193
+      },
+      "GameThreadTime": {
+        "median": 4.278,
+        "p95": 5.25012,
+        "mean": 4.380457620817844
+      },
+      "RenderThreadTime": {
+        "median": 15.8331,
+        "p95": 17.07554,
+        "mean": 15.906648911311736
+      },
+      "GPU/Basepass": {
+        "median": 0.7574,
+        "p95": 1.56459,
+        "mean": 0.8485099309612321
+      },
+      "GPU/ShadowDepths": {
+        "median": 1.7445,
+        "p95": 2.70689,
+        "mean": 1.987561922464153
+      },
+      "GPU/TemporalSuperResolution": {
+        "median": 3.5942,
+        "p95": 3.78069,
+        "mean": 3.2963068507700477
+      },
+      "GPU/Postprocessing": {
+        "median": 0.89,
+        "p95": 1.67739,
+        "mean": 0.9921233138608603
+      },
+      "GPU/CustomDepth": {
+        "median": 0.0221,
+        "p95": 0.0267,
+        "mean": 0.02718518321826872
+      },
+      "GPU/SlateUI": {
+        "median": 0.0289,
+        "p95": 0.0316,
+        "mean": 0.03045167286245353
+      },
+      "frames": 1883,
+      "duration_s": 30.0053646,
+      "fps": 62.75544473803861,
+      "low1_fps": 49.83830094412103
+    },
+    "grass_100_r1": {
+      "FrameTime": {
+        "median": 16.96395,
+        "p95": 18.240975000000002,
+        "mean": 16.985519309173274
+      },
+      "GPUTime": {
+        "median": 16.273,
+        "p95": 17.171400000000002,
+        "mean": 16.432894054360137
+      },
+      "GameThreadTime": {
+        "median": 4.4376,
+        "p95": 5.389900000000001,
+        "mean": 4.534396998867497
+      },
+      "RenderThreadTime": {
+        "median": 16.9421,
+        "p95": 18.228575,
+        "mean": 16.96251347678369
+      },
+      "GPU/Basepass": {
+        "median": 1.3189,
+        "p95": 2.131675,
+        "mean": 1.459699093997735
+      },
+      "GPU/ShadowDepths": {
+        "median": 1.7622,
+        "p95": 2.714975,
+        "mean": 2.0044975651189127
+      },
+      "GPU/TemporalSuperResolution": {
+        "median": 3.601,
+        "p95": 3.772475,
+        "mean": 3.323350169875425
+      },
+      "GPU/Postprocessing": {
+        "median": 0.8938,
+        "p95": 1.687425,
+        "mean": 1.007569422423556
+      },
+      "GPU/CustomDepth": {
+        "median": 0.0222,
+        "p95": 0.0267,
+        "mean": 0.026176670441676105
+      },
+      "GPU/SlateUI": {
+        "median": 0.0289,
+        "p95": 0.031775,
+        "mean": 0.03248204983012457
+      },
+      "frames": 1766,
+      "duration_s": 29.996427100000002,
+      "fps": 58.87367832550964,
+      "low1_fps": 49.63560571570545
+    },
+    "grass_100_r2": {
+      "FrameTime": {
+        "median": 17.0001,
+        "p95": 18.37762,
+        "mean": 17.05945127913587
+      },
+      "GPUTime": {
+        "median": 16.3511,
+        "p95": 17.31493,
+        "mean": 16.517757760090962
+      },
+      "GameThreadTime": {
+        "median": 4.3997,
+        "p95": 5.777739999999999,
+        "mean": 4.560840591245025
+      },
+      "RenderThreadTime": {
+        "median": 16.977,
+        "p95": 18.310119999999998,
+        "mean": 17.037461569073336
+      },
+      "GPU/Basepass": {
+        "median": 1.3187,
+        "p95": 2.13175,
+        "mean": 1.4600279135872656
+      },
+      "GPU/ShadowDepths": {
+        "median": 1.7653,
+        "p95": 2.72081,
+        "mean": 2.014633030130756
+      },
+      "GPU/TemporalSuperResolution": {
+        "median": 3.6033,
+        "p95": 3.80511,
+        "mean": 3.34852728823195
+      },
+      "GPU/Postprocessing": {
+        "median": 0.8943,
+        "p95": 1.68581,
+        "mean": 1.0172938601478112
+      },
+      "GPU/CustomDepth": {
+        "median": 0.0221,
+        "p95": 0.0267,
+        "mean": 0.02445747583854463
+      },
+      "GPU/SlateUI": {
+        "median": 0.029,
+        "p95": 0.0321,
+        "mean": 0.032635304150085274
+      },
+      "frames": 1759,
+      "duration_s": 30.007574799999997,
+      "fps": 58.61853254465603,
+      "low1_fps": 48.51516638006781
+    },
+    "grass_100_r3": {
+      "FrameTime": {
+        "median": 17.02465,
+        "p95": 18.299384999999997,
+        "mean": 17.06486313993174
+      },
+      "GPUTime": {
+        "median": 16.339550000000003,
+        "p95": 17.33798,
+        "mean": 16.516167918088737
+      },
+      "GameThreadTime": {
+        "median": 4.3529,
+        "p95": 5.305389999999999,
+        "mean": 4.4676635949943115
+      },
+      "RenderThreadTime": {
+        "median": 17.0012,
+        "p95": 18.284485,
+        "mean": 17.03715329920364
+      },
+      "GPU/Basepass": {
+        "median": 1.3175,
+        "p95": 2.132615,
+        "mean": 1.4566201934015928
+      },
+      "GPU/ShadowDepths": {
+        "median": 1.7635,
+        "p95": 2.73479,
+        "mean": 2.0123098976109217
+      },
+      "GPU/TemporalSuperResolution": {
+        "median": 3.60765,
+        "p95": 3.8053299999999997,
+        "mean": 3.3669729237770194
+      },
+      "GPU/Postprocessing": {
+        "median": 0.8932,
+        "p95": 1.6895449999999999,
+        "mean": 1.0125114903299204
+      },
+      "GPU/CustomDepth": {
+        "median": 0.0222,
+        "p95": 0.0267,
+        "mean": 0.029327929465301477
+      },
+      "GPU/SlateUI": {
+        "median": 0.0289,
+        "p95": 0.0314,
+        "mean": 0.030734357224118315
+      },
+      "frames": 1758,
+      "duration_s": 30.0000294,
+      "fps": 58.59994257205628,
+      "low1_fps": 46.22028485047995
+    }
+  },
+  "groups": {
+    "40": {
+      "FrameTime": {
+        "median": 15.8763,
+        "p95": 17.26214,
+        "mean": 15.960041737588652
+      },
+      "GPUTime": {
+        "median": 15.28375,
+        "p95": 16.20453,
+        "mean": 15.406702109929078
+      },
+      "GameThreadTime": {
+        "median": 4.41075,
+        "p95": 5.623440000000001,
+        "mean": 4.552534184397163
+      },
+      "RenderThreadTime": {
+        "median": 15.85775,
+        "p95": 17.218825,
+        "mean": 15.93290540780142
+      },
+      "GPU/Basepass": {
+        "median": 0.7585,
+        "p95": 1.5635,
+        "mean": 0.8493379787234042
+      },
+      "GPU/ShadowDepths": {
+        "median": 1.7466,
+        "p95": 2.70531,
+        "mean": 1.9922147163120567
+      },
+      "GPU/TemporalSuperResolution": {
+        "median": 3.585,
+        "p95": 3.786705,
+        "mean": 3.270536879432624
+      },
+      "GPU/Postprocessing": {
+        "median": 0.8911,
+        "p95": 1.681205,
+        "mean": 1.0012050709219857
+      },
+      "GPU/CustomDepth": {
+        "median": 0.0221,
+        "p95": 0.0267,
+        "mean": 0.02810904255319149
+      },
+      "GPU/SlateUI": {
+        "median": 0.029,
+        "p95": 0.032,
+        "mean": 0.0312854609929078
+      },
+      "frames": 5640,
+      "duration_s": 90.0146354,
+      "fps": 62.656477748728406,
+      "low1_fps": 49.957255870722534
+    },
+    "100": {
+      "FrameTime": {
+        "median": 16.9957,
+        "p95": 18.29548,
+        "mean": 17.036538197993565
+      },
+      "GPUTime": {
+        "median": 16.3208,
+        "p95": 17.27148,
+        "mean": 16.488860495930343
+      },
+      "GameThreadTime": {
+        "median": 4.3968,
+        "p95": 5.51024,
+        "mean": 4.520994946053379
+      },
+      "RenderThreadTime": {
+        "median": 16.9765,
+        "p95": 18.2738,
+        "mean": 17.012305356804845
+      },
+      "GPU/Basepass": {
+        "median": 1.3183,
+        "p95": 2.1322,
+        "mean": 1.458784024228658
+      },
+      "GPU/ShadowDepths": {
+        "median": 1.7636,
+        "p95": 2.72369,
+        "mean": 2.010471890971039
+      },
+      "GPU/TemporalSuperResolution": {
+        "median": 3.6042,
+        "p95": 3.79675,
+        "mean": 3.346249157675563
+      },
+      "GPU/Postprocessing": {
+        "median": 0.8938,
+        "p95": 1.6874699999999998,
+        "mean": 1.0124517698277493
+      },
+      "GPU/CustomDepth": {
+        "median": 0.0222,
+        "p95": 0.0267,
+        "mean": 0.026652886617452205
+      },
+      "GPU/SlateUI": {
+        "median": 0.0289,
+        "p95": 0.0318,
+        "mean": 0.03195150482680295
+      },
+      "frames": 5283,
+      "duration_s": 90.00403130000001,
+      "fps": 58.697370814322625,
+      "low1_fps": 47.92444647716436
+    }
+  },
+  "delta_100_minus_40_ms": {
+    "FrameTime": 1.1193999999999988,
+    "GPUTime": 1.037049999999999,
+    "GameThreadTime": -0.013950000000000351,
+    "RenderThreadTime": 1.1187500000000021,
+    "GPU/Basepass": 0.5598000000000001,
+    "GPU/ShadowDepths": 0.017000000000000126,
+    "GPU/TemporalSuperResolution": 0.019200000000000106,
+    "GPU/Postprocessing": 0.0027000000000000357,
+    "GPU/CustomDepth": 9.99999999999994e-05,
+    "GPU/SlateUI": -0.00010000000000000286
+  },
+  "over_0_5ms": {
+    "FrameTime": 1.1193999999999988,
+    "GPUTime": 1.037049999999999,
+    "RenderThreadTime": 1.1187500000000021,
+    "GPU/Basepass": 0.5598000000000001
+  }
+}

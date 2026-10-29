@@ -1,0 +1,11 @@
+from pathlib import Path
+import json
+P=Path(__file__).resolve().parent
+labels={'original':'Original: 4 × 2048','cortes_pequenos':'Cortes de sombras pequenas','csm3_1536':'3 × 1536 + alcance menor','csm2_2048':'2 × 2048 + alcance menor'}
+d=json.loads((P/'desempenho_cascatas.json').read_text())
+rows=''.join(f'<tr><td>{labels[n]}</td><td>{v["aggregate"]["fps"]:.2f}</td><td>{v["aggregate"]["low1"]:.2f}</td><td>{v["aggregate"]["medians"]["GPUTime"]:.2f} ms</td></tr>' for n,v in d.items())
+options=''.join(f'<option value="{n}">{s}</option>' for n,s in labels.items())
+html='''<!doctype html><html lang="pt-BR"><meta charset="utf-8"><title>Sombras — Alto 100%</title><style>body{font:16px system-ui;background:#12171d;color:#eef3f7;margin:24px auto;padding:0 20px;max-width:1800px}p{color:#bac7d3}a{color:#9bd8ff}select{font:inherit;background:#263440;color:white;padding:10px;border-radius:6px}section{display:grid;grid-template-columns:1fr 1fr;gap:16px}img{width:100%}th,td{padding:8px 20px;text-align:left;border-bottom:1px solid #42515f}table{border-collapse:collapse}h1{font-size:26px}@media(max-width:800px){section{grid-template-columns:1fr}}</style><h1>Sombras — Alto, 1080p nativo, TSR Q1</h1><p>Câmera fixa, 3×30 s por opção. Prints reais sem retoque. PCSS, Source Angle e Distance Field Shadows preservados. Nenhuma alteração global adotada.</p><table><tr><th>Opção</th><th>FPS</th><th>1% low</th><th>GPU</th></tr>ROWS</table><p>Escolha o par; clique no print para abrir em resolução original.</p><section>'''.replace('ROWS',rows)
+for i in range(2):html+=f'<article><select id="s{i}">{options}</select><a id="a{i}"><img id="i{i}"></a></article>'
+html+='''</section><h2>Referência 4 fornecida</h2><a href="../Baseline/Referencias/zenkai_4.png"><img style="max-width:1000px" src="../Baseline/Referencias/zenkai_4.png"></a><p><a href="Relatorio.md">Relatório</a> · <a href="../AA1b/comparar.html">TAA: bloco 1b</a></p><script>function set(i){let n=document.getElementById('s'+i).value;document.getElementById('i'+i).src=n+'.png';document.getElementById('a'+i).href=n+'.png'}s0.value='original';s1.value='csm3_1536';[s0,s1].forEach((s,i)=>{s.onchange=()=>set(i);set(i)})</script></html>'''
+(P/'comparar.html').write_text(html,encoding='utf-8')

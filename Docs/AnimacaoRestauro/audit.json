@@ -1,0 +1,213 @@
+[
+  {
+    "path": "Content/Characters/Mannequins/Anims/Unarmed/ABP_Unarmed.uasset",
+    "head_available": true,
+    "local_matches_head": true,
+    "head_matches_e3": true,
+    "head_size": 385911,
+    "markers": [],
+    "local_markers": []
+  },
+  {
+    "path": "Content/Characters/Mannequins/Anims/Unarmed/BS_Idle_Walk_Run.uasset",
+    "head_available": true,
+    "local_matches_head": true,
+    "head_matches_e3": true,
+    "head_size": 52333,
+    "markers": [],
+    "local_markers": []
+  },
+  {
+    "path": "Content/HypeWorld/Animacoes/A_Pose_Prontidao.uasset",
+    "head_available": true,
+    "local_matches_head": true,
+    "head_matches_e3": true,
+    "head_size": 433416,
+    "markers": [
+      "A_Pose_Prontidao"
+    ],
+    "local_markers": [
+      "A_Pose_Prontidao"
+    ]
+  },
+  {
+    "path": "Content/HypeWorld/Animacoes/TroteDirecional/A_Prontidao_Cintura.uasset",
+    "head_available": true,
+    "local_matches_head": true,
+    "head_matches_e3": true,
+    "head_size": 433921,
+    "markers": [],
+    "local_markers": []
+  },
+  {
+    "path": "Content/HypeWorld/Jutsus/Katon/Animacoes/A_Selo_Tigre.uasset",
+    "head_available": true,
+    "local_matches_head": true,
+    "head_matches_e3": false,
+    "head_size": 421265,
+    "markers": [
+      "A_Selo_Tigre"
+    ],
+    "local_markers": [
+      "A_Selo_Tigre"
+    ]
+  },
+  {
+    "path": "Content/HypeWorld/Jutsus/Katon/Animacoes/A_Selo_Tigre_Sasuke.uasset",
+    "head_available": true,
+    "local_matches_head": true,
+    "head_matches_e3": false,
+    "head_size": 381371,
+    "markers": [
+      "A_Selo_Tigre"
+    ],
+    "local_markers": [
+      "A_Selo_Tigre"
+    ]
+  },
+  {
+    "path": "Content/HypeWorld/Jutsus/Katon/Animacoes/Sasuke/A_Katon_Selo_Tigre.uasset",
+    "head_available": true,
+    "local_matches_head": true,
+    "head_matches_e3": false,
+    "head_size": 429716,
+    "markers": [],
+    "local_markers": []
+  },
+  {
+    "path": "Content/HypeWorld/Jutsus/Katon/Animacoes/Sasuke/A_Selo_Tigre.uasset",
+    "head_available": true,
+    "local_matches_head": true,
+    "head_matches_e3": false,
+    "head_size": 381289,
+    "markers": [
+      "A_Selo_Tigre"
+    ],
+    "local_markers": [
+      "A_Selo_Tigre"
+    ]
+  },
+  {
+    "path": "Content/HypeWorld/Jutsus/Katon/Animacoes/Sasuke/TigreV2/A_Selo_Tigre.uasset",
+    "head_available": true,
+    "local_matches_head": true,
+    "head_matches_e3": false,
+    "head_size": 396635,
+    "markers": [
+      "A_Selo_Tigre"
+    ],
+    "local_markers": [
+      "A_Selo_Tigre"
+    ]
+  },
+  {
+    "path": "Content/HypeWorld/Personagens/Indra/ABP_Indra.uasset",
+    "head_available": true,
+    "local_matches_head": true,
+    "head_matches_e3": true,
+    "head_size": 47391,
+    "markers": [],
+    "local_markers": []
+  },
+  {
+    "path": "Content/HypeWorld/Personagens/Indra/IK_Indra.uasset",
+    "head_available": true,
+    "local_matches_head": true,
+    "head_matches_e3": true,
+    "head_size": 229825,
+    "markers": [],
+    "local_markers": []
+  },
+  {
+    "path": "Content/HypeWorld/Personagens/Indra/IK_Manequim_Indra.uasset",
+    "head_available": true,
+    "local_matches_head": true,
+    "head_matches_e3": true,
+    "head_size": 155567,
+    "markers": [],
+    "local_markers": []
+  },
+  {
+    "path": "Content/HypeWorld/Personagens/Indra/RTG_Manequim_Para_Indra.uasset",
+    "head_available": true,
+    "local_matches_head": true,
+    "head_matches_e3": true,
+    "head_size": 25440,
+    "markers": [],
+    "local_markers": []
+  },
+  {
+    "path": "Content/HypeWorld/Personagens/Indra/SKEL_Indra.uasset",
+    "head_available": true,
+    "local_matches_head": true,
+    "head_matches_e3": true,
+    "head_size": 68562,
+    "markers": [],
+    "local_markers": []
+  },
+  {
+    "path": "Content/HypeWorld/Personagens/Sasuke/Limpo/ABP_Sasuke.uasset",
+    "head_available": true,
+    "local_matches_head": true,
+    "head_matches_e3": false,
+    "head_size": 52076,
+    "markers": [],
+    "local_markers": []
+  },
+  {
+    "path": "Content/HypeWorld/Personagens/Sasuke/Limpo/IK_Sasuke.uasset",
+    "head_available": true,
+    "local_matches_head": true,
+    "head_matches_e3": false,
+    "head_size": 71933,
+    "markers": [],
+    "local_markers": []
+  },
+  {
+    "path": "Content/HypeWorld/Personagens/Sasuke/Limpo/RTG_Manequim_Para_Sasuke.uasset",
+    "head_available": true,
+    "local_matches_head": true,
+    "head_matches_e3": false,
+    "head_size": 22849,
+    "markers": [],
+    "local_markers": []
+  },
+  {
+    "path": "Content/HypeWorld/Personagens/Sasuke/Limpo/SKEL_Sasuke.uasset",
+    "head_available": true,
+    "local_matches_head": true,
+    "head_matches_e3": false,
+    "head_size": 25210,
+    "markers": [],
+    "local_markers": []
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ABP_Ninja.uasset",
+    "head_available": true,
+    "local_matches_head": false,
+    "head_matches_e3": true,
+    "head_size": 399203,
+    "markers": [],
+    "local_markers": [
+      "A_Pose_Prontidao"
+    ]
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/BS_ANAP_Locomocao.uasset",
+    "head_available": true,
+    "local_matches_head": true,
+    "head_matches_e3": false,
+    "head_size": 52698,
+    "markers": [],
+    "local_markers": []
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/BS_Ninja_Locomocao.uasset",
+    "head_available": true,
+    "local_matches_head": true,
+    "head_matches_e3": true,
+    "head_size": 27162,
+    "markers": [],
+    "local_markers": []
+  }
+]

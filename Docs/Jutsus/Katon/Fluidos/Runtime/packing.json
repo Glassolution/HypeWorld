@@ -1,0 +1,86 @@
+{
+  "Alongada": {
+    "channels": "R temperature normalized; GB signed UV displacement/frame encoded 0.5+flow/0.5; A density opacity",
+    "source": "Niagara Baker approved simulation",
+    "crop": [
+      76,
+      104,
+      203,
+      245
+    ],
+    "size": [
+      216,
+      240
+    ],
+    "uv_flow_range": [
+      -0.04124409705400467,
+      0.01710088737308979
+    ],
+    "duration": 1.6,
+    "frames": 64,
+    "motion_calibration": {
+      "world_extent_cm": 800,
+      "image_y": "inverted simulation Y",
+      "comparison": "Density advection toward next Baker frame, ten time samples",
+      "unwarped_mse": 0.06438717202940625,
+      "warped_mse": 0.03710937196607736,
+      "relative_error_reduction_percent": 42.4
+    }
+  },
+  "Redonda": {
+    "channels": "R temperature normalized; GB signed UV displacement/frame encoded 0.5+flow/0.5; A density opacity",
+    "source": "Niagara Baker approved simulation",
+    "crop": [
+      77,
+      166,
+      199,
+      246
+    ],
+    "size": [
+      240,
+      157
+    ],
+    "uv_flow_range": [
+      -0.02203989587724209,
+      0.011588115245103836
+    ],
+    "duration": 1.3,
+    "frames": 64,
+    "motion_calibration": {
+      "world_extent_cm": 800,
+      "image_y": "inverted simulation Y",
+      "comparison": "Density advection toward next Baker frame, ten time samples",
+      "unwarped_mse": 0.04175143096929339,
+      "warped_mse": 0.024104055048335425,
+      "relative_error_reduction_percent": 42.3
+    }
+  },
+  "Fumaca": {
+    "channels": "R temperature normalized; GB signed UV displacement/frame encoded 0.5+flow/0.5; A density opacity",
+    "source": "Niagara Baker approved simulation",
+    "crop": [
+      89,
+      172,
+      173,
+      256
+    ],
+    "size": [
+      240,
+      240
+    ],
+    "uv_flow_range": [
+      -0.01700613833963871,
+      0.01545758917927742
+    ],
+    "duration": 2.0,
+    "frames": 64,
+    "motion_calibration": {
+      "world_extent_cm": 800,
+      "image_y": "inverted simulation Y",
+      "comparison": "Density advection toward next Baker frame, ten time samples",
+      "unwarped_mse": 0.040464526941598494,
+      "warped_mse": 0.027289475465807365,
+      "relative_error_reduction_percent": 32.6
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+ "preset": "scalability 2 (Alto), r.ScreenPercentage 100, VSync off",
+ "stages": [
+  "base_bola",
+  "bola",
+  "ignicao",
+  "base_explosao",
+  "explosao"
+ ]
+}

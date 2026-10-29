@@ -1,0 +1,12 @@
+{
+  "hand_weighted_vertex_count": 873,
+  "hand_wrist_to_mesh_tip_cm": 16.184017118934406,
+  "hand_mesh_span_cm": 18.52877667863711,
+  "face_skin_z_bounds_cm": [
+    151.35049438476562,
+    169.31759643554688
+  ],
+  "face_skin_height_estimate_cm": 17.96710205078125,
+  "face_vertex_count": 991,
+  "note": "Mesh hand length is projected along wrist-middle axis; face estimate uses skin-colored frontal vertices, excluding dark hair and headband. It is a mesh estimate, not a clinical anatomical landmark measurement."
+}

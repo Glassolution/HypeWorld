@@ -177,15 +177,44 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Ninja|Câmera")
 	float CameraFollowDelay = 0.6f;
 
-	/** Zoom com a rodinha: distância mínima e máxima da câmera (cm), quanto cada clique da rodinha anda e a rapidez do ajuste */
-	UPROPERTY(EditAnywhere, Category="Ninja|Câmera")
-	float CameraZoomMin = 180.f;
-	UPROPERTY(EditAnywhere, Category="Ninja|Câmera")
-	float CameraZoomMax = 750.f;
-	UPROPERTY(EditAnywhere, Category="Ninja|Câmera")
+	/** Camera framing and zoom are independent: scrolling only changes the arm length. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera", meta=(ClampMin="0"))
+	float CameraZoomDefault = 450.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera", meta=(ClampMin="0"))
+	float CameraZoomMin = 200.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera", meta=(ClampMin="0"))
+	float CameraZoomMax = 800.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera", meta=(ClampMin="0"))
 	float CameraZoomStep = 60.f;
-	UPROPERTY(EditAnywhere, Category="Ninja|Câmera")
-	float CameraZoomSpeed = 10.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera", meta=(ClampMin="0"))
+	float CameraZoomSpeed = 8.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera")
+	FVector CameraTargetOffset = FVector(0.f, 0.f, 60.f);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera")
+	FVector CameraSocketOffset = FVector(0.f, 0.f, 40.f);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera", meta=(ClampMin="-89", ClampMax="89"))
+	float CameraInitialPitch = -15.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera", meta=(ClampMin="-89", ClampMax="89"))
+	float CameraPitchMin = -60.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera", meta=(ClampMin="-89", ClampMax="89"))
+	float CameraPitchMax = 30.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera", meta=(ClampMin="5", ClampMax="170"))
+	float CameraFOV = 80.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera")
+	bool bCameraUsePawnControlRotation = true;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera")
+	bool bCameraLagEnabled = true;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera", meta=(ClampMin="0"))
+	float CameraLagSpeed = 12.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera")
+	bool bCameraRotationLagEnabled = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera")
+	bool bCameraCollisionTest = true;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera", meta=(ClampMin="1"))
+	float CameraProbeSize = 12.f;
+
+	UFUNCTION(BlueprintCallable, Category="Camera")
+	void DoCameraZoom(float ScrollDelta);
 
 	/** Corrida ninja: rapidez com que a câmera volta para as costas nas curvas */
 	UPROPERTY(EditAnywhere, Category="Ninja|Câmera")
@@ -654,6 +683,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ninja|Jutsus")
 	TArray<TObjectPtr<UNinjaJutsuData>> JutsuLoadout;
 
+	/** Animações de corpo dos jutsus (selos e lançamento) feitas para outro esqueleto -> a mesma animação retargetada para o
+	 *  esqueleto do corpo visível. Só é usada quando o esqueleto da animação da ficha não é o do corpo */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ninja|Jutsus")
+	TMap<TObjectPtr<UAnimSequenceBase>, TObjectPtr<UAnimSequenceBase>> JutsuBodyAnimations;
+
 	/** Tecla de cada slot */
 	UPROPERTY(EditAnywhere, Category="Ninja|Jutsus")
 	TArray<FKey> JutsuSlotKeys = { EKeys::One, EKeys::Two, EKeys::Three, EKeys::Four, EKeys::Five, EKeys::Six };
@@ -680,6 +714,13 @@ public:
 
 	UFUNCTION(BlueprintPure, Category="Ninja|Jutsus")
 	bool IsCastingJutsu() const { return CurrentJutsu != nullptr; }
+
+	/** Chamas em órbita ativas deste personagem (todas as máquinas; o HUD e o clique esquerdo usam) */
+	class ANinjaFlameOrbit* GetActiveFlameOrbit() const;
+	/** Lança uma chama da órbita no ponto da mira (o que o clique esquerdo faz); falso sem chamas */
+	UFUNCTION(BlueprintCallable, Category="Ninja|Jutsus")
+	bool FireFlameOrbitAtCrosshair() { return TryFireFlameOrbit(); }
+	void SetActiveFlameOrbit(class ANinjaFlameOrbit* Orbit);
 	bool CanStartJutsu() const;
 
 	/** Chamados pela habilidade (no jogador e no servidor) */
@@ -703,6 +744,8 @@ public:
 protected:
 
 	virtual void BeginPlay() override;
+	virtual void PawnClientRestart() override;
+	virtual void OnConstruction(const FTransform& Transform) override;
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
@@ -856,6 +899,8 @@ protected:
 	void UpdateJutsuSeals(float DeltaSeconds);
 	void StartSeal(int32 Index);
 	USkeletalMeshComponent* GetJutsuBody() const;
+	/** A animação da ficha ou, se ela for de outro esqueleto, a versão do corpo em JutsuBodyAnimations */
+	UAnimSequenceBase* GetJutsuBodyAnimation(UAnimSequenceBase* Animation, const USkeletalMeshComponent* Body) const;
 	UPROPERTY() TObjectPtr<const UNinjaJutsuData> CurrentJutsu;
 	/** Jutsu que está sendo mostrado (selos/lançamento) — também nos outros jogadores */
 	UPROPERTY() TObjectPtr<const UNinjaJutsuData> PresentedJutsu;
@@ -866,6 +911,10 @@ protected:
 	/** Projéteis já soltos neste uso (rajadas) */
 	int32 JutsuShotsFired = 0;
 	TArray<int32> JutsuUseCounts;
+	TWeakObjectPtr<class ANinjaFlameOrbit> ActiveFlameOrbit;
+	/** Clique esquerdo com chamas em órbita: o servidor lança a chama na direção do ponto mirado */
+	UFUNCTION(Server, Reliable) void ServerFireFlameOrbit(FVector_NetQuantize AimPoint);
+	bool TryFireFlameOrbit();
 	/** Antecipação do jutsu na boca durante os selos (só visual); some no lançamento ou no cancelamento */
 	UPROPERTY() TArray<TObjectPtr<USceneComponent>> JutsuAnticipation;
 	void ClearJutsuAnticipation();
@@ -969,6 +1018,9 @@ private:
 	/** Rodinha do mouse: muda a distância desejada da câmera; UpdateCameraZoom chega nela suave */
 	void Zoom(const FInputActionValue& Value);
 	void UpdateCameraZoom(float DeltaSeconds);
+	void ApplyCameraSettings();
+	void InitializeLocalCamera();
+	bool bCameraInitialPitchApplied = false;
 	float CameraZoomGoal = 0.f;
 
 	/** Ao sair do lugar numa direção muito diferente, toca a animação de virar e gira no mesmo ritmo */

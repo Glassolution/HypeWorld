@@ -1,0 +1,28 @@
+{
+  "fps": 60,
+  "start": 86,
+  "impact": 139,
+  "flight_seconds": 0.8833333333333333,
+  "stages": [
+    [
+      "Saida",
+      64,
+      88
+    ],
+    [
+      "Chama estilizada",
+      70,
+      96
+    ],
+    [
+      "Bola viajando",
+      90,
+      106
+    ],
+    [
+      "Impacto",
+      121,
+      143
+    ]
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "preset": "Alto (sg=2), 1920x1080, 100%, sem limite de FPS",
+  "gpu": "GTX 1650",
+  "flight_distance_cm": 330,
+  "one_measurement_campaign": true,
+  "impact_detected": true,
+  "impact_point": "<Struct 'Vector' (0x000001EF836B1780) {x: -0.870311, y: 960.000000, z: 6.525309}>",
+  "method": "Flight A/B versus same opaque-core mesh with constant proxy material to preserve depth occlusion. All fire layers, live particles, halo, heat, glow decal, bloom and light toggled together; excludes trivial proxy geometry cost. Explosion: one actual floor collision and its 3.6s aftermath versus preceding scene baseline; peak includes normal scene variance. No capture during samples.",
+  "stages": [
+    "base_bola",
+    "bola",
+    "base_explosao"
+  ]
+}

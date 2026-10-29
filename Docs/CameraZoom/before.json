@@ -1,0 +1,193 @@
+{
+  "arm": {
+    "target_arm_length": "360.0",
+    "socket_offset": "<Struct 'Vector' (0x0000023EBE2C0E98) {x: 0.000000, y: 0.000000, z: 185.000000}>",
+    "target_offset": "<Struct 'Vector' (0x0000023EBE2C0EB0) {x: 0.000000, y: 0.000000, z: 0.000000}>",
+    "relative_rotation": "<Struct 'Rotator' (0x0000023EBE2C0D98) {pitch: 0.000000, yaw: 0.000000, roll: 0.000000}>",
+    "use_pawn_control_rotation": "True",
+    "enable_camera_lag": "True",
+    "camera_lag_speed": "20.0",
+    "enable_camera_rotation_lag": "False",
+    "do_collision_test": "True",
+    "probe_size": "12.0"
+  },
+  "camera": {
+    "field_of_view": "90.0",
+    "relative_rotation": "<Struct 'Rotator' (0x0000023E74E57998) {pitch: -19.000000, yaw: 0.000000, roll: 0.000000}>"
+  },
+  "character": {
+    "zoom_action": "<Object '/Game/Ninja/Core/Input/IA_Zoom.IA_Zoom' (0x0000023EC8C136C0) Class 'InputAction'>",
+    "mouse_look_action": "<Object '/Game/Input/Actions/IA_MouseLook.IA_MouseLook' (0x0000023EC8C11EC0) Class 'InputAction'>",
+    "look_action": "<Object '/Game/Input/Actions/IA_Look.IA_Look' (0x0000023EC8C11D40) Class 'InputAction'>",
+    "camera_zoom_min": "180.0",
+    "camera_zoom_max": "750.0",
+    "camera_zoom_step": "60.0",
+    "camera_zoom_speed": "10.0"
+  },
+  "contexts": {
+    "/Game/Input/IMC_Default": [
+      {
+        "key": "<Struct 'Key' (0x0000023F470169E8) {}>",
+        "action": "<Object '/Game/Input/Actions/IA_Jump.IA_Jump' (0x0000023EC8C11BC0) Class 'InputAction'>",
+        "modifiers": "[]"
+      },
+      {
+        "key": "<Struct 'Key' (0x0000023F470168C8) {}>",
+        "action": "<Object '/Game/Input/Actions/IA_Jump.IA_Jump' (0x0000023EC8C11BC0) Class 'InputAction'>",
+        "modifiers": "[]"
+      },
+      {
+        "key": "<Struct 'Key' (0x0000023F47016928) {}>",
+        "action": "<Object '/Game/Input/Actions/IA_Move.IA_Move' (0x0000023EC8C12DC0) Class 'InputAction'>",
+        "modifiers": "[\"/Script/EnhancedInput.InputModifierSwizzleAxis'/Game/Input/IMC_Default.IMC_Default:InputModifierSwizzleAxis_3'\"]"
+      },
+      {
+        "key": "<Struct 'Key' (0x0000023F47016808) {}>",
+        "action": "<Object '/Game/Input/Actions/IA_Move.IA_Move' (0x0000023EC8C12DC0) Class 'InputAction'>",
+        "modifiers": "[\"/Script/EnhancedInput.InputModifierSwizzleAxis'/Game/Input/IMC_Default.IMC_Default:InputModifierSwizzleAxis_4'\", \"/Script/EnhancedInput.InputModifierNegate'/Game/Input/IMC_Default.IMC_Default:InputModifierNegate_0'\"]"
+      },
+      {
+        "key": "<Struct 'Key' (0x0000023F47016868) {}>",
+        "action": "<Object '/Game/Input/Actions/IA_Move.IA_Move' (0x0000023EC8C12DC0) Class 'InputAction'>",
+        "modifiers": "[\"/Script/EnhancedInput.InputModifierNegate'/Game/Input/IMC_Default.IMC_Default:InputModifierNegate_3'\"]"
+      },
+      {
+        "key": "<Struct 'Key' (0x0000023F47016568) {}>",
+        "action": "<Object '/Game/Input/Actions/IA_Move.IA_Move' (0x0000023EC8C12DC0) Class 'InputAction'>",
+        "modifiers": "[]"
+      },
+      {
+        "key": "<Struct 'Key' (0x0000023F470167A8) {}>",
+        "action": "<Object '/Game/Input/Actions/IA_Move.IA_Move' (0x0000023EC8C12DC0) Class 'InputAction'>",
+        "modifiers": "[\"/Script/EnhancedInput.InputModifierSwizzleAxis'/Game/Input/IMC_Default.IMC_Default:InputModifierSwizzleAxis_5'\"]"
+      },
+      {
+        "key": "<Struct 'Key' (0x0000023F47016688) {}>",
+        "action": "<Object '/Game/Input/Actions/IA_Move.IA_Move' (0x0000023EC8C12DC0) Class 'InputAction'>",
+        "modifiers": "[\"/Script/EnhancedInput.InputModifierSwizzleAxis'/Game/Input/IMC_Default.IMC_Default:InputModifierSwizzleAxis_6'\", \"/Script/EnhancedInput.InputModifierNegate'/Game/Input/IMC_Default.IMC_Default:InputModifierNegate_2'\"]"
+      },
+      {
+        "key": "<Struct 'Key' (0x0000023F470165C8) {}>",
+        "action": "<Object '/Game/Input/Actions/IA_Move.IA_Move' (0x0000023EC8C12DC0) Class 'InputAction'>",
+        "modifiers": "[]"
+      },
+      {
+        "key": "<Struct 'Key' (0x0000023F470162C8) {}>",
+        "action": "<Object '/Game/Input/Actions/IA_Move.IA_Move' (0x0000023EC8C12DC0) Class 'InputAction'>",
+        "modifiers": "[\"/Script/EnhancedInput.InputModifierNegate'/Game/Input/IMC_Default.IMC_Default:InputModifierNegate_6'\"]"
+      },
+      {
+        "key": "<Struct 'Key' (0x0000023F47016448) {}>",
+        "action": "<Object '/Game/Input/Actions/IA_Move.IA_Move' (0x0000023EC8C12DC0) Class 'InputAction'>",
+        "modifiers": "[\"/Script/EnhancedInput.InputModifierDeadZone'/Game/Input/IMC_Default.IMC_Default:InputModifierDeadZone_0'\", \"/Script/EnhancedInput.InputModifierScalar'/Game/Input/IMC_Default.IMC_Default:InputModifierScalar_0'\"]"
+      },
+      {
+        "key": "<Struct 'Key' (0x0000023F47011888) {}>",
+        "action": "<Object '/Game/Input/Actions/IA_Look.IA_Look' (0x0000023EC8C11D40) Class 'InputAction'>",
+        "modifiers": "[\"/Script/EnhancedInput.InputModifierDeadZone'/Game/Input/IMC_Default.IMC_Default:InputModifierDeadZone_1'\"]"
+      },
+      {
+        "key": "<Struct 'Key' (0x0000023F47010688) {}>",
+        "action": "<Object '/Game/Ninja/Core/Input/IA_Sprint.IA_Sprint' (0x0000023EC8C13600) Class 'InputAction'>",
+        "modifiers": "[]"
+      },
+      {
+        "key": "<Struct 'Key' (0x0000023F47016628) {}>",
+        "action": "<Object '/Game/Ninja/Core/Input/IA_Sprint.IA_Sprint' (0x0000023EC8C13600) Class 'InputAction'>",
+        "modifiers": "[]"
+      },
+      {
+        "key": "<Struct 'Key' (0x0000023F47011828) {}>",
+        "action": "<Object '/Game/Ninja/Core/Input/IA_ChargeChakra.IA_ChargeChakra' (0x0000023EC8C12C40) Class 'InputAction'>",
+        "modifiers": "[]"
+      },
+      {
+        "key": "<Struct 'Key' (0x0000023F470116A8) {}>",
+        "action": "<Object '/Game/Ninja/Core/Input/IA_Dash.IA_Dash' (0x0000023EC8C12A00) Class 'InputAction'>",
+        "modifiers": "[]"
+      },
+      {
+        "key": "<Struct 'Key' (0x0000023F47011408) {}>",
+        "action": "<Object '/Game/Ninja/Core/Input/IA_Attack.IA_Attack' (0x0000023EC8C11200) Class 'InputAction'>",
+        "modifiers": "[]"
+      },
+      {
+        "key": "<Struct 'Key' (0x0000023F470110A8) {}>",
+        "action": "<Object '/Game/Ninja/Core/Input/IA_Attack.IA_Attack' (0x0000023EC8C11200) Class 'InputAction'>",
+        "modifiers": "[]"
+      },
+      {
+        "key": "<Struct 'Key' (0x0000023F47010AA8) {}>",
+        "action": "<Object '/Game/Ninja/Core/Input/IA_ChargeChakra.IA_ChargeChakra' (0x0000023EC8C12C40) Class 'InputAction'>",
+        "modifiers": "[]"
+      },
+      {
+        "key": "<Struct 'Key' (0x0000023F47015FC8) {}>",
+        "action": "<Object '/Game/Ninja/Core/Input/IA_Dash.IA_Dash' (0x0000023EC8C12A00) Class 'InputAction'>",
+        "modifiers": "[]"
+      },
+      {
+        "key": "<Struct 'Key' (0x0000023F47010EC8) {}>",
+        "action": "<Object '/Game/Ninja/Core/Input/IA_Focus.IA_Focus' (0x0000023EC8C12700) Class 'InputAction'>",
+        "modifiers": "[]"
+      },
+      {
+        "key": "<Struct 'Key' (0x0000023F47015F08) {}>",
+        "action": "<Object '/Game/Ninja/Core/Input/IA_Focus.IA_Focus' (0x0000023EC8C12700) Class 'InputAction'>",
+        "modifiers": "[]"
+      },
+      {
+        "key": "<Struct 'Key' (0x0000023F47014B88) {}>",
+        "action": "<Object '/Game/Ninja/Core/Input/IA_HeavyAttack.IA_HeavyAttack' (0x0000023EC8C12F40) Class 'InputAction'>",
+        "modifiers": "[]"
+      },
+      {
+        "key": "<Struct 'Key' (0x0000023F470103E8) {}>",
+        "action": "<Object '/Game/Ninja/Core/Input/IA_HeavyAttack.IA_HeavyAttack' (0x0000023EC8C12F40) Class 'InputAction'>",
+        "modifiers": "[]"
+      },
+      {
+        "key": "<Struct 'Key' (0x0000023F47016028) {}>",
+        "action": "<Object '/Game/Ninja/Core/Input/IA_Dash.IA_Dash' (0x0000023EC8C12A00) Class 'InputAction'>",
+        "modifiers": "[]"
+      },
+      {
+        "key": "<Struct 'Key' (0x0000023F47015F68) {}>",
+        "action": "<Object '/Game/Ninja/Core/Input/IA_CombatMenu.IA_CombatMenu' (0x0000023EC8C12940) Class 'InputAction'>",
+        "modifiers": "[]"
+      },
+      {
+        "key": "<Struct 'Key' (0x0000023F47011A68) {}>",
+        "action": "<Object '/Game/Ninja/Core/Input/IA_CombatMenu.IA_CombatMenu' (0x0000023EC8C12940) Class 'InputAction'>",
+        "modifiers": "[]"
+      },
+      {
+        "key": "<Struct 'Key' (0x0000023F47011468) {}>",
+        "action": "<Object '/Game/Ninja/Core/Input/IA_ChakraFeet.IA_ChakraFeet' (0x0000023EC8C12B80) Class 'InputAction'>",
+        "modifiers": "[]"
+      },
+      {
+        "key": "<Struct 'Key' (0x0000023F47010508) {}>",
+        "action": "<Object '/Game/Ninja/Core/Input/IA_Walk.IA_Walk' (0x0000023EC8C127C0) Class 'InputAction'>",
+        "modifiers": "[]"
+      },
+      {
+        "key": "<Struct 'Key' (0x0000023F47011288) {}>",
+        "action": "<Object '/Game/Ninja/Core/Input/IA_Walk.IA_Walk' (0x0000023EC8C127C0) Class 'InputAction'>",
+        "modifiers": "[]"
+      },
+      {
+        "key": "<Struct 'Key' (0x0000023F47010328) {}>",
+        "action": "<Object '/Game/Ninja/Core/Input/IA_Zoom.IA_Zoom' (0x0000023EC8C136C0) Class 'InputAction'>",
+        "modifiers": "[]"
+      }
+    ],
+    "/Game/Input/IMC_MouseLook": [
+      {
+        "key": "<Struct 'Key' (0x0000023F470106E8) {}>",
+        "action": "<Object '/Game/Input/Actions/IA_MouseLook.IA_MouseLook' (0x0000023EC8C11EC0) Class 'InputAction'>",
+        "modifiers": "[\"/Script/EnhancedInput.InputModifierNegate'/Game/Input/IMC_MouseLook.IMC_MouseLook:InputModifierNegate_0'\"]"
+      }
+    ]
+  }
+}

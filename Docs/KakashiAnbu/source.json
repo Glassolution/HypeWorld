@@ -1,0 +1,73 @@
+{
+  "source": "C:\\Users\\lucas\\Downloads\\personagem para customizacao\\Personagens para pegar as roupas\\anbu_kakashi_hatake.glb",
+  "asset": {
+    "extras": {
+      "author": "3D Resource (https://sketchfab.com/lopuh22721)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/anbu-kakashi-hatake-f6e6fbeadb134b6f8947ae796e680294",
+      "title": "(Anbu) Kakashi Hatake"
+    },
+    "generator": "Sketchfab-13.24.0",
+    "version": "2.0"
+  },
+  "materials": [
+    {
+      "doubleSided": true,
+      "name": "kk2_eye.png",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicFactor": 0.0
+      }
+    },
+    {
+      "doubleSided": true,
+      "name": "kk2_tex01.png",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 1
+        },
+        "metallicFactor": 0.0,
+        "roughnessFactor": 0.9624379700782411
+      }
+    },
+    {
+      "doubleSided": true,
+      "name": "kk2_tex02.png",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 2
+        },
+        "metallicFactor": 0.0,
+        "roughnessFactor": 0.9624379700782411
+      }
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    }
+  ],
+  "bounds_cm": [
+    [
+      -90.88630080223083,
+      -20.951999723911285,
+      -1.2058000080287457
+    ],
+    [
+      90.88580012321472,
+      27.966898679733276,
+      191.67399406433105
+    ]
+  ]
+}

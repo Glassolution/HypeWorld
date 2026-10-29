@@ -1,0 +1,1077 @@
+[
+  {
+    "path": "Content/HypeWorld/Animacoes/A_Pose_Prontidao.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/HypeWorld/Animacoes/TroteDirecional/A_Prontidao_Cintura.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/HypeWorld/Animacoes/TroteDirecional/A_Run_Center.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/HypeWorld/Animacoes/TroteDirecional/A_Trote_Direita.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/HypeWorld/Animacoes/TroteDirecional/A_Trote_Esquerda.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/HypeWorld/Animacoes/TroteDirecional/A_Trote_Frente_Baixo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/HypeWorld/Animacoes/TroteDirecional/A_Trote_Tras.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/HypeWorld/Combate/Esquivas/Provisorias/AM_Esquiva_Direita_Passo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/HypeWorld/Combate/Esquivas/Provisorias/AM_Esquiva_Esquerda_Passo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/HypeWorld/Combate/Esquivas/Provisorias/AM_Esquiva_Frente.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/HypeWorld/Combate/Esquivas/Provisorias/AM_Esquiva_Tras.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/HypeWorld/Combate/Esquivas/Provisorias/A_Esquiva_Direita_Passo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/HypeWorld/Combate/Esquivas/Provisorias/A_Esquiva_Esquerda_Passo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/HypeWorld/Combate/Esquivas/Provisorias/A_Esquiva_Frente.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/HypeWorld/Combate/Esquivas/Provisorias/A_Esquiva_Tras.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/HypeWorld/Combate/Esquivas/Provisorias/DA_Esquiva_Direita_Passo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/HypeWorld/Combate/Esquivas/Provisorias/DA_Esquiva_Esquerda_Passo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/HypeWorld/Combate/Esquivas/Provisorias/DA_Esquiva_Frente.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/HypeWorld/Combate/Esquivas/Provisorias/DA_Esquiva_Tras.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ABP_Ninja.uasset",
+    "available": true,
+    "matches": false
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/AM_Ninja_Dash.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/AM_Ninja_HitReact_1.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/AM_Ninja_HitReact_2.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/AM_Ninja_HitReact_3.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/AM_Ninja_IdleOlhar.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/AM_Ninja_Knockout.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/AM_Ninja_Virar180.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/AM_Ninja_VirarDireita.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/AM_Ninja_WallJump.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/AM_Ninja_WallRun.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/AM_ANAP_CarregarChakra.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/AM_ANAP_CorridaParede.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/AM_ANAP_Dash.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/AM_ANAP_Golpe_ChuteAereo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/AM_ANAP_Golpe_ChuteDragao.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/AM_ANAP_Golpe_ChuteGiro.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/AM_ANAP_Golpe_Direto.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/AM_ANAP_Golpe_Gancho.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/AM_ANAP_Golpe_Investida.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/AM_ANAP_Golpe_Jab.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/AM_ANAP_Golpe_SocoForte.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/AM_ANAP_Golpe_SocosGancho.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/AM_ANAP_Nocaute.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/AM_ANAP_PuloChakra_Carga.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/AM_ANAP_PuloChakra_Salto.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/AM_ANAP_PuloDuplo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/AM_ANAP_PuloParede.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/AM_ANAP_Reacao_Cabeca.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/AM_ANAP_Reacao_Forte.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/AM_ANAP_Reacao_Lado.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/AM_ANAP_Reacao_Ombro.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Aereo/AM_Mortal_Tras.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Aereo/AM_Reacao_Ar_Barriga.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Aereo/AM_Reacao_Ar_Leve.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Aereo/AM_Reacao_Lancado.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/BS_ANAP_Locomocao.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Ar.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Direita_Desvio.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Direita_Passo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Esquerda_Desvio.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Esquerda_Passo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Frente_Mao.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Tras_Mortal.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_Aerial_ChakraFist_B_Palm.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_Aerial_ChakraFist_B_Palm_Combo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_Aerial_ChakraFist_B_TurnKick.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_Aerial_ChakraKnuckleA_Cmb01.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_Aerial_CyakraKnuckley_Cmb01.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_Aerial_CyakraKnuckley_Cmb01_Combo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_Aerial_CyakraKnuckley_Cmb03.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_Aerial_CyakraKnuckley_Cmb03_Combo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_Aerial_Hand_Punch.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_Aerial_Hand_Punch_Combo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_Aerial_Hand_TurnHeelDropKick.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_Aerial_Hand_TurnKick.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_Aerial_Hand_TurnKick_Combo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_Aerial_cmb04.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_Aerial_cmb04_Combo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_BeniHien_BlastPunch.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_BeniHien_Uppercut.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_BeniHien_Uppercut_Combo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_ChakraFistA_BlastPunch.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_ChakraFistA_DragonKick.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_ChakraFistA_Palm_Large.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_ChakraFistA_Palm_Large_Combo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_ChakraFistA_StraightPunch.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_ChakraFistA_cmb08.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_ChakraFistA_cmb08_Combo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_ChakraFistA_cmb_00.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_ChakraFistA_cmb_00_Combo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_ChakraFistA_cmb_14.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_ChakraFistA_cmb_14_Combo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_ChakraFist_B_DoubleTurnKick_Large.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_ChakraFist_B_Palm.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_ChakraFist_B_Palm_Combo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_ChakraFist_B_QigongGun.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_ChakraFist_B_StraightPunch.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_ChakraFist_B_StraightPunch_Combo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_ChakraGloves_B_DoublePunch_Kick.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_ChakraGloves_B_DoublePunch_Uppercut.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_ChakraGloves_B_DoublePunch_Uppercut_Combo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_ChakraGloves_B_Uppercut.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_ChakraGloves_B_Uppercut_Combo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_ChakraGloves_B_Uppercut_Large.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_ChakraGloves_B_Uppercut_Large_Combo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_ChakraKnuckleA_Cmb01.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_ChakraKnuckleA_Cmb02.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_ChakraKnuckleA_Cmb02_Combo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_ChakraKnuckleB_Cmb01.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_ChakraKnuckleB_Cmb02.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_CyakraKnuckley_Cmb01.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_CyakraKnuckley_Cmb01_Combo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_CyakraKnuckley_Cmb02.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_CyakraKnuckley_Cmb02_Combo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_CyakraKnuckley_Cmb02_Rateup.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_CyakraKnuckley_Cmb02_Rateup_Combo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_CyakraKnuckley_Cmb03.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_CyakraKnuckley_Cmb03_Combo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_CyakraKnuckley_Cmb05.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_Hand_BackKick.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_Hand_ChakraClawsB_cmb_01.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_Hand_ChakraClawsB_cmb_01_Combo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_Hand_ChakraClawsB_cmb_12.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_Hand_ChakraClawsB_cmb_12_Combo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_Hand_DragonKick.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_Hand_JackCut.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_Hand_MantisFist.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_Hand_Punch_Left.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_Hand_Punch_Left_Combo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_Hand_Short_ChakraClawsA.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_Hand_Short_ChakraClawsA_Combo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_Hand_SidePalm.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_Hand_SidePalm_Combo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_Hand_StraightPunch.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_Hand_WindMill.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_JumpTurnKick_Right.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_KickUp.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_KickUp_Combo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_cmb05.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_cmb05_Combo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_cmb07.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_cmb07_Combo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_cmb09.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/ANAP/Golpes/AM_G_cmb09_Combo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/BS_Ninja_Locomocao.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Combate/AM_Dash_Estrela.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Combate/AM_Golpe_ChuteAereo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Combate/AM_Golpe_ChuteCircular.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Combate/AM_Golpe_ChuteESoco.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Combate/AM_Golpe_ChuteFrontal.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Combate/AM_Golpe_ChuteGiratorio.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Combate/AM_Golpe_ChuteVoador.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Combate/AM_Golpe_Direto.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Combate/AM_Golpe_Gancho.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Combate/AM_Golpe_GanchoEsquerdo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Combate/AM_Golpe_Investida.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Combate/AM_Golpe_Jab.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Combate/AM_Golpe_SocoCarregado.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Combate/AM_Golpe_SocoCorpo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Combate/AM_Golpe_Uppercut.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Combate/AM_Golpe_UppercutMartelo.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Combate/AM_Reacao_Barriga.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Combate/AM_Reacao_Costela.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/DeepMotion/A_Ninja_DM_DashEstrela.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/A_Ninja_MX_Avulsa_Right_Strafe_Walking.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/A_Ninja_MX_Avulsa_Right_Turn.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/A_Ninja_MX_Avulsa_Walk2_Backward.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/A_Ninja_MX_Avulsa_Walk2_Forward.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/A_Ninja_MX_Avulsa_Walk2_Left.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/A_Ninja_MX_Avulsa_Walk2_Right.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/A_Ninja_MX_Avulsa_Walking.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/A_Ninja_MX_Avulsa_Walking_Turn_180.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/A_Ninja_MX_Avulsa_Warrior_Idle.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/A_Ninja_MX_Cover_To_Stand.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/A_Ninja_MX_Cover_To_Stand_2.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/A_Ninja_MX_Crouched_Sneaking_Left.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/A_Ninja_MX_Crouched_Sneaking_Right.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/A_Ninja_MX_Falling_Idle.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/A_Ninja_MX_Falling_To_Roll.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/A_Ninja_MX_Hard_Landing.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/A_Ninja_MX_Idle.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/A_Ninja_MX_Idle_2.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/A_Ninja_MX_Idle_3.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/A_Ninja_MX_Idle_4.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/A_Ninja_MX_Idle_5.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/A_Ninja_MX_Jumping_Up.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/A_Ninja_MX_Left_Cover_Sneak.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/A_Ninja_MX_Left_Turn.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/A_Ninja_MX_Right_Cover_Sneak.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/A_Ninja_MX_Right_Turn.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/A_Ninja_MX_Stand_To_Cover.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/A_Ninja_MX_Stand_To_Cover_2.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/A_Ninja_MX_Walking.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/Corrida/A_Ninja_MX_Corrida_Normal.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/Luta/A_Ninja_MX_Luta_Boxing.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/Luta/A_Ninja_MX_Luta_Hook.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/Luta/A_Ninja_MX_Luta_Mma_Kick.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/Luta/A_Ninja_MX_Luta_Mma_Kick_1.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/Luta/A_Ninja_MX_Luta_Mma_Kick_2.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/Luta/A_Ninja_MX_Luta_Rib_Hit.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/Luta/A_Ninja_MX_Luta_Sneaking_Forward.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/Luta/A_Ninja_MX_Luta_Stomach_Hit.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Animations/Mixamo/Luta/A_Ninja_MX_Luta_Uppercut.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/HypeWorld/Personagens/Indra/IK_Indra.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/HypeWorld/Personagens/Indra/IK_Manequim_Indra.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/HypeWorld/Personagens/Indra/RTG_Manequim_Para_Indra.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/HypeWorld/Personagens/Sasuke/Limpo/IK_Sasuke.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/HypeWorld/Personagens/Sasuke/Limpo/RTG_Manequim_Para_Sasuke.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Retarget/IK_DeepMotion.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Retarget/IK_Manequim.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Retarget/IK_Motifect_Locomotion.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Retarget/IK_XBot.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Retarget/RTG_DeepMotion_Para_Manequim.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Retarget/RTG_Motifect_Locomotion_Para_Manequim.uasset",
+    "available": true,
+    "matches": true
+  },
+  {
+    "path": "Content/Ninja/Characters/Retarget/RTG_XBot_Para_Manequim.uasset",
+    "available": true,
+    "matches": true
+  }
+]

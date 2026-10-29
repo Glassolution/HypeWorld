@@ -1,0 +1,55 @@
+{
+  "samples": {
+    "longe_off": {
+      "frames": 182,
+      "gpu_median_ms": 27.00825,
+      "gpu_p95_ms": 27.4968,
+      "gpu_max_ms": 27.9085
+    },
+    "longe_on": {
+      "frames": 171,
+      "gpu_median_ms": 28.8189,
+      "gpu_p95_ms": 29.2502,
+      "gpu_max_ms": 29.5398
+    },
+    "perto_off1": {
+      "frames": 226,
+      "gpu_median_ms": 21.6876,
+      "gpu_p95_ms": 21.9555,
+      "gpu_max_ms": 22.1523
+    },
+    "perto_off2": {
+      "frames": 227,
+      "gpu_median_ms": 21.59,
+      "gpu_p95_ms": 21.9187,
+      "gpu_max_ms": 22.1494
+    },
+    "perto_on1": {
+      "frames": 208,
+      "gpu_median_ms": 23.65325,
+      "gpu_p95_ms": 24.1126,
+      "gpu_max_ms": 24.2666
+    },
+    "perto_on2": {
+      "frames": 208,
+      "gpu_median_ms": 23.67295,
+      "gpu_p95_ms": 24.1478,
+      "gpu_max_ms": 24.6627
+    }
+  },
+  "incremental_vs_opaque_proxy": {
+    "perto1": {
+      "delta_median_ms": 1.9656500000000001,
+      "on_p95_minus_off_median_ms": 2.4250000000000007
+    },
+    "perto2": {
+      "delta_median_ms": 2.0829500000000003,
+      "on_p95_minus_off_median_ms": 2.5578000000000003
+    },
+    "longe": {
+      "delta_median_ms": 1.810649999999999,
+      "on_p95_minus_off_median_ms": 2.241949999999999
+    }
+  },
+  "note": "Includes statistical variance. Proxy preserves depth occlusion to avoid claiming negative effect cost when the ball covers expensive grass. Proxy raster cost excluded. Does not certify a hard 1.5 ms maximum."
+}

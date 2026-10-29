@@ -1,0 +1,3010 @@
+[
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ABP_Ninja.uasset",
+    "sha256": "a5cd150fef2b5150831db635400dca0a4550a80600fae0c17808e5d5c2b61dbe"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\AM_Ninja_Dash.uasset",
+    "sha256": "ed5ea9576dde4c1a484f6c05c56eb8fe77417c29974cdebef0c78c38ed55af21"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\AM_Ninja_HitReact_1.uasset",
+    "sha256": "9cb49306114abf08687ef8b1f3007df39486007d9e9a84a6698e402b8dc4628c"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\AM_Ninja_HitReact_2.uasset",
+    "sha256": "5869e77d3816c8ae8bb51e9e1220bc407f0770c6850c2cefafff172ddf623da6"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\AM_Ninja_HitReact_3.uasset",
+    "sha256": "9d7a8153094eaa385b2a50272e0ac9809253400791ffba3283403b47424a746c"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\AM_Ninja_IdleOlhar.uasset",
+    "sha256": "75483424532aa182fc1385f0a3ac656b6dc6befb0dafc7f60c6ca13e5122c13f"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\AM_Ninja_Knockout.uasset",
+    "sha256": "59e4a83107b5cfcabfc2eab4c43b5c076e563b603c5f9640b691ba93e5994a35"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\AM_Ninja_Virar180.uasset",
+    "sha256": "94671c0938ca8d5d95f1ade6b2dfc46246653584a0a7798e602621317bf7d1e6"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\AM_Ninja_VirarDireita.uasset",
+    "sha256": "e92960c84570a608250d0d656b47aabcb8644bd2c81d1a84efc4ff78a5f8304e"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\AM_Ninja_WallJump.uasset",
+    "sha256": "4838d33994a529de052975bfa9902dee292f3538ba4858c23b75ce7a77d3eea5"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\AM_Ninja_WallRun.uasset",
+    "sha256": "93af3d666486860cd40f8e1fac09ad22c7f8d423db311ac507fefb880a4b4b9d"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\BS_Ninja_Locomocao.uasset",
+    "sha256": "3a6e710494902f0031977c880bfa197b22b702388a3777240752b7eb81e3e292"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_CarregarChakra.uasset",
+    "sha256": "b2928fc78f717579b97975d489b0c89b612dcd29a18e678da958be81a9b4b688"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_CorridaParede.uasset",
+    "sha256": "68e54494e0c45b6dc0a0bee4f36cf4c79ea9454be52bef9ca65d9bc57e2fc768"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_Dash.uasset",
+    "sha256": "4b78c68209f4d902eb07dc089e8e6a2623d46a4b345dc0306b472092974b1e64"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_Golpe_ChuteAereo.uasset",
+    "sha256": "a1395da6dccf28e696200af30a491df014ac60ed2ba24fbc2e8fa141d880fe61"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_Golpe_ChuteDragao.uasset",
+    "sha256": "ff0915fcb89049f8d2a65b6e7859ae8c6c3ba1e513e59919cbac5d9ff46673bc"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_Golpe_ChuteGiro.uasset",
+    "sha256": "89146dc9d89388512edff14131b07328c521fc15ce44aa0e67e74a1f56b5b5b0"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_Golpe_Direto.uasset",
+    "sha256": "3b9be00807aded500bf3ce0a1babe7a93614bd7853adf6b0815b4d58dd662b74"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_Golpe_Gancho.uasset",
+    "sha256": "287acd91457ea6c90af86ff46f7da528f074717d422407ba8efaf106bdc349d2"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_Golpe_Investida.uasset",
+    "sha256": "3385736f3c4f0c73dd2c5418db886de26b136235a0fd934875cfaaba5edcddb1"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_Golpe_Jab.uasset",
+    "sha256": "d9a408bd7ebbdb29fac7b270c2766e0f8ee6f2abf8496e9b98a996813cd96835"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_Golpe_SocoForte.uasset",
+    "sha256": "b2d1cf6e9f5ff11f10c5af56b3805df5968df7e241a1ff1059ae12895862f4ab"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_Golpe_SocosGancho.uasset",
+    "sha256": "0404bfbfb9c0965632eb6459fc198a38482f7ba7be50a8cf0c2db36ef3456b4a"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_Nocaute.uasset",
+    "sha256": "7a0f7b3f4962c37dc78542ed283992a351bb5a84348305f5980f8b6609e88b11"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_PuloChakra_Carga.uasset",
+    "sha256": "3207d4794a7e9368b2b18570c762ef7addcd39db67a06ee9d058ff065649665d"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_PuloChakra_Salto.uasset",
+    "sha256": "0b04557e138bf050f7895ee7bb1ba9847d999f5b9b440dde4db6a1724f36e8ea"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_PuloDuplo.uasset",
+    "sha256": "708e38f70f75099c91626a6250f3582d783696ae23daefb7f0f52aaad43104a9"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_PuloParede.uasset",
+    "sha256": "2da8b1b912ff9e29537ec9cddba8269aace690ea0683e95fb01336880ca2f872"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_Reacao_Cabeca.uasset",
+    "sha256": "6b56f17b20328db2bc4c742768026d709f2f132a3749c74574c8e213d047f323"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_Reacao_Forte.uasset",
+    "sha256": "f07b17b3d14ccdab6e31d8c2dfd19a69a28d38af99a9b329546ce858cc20a997"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_Reacao_Lado.uasset",
+    "sha256": "8adcc67cafe0b0b5d815de0a1caf780b99db25b14da1a43ff1e33422cdc77c5a"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_Reacao_Ombro.uasset",
+    "sha256": "f41c58460a0894f70761ae16ccd669483249eae5266a7390bf4fa93a9199dd86"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\BS_ANAP_Locomocao.uasset",
+    "sha256": "22b216a6751e96939eba7e09cd3a8be195ffb46e1584d752d857408493fea68d"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Aereo\\AM_Mortal_Tras.uasset",
+    "sha256": "c43b38072cc06aae4e9e187693ee82525b2ee4cbb6d15e72a91461395af14985"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Aereo\\AM_Reacao_Ar_Barriga.uasset",
+    "sha256": "c152b1f1487e43a0c92233b4791f8050a1f01e67f89e4b6dbca5f7243aabd991"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Aereo\\AM_Reacao_Ar_Leve.uasset",
+    "sha256": "8f4d477a9abf858cf73d48b13ecd64b69b23c9561ee5d5eb3f92de2928157600"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Aereo\\AM_Reacao_Lancado.uasset",
+    "sha256": "1e1cb5dc106cfc586ce55d678ae1743c82a66259df164060407a53f8c7a0e1cd"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Dash\\AM_Dash_Ar.uasset",
+    "sha256": "1b331382c0250bde599b6c11250a1c46def027227d205bbdc7b61c3eb7ee63b0"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Dash\\AM_Dash_Direita_Desvio.uasset",
+    "sha256": "15d7966500e72338d7e58a7ea1cbe45ecc6c6f59f85b1e40595540926b0e5204"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Dash\\AM_Dash_Direita_Passo.uasset",
+    "sha256": "ae2f5ea7bd399fa2858bede0dec043731730230b38eaded276b68cdc36fb62be"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Dash\\AM_Dash_Esquerda_Desvio.uasset",
+    "sha256": "e8a00f411f2c7f15ad6b60f0a4be3bb6a38e04678a1dc16e3f23f5e237fcb7fa"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Dash\\AM_Dash_Esquerda_Passo.uasset",
+    "sha256": "28f95da398b2a727401a9f16d46f4b62262416ffa2ab430fffa26808a313011d"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Dash\\AM_Dash_Frente_Mao.uasset",
+    "sha256": "0607495991dc6587f3105a406a51dd802f233bb34be3cff06631371da84d3b26"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Dash\\AM_Dash_Tras_Mortal.uasset",
+    "sha256": "96f53655aa20aa4c8b1230840298156fcfeb44655ef93d0df92029fc5e34f60c"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Aerial_ChakraFist_B_Palm.uasset",
+    "sha256": "f5637da662998ba304da9f7fc199f721b49b127b2305c0b52131e12dbbaa1ead"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Aerial_ChakraFist_B_Palm_Combo.uasset",
+    "sha256": "13048ba16f916423632a9921dbc7c98bdfa8092a1d5c01390764ede0ffd07798"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Aerial_ChakraFist_B_TurnKick.uasset",
+    "sha256": "3464bff750970e892ebf250b899661dfdb811cc22ce9e342d915105d81822baf"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Aerial_ChakraKnuckleA_Cmb01.uasset",
+    "sha256": "07d129ea0d349b53a7d658cf5721b7ee30dfc0ae28ae4dd5d31bde1e294dba5c"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Aerial_cmb04.uasset",
+    "sha256": "806f89ea26ef9393f0413dd75deffca668a0e21be8a38132ad8c3f84b3e83fd5"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Aerial_cmb04_Combo.uasset",
+    "sha256": "8de112e2964fdcccdafa54c77f9e032ea005c80f306181f5ca954324c7f31941"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Aerial_CyakraKnuckley_Cmb01.uasset",
+    "sha256": "90a00faf466e0d19837dc073aa7b27842e6378816c73b6c16e5adc52288f122d"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Aerial_CyakraKnuckley_Cmb01_Combo.uasset",
+    "sha256": "dd1e8ff3584514d3b093f3ae229c2d8fa7db96a0aa88edbd3a6eba883014fa28"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Aerial_CyakraKnuckley_Cmb03.uasset",
+    "sha256": "2001809df2a4825c87173950b54c623f6d22569e6e04b3d00a311046e039f6cb"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Aerial_CyakraKnuckley_Cmb03_Combo.uasset",
+    "sha256": "7ff22de78ba4897c361b1291f3806412bdc59e89955c02ffdf8f984cf04748b5"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Aerial_Hand_Punch.uasset",
+    "sha256": "a561494d596e0b91e27691e8f7386f40d2c257d70204c421d167e4e897e8e153"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Aerial_Hand_Punch_Combo.uasset",
+    "sha256": "0584d77c60812711b5e9ef22a84e93cc1e18a6aa905c53b5bbdb56ffa1d69db0"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Aerial_Hand_TurnHeelDropKick.uasset",
+    "sha256": "d07389778d8e02e1236a84499fbbc40d8f437586718a0b2cdb21b000b227653d"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Aerial_Hand_TurnKick.uasset",
+    "sha256": "48b2c90d524e5cf350749bf95b365276db3797a6074eea44723b107e4d7f876a"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Aerial_Hand_TurnKick_Combo.uasset",
+    "sha256": "319d3d2ab51bc049629807447c94b54508d957a1dbe4bd3e9f318e7ed2cc86d2"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_BeniHien_BlastPunch.uasset",
+    "sha256": "cef61bb06f3ffaf1204d56aeb8d1c27c02b9ab000a7be1fd45bd3df9e87ea6bd"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_BeniHien_Uppercut.uasset",
+    "sha256": "6e7d5c1f6a0c921bd2bcf6df2a1118d8058900b9a0ed23f218a4d0ed2f389ce7"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_BeniHien_Uppercut_Combo.uasset",
+    "sha256": "7658188ca3417352c3737100fa929e2652c72fc97f8fe0a012afe7cf5c949435"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFistA_BlastPunch.uasset",
+    "sha256": "3c717e56f32758abda0c348e6982e61c0febed9ee8d91f160426e232f074658a"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFistA_cmb08.uasset",
+    "sha256": "2fec0304e7b7d6a1a3f3ffc05eec512018c5c82cd5e53db38bd70a9a91f1783e"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFistA_cmb08_Combo.uasset",
+    "sha256": "cb11d03c45b4b60ca35cf547c4d24d22638905cf5226a8ea86791bb02998fe19"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFistA_cmb_00.uasset",
+    "sha256": "972db14d89079f9dc57b921bfddb3a6a6a7c5245b7bae21f1046a72b576a1461"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFistA_cmb_00_Combo.uasset",
+    "sha256": "13ff25984fa6d3864ad8a6e9a3aaf6c19b7275c66d88a7d904f5aeb07f0896cd"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFistA_cmb_14.uasset",
+    "sha256": "fc5cdc421259fc9fc91472a789e3894e7c2dd2ed8bbad48bac656a4cd31f89f5"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFistA_cmb_14_Combo.uasset",
+    "sha256": "3e1765123c968da9cde481cf3692066a06454990422528272a285a9939882cd0"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFistA_DragonKick.uasset",
+    "sha256": "cce0dcfd6e37dff10d9ccd92e18653dd4c1fffa49aece7564e228fdc91d5b679"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFistA_Palm_Large.uasset",
+    "sha256": "263acdbd9a4d6135f63e25ceffc191ad51ca3f49ff7fe48a77a06db7877d123b"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFistA_Palm_Large_Combo.uasset",
+    "sha256": "a4fe6a18920c834b8163e35e06c58f85727273911e50ed4a9a556a609321445c"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFistA_StraightPunch.uasset",
+    "sha256": "c2dbdbcde8229b3a998e0faed67082ee34b9aa84a15678e24f1460070178151d"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFist_B_DoubleTurnKick_Large.uasset",
+    "sha256": "385d78fc4d3f31f4dd156565bbaa7315ecc05bd908ab6bde3224a17501f66aed"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFist_B_Palm.uasset",
+    "sha256": "7a9853cabcc92465d1a85c4d38666c524afbd5ecf9d70049ba2808aa8383d788"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFist_B_Palm_Combo.uasset",
+    "sha256": "54e04207b3f6c39f116a4ed2013112dbdfaff99676964b2e886c92d49e720b07"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFist_B_QigongGun.uasset",
+    "sha256": "5141d70028f17ce5c524d8e11b67384e9106eb5dc5f2bf706d586d6f2665ca3a"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFist_B_StraightPunch.uasset",
+    "sha256": "a58b7db169233b00fc8b6e77b7ebbe24ce05e8c77b64a6529c06b8e831d2faec"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFist_B_StraightPunch_Combo.uasset",
+    "sha256": "c810ab74185e9e8aff6024006e8c9535770491322473f784fff5db50ec9f2a1c"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraGloves_B_DoublePunch_Kick.uasset",
+    "sha256": "3c9060e0283e325bed81ac5463a3968c9e85ab180ff4c56bd64194f1e4a786fa"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraGloves_B_DoublePunch_Uppercut.uasset",
+    "sha256": "b8dd5ad03432a082c4bdabbd29dd34dbb5579a9e5e12491686f73b8607777af0"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraGloves_B_DoublePunch_Uppercut_Combo.uasset",
+    "sha256": "5a62bfee8b59c9321a3ce2cd33b95e4c1c0dbab114350abe797bde1d524adc0f"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraGloves_B_Uppercut.uasset",
+    "sha256": "9cb09cc2b8e298823e711cc397de4c0cb535c3d6628904d3abccae8c18404daa"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraGloves_B_Uppercut_Combo.uasset",
+    "sha256": "070de2d8e99b16c33ee4a67293d33bfb57bf09f1fbacd43a2e42925db4172173"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraGloves_B_Uppercut_Large.uasset",
+    "sha256": "f09af29eef627f6c3917ff871004f5fb8acb08385a6be4d7f8acbff93703f0c7"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraGloves_B_Uppercut_Large_Combo.uasset",
+    "sha256": "221b836a90c8819eb89600842304f0a4b14045a11a0441c06c225a9048d6e374"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraKnuckleA_Cmb01.uasset",
+    "sha256": "ae83255477831c6452872f7fdf4b2d49c21435b79e31b537bb108d451e230523"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraKnuckleA_Cmb02.uasset",
+    "sha256": "cd876cd4c6d9e4afe9ceac55844e8a9263574363ab0959925bb2d8d26844ecc0"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraKnuckleA_Cmb02_Combo.uasset",
+    "sha256": "d8addd5b7eee55ab51be018f0ce6ac54716db090b70a9a86abb6e78a4896f254"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraKnuckleB_Cmb01.uasset",
+    "sha256": "711cd792f85a68c5c22f46130aa7283263acf6ee063862ec0fea92d6d52fe611"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraKnuckleB_Cmb02.uasset",
+    "sha256": "ed09d43f6fcd17a467b9c8725bc9effdf3d5bff753fdded63c05bb341ada9932"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_cmb05.uasset",
+    "sha256": "b13c6776ba2befdc684d05988743e459ce201b452b705ce98f8502641862d024"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_cmb05_Combo.uasset",
+    "sha256": "6e010baca0f767da6e2aea4851b9b94ee457a820991893cba24f6a98dac74e00"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_cmb07.uasset",
+    "sha256": "e38066373a1b6a3103ff54fa44f9f99415041f5dc27c7ed03cea9bdf7b32d2ca"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_cmb07_Combo.uasset",
+    "sha256": "2b17c3592457302e355a651d184d769107b96c44ea38c82b786e23176fb6ed8a"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_cmb09.uasset",
+    "sha256": "81e78a007d5941a3d0cadbe50b7891f3c32aef26bfefc32ff8d74d47f3818875"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_cmb09_Combo.uasset",
+    "sha256": "cdb5b39b3e67b73266bc74ea6f86e3cf352189fa7d228b40609cab968750eb27"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_CyakraKnuckley_Cmb01.uasset",
+    "sha256": "376056bfde945baa206adf46e14b983a1fa4afecf42f0788921510ba7d53d6cd"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_CyakraKnuckley_Cmb01_Combo.uasset",
+    "sha256": "4a733d33705b4d799c3e974478fab02522d2d6d54ce3568b2cec59ecc969c72e"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_CyakraKnuckley_Cmb02.uasset",
+    "sha256": "0f5ebb32529649ef63501d55430f6ee91cff8439e4df5791f9b57e9d7ff43068"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_CyakraKnuckley_Cmb02_Combo.uasset",
+    "sha256": "079d1f3315f3b58e77c7067868fc15900ae760b142fcf2a741b69de6cb19d03a"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_CyakraKnuckley_Cmb02_Rateup.uasset",
+    "sha256": "140f9c2f1ccd11dc0354108169f47f1e18b549f9e72401e9d25b069cab4bf3f9"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_CyakraKnuckley_Cmb02_Rateup_Combo.uasset",
+    "sha256": "0bb94ec863e12477c9c1e3d1aef6b2b1ec6ddc62009e5d96091d579894561ffa"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_CyakraKnuckley_Cmb03.uasset",
+    "sha256": "6ff441afa3114f44b3f922444ecab4f87d20576a3d254d27f0d4d6035656e378"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_CyakraKnuckley_Cmb03_Combo.uasset",
+    "sha256": "1b9daaa7ad4ce815f56ac65b705a643660dc287ea14f93c391ab86a5dc19695f"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_CyakraKnuckley_Cmb05.uasset",
+    "sha256": "775efb87a5fa59ccb035f731dad3ffa92aed7590de1d04d0ea4a1968ec9ed36f"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Hand_BackKick.uasset",
+    "sha256": "26ced2177f2b0e32125007c15346c65712a57666a6bf0073e5d8d37f11157c41"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Hand_ChakraClawsB_cmb_01.uasset",
+    "sha256": "30e0de984fdfb0303526d3ec54e15b8dea8087dfa736148869bc3c5534e733f4"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Hand_ChakraClawsB_cmb_01_Combo.uasset",
+    "sha256": "9d37ce64bc3c4611015c482f0cdcfee4e65741cf783da8d10b7a6ed6b6a4c69b"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Hand_ChakraClawsB_cmb_12.uasset",
+    "sha256": "e4f8c57d20a029f86d55b36307e2a991f0bf1e7e55db452ae6f0d3225f19cf6c"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Hand_ChakraClawsB_cmb_12_Combo.uasset",
+    "sha256": "00f27db7fae54da99b69bbac2ad7b582f832140f1be4088606333d99d56c67a6"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Hand_DragonKick.uasset",
+    "sha256": "681e3efcf8db330085490999db550309a80efad3baf95cf6f2a5407d583a6f08"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Hand_JackCut.uasset",
+    "sha256": "0e8e0e4c8ba08392462f979165aa0f43a3bbc553ec0c324e122e7c1972e0953e"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Hand_MantisFist.uasset",
+    "sha256": "166ef4e2e42d392acd06617999200c8e04e416a42222fd5d98f9ff5ed7239fba"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Hand_Punch_Left.uasset",
+    "sha256": "c5f842a0e6ed189142e080ef98965e3f37c24227c81150f14f9b89fad073cfc3"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Hand_Punch_Left_Combo.uasset",
+    "sha256": "e56c39bba4180d0be70dd7a8b10106106715438c94868a22b6c894638fa537df"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Hand_Short_ChakraClawsA.uasset",
+    "sha256": "e24d32343dad60392051b89a19a108ad521bb17297708375f9db99e9af681abe"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Hand_Short_ChakraClawsA_Combo.uasset",
+    "sha256": "f4a58c94ff8bd563b9fca127267919235b0f8f336b4e5c8216f00fc38cdf5843"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Hand_SidePalm.uasset",
+    "sha256": "d0a19bfcee2fd9342e3cc170a8342b78b16cfb4200ec3bdac01588619ff82e79"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Hand_SidePalm_Combo.uasset",
+    "sha256": "f751b157d262452f19fa364dd4a3740d529e8cdec0f598d0f7fa90959ab4fd3f"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Hand_StraightPunch.uasset",
+    "sha256": "41914b20c94c5cc4bd6d4df9dbaa42f19c3e5eb2a3284423788a403750033649"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Hand_WindMill.uasset",
+    "sha256": "8f77f51fc946d295b066d657f00d5e5081f5c350899fc02b9be52973b664af57"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_JumpTurnKick_Right.uasset",
+    "sha256": "0c64f30dce593bf68def8bb02285700c88a673224f55d57a78a385e9f5ae39b2"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_KickUp.uasset",
+    "sha256": "0dadb6b127d37188357f623c34f43a9b2838ee5c4a2591ce53a09be33a74142a"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_KickUp_Combo.uasset",
+    "sha256": "c77b3d9d51dcc3911d11c4db79947419bf649edbbc7121e7625f19a900adf43a"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Dash_Estrela.uasset",
+    "sha256": "01117be980b63ac46d0f7e38948cb3e592624dd0a25af37d33e5190828cbc71c"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Golpe_ChuteAereo.uasset",
+    "sha256": "d375a13e40a186d2226db7245a9b6ad986d71b1af998ab101f7570e290395fcd"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Golpe_ChuteCircular.uasset",
+    "sha256": "fd6c744a6d8c3dc9ac5ed876813c96bba19e9f517bcb0c6ba542eabdf7ed7b2f"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Golpe_ChuteESoco.uasset",
+    "sha256": "c140d81b0661a650ba54e02730ea816f41383a1af021d64fd7a4d53f4b6a4054"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Golpe_ChuteFrontal.uasset",
+    "sha256": "19a84c47f4877856e88e4fe25276b9b31b83a1975824447b1ec76a53427e6055"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Golpe_ChuteGiratorio.uasset",
+    "sha256": "210ed745c8fd8ea2d6d70ea834ef68d28ec85b2f8ec416e29435e0b506ce88af"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Golpe_ChuteVoador.uasset",
+    "sha256": "d72bb01205249cf8d052441f0c8f04664a3b8cd33326cd255c80359ada30598e"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Golpe_Direto.uasset",
+    "sha256": "d104a9fa3647b3ee5e67ab2e5dc27274da5bb8bb17b936ffc8e8f6345a35fc68"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Golpe_Gancho.uasset",
+    "sha256": "82159599f259211d47a5d7f53c09f56a5772305b0303109572d57ece1e0d3a02"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Golpe_GanchoEsquerdo.uasset",
+    "sha256": "30caebdedbb1ae665eda6bddd247260d2862adb972dc5b2052908a3132025b69"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Golpe_Investida.uasset",
+    "sha256": "30c14e66256941be2cf5cd1088cea5f19f095f2a5b665ca5d3a64f6aed0ddcc5"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Golpe_Jab.uasset",
+    "sha256": "c575884917b3300645fbf5f304cea05d8e16930619af38a47d48045069a95513"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Golpe_SocoCarregado.uasset",
+    "sha256": "d258020987d1407781a1432e301190cd8b163f2edb863721cff3a1ad309e8740"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Golpe_SocoCorpo.uasset",
+    "sha256": "77987a01dbdb3692dda8eb8c5ee2c4af1268db3fa9bbc02aee875c5dc30fceec"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Golpe_Uppercut.uasset",
+    "sha256": "d31a6ad33b920f6c4e864112efdffdfb1152eb4581348381a9a645be3a8c5f2c"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Golpe_UppercutMartelo.uasset",
+    "sha256": "b7d3b6cd8986b21c5c0fca1c98effa1c83c51db38ffb4459646388d8e179c1a1"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Reacao_Barriga.uasset",
+    "sha256": "dccb626f61427d5cc6b1862e7304c2a78bb09ccd623f573ce48c471651aea5e3"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Reacao_Costela.uasset",
+    "sha256": "65bdf114eb6c8ef40723a223827f5ac768c46c788567d0fe5d90d3cf037ac22b"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\DeepMotion\\A_Ninja_DM_DashEstrela.uasset",
+    "sha256": "4ffce020ac3cfb36a92ef429156eb86cdc177aea3de5ed08bc1a5e35cf798b16"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Avulsa_Right_Strafe_Walking.uasset",
+    "sha256": "0a758c191cf3154117b3cdb5d8123a1e48a2ce43b18ca359e48589fdd2fca1e0"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Avulsa_Right_Turn.uasset",
+    "sha256": "ca22c3e566f267c37030b7fe027a5cfc108c6bf2d1ead151e5332ad9a5483e44"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Avulsa_Walk2_Backward.uasset",
+    "sha256": "e5575a1720eb89e0b9bbc88516d656e599f6ad56cb404bd98dfa87b6ea58cf1d"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Avulsa_Walk2_Forward.uasset",
+    "sha256": "a6dda134d8caccc8f68cb7428cd10a7a4ecd3c037b2caf492fbeff91eb057f9d"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Avulsa_Walk2_Left.uasset",
+    "sha256": "831b0760fef4b88e00dcfa17303a55a5032fbcb4a197e91d2d1052b094fe0969"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Avulsa_Walk2_Right.uasset",
+    "sha256": "08f58db4a4ab64dbc599e232b847374badb767d08a872656b016df0a99173a4d"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Avulsa_Walking.uasset",
+    "sha256": "8f4686860478de51a2542719d00dae714ef3e565a4c5deb16aaf2c31f2c28595"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Avulsa_Walking_Turn_180.uasset",
+    "sha256": "997ecb25466868d4a44e22deb641d0480d2409f608c28c3f5e7335ce32edcb06"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Avulsa_Warrior_Idle.uasset",
+    "sha256": "ebd93256aed9e4176a00ade2696ab99eb1851da2b35279835668eeac51710fa5"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Cover_To_Stand.uasset",
+    "sha256": "925b2afc75b71ac5ddc6ed0157ab81cf04bf0be055880820ceeac929c37d527e"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Cover_To_Stand_2.uasset",
+    "sha256": "eb6a36fbf746a4b3c6b80747673b396e36d8e2c60181d6e1a16b991084bc0c40"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Crouched_Sneaking_Left.uasset",
+    "sha256": "acd5a2919216950225f209b67d82fa286e52e4fe7b35e3caa2c52c9fcec9c440"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Crouched_Sneaking_Right.uasset",
+    "sha256": "dd88c27652b80c43e9bf23ae8d39680002535c304b98240937f1f5609e319c91"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Falling_Idle.uasset",
+    "sha256": "5a980c692b6c6d8094586fe282fc7fd86b3986aee9625825fc597fc3a3828747"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Falling_To_Roll.uasset",
+    "sha256": "3c8132d41c445d543fed63c3c9622b0c91e58dc9ed9fba3f206da5762ad5612b"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Hard_Landing.uasset",
+    "sha256": "6f9b8492fcf29dfc33ce19d70b5ed100a17e09a5c7b6acaa882e5dff771c8dac"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Idle.uasset",
+    "sha256": "5e9e591539408792419f45d5d51c3ae9499b9a720fe52ebceb2e2f370a11d562"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Idle_2.uasset",
+    "sha256": "7bb5b6355c1922ee2800c3b032988f57ae73ca0e6b7064e9ade0ebe11f0e9de1"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Idle_3.uasset",
+    "sha256": "b40c61672045544d54b332ba9f3fd36f8b85b0dc42613822fb264b26f2dead21"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Idle_4.uasset",
+    "sha256": "f6182d430526619d1e42594abee45b807c19b6b89ba1b14f7f07f29d0c20d3a8"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Idle_5.uasset",
+    "sha256": "3fe5544890a998ecd0c80049ff44e651266efcc723da057927b22b38137bbc69"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Jumping_Up.uasset",
+    "sha256": "5e7ac4113874c628a964d106b20ad5b9a043d06faea8006bfa4a521df1b0ca14"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Left_Cover_Sneak.uasset",
+    "sha256": "0a8c85c72005341617909e6eb3beeb7839cc77b8d676291ca59636142ab155f8"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Left_Turn.uasset",
+    "sha256": "c205269078a60b339306d168ee7ea892bed1b4fdd6534df47464cbd4d12fa31e"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Right_Cover_Sneak.uasset",
+    "sha256": "eaf58593b0991e436ee7b55a493ebf95b1bc0758320d5c9a3b0f08c8ea1a6a71"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Right_Turn.uasset",
+    "sha256": "27324476ba5c88933be61944f24cda92be0927ab1e5a9d5411142875c99ae753"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Stand_To_Cover.uasset",
+    "sha256": "91576e13bd3bfc3b93a15be50069e3d80e5f4c2ebf44ba0c9e3b3c770265e615"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Stand_To_Cover_2.uasset",
+    "sha256": "d8421639e327b31aa0d3e34d8dcf96f0f66ef117c9dea3030783d965e6ae82c7"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Walking.uasset",
+    "sha256": "efbd4e49aa84a32da2654585586e704822ef1bde2bda8631aca839469a5230f6"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\Corrida\\A_Ninja_MX_Corrida_Normal.uasset",
+    "sha256": "0a17e0fcbc3ea3c9869f3f8bc7e1f647c30b364b548e28f9e5da4e29db52b775"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\Luta\\A_Ninja_MX_Luta_Boxing.uasset",
+    "sha256": "3b842dd586fb2ac207da11b472c1eff69113909184da63bc8d4ff66145a7dc50"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\Luta\\A_Ninja_MX_Luta_Hook.uasset",
+    "sha256": "4d2beb1250b47f789ceb5174273ef412b81e247da6f406548576864aa5d17c4c"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\Luta\\A_Ninja_MX_Luta_Mma_Kick.uasset",
+    "sha256": "e545e976fe272af02d5bd2615f5b470dfe62d714f368ef28c2dd8e97a40f20c8"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\Luta\\A_Ninja_MX_Luta_Mma_Kick_1.uasset",
+    "sha256": "1c72adac71b69464b7b436425d49b8feec77d434e61d2538eda30f2b914969e1"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\Luta\\A_Ninja_MX_Luta_Mma_Kick_2.uasset",
+    "sha256": "c5531ee3325b20b6cb2e8f1f9685f9b6f01d956c4a6f130f7224f7edf4e3a544"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\Luta\\A_Ninja_MX_Luta_Rib_Hit.uasset",
+    "sha256": "de07f9ef1dee8b32ee6eab9837cc8f69132dbc8ad053f91558c0b865a534408f"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\Luta\\A_Ninja_MX_Luta_Sneaking_Forward.uasset",
+    "sha256": "9e4d3aef700fee02ab15af4e732483935ab0438392f026d80211cda0843ad243"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\Luta\\A_Ninja_MX_Luta_Stomach_Hit.uasset",
+    "sha256": "624055ef7ccd1934cc94bfdb4dd22f332145362a595449e6e99c9bb1848b8f1f"
+  },
+  {
+    "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\Luta\\A_Ninja_MX_Luta_Uppercut.uasset",
+    "sha256": "dced5d03f1b438a916854b150de1f5861bb36bd9e67e3fc96a0901d9bd5a1d9f"
+  },
+  {
+    "path": "Content\\ANAP\\ANAP_Demo.umap",
+    "sha256": "c42e8dfff954a44220894186f00534161ca693df7dd392edbaf0679b34bbcda5"
+  },
+  {
+    "path": "Content\\ANAP\\ANAP_Update1.umap",
+    "sha256": "6c1bec520c62d254f609be004939881ec73b761d6b05e35ba9d4ed6400228a94"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\NewAnimMontage.uasset",
+    "sha256": "2596f44076d42c3f6ec627d09dbde28e1de3848386abfff5613056beeab1b141"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_99Spear_DoubleSlash.uasset",
+    "sha256": "2649b4143f49ddfdefd858daabc1e97ae6110296e8757b00ac1d3b5810031b5d"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_99Spear_JumpDoubleSlash.uasset",
+    "sha256": "d28cde77e043acbad9d23b73bf6b620caccd5060187963888deb789e9c7f6d25"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_99Spear_JumpStab.uasset",
+    "sha256": "ae6cc266b4edad6fd33dcfd02ef6320edf84ced3aaaf3d803cfefbe2abd42fe7"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_99Spear_SlashHorizon.uasset",
+    "sha256": "56e7835e6195dc62278d23c9daf04eb21f8f632aca46c842885caff900d951f7"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_99Spear_SlashHorizon_Teleport.uasset",
+    "sha256": "00b5225b0e4a5a6cf2bdf0ec0d47a9cf137ffc77f5957fe598631dbc4b1e7ad8"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_99Spear_SlashHorizon_TurnKick.uasset",
+    "sha256": "fc423b8e78cd9fb6a4299099bf78396e0ee1262a2365ef431c03ecc56888e48f"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_99Spear_SlashShoulder.uasset",
+    "sha256": "9efcc1fe7d7a624d64f71840da29d657fe8245f25dc85afa447934071a86506e"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_99Spear_SlidingTurnSlash.uasset",
+    "sha256": "18b6105f86efa68683406c4c3f95a2971a8b92f4dc1801f020f00ffb63fb4439"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_99Spear_Thrust.uasset",
+    "sha256": "0b59ed2a2eac2bdda66b672c6141f7c528b1b0e694cd3877b0bd1a49484ef684"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_99Spear_ThrustNeedleAttack.uasset",
+    "sha256": "3bc566f26e2fa16daa86508ae6c187478d74a3cb3c3500545d87e3a1aa7f42e5"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_99Spear_NeedleAttack.uasset",
+    "sha256": "7d06acc89989773d6c698ca59ffdb5a17876a6d25742b3aec9d6b2febfd0f916"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_99Spear_SlashHorizon.uasset",
+    "sha256": "802982739a1ae5c57c64fa44aeac1d565f956398f5b238b5064a780724836a33"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_99Spear_SlashHorizon_Teleport.uasset",
+    "sha256": "e02a99a6a0073fcf509db4e0f7be453838900cb91d8bd6537a318ca048eafaff"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_99Spear_SlashShoulder.uasset",
+    "sha256": "bd9d0e9866439e78c5e56be9e0104e64ecb3baa2d23da608f7bd9d5794fe8d1d"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_99Spear_SlashUp_HeelDropKick.uasset",
+    "sha256": "d66dc5604c123913f11e37f5d8a2fb6d47e0ddd2d144ea878052f893dfaa9b39"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_99Spear_ThrowKunai.uasset",
+    "sha256": "031a4eb9fd707a3695d6e4c2de26a24617d0698be860bed4ed2c5ebe8d36167c"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_Armhammer.uasset",
+    "sha256": "4da56eecdedd9ada2838302be6f6819e0664d356f4ed09d10f2968586cea7724"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_BeniHien_CutSenpuCut.uasset",
+    "sha256": "7bf20f9b6046cf5818d6116c8c9ee5e05ff714621833f357990e082d661f038d"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraFistA_Punch.uasset",
+    "sha256": "72d48e8718f4a7f388485a8b008169df83bd577aaff1aa85176ff46da86024fb"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraFistA_TurnKick.uasset",
+    "sha256": "b64e254582765ca96886c079f93ccd02c5b7b2c6b3a7d119adffeccf20d50f71"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraFist_B_DiveKick_Double.uasset",
+    "sha256": "05b0993bc0973016160a6a5ff6297d8c60b2b53f68a146e65f4dfd9d970b8b25"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraFist_B_Hand_DoublePunch.uasset",
+    "sha256": "c244be910d61eb9a6d85c830b0fb3f6afe367303826ab54555adaa3755d7b746"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraFist_B_Palm.uasset",
+    "sha256": "198be328bd4957e90396ef8db771cdbf6946fec835f1bcd725ec1456572e2bfe"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraFist_B_QigongGun.uasset",
+    "sha256": "74c0332f356e2dd35df466557ceeb1dfada5fcb509a08166af27066e042bc4d0"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraFist_B_TurnKick.uasset",
+    "sha256": "fa97cf6a7bc5d8fd77bfeb258b5a66acca55390deaa465ee33058c3a40015503"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraGloves_B_DragonPunch_Double.uasset",
+    "sha256": "8e456bf8504ddc0f517117a41412825fc05647d8cabfb908f1a6c42fa0ebe228"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraGloves_B_SpinPunch_Large.uasset",
+    "sha256": "937b2463923da7778895e15e2e50cb0685a8116baf9399782332127d006161c5"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraKatana_A_cma_00.uasset",
+    "sha256": "d39a9664c6e98c26b83357755cb003447f526a33cfc454c0b9873901672a8bc3"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraKatana_A_QuickDrowSlash.uasset",
+    "sha256": "c99248a915e7a7aea6c57c9bf1eb19c39d29d8069de0b24b387c17a462ef5e93"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraKatana_A_SlashHorizon_Right.uasset",
+    "sha256": "214577a5116a4a39352ee6f14353591d32737a1aa33fef9e9ad8732eaef4edd3"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraKatana_A_SlashUp.uasset",
+    "sha256": "0e5a472969f305ab0c8bd3431c97c7425aea72fe129be9d95c546da730b4be00"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraKatana_A_SpaceSlash.uasset",
+    "sha256": "f6fcec3c8d1b8946df0331a314739746fc34aa1a7422947ce00453840e5e64b8"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraKatana_A_TopStab.uasset",
+    "sha256": "17f95170d1c67fa1d1ad37ca4a96d49a2152b9020a950e9b65264cb96e05d3d3"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraKatana_B_cmb_01.uasset",
+    "sha256": "7680ff9b91f1ce74a018ad9499de057ba07f2b3e5e2c4b964004708a31e9a292"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraKatana_B_cmb_01_B.uasset",
+    "sha256": "dbc035acc50516eccb10bea8863949c2f397a9a477b764c71c22fb5cf1998e83"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraKatana_B_cmb_02.uasset",
+    "sha256": "a576ec2e62a31a7ec1fec10b7a684ee74dce6a02215f2f03be748aac9f60226e"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraKatana_B_cmb_02_B.uasset",
+    "sha256": "873dec14e8fbc8e4ba341387a12176d8232ef28999642318e9466fffbb7e5bf6"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraKatana_B_cmb_03.uasset",
+    "sha256": "d71298ebc6f87212f23110d6c6968774b989aaf8dc7901ed6765b2abd879e926"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraKatana_B_cmb_04.uasset",
+    "sha256": "b171fb429cc7b208510852a07d70f12f652109aa78cf35987feabc566b944483"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraKatana_B_Range.uasset",
+    "sha256": "52de9e517491ffb14641c947d1eb02b2e39e4790b8e6b747856abc84875470fd"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraKnuckleA_Cmb01.uasset",
+    "sha256": "562f70e01313ae39e2e024cbfe19934de9c7050f6b1d144a420dec1e4b67871b"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraKnuckleB_Cmb01.uasset",
+    "sha256": "32bfa6971e9d38368d4263dea9277a0bed2c4ca668b872d312f98e481c6e006b"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_cmb01.uasset",
+    "sha256": "3d78c1f824357ddf40888b093375cfc4422fd3efd30cefc563494382ab875d34"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_cmb04.uasset",
+    "sha256": "7a292360f297758a2ff7b95223cc918d14f22f9f2032e9bd576953c9ecf2341e"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_CyakraKnuckley_Cmb01.uasset",
+    "sha256": "98b44b73d3e25c72cb3fbbb775e0a782dfabd6906aa571642876814f7a0e8dd1"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_CyakraKnuckley_Cmb02.uasset",
+    "sha256": "68950969a62df2e0364c34f176e49427472f4c6d8202b9b40583a47bac214a16"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_CyakraKnuckley_Cmb03.uasset",
+    "sha256": "06fee83704e44442d0d48d43db75f02dd154b9e078df4c2ae2bee7dde38af78f"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_DoubleTurnKick.uasset",
+    "sha256": "05bbbb2a22b5e4644ffc1421e824698aec7678968a853a8f8d3838f07027bd46"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_Hand_BlastPunch.uasset",
+    "sha256": "8c36167d1458052781d6b1ae438ad65c4e19c9d4b2a968943d121daa6ed5bf63"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_Hand_ChakraClawsA.uasset",
+    "sha256": "4e74a47c9bb4a472bcd2e1fac6d73ce4f9524b8e8ae86c83a6479c696d74f8e7"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_Hand_ChakraClawsB.uasset",
+    "sha256": "ab8bdeaaef97ef8d382f577cc2528752bf0a4bb58401d83a0c32f905b692f0db"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_Hand_DoubleUppercut.uasset",
+    "sha256": "e484d4139b66cb177a9fbc5dbc645dcd22365f40234ab89a64e8bb83a2ae0ac2"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_Hand_DragonPunch_Double.uasset",
+    "sha256": "876c400ecc3015d727247ab7315b75f072a8af9ab703e507390c6d7a7731e42f"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_Hand_Punch.uasset",
+    "sha256": "ed507ea16d61e9e6c8d49bf89e223e3dc20a1eeaa088153fe47d5b95e4b0aba8"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_Hand_TurnHeelDropKick.uasset",
+    "sha256": "8bcb2d04bf23a49bd6cb868dccdf5c54d469ad56359c11d977f53f81b0a281db"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_Hand_TurnKick.uasset",
+    "sha256": "9734380cf2f9e0a6c017edf0188ecb2c3a69c02dff1fd4530db8a3b40407d2c2"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_TwinFang_DoubleUppercut.uasset",
+    "sha256": "c32513df23f65e42aeba62d0dd7c1388b479087511c3859dd10ef06e68161710"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_TwinFang_DoubleUppercut_WEP.uasset",
+    "sha256": "8316fac480ef3ecce58e329abdf50d5d4569996f6bf95ef37f453b115a5b24af"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_TwinFang_FigureEightHit.uasset",
+    "sha256": "6bc7ae844abc3eb90d741f19895ccd70a50c4ea14ab36f32a7b6072cb54f1681"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_TwinFang_FigureEightHit_WEP.uasset",
+    "sha256": "235f33b1c2223241675c611d955fa15ead344f8d4a922ea94bebf2f398a4d28c"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_TwinFang_Punch.uasset",
+    "sha256": "c17a505e4c2a89c7e0c124eac0eb5795fdd6d27029d6f066cf6cdbd3cb59bc85"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_TwinFang_TurnBodyBlow.uasset",
+    "sha256": "6956442abbd79bdc8a39ed34fc042177764cec0cce8c24acb8779d21c6d06632"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_TwinFang_TurnBodyBlow_WEP.uasset",
+    "sha256": "9a9c2d1fef81b01d66975a9948131a49d67894b901a9744cd681a8bb38e102a5"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_TwinFang_TurnKick.uasset",
+    "sha256": "8fd65ec88125bc2e6c28dd0f586d87abf67f576b1792bf729fe8481b4e3761b8"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_Y_KnuckleKnife_Uppercut.uasset",
+    "sha256": "a924cdca853653b50ed4a50deb3c6bec7700e3f156dfa1f8616eef468a68608d"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_Y_Y_KnuckleKnife_Cross.uasset",
+    "sha256": "74fad1f312bbb5d6d18df61cdad85488586c9be7b8875b3efeb7dfd2d1935c53"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_BeniHien_BlastPunch.uasset",
+    "sha256": "a4567f0473d7ab4afefc238766a331216542450eb046fd08f96faaf8e15bbc8e"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_BeniHien_Uppercut.uasset",
+    "sha256": "e78614c67a5ca10e7bd3220c6bf75ce1d45881f5e2e97f0737696f2d8551eb9a"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraFistA_BlastPunch.uasset",
+    "sha256": "40bb43aec60d02cebd192b8bde432f85d763b44a923de93b36c9dd72bac58ca3"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraFistA_cmb08.uasset",
+    "sha256": "4a93fac2c89e0153013967fa33eb12b9fdb97248d5c6a2b2d4029f37ced798c9"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraFistA_cmb_00.uasset",
+    "sha256": "026291504fa4e913541d8ccdfc0ef540415a6171a9f38f38fa61854715aab11f"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraFistA_cmb_14.uasset",
+    "sha256": "9fe1552e13054edfac2407e0acbf13151ed3d9871be2a3fe8e0802bb054b55cc"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraFistA_DragonKick.uasset",
+    "sha256": "3f2073647966a63d3218a6ece395572fa77dbd98a3fa4625fbf57a5b9b9b93e2"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraFistA_Palm_Blast.uasset",
+    "sha256": "e11fb08f5df10b6b2fd2ca7d1db262f4e7f0b5e268639737ade1e211b310a47d"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraFistA_Palm_Large.uasset",
+    "sha256": "faa9e5271f105f76f1cfd328b2557c2ce574855f989e7dcf48d51ed2554a40f4"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraFistA_StraightPunch.uasset",
+    "sha256": "88d9fdfde9ddb8ff11fc73bd136f54d311b5ebdec428c10adcc885921e8b4c81"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraFistA_Uppercut_Large.uasset",
+    "sha256": "88c9636d37106d7e16a793bebf6c6e28743050d0bc627084c62a6acc754e70ea"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraFist_B_BackBlow.uasset",
+    "sha256": "db0a14e5e7d039065f72e8c90c87f807de0c725b88f4a452742a87a8f7f975d0"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraFist_B_DoubleTurnKick_Large.uasset",
+    "sha256": "42c39611463347476ebf249ae370b4ec7d0e8c4f90f25caa1a50317ef38cf708"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraFist_B_Palm.uasset",
+    "sha256": "40f6e1ebfc1f036dc0bea72f1eb8ba91575ac097c3baaea3e6cd4f03f4a0e2a5"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraFist_B_QigongGun.uasset",
+    "sha256": "163a304ae8dd615121d7216c9a731cf2da13fe49f0efa62cfdaeda1c00741b36"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraFist_B_QigongGun_GroundPunch.uasset",
+    "sha256": "f9d2292f5ba4b18c3b8d5d283e05347d71396e3f299cf442dd50989fc99aadae"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraFist_B_StraightPunch.uasset",
+    "sha256": "3fa7b67293dc7edc5d387e8f0e3ceefc4e80407c2b03ad36578e6cfb6d1a76d6"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraGloves_B_DoublePunch_Kick.uasset",
+    "sha256": "8395e01cfbfc3b918a1547c04ec499fb9d0bf31772e458d6b2d796036a69958d"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraGloves_B_DoublePunch_Uppercut.uasset",
+    "sha256": "55a2249644ae106424389c3b43f92051b49b286dbdb36ffe03242d6eae8ba09b"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraGloves_B_Uppercut.uasset",
+    "sha256": "d1b4cb9899a40303dcda517a7e4cfbb9a0afdff333ee74f00d94c99e0f42e967"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraGloves_B_Uppercut_Large.uasset",
+    "sha256": "6be13587bab40b6a06cd3eff4b5e753b41387db13b74c5602552a7c57a21cfac"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_A_DiagonalSlash.uasset",
+    "sha256": "2123b5627e1d4842df2dc45e45ce0e202112f73f7093023eb374d86f220add5b"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_A_QuickDrowSlash.uasset",
+    "sha256": "6d63bfc3a0c99e183244fe76b1674fe54358a089fecdf268d6d2c9f95efef7ec"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_A_ReverseDiagonalSlash.uasset",
+    "sha256": "e4226f90bc090d9f4105427cd93dfd27573c7dc9cced074e03bfabe291cd887d"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_A_RightSlash.uasset",
+    "sha256": "5a96061c0133b88b064b613812398f97c149177a91c643118512abaa933a776d"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_A_RightUpSlashing.uasset",
+    "sha256": "0c2fe53ef80ef77623a9de75f04da3a3b1d787c80731ffbf5ec2044029181efd"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_A_SlashHorizon_Right.uasset",
+    "sha256": "1fa070bb91dffaf5531dd82c6322fafcb4a5fbbc5b5bac46510217ef8b5487df"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_A_SpaceSlash.uasset",
+    "sha256": "3a35384dd05c65c7636657c3a6b1c03932fe72a046c4d43d5616c2822c2b67d2"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_A_StabPullOut.uasset",
+    "sha256": "eef8b81c9f2f2eef7c55da90bdfd90711ecc5b739815359b02b277a231a2d89a"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_B_cmb_01.uasset",
+    "sha256": "5a15c1668811fc4173ac656ad5f5f481d2939388f1a8ec7a8b94398dc152defd"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_B_cmb_01_B.uasset",
+    "sha256": "94235c40a4a27698656b82800c3d1831510ff587134ea277e0b49ca1fea86f96"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_B_cmb_02.uasset",
+    "sha256": "54cb951b00916bf212f13e3bdc8857d56b64b1e881540ec621a51fe32dd4021e"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_B_cmb_02_B.uasset",
+    "sha256": "290000322cdbb7b1355f47f98f3535164fd4adc2319bb3c0b0fd3c0a17fa8efa"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_B_cmb_03.uasset",
+    "sha256": "f15b7294e3a8f7fdcae629c26f8995ad7e76c83d2ba96ccb4f7bbfd5eb94b0dd"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_B_cmb_04.uasset",
+    "sha256": "a5123584c2c10a2a77da53aaf2e9fb7a691c4ee0cec93f8e1f4f64493973e6c0"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_B_cmb_04_B.uasset",
+    "sha256": "50b6ec4af88daa2cb354ce4c5a3eec328d41db453bbcf9c8fbce8068f6ed5997"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_B_cmb_05.uasset",
+    "sha256": "85d29315f95c0e1d74d6fe7a2216942ddfa0bc6c81ca13cad8065a31a58f8232"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_B_Range.uasset",
+    "sha256": "a38c89160b7dbedb51f7dcf185d23fcf4e20d52af62a91f0b9fe43274cdceb93"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKnuckleA_Cmb01.uasset",
+    "sha256": "58b9cc025e00c07175bded16ca325a60d18f0efcd5df1fdc222eee6831632ec4"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKnuckleA_Cmb02.uasset",
+    "sha256": "979d5082598c0b36018c7db38248b38b3ae613456f34ca290c2e88cd4fc3baa0"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKnuckleB_Cmb01.uasset",
+    "sha256": "e83c5efb9a00c30019911676a74e2c29b190ff8bb77507f8e4e9cc868f1fb1b9"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKnuckleB_Cmb02.uasset",
+    "sha256": "1184b84ca2e5be1b3d5452e349f566a935861282a1552c1816a2df151ac93034"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_cmb05.uasset",
+    "sha256": "194d397b6db480b8ac1eb628f109fbc0eb393b5e1b5c8f9fda06bbb29a1cf020"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_cmb07.uasset",
+    "sha256": "f2a2fadac87cb0a8a85304704db302c90205346f60b45e35733e8443acc2f51d"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_cmb09.uasset",
+    "sha256": "47926f4d0059ff35bebfca8f6190c12cd75115c1e91d211d271083c439ad4777"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_CyakraKnuckley_Cmb01.uasset",
+    "sha256": "e31939a1f5d14e1272c93da16c75b4482fd2ede25139c176b226fddc6b713993"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_CyakraKnuckley_Cmb02.uasset",
+    "sha256": "5625b2afadf4d97a66e1fe9c35ed84ebfb29b59e800f55bf34d363696f6eec90"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_CyakraKnuckley_Cmb02_Rateup.uasset",
+    "sha256": "9703552bccaf4a868a643d4cf9b132184c23581c415f8d23a419598e68ca749f"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_CyakraKnuckley_Cmb03.uasset",
+    "sha256": "338e259237d5599a9f8132c1598347e189edf5f098b1e86fc73d7954ba5baaf7"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_CyakraKnuckley_Cmb05.uasset",
+    "sha256": "9de76b09d686724333cae013b9cedba0e1af246f97a437c0d7ff9433908dd225"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_DoubleTurnKick.uasset",
+    "sha256": "828021d6face36a13d2431b9a69d7bae164527e8c7e24591a03cb96277c53e9c"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Hand_BackBlow.uasset",
+    "sha256": "feb3f31f208bfc6b60f813ad297bd7f059f4ab0ea8f88c5813852677a6ed5a98"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Hand_BackKick.uasset",
+    "sha256": "ea991bd817afa6a970ab34532fffcab02173357332ad2e434cd7966281d0b983"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Hand_ChakraClawsA.uasset",
+    "sha256": "bdbaa57287ae0a72efd9ac736a67e9f77e5858ffdb5eac6cb33191e2f1b749f6"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Hand_ChakraClawsB.uasset",
+    "sha256": "a2678b4ac768a18e756be4115d176ed880a13d82933e7bf276a368b8d55dc351"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Hand_ChakraClawsB_cmb_01.uasset",
+    "sha256": "c3fc24ebd1b07591ab3eedde359db716c306e4620e52e54986550bd592f44e17"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Hand_ChakraClawsB_cmb_12.uasset",
+    "sha256": "e29a1f1a1d090fe3f9e57ee3bad9b755a80a1cab5dcd32ad8f37664e2a03325a"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Hand_ChargeAttack.uasset",
+    "sha256": "2732a6aa740cef311bdc01cc69f022f3dbe1d53274b544d46c488d84bf38d20b"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Hand_DragonKick.uasset",
+    "sha256": "c8c2a34e8f9c1d383ea2e4a224e3829901420cc62f34f40677b865f0ac82dde9"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Hand_JackCut.uasset",
+    "sha256": "4cc93bb2dd02af5098177a661a4db268394cd91b475235ffbdf5741ecf5d0de4"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Hand_KneeKickUp.uasset",
+    "sha256": "336b606e343ff6d9141218f334c23daee90913c3cd5b5c2cbc69dbcd7c06046e"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Hand_MantisFist.uasset",
+    "sha256": "9d9399f94601f47e3dc6963e4c841cf90914221c856e66ed72b7436267b7f63e"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Hand_Punch_Left.uasset",
+    "sha256": "e80dbf174a97b652da037b066f3032714e5bb135b6bf92d71e1662bdeee4f021"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Hand_Short_ChakraClawsA.uasset",
+    "sha256": "b9cd98f5f337e6327b8c1ed4810b5afab71faf24f6cddd417402f0897aab63fd"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Hand_SidePalm.uasset",
+    "sha256": "e803e83276d082d8f3a83c64fe295647eb7ba33da3723b8b759831f08649c12e"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Hand_StraightPunch.uasset",
+    "sha256": "6149a6c5b4c8ca961c70c6c3d1b4632faa48c7d9dbf942d1404e7a0af943b614"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Hand_WindMill.uasset",
+    "sha256": "14af4c7c326888d693a8a80462896fea9063b35611652daa39d2e8c8544dfa11"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_JumpTurnKick_Right.uasset",
+    "sha256": "7768c73e7caf8cde25d936fa214889e27e71e3febe58b0b3d5dac7f3ed5031f3"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_KickUp.uasset",
+    "sha256": "f4e444e13ac77141aba074135a96024a905897565b417714f908fb2d03d21cf2"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_TwinFang_BackBlow.uasset",
+    "sha256": "32e85c8de218656926adcc6dd10c9524b8c59712ec435002654345d5361abf87"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_TwinFang_JackCut.uasset",
+    "sha256": "3d76848820464eb35a163a29650ddc24afc041ceb68b9158ed72978215c3367d"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_TwinFang_KneeKickUp.uasset",
+    "sha256": "2b605d0dd05dd68abef95b64972df243e20e019ec48eab7fad922bbd93ffec78"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_TwinFang_PalmSwingUp.uasset",
+    "sha256": "cb13255ae8c3b04b489d762573dcb5a1da9b72833c6297fc50c5a0e8e726e928"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_TwinFang_PalmSwingUp_WEP.uasset",
+    "sha256": "1314c4412a557dc91b632290fd3200eae96de492a159e56c551cdc78c441c260"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_TwinFang_SideChop.uasset",
+    "sha256": "c73580d196874ef08a13e0af99000eee6f871135eb8aec83be9ac66e549d7d98"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_TwinFang_SideChop_WEP.uasset",
+    "sha256": "556436b9afa844ca3544c6ee49c0792ce55b153ff7fe3fbd55bb496f50f7ba38"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_TwinFang_SpinShootDown.uasset",
+    "sha256": "aeb8da37a40c8a260a4a44ecdb623cc44a62fcf234581cef5906eec531f3c419"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_TwinFang_SpinShootDown_WEP.uasset",
+    "sha256": "326e199b42d2604dbf87e4f22cd56366cb27588e0c3df2c8e2221ecc79b7f644"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_TwinFang_Upper.uasset",
+    "sha256": "ab615661b95a8572487f351be4fe9b46d26fe75a73da45a8c11ddc675d1607be"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_TwinFang_Upper_WEP.uasset",
+    "sha256": "02a492e7a3370268432ae5ba5ff141f1a1a088301237bc31f3fb295575e2b046"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_TwinFang_whirlwind.uasset",
+    "sha256": "bbf6fee262f8d6919335b7c2392bca82e89e6248dffcd3c61c33bc6d273f4d28"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_TwinFang_whirlwind_WEP.uasset",
+    "sha256": "571665bfeab99276babfa285941e47523b2273ead627390964f2f08e671c5589"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_TwinFang_WindMill.uasset",
+    "sha256": "31d4802a2475013aad80c5c922f1003eb09237308eb2c4dffd9a7dc5e0126c77"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_TwinFang_WindMill_WEP.uasset",
+    "sha256": "4aa67b7aa00946262c95a6389ec14e021df2ad2acc9a1ea34ebe90115ffa1ae6"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_RangeAttack_99Spear_SlashHorizon.uasset",
+    "sha256": "33fc00df8a1b282d6e1df9b00b6032a519344346d7b4f1df823b6761fcb45d34"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_RangeAttack_Aerial_99Spear_SomerSaultKick.uasset",
+    "sha256": "58d0bf05b2a209837bdd773aee1c518ff5499704456195a294156bcdaaa62c37"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_RangeAttack_ChakraFist_B_Hand_BlastPunch.uasset",
+    "sha256": "547d3415ddc2fa73f063331e106c63ba837fefdef2be823a41c3dd70bac4c051"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_RangeAttack_ChakraKatana_A_SheathHit.uasset",
+    "sha256": "4926f9487961f3dacb9c930e88ca1a078a750fbfe9172aa98f625fbe78a04b20"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_RangeAttack_Hand_BlastPunch.uasset",
+    "sha256": "084c2043506fe4c73fd47ed4a5585ad7499e4d94d518ab3ce4196a057dc9b657"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_RangeAttack_TwinFang.uasset",
+    "sha256": "129737ad9669360a39b5933664104c49952e52f68a55fb3392c89fbaba3a2f79"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_TwinFang_Loop_WEP.uasset",
+    "sha256": "c26463000323fe5a2956e3f9851daaec0acff26fd84f14b3291b21849b995952"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Aerial_Dash_End.uasset",
+    "sha256": "f3b16b575a3de9c8d45d3041cf66bc477deaa70c44e746a6e26ca8bd41743a07"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Aerial_Dash_Loop.uasset",
+    "sha256": "2b72f9e6a5970f08f560823247b460f2f97ef365e738336b7d04c73bd23e8927"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Aerial_Dash_Start.uasset",
+    "sha256": "0749322b5c273f4ab5f61efa65b43de59916948a33d06b3799a53ac24b435dbf"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Aerial_RecoveryChakra_End.uasset",
+    "sha256": "0c315c434ff7483f0817d999d11f9843ad8b6633bd1ae8c7955e516b05292119"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Aerial_RecoveryChakra_Loop.uasset",
+    "sha256": "3540262714a0e147e34e7dc7f8f0e054af45d2234d6b9852c4a6badf334e1802"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Aerial_RecoveryChakra_Start.uasset",
+    "sha256": "346d076696ba127a6fd202e9db0cbb95c01a644e0ef41d23b3ae38d112e00671"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Aerial_TakeMedicine.uasset",
+    "sha256": "a7bc5fa1ab8f885685135351f27304e1bef0fed86b9be1e4c9efe67f252a7f81"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Aerial_WallStop.uasset",
+    "sha256": "6c98db75d5ff564283912e6559e2becd1422527398a9eba310ec004bcf485793"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_BigSword_DashStep_Behind.uasset",
+    "sha256": "c2a7c55a3939c3ec80e3bc37e2e806f3f16339baba5ba1cb402c37cac1621c27"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_BigSword_DashStep_Front.uasset",
+    "sha256": "eb6d26b7cec12a4f84de98bc3f60fc3274d0d7c6c486a872a2ee8b9e5733b339"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_BigSword_Dodge_Run_Left.uasset",
+    "sha256": "e177b19215cb48a6ff5f13f5cfbbfe21ed1b8741c96722fb3bca2615674f6333"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_BigSword_Dodge_Run_Right.uasset",
+    "sha256": "642e3b8a3d107414aa2e10a5e5805d52b9149909e3cc762088b52a64eafeee2b"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_BigSword_HeightLand.uasset",
+    "sha256": "04683ed63f7e33fddc12d8e34c4e0c22cfd54b5c0125cd42f938d5a5b5b4207a"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_BigSword_Idle_Loop.uasset",
+    "sha256": "273e23c5baaa8a2b11d1f9c13f8ae2dfedf2138f117557f0b13330b107a4226e"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_BigSword_Land.uasset",
+    "sha256": "c6c6fc77d611c07a44d045a76c53717bbeb12a20c87aece59137500821c7d15b"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_BigSword_Run_End.uasset",
+    "sha256": "aaefbfdc284088762af72baedec4cb790529608615c6626bf5524c74cc26ea3a"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_BigSword_Walk_End.uasset",
+    "sha256": "56a2a749c9774af5e6c0982e7ab704394971ac7891b1ae67558e7325ba0743fd"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_ChakraJump_Charge_End.uasset",
+    "sha256": "7d5aed93da8597ba6030bfecf9393f53eab10dccadb61b39b4d2bf19878ba535"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_ChakraJump_Charge_Loop.uasset",
+    "sha256": "0f261ba1ce0ff6c10eb0ed965be3b143374f2b03673a946f409d0bad16046f0a"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_ChakraJump_Charge_Start.uasset",
+    "sha256": "317739afd89d3cbcab5929ab73eb67ef375de01e0f1fa5407bc965f98517fc00"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_ChakraJump_Vertical_Charge_End.uasset",
+    "sha256": "de7a2f66c29ea465e9f223a2e76664b9bac5799661441f2b4f3937c717aaf0c2"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_ChakraJump_Vertical_Charge_Loop.uasset",
+    "sha256": "26fd68acd502be7bdc8f95ee1b226eb2b861bba54daf79d30b6d7674ed4fbaff"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_ChakraJump_Vertical_Charge_Start.uasset",
+    "sha256": "b5d3e111dfacca2c4198714b72e6f602468dff549691d06c0dae18f2240576cf"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_CharaSelect_Idle.uasset",
+    "sha256": "0043cb7066eab627c59dafdc665740579c94e0a412c0d45e283666b95c8bdc4f"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_DashStep_Behind.uasset",
+    "sha256": "45c09093da7c593ff2f9ec33278dcd2447895873fbcc648e87802982c2c6c099"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_DashStep_Front.uasset",
+    "sha256": "85000890d8ce55e632a0f79c4bdbb069095a3195526287374f887c2d8744f6c0"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_DashStep_Left.uasset",
+    "sha256": "36aff34aaf51316440268af02d0a83a6648e303045149876c366d92161b80988"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_DashStep_Right.uasset",
+    "sha256": "dd313d4a41fbb5fbcd78fffb0244547638cd74de39838a4ed49d55970fd15e0f"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Dodge_Run_Left.uasset",
+    "sha256": "7ccb549c388aab11e816a25b057f2926ac8ec148995d9177f65b1297274e9976"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Dodge_Run_Right.uasset",
+    "sha256": "7f5cf81dcc5a07756deca5c1bb7a71a6017e487d076ebcc7608c3dc2c9e5dddb"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_DoubleJump.uasset",
+    "sha256": "d54e15cc3522fa9dece3f0a04230bf10fb888f7751b5a1f1cff5efdaac265d33"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Fall_Front_Loop.uasset",
+    "sha256": "ed34528c6f7eb0b665b2769e7ab021c034e9fc612836d19df5f687e1ff38991b"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Fall_Vertical_Loop.uasset",
+    "sha256": "f5ac3e8a9e35614394b765a5294bda5cf75c3492db441c8c737b9d027ac1e5a1"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_GetUp.uasset",
+    "sha256": "23386a8b240f2800cf712c7a9f4641e981891328f9694cab4bfbc69f2467d95e"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_GetUp_Type01.uasset",
+    "sha256": "6819c454800c0f588090dc364fdae9794fa30c2a9119c36a65ec9fca9bd16564"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Hand_DashStep_Front.uasset",
+    "sha256": "4097270d904674cdf881139cc23230267501f35e499cf2c21b07ef02703871b8"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Hand_HeightLand.uasset",
+    "sha256": "0f1354b6546f8eeaa4322f4c2d113edad7eb4a38a73189149b878abe237eecbb"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Hand_Idle_Loop.uasset",
+    "sha256": "9bc550dd809b894d003780417d793ecc940014d800f64bd94d2e33b1430adeed"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Hand_Land.uasset",
+    "sha256": "5d96ec658df3317714ae52047b943b3051996ccbbeee4620b42f6167177be01d"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Hand_Run_End.uasset",
+    "sha256": "88333ece0b5076e2ae1a6d5553b0508f05fffc31071146ac7f4706502b214a9b"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Hand_Walk_End.uasset",
+    "sha256": "2e77cd20f77a5b3db2b63680385dd5e1d8e1de2cb615638f410a4bcc28530a12"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_HeightLand.uasset",
+    "sha256": "9237b60cbc819e98b3f2c4b3c02fe32f56f2312269b68f73d8fd6da36e5ca6ed"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Idle_Loop.uasset",
+    "sha256": "180f14d32a9a2962bda9c7f0e63a929b3ad203ceaa351c33eeea99316a591466"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Jump_Front.uasset",
+    "sha256": "d543e9fa4a308d2ccb4c4a25f2649a86fc52b82c837137e720f8bed2e61965e9"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Jump_Vertical.uasset",
+    "sha256": "86e34226342e0b40862be33e84568a09fc08fee85f2be1c0a289ec330fdab409"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Kunai_DashStep_Front.uasset",
+    "sha256": "c4375a1e4cdfe730ea20c715238e6615301accdc465dd0507aa0b4ef288903e5"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Kunai_HeightLand.uasset",
+    "sha256": "9ac7c58321e48ae3afb2c3c803dd8fed5c3440bf081aef3423ad9c4f38b0c2f6"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Kunai_Idle_Loop.uasset",
+    "sha256": "97ff169bc485b1010cd38d0c05e94b6be4d5fa3e85addb38c879082e9ea70e73"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Kunai_Land.uasset",
+    "sha256": "c1e6cc2249777b98d11b04b4900970cfa4fbfe213ca280fc3664af1d264c8b37"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Kunai_Run_End.uasset",
+    "sha256": "5a0904d6fb8c17fc3a8c8069f6ab79b70c0a3d99a3755f5f441fa117942293f2"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Kunai_Walk_End.uasset",
+    "sha256": "166b0a5f1d11a78898c33c9365e22684e7f5e4f725f2cd100a57070cea46265a"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Land.uasset",
+    "sha256": "4bbcb563a6a329a0c6c82f84ef29ac6de83ea3c520b0606be7cd77f82741818b"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Land_toChidoriCharge.uasset",
+    "sha256": "c153cead5e09398e405369b824c259a5a64a9eabbd929c798e9539bed9333347"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Land_toD23NJ4Charge.uasset",
+    "sha256": "264b7f5b22adb46410479f3457fd5e7734640e1f7bafd4c8ed79650edd99856e"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Land_toRasengunCharge.uasset",
+    "sha256": "b90c581490790605a7b3a2ad7d38014d153ac6d1db93e4e502ca2649940fdff5"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Land_toRecoveryChakra.uasset",
+    "sha256": "a36ff44adcf8ba981e2c465b60d6a8a56ba799558b208154fa8f23abc88d277f"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_PaperBomb_Put.uasset",
+    "sha256": "5268bd17336470c4a7bd5ebf996e1b4c7f79ad78677ace74a9a5209807d04875"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_RecoveryChakra_End.uasset",
+    "sha256": "e4bf5c7b367f02234ee6a3fbd4cb9492e833c58786bf52f8bcf0fa461dacd8b1"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_RecoveryChakra_Loop.uasset",
+    "sha256": "60716898c014b2aa8a53a6fdd4d157beff31f9a50ee1c7a360215938cd298525"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_RecoveryChakra_Start.uasset",
+    "sha256": "c313c52093efef95c8c4dd50cb885884dc6b1c6d117521a9be48d9771028b706"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Rolling_GetUp.uasset",
+    "sha256": "ccc3ca5a75bd74a9e06d10c356988025c653c1e4a2271c0ef248672ebb161079"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Run_End.uasset",
+    "sha256": "63ae457ffad98ae2591ee2ff2cf125658ad4cd696c4b44ba8ec4ba9238808729"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Run_Loop.uasset",
+    "sha256": "63e63b736b91f38ce3c7d8e18073cf16247c5a98d5ef9322995b557bd6b8318c"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Run_TurnLeft180.uasset",
+    "sha256": "9c8fc2c27672e1f8abc4a0d24ea2c103d472ddb405726bae1a46ec655a21ef97"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Run_TurnLeft180_Start.uasset",
+    "sha256": "ca0f54a8db36b4b921507ebc66a5318f591ac0a81269f95963bd598ca8c8bc2a"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Run_TurnLeft90_Start.uasset",
+    "sha256": "e04c13a8022b5d8bacf56dcb136477546130bb5399d6cff70463e87df76b69b6"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Run_TurnRight180.uasset",
+    "sha256": "beadb6082de8b9958e1086164c04f40ea52014afa0273db80bef222defb559e4"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Run_TurnRight180_Start.uasset",
+    "sha256": "337cf6e7a692f626ca3659a17503fbbbce935628a037f2b86e7507fd1e4ebe1a"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Run_TurnRight90_Start.uasset",
+    "sha256": "bdd81291ebf296c35ba11cee92b1d96f3414b94d4cc56faa3510d9c58f4682a4"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Run_Type01_Loop.uasset",
+    "sha256": "2699f989b86a107582f7abce7a8c9839acf6736e4f9eb35d83a82047a3f01280"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_TakeMedicine.uasset",
+    "sha256": "b4023fa913608bfe8c696531766726225ce8c023afeafe26de12f1688b37add1"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Walk_End.uasset",
+    "sha256": "4c46d871bb66145ee78468dc752ec79a5b5fc7fa180ab607c7dbc9e4e41ff6d0"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Walk_Loop.uasset",
+    "sha256": "7c32297d71a9794dffc487208a7d7e0efb22d72b7e609827f1ba236fa8385954"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Walk_TurnLeft180_Start.uasset",
+    "sha256": "a4eeefbbb2ef4e9e6f1f4c807a19fd770a16ee9de45f54756208a009a5d26988"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Walk_TurnLeft90_Start.uasset",
+    "sha256": "88affbd5b9de2cbd116d73f8941756295bf7bf8d611d69fce923507075d6ccd6"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Walk_TurnRight180_Start.uasset",
+    "sha256": "6ccb57f3739ab021c8abfdb3b3a7926a44a84530d523b02d1cc0e657fb3a06bf"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Walk_TurnRight90_Start.uasset",
+    "sha256": "14df65a6f7ab03cb02d9872d84602b1092a3312e401765661c9ae650b9b918e0"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Walk_Type01_Loop.uasset",
+    "sha256": "4f4686b305aa4730afe6b1c1ecc075fa38006240bc921965028ba75f82560ce4"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_WallJump_Loop.uasset",
+    "sha256": "813afa582b6d6f70338b040e5c8ddd0be5e6fd1cb74746f69db49695af0aeb24"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_WallStop.uasset",
+    "sha256": "d49e5463f3fc3350a8404929ed1a6b723522c958bd29b205d8f65a2b00dbc85e"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_WireJump_Ready.uasset",
+    "sha256": "25018a257c74da3fc99e1001cd4dbd745e6c55989dab7889186300f9cd39e004"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Aerial_BlowOff_toFall.uasset",
+    "sha256": "5cab5d89fb952f2ec0d182dc97cde0a90eb9dc5907a79b639dd12557b6193e46"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Aerial_Conect_toFall.uasset",
+    "sha256": "839eb77752b458911673c1697983f175ac949d0d6a561cfa83ddb1198c2b1cec"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Aerial_D45NJ3_Loop.uasset",
+    "sha256": "ea8bd48be4524d59905aa571c186f1525a2685290cc882b2d6f31dc0b8058d74"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Aerial_D45NJ3_Start.uasset",
+    "sha256": "a606cb60b475c2d58293035668dbde779e9b74a7b5d041624a8bbedf82bf40ca"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Aerial_D51NJ3_Loop.uasset",
+    "sha256": "2b62bd0eb72e543f0eac7345db3f04c4fb77f879b7d959bc134b20bd851f54fb"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Aerial_D51NJ3_Start.uasset",
+    "sha256": "1985e0870e3f52f9104ae6dc9a907072a0120202a0c1580ca7e33ce24f8ec948"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Aerial_DownToFloor_Conect_toStand.uasset",
+    "sha256": "0bb859a27d82ef68b7e24266f2fdf0c7f3dcbb89ab46fe5d7e6ea29d6a948cc7"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Aerial_Large_Front_Conect_toFall.uasset",
+    "sha256": "b2b3d8120bf62866b36e6b51592912186f0de0447727004fe2a15565aec7f1a1"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Aerial_ReaperDeathSeal.uasset",
+    "sha256": "ab8f9c3813b7c71533a4697815ac97b277679df9809fc1f041f56ebd66cc7203"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Aerial_Small_Conect_toFall.uasset",
+    "sha256": "7d791dea079ba11b2f91bbb5829d74560cbb932e1fe6d51842f892946ec411a0"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Aerial_Stagger_Belly.uasset",
+    "sha256": "2974f4a38c719f1a2d24523e542523c097a3b7af2ed25ee5f6d9c3102bd15c9d"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Aerial_UniversalPull_Behind_End.uasset",
+    "sha256": "0bb374d1d28ddaed5e0d757bb85438f6cf3a2b848cfa34d44cedcb83340c2257"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Aerial_UniversalPull_Front_End.uasset",
+    "sha256": "af0115f10fb02915199c1ecc9678730ec10c73f4a20106fa7297891f7b1fd390"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Aerial_UniversalPull_Loop.uasset",
+    "sha256": "a559eef090c2522c0945201215d33e5f5d4321b716a241b0df7f91bc804b3b86"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Aerial_UniversalPull_Start.uasset",
+    "sha256": "dc7d00ccd3b71c56a73a638814d71a2bc5555d641950799f7c3d2519380e98de"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_BellyDown_Large_End.uasset",
+    "sha256": "7f8ff369ada3e18e06778139247352ce4a44da819ec2fe61a485bf3a1efcc70b"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_BellyDown_Large_Loop.uasset",
+    "sha256": "5dddbac4e11ec43b6a6f802d21ef91b7956ce3af0f05157e048ea2efafc17d1e"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_BellyDown_Large_Start.uasset",
+    "sha256": "e69aa6273ea34bb52e89193dd6298441699b5327b42d2ff931c23b1c19bd3c5f"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_BellyDown_Middle_End.uasset",
+    "sha256": "165d53b6576ee5d4e1c930b5b0587b54b0fe1fac6ec10487f38c5a274cac4e59"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_BellyDown_Middle_Loop.uasset",
+    "sha256": "cf0f29487814686a97f8e9813157a8a407f6c80de48e494662ea18d8b404dae5"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_BellyDown_Middle_Start.uasset",
+    "sha256": "66af4a82f7e52db4fbaaec91d7e7ec52fcfd16fe6628e5a3ec55994a6bf5f82d"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_BellyDown_Small_End.uasset",
+    "sha256": "81cea1ed55a082e59d55dcd6ba24fdb3fbcec95909c3c0b55267c4cfb4ba38ce"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_BellyDown_Small_Loop.uasset",
+    "sha256": "b26ee584c0cf19357ac1672d34ca08201ffe1284fb5f8b8084fc00579887c19a"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_BellyDown_Small_Start.uasset",
+    "sha256": "0f83970a1cb64e7b179a93f929a654b574d1a042895e4d09df05b9fb84f6f378"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Bind_Loop.uasset",
+    "sha256": "2157e1841ab06faca64d6fef4d99658f0608c0719eeb52a2aed977136ed3b511"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Blasted.uasset",
+    "sha256": "2e2e37de74829c4639a86b10facd9393850c979e9074cf9200e27a16b135630b"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_BlowOff_ChaseAttack.uasset",
+    "sha256": "7469f15aa365cde335202b462afac7d3529ec3b2e587a18329209764d37efa56"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Burn_Type01.uasset",
+    "sha256": "7402295a6f96637a3c43f685166cb33201c26d0db49a51a51f3345ede0c35f47"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_D29NJ1_End.uasset",
+    "sha256": "7533b100f2fcc91958d9f19bae43719b3e79fedd632b2e8b628d57e2f30e859d"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_D29NJ1_Loop.uasset",
+    "sha256": "33eb2503f35c2f704d5aa991e76d14bc72f06af2c8ec2906487641a063ed3d38"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_D29NJ1_LostEnd.uasset",
+    "sha256": "fde0ab0b6bdb6c9d9604478c193c62d6faada18d50ea5b30c0075db08d6268e8"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_D29NJ1_Start.uasset",
+    "sha256": "a4247294d3c7f8bde9a7a5584e449ad3a8623e3c2392d5f0bfb0035c279a6eb5"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_D43NJ1.uasset",
+    "sha256": "4d35a9e66a023c493d74bd7dd3008a6eb028a67a661e65d3f189495db2f9895d"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_D45NJ3_End.uasset",
+    "sha256": "f5c3017b67ab04414e8672a03ef8114bbf180d229dd860b6bb48590330f29f13"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_D45NJ3_Loop.uasset",
+    "sha256": "814c5fadfb91b7417d28939f4a66b2455c4937ecb6f19774fc24cea35de8a473"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_D45NJ3_Start.uasset",
+    "sha256": "22003ca895f8339083b1e58f7c8a0edcce08a8d1afa77794e9d35e69f99adfe4"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_D51NJ3_Loop.uasset",
+    "sha256": "8bd1e3a49374d42d88d0ebc00ba36ef32600bb52cf7ba1a71df51e54186a7e58"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_D51NJ3_Start.uasset",
+    "sha256": "ad442b32331e92a70228d04ce9506f89b8e75949f3a1dfa78063c98764db160d"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_D55NJ2.uasset",
+    "sha256": "cfe4b1b2871b7fa8337d83c72255c5469f82ab67b604d4a3317914ce89860062"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_DownHit.uasset",
+    "sha256": "31fb19dac903456093f8f7080cf07bb51bdae5f317b9f891abf86395aaf07c1e"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_DownToFloor.uasset",
+    "sha256": "d08956260657db6025ccd255f6792cfe5ca9144c9e9168910ad165b06d99f89f"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_DownToFloor_Type01.uasset",
+    "sha256": "ff74615a7bd2ff9926d6a4a66093718d6bac86382aae4a453351e99255b3e06a"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_DownToWall.uasset",
+    "sha256": "1a0e7badfd15a6343a06930b3b02e2d4dab0f685d45d64023cf540ed749f2ea3"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Down_Loop.uasset",
+    "sha256": "bbcd26c7cb03b4372c1e0f089206217f952f76936fb6512b7c525608392d59a0"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Down_Sleep_Type01_Loop.uasset",
+    "sha256": "6a815ce30b518bd68fd2fd4ece6329297b0d4f8462117c3ebdb9b8915f267312"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Down_Type01_Loop.uasset",
+    "sha256": "128f7bb798dd16ea81a12415c3e2de7e2cc77b6663188d04746c75d4fb177d94"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Earthquake_Loop.uasset",
+    "sha256": "64b87f9355a441e3ef89feeef6d8a6c3cd50dac911c4cb8fd4239fd827787802"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_ElectricShock_End.uasset",
+    "sha256": "43329ac9424b40e12b6333f86930d24f4d2b14aecdef32d811bdf7e749520b6f"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_ElectricShock_Loop.uasset",
+    "sha256": "5993ff93e91a57a70cd2768cc04b4533a9f2285d637095c92abb9d3ac2457513"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Fall_Behind_Loop.uasset",
+    "sha256": "80591e34616d3123c2ebe3b611d599a148db5d073b133c698f8b7a48b0b897dd"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Fall_ChaseAttack_Behind_Loop.uasset",
+    "sha256": "e56b66c3cc64c0e795e591628bc3d652b57e256d2466a686c581906841e851c7"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Fall_ChaseAttack_Loop.uasset",
+    "sha256": "e2906a42b02f332f17cf8b2fc9c0df2bc8877561d811fdae37108691414493f2"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Fall_Front_Loop.uasset",
+    "sha256": "711c1ae4a59fc15c338c2e8a5d4600154ddc7491026c03f61fa5bf241569b0f5"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Frozen_Loop.uasset",
+    "sha256": "4e55288d4526e6af74dd66860980a0e1b2f26678cc2c64b500453de1137304fa"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_GuardReverseBlowOff.uasset",
+    "sha256": "e39efcda968e65d0ad64c43ae2bd8d4b3868e71803d27ccfeaaa48df84ae8909"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_HideBlowOff.uasset",
+    "sha256": "c5680346f9058138491bec305d56e21c1b8e4becbf3a57f81e05b33c5d99851c"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Hide_Loop.uasset",
+    "sha256": "2de430319f77ba40529af4b3af355abdba0084186de357529e680de11c3b7ba1"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Kamui_Loop.uasset",
+    "sha256": "0b3c9366ac96524290416ac9f43bcd3ce59d315a50fe63baa2e7e0478501cca8"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Kunai.uasset",
+    "sha256": "23db4958a4edaf4f820546d56c77792baf2d7007dbe86a0107ce1cc068f65310"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Left.uasset",
+    "sha256": "c3b602f8933d5af2d010d678cbc75f69cc4097db012f195cd00e42d5a4f3fa5f"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Left_Head.uasset",
+    "sha256": "199dbb9320372425c84574717689ae7d90888903cace4aec0eb997fadefc0305"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Left_Low.uasset",
+    "sha256": "146e7ebff9be5749d57d5a279c4a6f8f3fabce4934c4ad8e327ff635625496b4"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_LowFront_Chin.uasset",
+    "sha256": "d0684b92966b1a26654bd26fc30615cec7828150ae293dba6506fb8ad7a06bcf"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_OneHitDown_Long.uasset",
+    "sha256": "9d0f2540dcee6bd603eef4b26051ae9c2bc0ed9af04f62b39c6d816e0d2cc1a7"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_OneHitDown_Short.uasset",
+    "sha256": "7a79537556b7198ea18c1415f288f71d420ff93796073fe5d7c24be15558f27f"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Paralysis.uasset",
+    "sha256": "0e3ad2ab65c4436104a05f566a34d17e18cf03eebce0607c9f766aab526e97ed"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_ReaperDeathSeal.uasset",
+    "sha256": "fa4efa50b61e673494961c517b09d5e8ac6b05e1cc060a57151b0ab62c67112a"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Restrict_Loop.uasset",
+    "sha256": "7468ed1401f005a7d136fd5bcea2e967bbfc5e847bda8ab75d55c0f2ba4f8cb6"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Right.uasset",
+    "sha256": "fdf10c45c14d1c6164adb00c485ee56ec86f07cdaf0ab1721ef825884bff8cf6"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_ShadowPossession_Loop.uasset",
+    "sha256": "255fb4c5404808fd671e208c3526c878edcd8ec9a18fa47176aa9b379fb17aa5"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_SpinBlowOff.uasset",
+    "sha256": "e937ffec3f2eda03daa4dac9aa2be201a9af0655dd7175c96d527e2d6fbf0c7f"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_SpinBlowOff_Behind.uasset",
+    "sha256": "822edafe662b445754b79e3eab0f4e8b279f303a6dd45ce3deda3c79fe3652c1"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_SpinBlowOff_Bound_Conect_toFall.uasset",
+    "sha256": "677affe77279c917b2a41e10cbab219e3e5b8006ddb442e84bd08350b4703d3c"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_SpinBlowOff_Bound_End.uasset",
+    "sha256": "52138fbcdaf54d6c9d6ac5dd4ecf764ee0e8b13d4cec95cea79657c5d2727f33"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_SpinBlowOff_Bound_Loop.uasset",
+    "sha256": "605a65948827db3802796ec98138482673e05705bcaa6b50bdc6b83738b7bdec"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_SpinBlowOff_Bound_Start.uasset",
+    "sha256": "e2034b60b586a28c123746943cdec80e40a6fdc62384cd7e68e16dbb9ba37aa1"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_SpinBlowOff_Conect_toDown.uasset",
+    "sha256": "bd5d860e2c658e3e62c7785fb82d5a519c284f4b7158f6d863f859ff6fb73e8e"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_SpinBlowOff_Conect_toStand.uasset",
+    "sha256": "1e8f1c93d9365bd88d50bbb20fd7d4775f37fb7f4fe6f368be9093eca59b7d6e"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_SpinBlowOff_D52NJ3.uasset",
+    "sha256": "caff83393689c07ccca34760e246078d7a8e015dfa04582fc04f1e03869560bd"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_SpinBlowOff_Large_Up.uasset",
+    "sha256": "a88080ff740f53462d0475f02b13a19079f601e88f7feaa0ce51381c258c56a0"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Stagger_Belly.uasset",
+    "sha256": "9338d8f2aa32e2a31bdeec58521b06b3634939a368312b5f27c6496e65f0161d"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Struggle_Loop.uasset",
+    "sha256": "5fd4ce80b3a8c77f078e234e4deb2315b153bbb0b24f140bc3b1377db686d332"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Struggle_Start.uasset",
+    "sha256": "32412ee2a02da7cd039f6802dbb29e2c169d0829c9de543d0e2e8f724485b537"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_UpFront_Head.uasset",
+    "sha256": "947ae024cb34ef683d357983658cce1ccff109d1179f8d48afb384384d688fda"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_UpLeft_Shoulder.uasset",
+    "sha256": "65320bc070d3e69bd375ddfde1ac323639537333f897e679dd4203e5365dc955"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_CustomMan_CharaSelect_Idle.uasset",
+    "sha256": "eb38e51b23077dd6c65bbb3622799e38f43af6200c968964dd44f62cb7577ac9"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_D21_Lobby_Win_Loop.uasset",
+    "sha256": "649cee7adeca6873283ed4cec3703c5a445f520607c523baeab7e19327b5e19d"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_D23_Idle_Loop.uasset",
+    "sha256": "1c1351d1b9fc37776c2a348c53f07b21930214649170bb270ef6fc4d2be978a2"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_D23_Lobby_Win_Loop.uasset",
+    "sha256": "c7f78937b2daa650e51bd983895db403dfd69f968571f0db2d9b13d1a3cf14fd"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_D24_Idle_Loop.uasset",
+    "sha256": "424bb2b79366f201be4c65708291b449c663f06246e30b6021e080ca0b54936d"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_D24_Lobby_Win_Loop.uasset",
+    "sha256": "64128886ba8d3c2deb4451d4ead11cda5f390831979dbb980752b32d9a0dfc91"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_D25_Idle_Loop.uasset",
+    "sha256": "eafc6d10e7f10a5aa583dbc08a5b6da22958ff368b4518bb316d3c7814681fe3"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_D25_Lobby_Win_Loop.uasset",
+    "sha256": "ce62484cf3450119e447b66ebe258b399035a06a8a976ea00c9c6200fb0fe7ea"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_D27_Lobby_Win_Loop.uasset",
+    "sha256": "07f799507408f43711b32158d346de0ca714ff8e4f0714b9086fe59478e5fa4e"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_D29_Lobby_Win_Loop.uasset",
+    "sha256": "7a8cf48d1f710d73bfaedae18eb9c96bd2bccf0232c09bae120afbdab924aff3"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_D31_Lobby_Win_Loop.uasset",
+    "sha256": "3769409567b9721a68d0e1483b55984851e3647b6bc7584a88069f158d7e9c8b"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_D33_Lobby_Win_Loop.uasset",
+    "sha256": "41dfb8909e82e926df6b0ccd57931ce580b9c035fbd54748b91563eca9ae79dd"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_D34_Lobby_Win_Loop.uasset",
+    "sha256": "d96a0681066b52699a4a9693a25d6180970a952b9f51ec7c7a5dd224a730934c"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_D42_Idle_Loop.uasset",
+    "sha256": "0b8e350032316df4801127d99519247a587736a2010717e1a06871c3534a185c"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_D42_Lobby_GetSet_Loop.uasset",
+    "sha256": "0f4432d6d8d826a2002c17cf6afd8d9727fe98ace27d2b7dc5981c217392bddc"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_D43_Idle_Loop.uasset",
+    "sha256": "a0b93b72494d4f6e9517ba910c981d71da6a85d74c09a2c42526c4dfaf5cd8e9"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_GaaraNext_Idle_Loop.uasset",
+    "sha256": "86c96e0e54d94d82eb87d2b3832b67cd1a18f3f0858bc9a950fe7762f4848093"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_Gaara_Lobby_Win_Loop.uasset",
+    "sha256": "080d0037424d8eeb2e583bb327324722d3e9a306becb0913c7930cd805e01a58"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_Itachi_Idle_Loop.uasset",
+    "sha256": "2b0593040222d54a2b41c954f7736cd9adcd4e395685e83630df8acac888e441"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_Itachi_Lobby_Win_Loop.uasset",
+    "sha256": "e2772395f1430aedaf4286023619a24dcd5925a997e28e316c47011e6fa105b8"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_KabutoCloak_Idle_Loop.uasset",
+    "sha256": "7e39e8789f3d49fa991d5e390131fc1f09b94d68375f50b075621f08285eeecf"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_KabutoCloak_Lobby_Win_Loop.uasset",
+    "sha256": "eeb46e35d26ad521419be064f1baeb5211f335e312042828c0391b99391da64c"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_Kisame_Idle_Loop.uasset",
+    "sha256": "00f4fa246598ca093c1a7a2bc4f42adccd2e951b74bde11d2b8bf6cdb2b4af0d"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_Kisame_Lobby_Win_Loop.uasset",
+    "sha256": "84823ba96f9f10032b2eb95264a256824af2bf3511fb4a2092a9d0a9f993a0b9"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_Konan_Lobby_Win_Loop.uasset",
+    "sha256": "9443e62b15ce693627e9b959495ab8fa0b6ef92ce981b43deb74ed8cb45c991b"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_MadaraZombie_Idle_Loop.uasset",
+    "sha256": "192f9a99b73bdfd8aab552b5c8dbd0d9d44421ef9919324af9da688c986031c0"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_MadaraZombie_Lobby_Win_Loop.uasset",
+    "sha256": "8a2d5025b260facb74414edae90d433dde4788fb0c0bad25a939955fdb45f27b"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_Minato_Lobby_Win_Loop.uasset",
+    "sha256": "1616e66d8a709b7d81efced58179ae89d574b47d91f2eea78e390eea759d721e"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_ObitoZombie_Lobby_Win_Loop.uasset",
+    "sha256": "54edd0871d70f62a6c77e58c42db177e5c8144531a964ef3a2cc0ad65a8dca27"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_Pain_Lobby_Win_Loop.uasset",
+    "sha256": "fbf8a2f0b765f9eaa2fc69fafeaa4e96b6386289f5561b76a0832d4da1046d5a"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_ShinoNext_Idle_Loop.uasset",
+    "sha256": "ae912dba585957a6bedd210f1166daf42e552765a46a1f440c960ad19ff9b50e"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_HashiramaZombie_Ninjutsu_Idle_Loop.uasset",
+    "sha256": "7a0d1f46c1ab5ebbfb5b153268813e7e4083434baed4afa46630257531e3047d"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_Hashirama_Lobby_Win_Loop.uasset",
+    "sha256": "998a24237b7c0cfc46b1896a64973893c9b7ce913da93f91a80165d46baabebb"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_HinataNext_Idle_Loop.uasset",
+    "sha256": "1e5553f5ad3c4a4c9c32002c4f30a647ddcabb6fc23b09f8ad536eeb9cb8f0d9"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_Hinata_Lobby_Win_Loop.uasset",
+    "sha256": "77dd1bc0210ae9ca8a1d2fe8c7fe3807435ee8d53f64ce6f7fa2a77366ab5c14"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_Hiruzen_Lobby_Win_Loop.uasset",
+    "sha256": "21b81f512c51760f1a8bae635c06ada2ccbaa82e28aa24585f14be48f4315101"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_InoNext_Idle_Loop.uasset",
+    "sha256": "ea8eb902dee81eeba8f00c8ffb686f057ef2cae5e87da3407bd0c135008270e2"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_KakashiNext_Idle_Loop.uasset",
+    "sha256": "523247dfd90b4c470e3b51834cf1edc612ecb17a360090f6c1cdd4f5f8b0ce40"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_Kakashi_Lobby_Win_Loop.uasset",
+    "sha256": "d4150b3aa8ff5e3ebca32cdc9d7f417592a8bb9b2aa0049a9061959586d1ef4f"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_KonohamaruNext_Idle_Loop.uasset",
+    "sha256": "9a6c167b706d95ddd8cf3981ed75045704b5249a9eecffff4efca69c661fbb21"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_Mitsuki_Lobby_Idle_Loop.uasset",
+    "sha256": "825a85577df8cbd2c0a7cf6c7a325a4a1bfdde03d76481dab36373201469c8f7"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_NarutoNext_Idle_Loop.uasset",
+    "sha256": "21831b47e7e263d978a0d8e4a1d7dfcc93c9c1850f69555b647356810ddbab3c"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_Orochimaru_Idle_Loop.uasset",
+    "sha256": "a87bab2aaf9a5c9ff0f4289661b3f3079fe6e6f3a428469dd4aef9b6a0ebe53b"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_Orochimaru_Lobby_Win_Loop.uasset",
+    "sha256": "b7b226426f8619279b168a65382b58f54c14a25e25f639eb12500126921cf925"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_SakuraNext_Idle_Loop.uasset",
+    "sha256": "1ba2597dab75ec297d70371db1d95cd178a76d29f13a46f47769ffe66e77ab25"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_Sakura_Lobby_Win_Loop.uasset",
+    "sha256": "e35ba6c7eb880e0e52e80143fe8ad6ca2530fd00f9256618908c0dce1055f073"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_Sarada_Lobby_Win_Loop.uasset",
+    "sha256": "9a52f07f2364dbf0f7de0ffcfc7d0e32354d2c70bd8768e5aa956a51846d3d3e"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_SasukeNext_Idle_Loop.uasset",
+    "sha256": "17124d054827438d19100c94428637c6b99226d4caa0df2edc75f415acfb2572"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_Sasuke_Lobby_Win_Loop.uasset",
+    "sha256": "87b5614983ae4d084c76dd3f5782444acf1f762b3b39bab269c7fdee7e2c8492"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_ShikamaruNext_Idle_Loop.uasset",
+    "sha256": "20c373ed0e90db38aecbcce474f2136e7f33d8ada7b87f6cb49665910807be54"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_Shikamaru_Idle_Loop.uasset",
+    "sha256": "03224faaaeb231040bad400b3656b749d5d98e16de263950650ba03b2308135c"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_Shikamaru_Lobby_GetSet_Loop.uasset",
+    "sha256": "8b28838c5aaf549dc336ca5ac55de7e87bcabebb9b640bec18bac07f09b56928"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_TentenNext_Idle_Loop.uasset",
+    "sha256": "6aa3f1d90e83fdc8ff8ebe97bb09131fdfb38772244061176217f0f081937f8f"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_TentenNext_spk0_Loop.uasset",
+    "sha256": "8e3524bfa5f0c9ec262e75067aed532d5ccf68b594594fd3babc393d313ec8fc"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_Tobirama_Lobby_Win_Loop.uasset",
+    "sha256": "723a361245c9357aa59add0d9fbe7359dcf3107172287371e958024de9992d8a"
+  },
+  {
+    "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_Tsunade_Lobby_Win_Loop.uasset",
+    "sha256": "520c5244b474265cbcc67b7bcfedd9f50fa535077a5350ea589c1c04b256fc06"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Auditoria\\L_Selos_Auditoria.umap",
+    "sha256": "f35c3d9a53f4408e842b31e7a685995cef01f04f2c72320885b74897015f7921"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Auditoria\\L_Tigre_Aprovacao.umap",
+    "sha256": "52fab21723b3ea5fbf5673fac836929bb7cac7980b424b8d74c8245e8cb444a1"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Auditoria\\M_Selos_Clay.uasset",
+    "sha256": "850fba50ff3446100ebf580d3d5f716b33d23aa1e76bc2ee1d7ea941d1fedba2"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\BP_Katon_Goukakyuu.uasset",
+    "sha256": "8f20e8599b15b5fc97a1c8b36a9a90ce618f770e513102e921a8c469ed0cf402"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\DA_Katon_Goukakyuu.uasset",
+    "sha256": "9284140a626bc499feb22fdd16244d885c5efbbb798fd39a47c0973ec6c66656"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Animacoes\\AM_Katon_Sopro.uasset",
+    "sha256": "039045bcea709f2171666c5fa978db36293daa03a14a09b07176a69ef4b88ecc"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Animacoes\\A_Katon_Sopro.uasset",
+    "sha256": "c56f8258054313636955828599645b94baf54606189efb5fd1797d4ccf727607"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Animacoes\\A_Selo_Tigre.uasset",
+    "sha256": "337e3a9d45f8476fac38f60054dfc914956e8d18d8134e1902af210a1131b3f7"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Animacoes\\A_Selo_Tigre_Sasuke.uasset",
+    "sha256": "68620b8448cfd86bf92cf61e29475dde27dcf59170dcb1f1363cb6ed401a90e5"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Animacoes\\Sasuke\\A_Katon_Selo_Tigre.uasset",
+    "sha256": "b114f85a8bcb432916d7f1c0e2706b71fc74f2ff26e2fa77df84f4ac2341db62"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Animacoes\\Sasuke\\A_Katon_Sopro_Sasuke.uasset",
+    "sha256": "e809d3c1609b7fb391d9a1466a01fd62690ad8207281270c8c8dcf535894c6a3"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Animacoes\\Sasuke\\A_Selo_Tigre.uasset",
+    "sha256": "98df14ac503c14b768720d3e1517104db24509712f71409a9c10c3c39d187d1b"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Animacoes\\Sasuke\\TigreV2\\A_Selo_Tigre.uasset",
+    "sha256": "8dffcfdfdfc5b92e631f2a95ef59cd88566d7b0858d79b4aeb3c593aea2defb9"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Endan\\BP_Katon_Endan.uasset",
+    "sha256": "3661fb93ce0285c619bbf2b781e128f078086ccf448e94ccee3272e9cae77d51"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Endan\\BP_Katon_EndanExplosao.uasset",
+    "sha256": "66221cb410e0f20aa9096de93a7cba8d9c2325aa4a9a346071349c3d5772bab6"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Endan\\DA_Katon_Endan.uasset",
+    "sha256": "b4a6f7579595c525670b518ee1573130249a7554ad5989e7b0ad50b3005418f9"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Endan\\NS_Endan_Rastro.uasset",
+    "sha256": "2676234cccd8ddb0752ff2b15db2d4545797c40a1b167ed6c727e962f555cb29"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Endan\\UI\\T_JS_Endan.uasset",
+    "sha256": "2cf28fd7d1a501baedfd6da0589a84fa20d74e427902c4d9d72878495d2a191b"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Endan\\VFX\\MI_Endan_Cauda.uasset",
+    "sha256": "df4421c77bcf9b9c808fc1f88e6b3ea0107c3f3d200869e761912448991f16d7"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Endan\\VFX\\MI_Endan_FireBall.uasset",
+    "sha256": "8fb3031271a0d0575f2d35806b6674d5bb65644918254f052ac7c4d7dc1325e0"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Endan\\VFX\\MI_Endan_Halo.uasset",
+    "sha256": "56e362d49a014b65f9deddbb24914028ed59c506ead48100921dedff35b35fb8"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Endan\\VFX\\MI_Endan_Lingua.uasset",
+    "sha256": "cd62e26ae42516b79732f83a03a22f51cac58ae97f83b776ba4c88c3534ac40e"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Endan\\VFX\\MI_Endan_LinguaNucleo.uasset",
+    "sha256": "fb9dc3a2608a2df5105771c0b06adf23f4ed6b03aa6643342b8b3f8cf8df83c4"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Endan\\VFX\\MI_Endan_Lobo.uasset",
+    "sha256": "90995e5ab34c40e294983a39433d70312761fde4b246afc76cb68eb8c1bc6d27"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Fluidos\\L_VFX_Flipbooks.umap",
+    "sha256": "0ad4f8d28cb488c048a34c6c6ae45be572d0ab78438cc977d0ecce0a20237748"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Fluidos\\Simulacoes\\NS_Bake_Alongada.uasset",
+    "sha256": "1d80acf1d6064183ca4744c7ad9f815aa103b7442f2770aa1eb2554b3c227482"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Fluidos\\Simulacoes\\NS_Bake_Alongada_Density_8x8.uasset",
+    "sha256": "4cd2c9f6bcfefe4e1c3b21c1533e488edc5d52eb2e01420c3ecd12adf920fb1c"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Fluidos\\Simulacoes\\NS_Bake_Alongada_Temperature_8x8.uasset",
+    "sha256": "5887c2ce7cc5d3e9c2bb9d7a9427a1adc9f5571cc50f8034e117036bd55bfce6"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Fluidos\\Simulacoes\\NS_Bake_Alongada_Velocity_8x8.uasset",
+    "sha256": "39fd9b41d1be258316e772d328e29e07e36915f44fbd84e43112946c168f1153"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Fluidos\\Simulacoes\\NS_Bake_Fumaca.uasset",
+    "sha256": "327f61dd775520557325d43c538ed2d39d149a211b2045363fa8a41370c525ed"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Fluidos\\Simulacoes\\NS_Bake_Fumaca_Density_8x8.uasset",
+    "sha256": "59e0f8bf462e54a10494655a3cb4dbcd6c7da4e151cb3ca035d64231aeb9cf19"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Fluidos\\Simulacoes\\NS_Bake_Fumaca_Temperature_8x8.uasset",
+    "sha256": "dbf1d839cc3bedbd479a26367f21c365836855ff28daf5b07c6816db40ff297f"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Fluidos\\Simulacoes\\NS_Bake_Fumaca_Velocity_8x8.uasset",
+    "sha256": "6f4890b136ff6c0bb188de7dd986bc5d27c1b16152591c95e14eed27e998f42a"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Fluidos\\Simulacoes\\NS_Bake_Redonda.uasset",
+    "sha256": "b1225a3347b1090c4f6a85d8e74f61a049585774f6a8ebd69f7ba4e848bb4df8"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Fluidos\\Simulacoes\\NS_Bake_RedondaV2.uasset",
+    "sha256": "f5da56304aed59f59ec09e60ce6dbc517fdfc0c349d9d510c16145a2298960d7"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Fluidos\\Simulacoes\\NS_Bake_RedondaV2_Density_8x8.uasset",
+    "sha256": "a3c3337f5d55d9e2111e171649ba3f9def15080cbcf6309b682f19c1dc6c9632"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Fluidos\\Simulacoes\\NS_Bake_RedondaV2_Temperature_8x8.uasset",
+    "sha256": "61ab685dc40dd3a3c1035a0c91bcc5502f01d1eab9dc04cac9b2f90116a9fd8d"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Fluidos\\Simulacoes\\NS_Bake_RedondaV2_Velocity_8x8.uasset",
+    "sha256": "f03ab91d443ff638c32115e946c2315f43365d59e7a666116ebb59eaaf72f10b"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Hosenka\\A_Hosenka_BracosAbertos.uasset",
+    "sha256": "b62efd3d0f8d1b5ab7bc5f92159fb819cedc92eced0dd411b22c99146d00843e"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Hosenka\\BP_Katon_HosenkaChama.uasset",
+    "sha256": "ebf5c0a97356e4273632730760a2e550ed7c54b31b74dfb09cbd7e3e444087a6"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Hosenka\\BP_Katon_HosenkaOrbita.uasset",
+    "sha256": "c583f32634366d7acebfe8307a90c77b2874e93cdc2d94f5f1b9b1a874655233"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Hosenka\\DA_Katon_Hosenka.uasset",
+    "sha256": "a8b7cefba6a7ebd83c58608f7e4ced10ca7f6c433181373fb559867f4206f036"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Hosenka\\MI_Hosenka_Chama.uasset",
+    "sha256": "a75bf899f2dfe5af756c49f35c719e582aa48cd88761aaad85449c724362e4d1"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Hosenka\\MI_Hosenka_Halo.uasset",
+    "sha256": "d68a0b4f437b0cf61b6d179de0ccc3407aefeec7714dba399cac7fade4332339"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Hosenka\\MI_Hosenka_Nucleo.uasset",
+    "sha256": "888710e2043c1eab3fe0c9bef329b2c1ad5d4a92a8591f48d84dd5baef68563a"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Hosenka\\UI\\T_JS_Hosenka.uasset",
+    "sha256": "0654c21a487b0866d8fb8c0eef5e26c1027d5dc934d1702d675ad4f98d85c48f"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Modelo\\SM_Katon_EnergySphere.uasset",
+    "sha256": "53a420e71e29644d3e8fc1d33ef22b8546ba09394372a86fdb8e03fa71c77870"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Modelo\\T_EnergySphere.uasset",
+    "sha256": "5f5b41ee43f741b727172f59fe1d726d2b35ee39ad609e942d00c6b37e156a6d"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Modelo\\T_EnergySphere_Mask.uasset",
+    "sha256": "62b0e19521a0b48bc17095cf7cc6647e15c72aba43e510a7b658ac2c3ae13829"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\Preview\\SK_Sasuke_Tigre.uasset",
+    "sha256": "f075640125ff252aa1780b3a8d20d0f672228ff9725eed5be8599f5f6000a7de"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\UI\\T_JS_Katon.uasset",
+    "sha256": "803fdf1922714cf098841c6586fdc6b760d510fa856af826298a010da81079de"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\NS_Katon_Boca.uasset",
+    "sha256": "3becec68911b871a896714de7298763f30890346b70053adf13ea8fe7f68e2cf"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\NS_Katon_CorpoVivo.uasset",
+    "sha256": "4db8071f789e225ef2cf0b6021f0f0f8ede1bd5457b488d24bab0ad4a93738cc"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\NS_Katon_Espiral.uasset",
+    "sha256": "d6b7c60cb679f5a5297539e019948a30efc0dc2d9c543e26de5b900a684363a0"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\NS_Katon_Espiral_Continuo.uasset",
+    "sha256": "207e91b23caa1c5bc88f5a3346eb517dc202b0f159578ecad2636b843d0007c1"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\NS_Katon_Explosao.uasset",
+    "sha256": "9ee0252f69364ddc4f728f30af54adc204dfd0f70ca7b50b9e6b79ec12aee0a4"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\NS_Katon_ExplosaoIntegrada.uasset",
+    "sha256": "0d9b9cc77df3f86b6a7077ca67b70a08596d5faaa8d8acad9f658da5fc7eb183"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\NS_Katon_Explosao_Zenkai.uasset",
+    "sha256": "510d60f718dbedfae22ee4a88e7ef05dc5f0f8d1b0a378e25eae53124e578856"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\NS_Katon_FogoNoChao.uasset",
+    "sha256": "1056cbedf17ca3914e0d079a80560c62dc68967630e539c191d193549dca660d"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\NS_Katon_FogoVivo.uasset",
+    "sha256": "c01dcd2b75af410b11e9266bf98ff172189d33c70d154cab8d07916acdbfea9b"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\NS_Katon_JatoIntegrado.uasset",
+    "sha256": "1add18964b5d1f47c5be650145249338e978042551d8f138dc7ebbe1d2c6e9b6"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\NS_Katon_JatoVivo.uasset",
+    "sha256": "5f5b9d58617f7fb9371010fc19c261b82fb3bf8911bf308258ba51f872fdebb4"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\NS_Katon_Rastro.uasset",
+    "sha256": "c86fdf8247343131de6974cf026acd2520869bc30b83271764733a4aa7e70525"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Estilizado\\BP_Katon_ExplosaoEstilizada.uasset",
+    "sha256": "89ca8d5461b12104fe2339050ce872ca499e0cf7a4bd2b4de8e7ea06da72f4a5"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Estilizado\\CA_Fogo_Faixas.uasset",
+    "sha256": "8ede730ed5c425388b7961f739302b734eec8dec7450114743c430cd5d8fab9f"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Estilizado\\C_Fogo_Faixas.uasset",
+    "sha256": "d3658c8cc25ef987ecef6dc1ef37d2e48d251d9e84bf0864f3fcf7de21a62555"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Estilizado\\MI_Fogo_Anel.uasset",
+    "sha256": "44a4e0bf3c0e2bc55ba67febacf450d496fe380e6e513744b4e47c6adc833680"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Estilizado\\MI_Fogo_Chao.uasset",
+    "sha256": "6dc4a720091320e348124a37d57fab59ced2b468bd6a75883b6f6f66fa65d225"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Estilizado\\MI_Fogo_Coluna.uasset",
+    "sha256": "a933febf22a0c81b32562ee61e4320ba2018e4b48ef0bac7bf41bb6b0fda13d9"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Estilizado\\MI_Fogo_Cupula.uasset",
+    "sha256": "a7cd15037950ee1e87c3655532c3618d11781123446d928b91dc4ef685bf4564"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Estilizado\\MI_Fogo_Halo.uasset",
+    "sha256": "7584312e0165e5fbbd5fd7ed94455e32a8681a1ce093c9f3f1fb07c70bae7801"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Estilizado\\MI_Fogo_PuffVermelho.uasset",
+    "sha256": "6039141c71657196ac2d109fc3ecdb1a3bc2626f0cf61f55628440c5adcad739"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Estilizado\\MI_Fogo_Risco.uasset",
+    "sha256": "cdcf1ccc9e9bd5d52fbe474795217b077cb1f2c43d1bd246d650b048586568cd"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Estilizado\\MI_Fumaca_Puff.uasset",
+    "sha256": "e6373d34e851946bb06f78b7692e9d24de65cf0db60a5615eb1fb8fed99d2b4d"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Estilizado\\MI_Katon_Antecipacao.uasset",
+    "sha256": "89fc0ce4425f44de44d62d45566145ba1ee4349b6f44978fed88650bd917b7f2"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Estilizado\\MI_Katon_Casca.uasset",
+    "sha256": "74cc412cbc8a86a609f7adc7efc862472c03ee720877afa3d8b1d7b58e5a6274"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Estilizado\\MI_Katon_Cauda.uasset",
+    "sha256": "11ced3633905e665f7aeaf6f6c7970811f9896556c78a9a7cf521afb8f94d342"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Estilizado\\MI_Katon_Corpo.uasset",
+    "sha256": "142a983f552f577e6bbfff789cb09fd8ea9e0cb2ba47bbab6b257eb61885bac9"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Estilizado\\MI_Katon_Fita.uasset",
+    "sha256": "585e4a39dc725fc5ed1156c6bd5c844f7ba7333ef1fd8673917f598aaf54eef0"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Estilizado\\MI_Katon_Halo.uasset",
+    "sha256": "dc9cda94f6eb572d3fd09f4dd1a4ed11b98d793b24a5bcb9312b665d664952fd"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Estilizado\\MI_Katon_Lingua.uasset",
+    "sha256": "7f02e5bba56087275c946fe121b1bca1a43e92bbbb0e76024a274b532b9170dd"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Estilizado\\MI_Katon_LinguaNucleo.uasset",
+    "sha256": "67f6a21d93f8a49b3be1917c3aa89b4a8dc3b4f1236a78659e7aff5fd4b60a62"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Estilizado\\MI_Katon_Nucleo.uasset",
+    "sha256": "f7ca5a05933b3242d4c39a04fd11674d20f289eac57a2985c1cce1e23cfb4fa1"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Estilizado\\M_Calor_Anel.uasset",
+    "sha256": "d39cefcb9b7d47fdadc68bfa8450b9d00aaf6439deaa8a0242bb709908659821"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Estilizado\\M_Fogo_Estilizado.uasset",
+    "sha256": "851de507fb3590ff4046bda090231a9dbfb714de3471dd2c4973ae7f484598be"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Estilizado\\M_Fumaca_Estilizada.uasset",
+    "sha256": "f02da4b0241e1ec7907f9ea3c3c2a366b98d3a5dc49a1682b96b3be574cda43c"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Estilizado\\NS_Fogo_Brasas.uasset",
+    "sha256": "9d99623c95fe5333132fe65b3245e34667d1131b6ee8958159f743b68d9af9ed"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Estilizado\\NS_Fogo_BrasasFlutuando.uasset",
+    "sha256": "2d281ba14669c27fe26237617dd0a3b2f2e1aa253862e9708187548bdede01ae"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Estilizado\\NS_Katon_Antecipacao.uasset",
+    "sha256": "65af845afae4a750329ff671188384e53002a9aa4b6f4abf5625e8c5b0e611b0"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Estilizado\\SM_Fogo_Anel.uasset",
+    "sha256": "db7a564bd6d847051097d99da65ba139deee5b78ee129deea049206fe58bb7a5"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Estilizado\\SM_Fogo_Chama.uasset",
+    "sha256": "31a20f38b140e27ba311caccfefd1ef4ca1fe9b34525aa5b8bd5d99b7b050129"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Estilizado\\SM_Fogo_Coluna.uasset",
+    "sha256": "e1044d9f010dba623a87d4246eee08e46e21170ef637d7a0ea4523b0097017c5"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Estilizado\\SM_Fogo_Esfera.uasset",
+    "sha256": "1ac4c450912f4b92a664db20803d5652dd45c31e7fd9d0396f8caa75aa95af04"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Flipbooks\\CA_Katon_Temperatura.uasset",
+    "sha256": "e90a476629b7603bb7cc45b9530d3950fced63bcb46517edb111da7cfaacace9"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Flipbooks\\C_Katon_Temperatura.uasset",
+    "sha256": "839ec941701b74e8aa271a012e12f7f1e2d5a3cd09533e777f8cc1c0597c6a2f"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Flipbooks\\T_Katon_Alongada_Cutout.uasset",
+    "sha256": "ea0938d5ef2bdb5a1c8808007c2330ee2f76a2e9fec4f4e5c854466b31b0159d"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Flipbooks\\T_Katon_Alongada_Dados.uasset",
+    "sha256": "2214d26621c199b572302e2a2f28a21304806f544b92bb10e581165d19d1fb00"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Flipbooks\\T_Katon_Fumaca_Cutout.uasset",
+    "sha256": "23c168061cd0bffe87e3b93ca47b220e2380855311467800c65bdd9adbd7be2a"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Flipbooks\\T_Katon_Fumaca_Dados.uasset",
+    "sha256": "0e04da2d80ebd91e9452ef7d7df178fd3c2b435e39950134c8cff608cc6d2357"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Flipbooks\\T_Katon_Redonda_Cutout.uasset",
+    "sha256": "393ae570174124355398948b1c5bf96d6e0f871c73dab97794b93419afb1b8a3"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Flipbooks\\T_Katon_Redonda_Dados.uasset",
+    "sha256": "a6eaf1aa6808a7359ea4aa497c4c82aac29effd4f27df63253202835615b6a48"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\MI_Katon_Brasa_Zenkai.uasset",
+    "sha256": "074975eab3127f5ef73d5fd48dcbea8e6e7a1e7d595987bb1be05a3b0f34d94e"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\MI_Katon_CalorParticulas.uasset",
+    "sha256": "6a6b946225bf7d98d2fe4827e1233effbb3d318d51000c95f2e199d6421a08a7"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\MI_Katon_ChamasDentro.uasset",
+    "sha256": "d576d76dd24d5fc07ce3c36f3ae74e21ec4f4aff867a977357a6fd3d4dda980e"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\MI_Katon_ChamasFora.uasset",
+    "sha256": "fe970a42e6836f5ff2811e0970efb78b9dcf1a03cd27d3798e1e0fcba0218dc8"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\MI_Katon_JatoVivo.uasset",
+    "sha256": "282ec91b04f68bccf9b83d7a099b73214ba6f363f3168af492ff41a2537ff3b6"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\MI_Katon_Labareda_Zenkai.uasset",
+    "sha256": "254825a48c6fc694908c9244b86e5efc7b95c1ae32fb0bea7ecc441aa1fa17eb"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\M_Katon_Brasa.uasset",
+    "sha256": "5647d0cd926ddd03b241c93515364a1e0dd163e3101436f8ea595dabd8504a31"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\M_Katon_BrilhoChao.uasset",
+    "sha256": "35163a2bd08544bf1c7c38165b31b15143de6d8a339e2901a8e53046ce2a9f30"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\M_Katon_Calor.uasset",
+    "sha256": "ec05bb8a4dbf8f3f03e74c53f320dff37da6fbdc4d13bfc9a0ef5a2d551b378e"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\M_Katon_CalorIntegrado.uasset",
+    "sha256": "5054b3a3bdcae15f40628a2db710d90143d174bb7e4828720b818c90dda5f6f4"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\M_Katon_CalorLeve.uasset",
+    "sha256": "9caa7084041d0f2e5617cf0bd81372bd8b9968ba7853de6b2771c1187dc596d5"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\M_Katon_Chamas.uasset",
+    "sha256": "c9377f3daac06161000e791b4efdd505721aaa24b7358f7dff1e7f317f0d153c"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\M_Katon_Espiral.uasset",
+    "sha256": "66d40c4c98890c849f6a3f2e50a3c3bfe6ff1de51a9053158469d9681a269903"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\M_Katon_Fumaca.uasset",
+    "sha256": "b564b62ed43f329967c92088257c084da2b61b732c551fd0060b2b52e715ed8b"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\M_Katon_Halo.uasset",
+    "sha256": "fd0045264ed6802b7c31004ed6793666ae4a7f0ed5221fd35c5aa197804d73d1"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\M_Katon_Ignicao.uasset",
+    "sha256": "48ac326cfb8a913305ba89ee6aee7dae30ec2512e99b36d29d322bea1e0df79a"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\M_Katon_Labareda.uasset",
+    "sha256": "69407ba1731ad2da5971b85b6efffe11082d0e0ec11dbac93f5fdad2b159c8c9"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\M_Katon_LinhasImpacto.uasset",
+    "sha256": "a943f4fb646926e67fa4841e43327fc7f16075d97ce73e97903a12d060dfbaff"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\M_Katon_Nucleo.uasset",
+    "sha256": "a54aaa95f0e6206ccc78dd0e64241660a3d52a9214f89a2593353ea5610f5579"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\M_Katon_OndaCalor.uasset",
+    "sha256": "2a9960ffd4c574a23d66d4cba9618b44f6307b6856f2d26ea397c6be1128a095"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\M_Katon_PosBrasa.uasset",
+    "sha256": "db15ce2de3fc46e1845bfc2b4ac5a9e8502402cae88a7500242072472072c71a"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\M_Katon_PosChama.uasset",
+    "sha256": "e6f699c1859e869dccffaf5d80e8084710226c186238d82a2d48fea47f6b4725"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\M_Katon_PosChamaChao.uasset",
+    "sha256": "aebeb6bb7824c6ffeddda5182f9903d255a48eba40518e888da9f7345b7271ab"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\M_Katon_PosFumaca.uasset",
+    "sha256": "cf25533671305d49ada92ad24b86137e4dcf12c30e92c520a903082b85cc0c4a"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\M_Katon_PosTerra.uasset",
+    "sha256": "db2bcf7befb0445e3d7d837719a17b6a8a9a960b21ad3892bad59e70652f5b33"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\M_Katon_ProxyMedicao.uasset",
+    "sha256": "2c76750e993360cebc3d2995406b66dd0479b360a1875c417d119ca0d56d1494"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\M_Katon_Queimado.uasset",
+    "sha256": "37bda1e8d1af9d2b3eeed2ad467db3431231267c1afa2475f44a32af83aaa20f"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\M_Katon_TerraGrama.uasset",
+    "sha256": "ef457a19d7bc1428e713f29ade6f596272f598cc6ef880755389dfbd40754cae"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\M_Katon_Vivo_Cauda.uasset",
+    "sha256": "3338de32e5c5c0fac7b4ab43f123902b544602dd48924207a0a922e4e2faddf6"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\M_Katon_Vivo_Chamas.uasset",
+    "sha256": "81f9cd48c42f24541b5212f749cde11f3ceb40d3fd9ded6f82a40758560bdcf3"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\M_Katon_Vivo_Fumaca.uasset",
+    "sha256": "9b2b4f4161518cd4173171978a3aa003223e2f954e41bab02b21e229eafa8e28"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\M_Katon_Vivo_Linguas.uasset",
+    "sha256": "f550ce47342e50f04c4631c03f4000d38f737f0a66c81c96b05eec6e466f17bb"
+  },
+  {
+    "path": "Content\\HypeWorld\\Jutsus\\Katon\\VFX\\Materiais\\M_Katon_Vivo_Nucleo.uasset",
+    "sha256": "71c09a22d0d7d85b8d9eda29c475f8ab8126b4bf7391398a4d3dd77cbd9d127e"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\L_Tutorial.umap",
+    "sha256": "dafc5a29114f9c7d40f1134840f51124ec12e32290ec5877f39a8f4b09de964b"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Camadas\\LI_Tut_Layer1.uasset",
+    "sha256": "595987c6d7013802da3312e05375c3b8addfec6b918143a4a55151d3e6902139"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Camadas\\LI_Tut_Layer2.uasset",
+    "sha256": "5b688a29007937c7638c3ec8d11403107ac050fc45fea7a17cca4f4ffdf151f1"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Camadas\\LI_Tut_Layer3.uasset",
+    "sha256": "923b63591e8565f5e145714701cc7cef110ada31e8f2d692265588b748b4bd36"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Camadas\\LI_Tut_Layer4.uasset",
+    "sha256": "b05e268b580349b392c559879e84c8444e2017a9dc7dc6ba3a0749dafa791bb5"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Foliage\\FT_Tut_Arbusto_1.uasset",
+    "sha256": "3bdd34354b747ba4be15935d064e9a70c86311374c5eda1317962a4f322dc32f"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Foliage\\FT_Tut_Arbusto_2.uasset",
+    "sha256": "2a3d5271e506c730925050c4096a13fd418f38b5c06234ee284afbfb94d2505e"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Foliage\\FT_Tut_Arbusto_Claro.uasset",
+    "sha256": "5fa30c202e0a4100a3477cec0d1c181d27a80cb9f15e473c49ac4418e9f1cbc2"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Foliage\\FT_Tut_Arbusto_Florido.uasset",
+    "sha256": "022543ceecfb2bbc6e05ede9f179b6ab2fc9aef392dcb25c2ad1bcb1d04aac9c"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Foliage\\FT_Tut_Flor_1.uasset",
+    "sha256": "6365dc46108aeb4f1921f9a1090a853657ef75a7f62bdd6af8d6050beee597c6"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Foliage\\FT_Tut_Flor_2.uasset",
+    "sha256": "46e50e3842ef94df471e439ab428bae41485f150681911cd615a977e2c9dca13"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Foliage\\FT_Tut_Flor_3.uasset",
+    "sha256": "8591d04694897483e23770499de941b6005ef352425029122ecb93192470cb79"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Foliage\\FT_Tut_Grama_Alta.uasset",
+    "sha256": "5ac06f75ff599720abb6936c56addb0f75541cb7d8e8a801acbe7fa2a08850d0"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Foliage\\FT_Tut_Grama_Clara.uasset",
+    "sha256": "6495068a9e4af2095dee460f9fe64022d55b921edae080526f4d88ea3768882e"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Foliage\\FT_Tut_Pedrinha_1.uasset",
+    "sha256": "261f08f2e23482d3583b8b89a0861df3f80b55faaa3e6495837aea3bc657a283"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Foliage\\FT_Tut_Pedrinha_2.uasset",
+    "sha256": "3af72b077758a92bb71d619790b5b8feb67a639e7cc5a9080faf6698a188c483"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Foliage\\FT_Zen_ArbustoFlorBranco.uasset",
+    "sha256": "ce446752ee4f5b107150f915b3e3a6409a3e977991a4d89c9312298c45c01dfe"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Foliage\\LGT_Tut_Grama_1.uasset",
+    "sha256": "2344daff3c343bb9cbf1e303ee13ba781d4d62bd313312997a6e19a3ef2ba085"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Foliage\\LGT_Tut_Grama_2.uasset",
+    "sha256": "f994e733d03069d612a81f8acd895fc4f8f3e59b7c8da4bb90209a210c9e7607"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Materiais\\MI_Placeholder_Lanterna.uasset",
+    "sha256": "00dab2f89ebc76b14cdf61a8fc1c9a544dfa064cca0ecf9324abf0a2095f69ec"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Materiais\\MI_Placeholder_Madeira.uasset",
+    "sha256": "cf42dae39e3eda8cce5b0dede4bb4435a436e6ce17c8462415aae777381971be"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Materiais\\MI_Placeholder_MadeiraEscura.uasset",
+    "sha256": "5ce9b2c4074b4be6552c924a0a7db747b7b16a41e07921aa3abebd652bc4df0a"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Materiais\\MI_PP_Personagem.uasset",
+    "sha256": "61f2b163a1eee855bf1eee13d65d651f4446a7a1a93c48a5f319b4b4905ccb0b"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Materiais\\MI_Tut_Arbusto_Claro.uasset",
+    "sha256": "6b06b823381257eb5c80c367615ee44ab4e2eb6a6c2c8aff8f3ee6505e1b834d"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Materiais\\MI_Tut_Arbusto_Florido.uasset",
+    "sha256": "162b0dbb1ce2680648014397535e85b271036df77c638071065d148c42b09e21"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Materiais\\MI_Tut_FloresBase.uasset",
+    "sha256": "088496371452983b0cd64d2d7e2e5a0f84ab230e39a98a9dba038b51786b5812"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Materiais\\MI_Tut_Folhas_Escuro.uasset",
+    "sha256": "d2bdb21d308b16be716ffd597744f4c5fc793bb56e958e0adaa7b02193c5c5c1"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Materiais\\MI_Tut_Folhas_Lima.uasset",
+    "sha256": "385c10093c2b55c9c4ca0f95ef695bb8f3c4e035734dee36302e868e8e76df8f"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Materiais\\MI_Tut_Folhas_Medio.uasset",
+    "sha256": "1bc644d6118b7f68e3c5137cede113e451543831d4f19cb57d60c4fd6b3495df"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Materiais\\MI_Tut_Grama.uasset",
+    "sha256": "67d4e739605322807300ca1b5b77891f78399b11d9697270850855886af7b48b"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Materiais\\MI_Tut_GramaBase.uasset",
+    "sha256": "60dc3af24fe8f72c2282f29ab085362dd52d987c6efcbe3ee9e35b7404c02401"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Materiais\\MI_Tut_Paredao.uasset",
+    "sha256": "86bfbf6feadfacb87f77c45fbc0c00e61d5677c00eb32f999623939c3a580c27"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Materiais\\MI_Tut_Terreno.uasset",
+    "sha256": "f5eaa6bf393519f4cdb1d957e6f07e8fb6026b3cb65d2402c7e53047f4faa4cc"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Materiais\\MI_Tut_TerrenoBase.uasset",
+    "sha256": "59f024d2306fc03e86cfba826119ac801d80bac3a7b77763c0945d6152c0fcb4"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Materiais\\MI_Tut_Tronco_Birch.uasset",
+    "sha256": "b550c70c66e024213e483e78059fe4f33cf84af9209143bb050effb77ef8f0d4"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Materiais\\MI_Tut_Tronco_Broadleaf.uasset",
+    "sha256": "ec9269bd623be827c4eb50e7a8825bfd39ce47e8b1d791cfc82a9cd8b001c661"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Materiais\\MI_Zen_FloresBrancas.uasset",
+    "sha256": "90f48e88da38aa437b94e692b30f66ace2d29e96aafd6b502fa4bfd2cacbad24"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Materiais\\MPC_Wind.uasset",
+    "sha256": "9ba38584c11b5da97fa46d231bd546b75bd6efa38bf8aa61920ccc944227e655"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Materiais\\M_PP_Personagem.uasset",
+    "sha256": "bb3ba1d9e100d38195839a12dff6854db60b2f0315f3517a2172eadaa417fc7f"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Materiais\\M_Tut_Flores_Master.uasset",
+    "sha256": "49b63baab7fcf99e8adb7615f126f1eb7499c864466ad009a70451c1a986af5c"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Materiais\\M_Tut_Grama_Master.uasset",
+    "sha256": "ee52a3ea8cc67e2e3823273099e89336e5ce0ccd62096a35575083df8516f0fa"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Materiais\\M_Tut_Rocha.uasset",
+    "sha256": "9d846e20112d92e916141ba79873db1776611a899f9cb41f43be970890125008"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Materiais\\M_Tut_Terreno_VT.uasset",
+    "sha256": "4272486f0450b8af0e540444ff8b09502a8dd9d38d9b1c5b39c6388720779eee"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Materiais\\M_Tut_TextoSemLuz.uasset",
+    "sha256": "98f22943af9147ee6012a883e9e6db515760d79532d2692f7755752ce2184d2b"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Placeholders\\SM_Placeholder_Barril.uasset",
+    "sha256": "76a9e5b93081066b9ccf95a824560074ec14aa5a6e900a2596a4603f8bd31a5e"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Placeholders\\SM_Placeholder_Cerca.uasset",
+    "sha256": "1cbce4b1f1318349d626b288d013e8865db1bcf84a795c806cd61836c07e795b"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Placeholders\\SM_Placeholder_Ponte.uasset",
+    "sha256": "881be921562987a6178cbee7bc97f0d5b4e72790ed3edac7faab509f3804045d"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Placeholders\\SM_Placeholder_Ponte10.uasset",
+    "sha256": "7f286c8fb5def40038e11a7030c7e3a15234ec70da33c4440d52b319da7fab3b"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Placeholders\\SM_Placeholder_Portal.uasset",
+    "sha256": "bbdb2b2bac7b395e501b1ea1ab564dfad4c355789391c1ae74222f39ccfd2814"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Placeholders\\SM_Placeholder_PosteLanterna.uasset",
+    "sha256": "208184c57049654bb55625d833827c6eea0ac3783f521a501680be24fb988b05"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Placeholders\\SM_Placeholder_Toco.uasset",
+    "sha256": "1aaf2fa0f01982c3a0a2e293c4bd2fd1a416d791d57599a0b483b2b572b53931"
+  },
+  {
+    "path": "Content\\Maps\\Tutorial\\Tutorial_Assets\\Placeholders\\SM_Zen_Tronco.uasset",
+    "sha256": "f2fdc8d180ceb90cd2947ea424bf2cee8c32675447e8f0c64b147cba63f29cc9"
+  }
+]

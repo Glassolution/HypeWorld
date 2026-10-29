@@ -1,0 +1,10 @@
+{
+ "condicoes": "-game tela cheia 1920x1080, scalability 2 (Alto), r.ScreenPercentage 100, VSync off, GTX 1650; CsvProfiler GPUTime, mediana de 3 s contra base de 3 s logo antes",
+ "base_cena_gpu_ms": 27.5,
+ "bola_gpu_ms": 1.37,
+ "bola_obs": "bola cheia parada a ~7 m da camera; inclui a distorcao de calor da bola",
+ "explosao_pico_ms": 2.27,
+ "explosao_pico_obs": "media movel de 5 quadros; quadro isolado mais alto +3.2 ms; ~0.6 s acima de 1.7 ms",
+ "explosao_sem_distorcao_pico_ms": 0.67,
+ "conclusao": "a distorcao de calor (passe de distorcao em tela cheia) custa ~1.6 ms; o resto da explosao custa ~0.7 ms"
+}

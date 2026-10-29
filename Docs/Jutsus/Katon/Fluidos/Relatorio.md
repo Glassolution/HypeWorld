@@ -1,0 +1,6 @@
+- Niagara Fluids ativado; autoria isolada no mapa L_VFX_Flipbooks.
+- Tres variantes gravadas no Niagara Baker: alongada, arredondada e fumaca, com 64 quadros / 2048x2048.
+- Densidade, temperatura e velocidade assinada preservadas em atlas HDR e EXR; copias numericas NPZ para validacao.
+- Pranchas e GIFs sao previas recoloridas dos canais, com recorte comum da sequencia; nao sao capturas do jutsu final.
+- Fontes de simulacao excluidas do cook; nenhum emissor de fluido foi ligado ao jutsu no jogo.
+- O corpo de particulas, interpolacao UV calibrada pelos vetores, video e medicao de GPU aguardam aprovacao destas bases.

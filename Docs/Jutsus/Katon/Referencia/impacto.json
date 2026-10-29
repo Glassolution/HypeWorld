@@ -1,0 +1,146 @@
+[
+  [
+    "Linhas",
+    "SpawnBurst_Instantaneous.Spawn Count",
+    12,
+    -1
+  ],
+  [
+    "Linhas",
+    "InitializeParticle.Lifetime Min",
+    0.1,
+    -1
+  ],
+  [
+    "Linhas",
+    "InitializeParticle.Lifetime Max",
+    0.18,
+    -1
+  ],
+  [
+    "Linhas",
+    "InitializeParticle.Uniform Sprite Size Min",
+    420,
+    -1
+  ],
+  [
+    "Linhas",
+    "InitializeParticle.Uniform Sprite Size Max",
+    650,
+    -1
+  ],
+  [
+    "Linhas",
+    "GravityForce.Gravity",
+    "0,0,0",
+    -1
+  ],
+  [
+    "Labaredas",
+    "SpawnBurst_Instantaneous.Spawn Count",
+    14,
+    -1
+  ],
+  [
+    "Labaredas",
+    "InitializeParticle.Lifetime Min",
+    0.16,
+    -1
+  ],
+  [
+    "Labaredas",
+    "InitializeParticle.Lifetime Max",
+    0.38,
+    -1
+  ],
+  [
+    "Labaredas",
+    "InitializeParticle.Uniform Sprite Size Min",
+    180,
+    -1
+  ],
+  [
+    "Labaredas",
+    "InitializeParticle.Uniform Sprite Size Max",
+    340,
+    -1
+  ],
+  [
+    "Labaredas",
+    "GravityForce.Gravity",
+    "0,0,-30",
+    -1
+  ],
+  [
+    "Brasas",
+    "SpawnBurst_Instantaneous.Spawn Count",
+    50,
+    -1
+  ],
+  [
+    "Brasas",
+    "InitializeParticle.Lifetime Min",
+    0.6,
+    -1
+  ],
+  [
+    "Brasas",
+    "InitializeParticle.Lifetime Max",
+    1.6,
+    -1
+  ],
+  [
+    "Brasas",
+    "InitializeParticle.Uniform Sprite Size Min",
+    2,
+    -1
+  ],
+  [
+    "Brasas",
+    "InitializeParticle.Uniform Sprite Size Max",
+    7,
+    -1
+  ],
+  [
+    "Brasas",
+    "GravityForce.Gravity",
+    "0,0,-300",
+    -1
+  ],
+  [
+    "Fumaca",
+    "SpawnBurst_Instantaneous.Spawn Count",
+    10,
+    -1
+  ],
+  [
+    "Fumaca",
+    "InitializeParticle.Lifetime Min",
+    1.1,
+    -1
+  ],
+  [
+    "Fumaca",
+    "InitializeParticle.Lifetime Max",
+    2.1,
+    -1
+  ],
+  [
+    "Fumaca",
+    "InitializeParticle.Uniform Sprite Size Min",
+    170,
+    -1
+  ],
+  [
+    "Fumaca",
+    "InitializeParticle.Uniform Sprite Size Max",
+    310,
+    -1
+  ],
+  [
+    "Fumaca",
+    "GravityForce.Gravity",
+    "0,0,130",
+    -1
+  ]
+]

@@ -18,6 +18,7 @@
 #include "HypeWorldCharacter.h"
 #include "NinjaAttributeSet.h"
 #include "NinjaJutsuData.h"
+#include "NinjaFlameOrbit.h"
 
 namespace NinjaHUD
 {
@@ -278,6 +279,21 @@ void UNinjaHUDWidget::BuildLayout()
 	SuperJumpBar->SetVisibility(ESlateVisibility::Collapsed);
 	SuperJumpSlot = Place(SuperJumpBar, FVector2D::ZeroVector, FVector2D::ZeroVector, SuperJumpBarSize, FVector2D(0.5f, 1.f));
 
+	// =========================== Chamas em órbita: contador + barra do tempo (centro de baixo) e mira ===========================
+	OrbitText = MakeText(TEXT(""), 17.f, White, TEXT("Bold"));
+	OrbitText->SetJustification(ETextJustify::Center);
+	OrbitText->SetVisibility(ESlateVisibility::Collapsed);
+	Place(OrbitText, BottomCenter, FVector2D(0.f, CenterY - Size * 0.72f - 58.f), FVector2D::ZeroVector, FVector2D(0.5f, 1.f));
+	OrbitBar = MakeBar(FLinearColor(1.f, 0.38f, 0.12f), 2.f);
+	OrbitBar->SetVisibility(ESlateVisibility::Collapsed);
+	Place(OrbitBar, BottomCenter, FVector2D(0.f, CenterY - Size * 0.72f - 50.f), FVector2D(220.f, 4.f), FVector2D(0.5f, 0.f));
+	OrbitCrosshair = MakeImage(Rounded(FLinearColor::Transparent, 15.f, FLinearColor(1.f, 1.f, 1.f, 0.85f), 2.f, true));
+	OrbitCrosshair->SetVisibility(ESlateVisibility::Collapsed);
+	Place(OrbitCrosshair, Center, FVector2D::ZeroVector, FVector2D(30.f, 30.f), FVector2D(0.5f, 0.5f));
+	OrbitCrosshairDot = MakeImage(Rounded(FLinearColor(1.f, 1.f, 1.f, 0.9f), 2.f, FLinearColor::Transparent, 0.f, true));
+	OrbitCrosshairDot->SetVisibility(ESlateVisibility::Collapsed);
+	Place(OrbitCrosshairDot, Center, FVector2D::ZeroVector, FVector2D(4.f, 4.f), FVector2D(0.5f, 0.5f));
+
 	ComboText = MakeText(TEXT(""), 40.f, FLinearColor(1.f, 0.62f, 0.15f));
 	ComboText->SetVisibility(ESlateVisibility::Collapsed);
 	Place(ComboText, FVector2D(1.f, 0.5f), FVector2D(-90.f, -40.f), FVector2D::ZeroVector, FVector2D(1.f, 0.5f));
@@ -455,6 +471,35 @@ void UNinjaHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 			SuperJumpGlowSlot->SetPosition(HeadOnScreen + SuperJumpBarOffset - FVector2D(0.f, SuperJumpBarSize.Y * Charge * 0.5f));
 			SuperJumpGlowSlot->SetSize(FVector2D(SuperJumpBarSize.X * (5.f + 2.f * Pulse), SuperJumpBarSize.Y * (0.35f + 1.f * Charge)));
 			SuperJumpGlow->SetRenderOpacity(0.35f + 0.5f * Charge + 0.15f * Pulse);
+		}
+	}
+
+	// Chamas em órbita: "Nome n/N", barra do tempo que falta e mira no centro
+	if (OrbitText && OrbitBar && OrbitCrosshair)
+	{
+		const ANinjaFlameOrbit* Orbit = Ninja->GetActiveFlameOrbit();
+		const bool bShow = Orbit && Orbit->IsActive();
+		const ESlateVisibility Vis = bShow ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Collapsed;
+		OrbitText->SetVisibility(Vis);
+		OrbitBar->SetVisibility(Vis);
+		OrbitCrosshair->SetVisibility(Vis);
+		OrbitCrosshairDot->SetVisibility(Vis);
+		if (bShow)
+		{
+			if (Orbit->GetFlamesLeft() != ShownOrbitFlames)
+			{
+				ShownOrbitFlames = Orbit->GetFlamesLeft();
+				const UNinjaJutsuData* OrbitJutsu = Orbit->GetJutsu();
+				const FString Label = OrbitJutsu && !OrbitJutsu->OrbitLabel.IsEmpty() ? OrbitJutsu->OrbitLabel.ToString() : FString(TEXT("Chamas"));
+				OrbitText->SetText(FText::FromString(FString::Printf(TEXT("%s %d/%d"), *Label, ShownOrbitFlames, Orbit->GetFlameCount())));
+			}
+			float Duration = 1.f;
+			const float Left = Orbit->GetTimeLeft(Duration);
+			OrbitBar->SetPercent(Left / FMath::Max(Duration, 0.01f));
+		}
+		else
+		{
+			ShownOrbitFlames = -1;
 		}
 	}
 

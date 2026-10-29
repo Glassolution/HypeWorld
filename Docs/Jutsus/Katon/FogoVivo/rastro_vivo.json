@@ -1,0 +1,235 @@
+{
+  "muzzle_system": "/Game/HypeWorld/Jutsus/Katon/VFX/NS_Katon_JatoIntegrado.NS_Katon_JatoIntegrado",
+  "muzzle_duration": 0.34,
+  "tail_space": "world",
+  "tail_rate": 90,
+  "tail_life": [
+    0.3,
+    0.5
+  ],
+  "tail_alive_mean": 36,
+  "max_trail_distance_cm_at_speed_3000": 1500,
+  "changes": [
+    [
+      "Cauda",
+      "SpawnRate.SpawnRate",
+      90
+    ],
+    [
+      "Cauda",
+      "InitializeParticle.Lifetime Min",
+      0.3
+    ],
+    [
+      "Cauda",
+      "InitializeParticle.Lifetime Max",
+      0.5
+    ],
+    [
+      "Cauda",
+      "InitializeParticle.Uniform Sprite Size Min",
+      140
+    ],
+    [
+      "Cauda",
+      "InitializeParticle.Uniform Sprite Size Max",
+      210
+    ],
+    [
+      "Cauda",
+      "ScaleSpriteSize.Initial Sprite Size",
+      "140,210"
+    ],
+    [
+      "Cauda",
+      "ShapeLocation.Sphere Radius",
+      38
+    ],
+    [
+      "Cauda",
+      "CurlNoiseForce.Noise Strength",
+      110
+    ],
+    [
+      "Cauda",
+      "CurlNoiseForce.Noise Frequency",
+      0.018
+    ],
+    [
+      "Cauda",
+      "RandomRangeFloat.Minimum",
+      25
+    ],
+    [
+      "Cauda",
+      "RandomRangeFloat.Maximum",
+      70
+    ],
+    [
+      "Jato",
+      "SpawnRate.SpawnRate",
+      140
+    ],
+    [
+      "Jato",
+      "InitializeParticle.Lifetime Min",
+      0.2
+    ],
+    [
+      "Jato",
+      "InitializeParticle.Lifetime Max",
+      0.3
+    ],
+    [
+      "Jato",
+      "InitializeParticle.Uniform Sprite Size Min",
+      90
+    ],
+    [
+      "Jato",
+      "InitializeParticle.Uniform Sprite Size Max",
+      170
+    ],
+    [
+      "Jato",
+      "InitializeParticle.Sprite Rotation Angle Min",
+      -15
+    ],
+    [
+      "Jato",
+      "InitializeParticle.Sprite Rotation Angle Max",
+      15
+    ],
+    [
+      "Jato",
+      "ShapeLocation.Sphere Radius",
+      7
+    ],
+    [
+      "Jato",
+      "AddVelocity.Cone Axis",
+      "1,0,0"
+    ],
+    [
+      "Jato",
+      "AddVelocity.Cone Angle",
+      8
+    ],
+    [
+      "Jato",
+      "RandomRangeFloat.Minimum",
+      1800
+    ],
+    [
+      "Jato",
+      "RandomRangeFloat.Maximum",
+      2200
+    ],
+    [
+      "Jato",
+      "GravityForce.Gravity",
+      "0,0,0"
+    ],
+    [
+      "Jato",
+      "Drag.Drag",
+      0.15
+    ],
+    [
+      "Jato",
+      "CurlNoiseForce.Noise Strength",
+      45
+    ],
+    [
+      "Jato",
+      "CurlNoiseForce.Noise Frequency",
+      0.025
+    ],
+    [
+      "Jato",
+      "ScaleSpriteSize.Initial Sprite Size",
+      "95,180"
+    ],
+    [
+      "Faiscas",
+      "SpawnRate.SpawnRate",
+      35
+    ],
+    [
+      "Faiscas",
+      "InitializeParticle.Lifetime Min",
+      0.12
+    ],
+    [
+      "Faiscas",
+      "InitializeParticle.Lifetime Max",
+      0.24
+    ],
+    [
+      "Faiscas",
+      "InitializeParticle.Uniform Sprite Size Min",
+      2
+    ],
+    [
+      "Faiscas",
+      "InitializeParticle.Uniform Sprite Size Max",
+      5
+    ],
+    [
+      "Faiscas",
+      "InitializeParticle.Sprite Rotation Angle Min",
+      -15
+    ],
+    [
+      "Faiscas",
+      "InitializeParticle.Sprite Rotation Angle Max",
+      15
+    ],
+    [
+      "Faiscas",
+      "ShapeLocation.Sphere Radius",
+      7
+    ],
+    [
+      "Faiscas",
+      "AddVelocity.Cone Axis",
+      "1,0,0"
+    ],
+    [
+      "Faiscas",
+      "AddVelocity.Cone Angle",
+      8
+    ],
+    [
+      "Faiscas",
+      "RandomRangeFloat.Minimum",
+      900
+    ],
+    [
+      "Faiscas",
+      "RandomRangeFloat.Maximum",
+      1600
+    ],
+    [
+      "Faiscas",
+      "GravityForce.Gravity",
+      "0,0,0"
+    ],
+    [
+      "Faiscas",
+      "Drag.Drag",
+      0.15
+    ],
+    [
+      "Faiscas",
+      "CurlNoiseForce.Noise Strength",
+      45
+    ],
+    [
+      "Faiscas",
+      "CurlNoiseForce.Noise Frequency",
+      0.025
+    ]
+  ],
+  "performance_remeasured": false
+}

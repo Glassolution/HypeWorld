@@ -1,0 +1,443 @@
+[
+  [
+    "Boca",
+    "Chama",
+    "SpawnRate.SpawnRate",
+    36,
+    2
+  ],
+  [
+    "Boca",
+    "Chama",
+    "InitializeParticle.Lifetime Min",
+    0.1,
+    1
+  ],
+  [
+    "Boca",
+    "Chama",
+    "InitializeParticle.Lifetime Max",
+    0.2,
+    1
+  ],
+  [
+    "Boca",
+    "Chama",
+    "InitializeParticle.Uniform Sprite Size Min",
+    26,
+    1
+  ],
+  [
+    "Boca",
+    "Chama",
+    "InitializeParticle.Uniform Sprite Size Max",
+    55,
+    1
+  ],
+  [
+    "Boca",
+    "Chama",
+    "AddVelocity.Velocity",
+    "1100,0,20",
+    1
+  ],
+  [
+    "Boca",
+    "Chama",
+    "GravityForce.Gravity",
+    "0,0,20",
+    2
+  ],
+  [
+    "Boca",
+    "Faiscas",
+    "SpawnRate.SpawnRate",
+    65,
+    2
+  ],
+  [
+    "Boca",
+    "Faiscas",
+    "InitializeParticle.Lifetime Min",
+    0.14,
+    1
+  ],
+  [
+    "Boca",
+    "Faiscas",
+    "InitializeParticle.Lifetime Max",
+    0.3,
+    1
+  ],
+  [
+    "Boca",
+    "Faiscas",
+    "AddVelocity.Velocity",
+    "700,0,40",
+    1
+  ],
+  [
+    "Rastro",
+    "Brasas",
+    "SpawnRate.SpawnRate",
+    34,
+    2
+  ],
+  [
+    "Rastro",
+    "Brasas",
+    "InitializeParticle.Lifetime Min",
+    0.45,
+    1
+  ],
+  [
+    "Rastro",
+    "Brasas",
+    "InitializeParticle.Lifetime Max",
+    1.0,
+    1
+  ],
+  [
+    "Rastro",
+    "Brasas",
+    "InitializeParticle.Uniform Sprite Size Min",
+    2,
+    1
+  ],
+  [
+    "Rastro",
+    "Brasas",
+    "InitializeParticle.Uniform Sprite Size Max",
+    5,
+    1
+  ],
+  [
+    "Rastro",
+    "Brasas",
+    "ShapeLocation.Sphere Radius",
+    160,
+    1
+  ],
+  [
+    "Rastro",
+    "Brasas",
+    "GravityForce.Gravity",
+    "0,0,-280",
+    2
+  ],
+  [
+    "Rastro",
+    "Brasas",
+    "Drag.Drag",
+    0.8,
+    2
+  ],
+  [
+    "Rastro",
+    "Faiscas",
+    "SpawnRate.SpawnRate",
+    36,
+    2
+  ],
+  [
+    "Rastro",
+    "Faiscas",
+    "InitializeParticle.Lifetime Min",
+    0.14,
+    1
+  ],
+  [
+    "Rastro",
+    "Faiscas",
+    "InitializeParticle.Lifetime Max",
+    0.42,
+    1
+  ],
+  [
+    "Rastro",
+    "Faiscas",
+    "InitializeParticle.Uniform Sprite Size Max",
+    3.2,
+    1
+  ],
+  [
+    "Rastro",
+    "Faiscas",
+    "ShapeLocation.Sphere Radius",
+    175,
+    1
+  ],
+  [
+    "Rastro",
+    "Faiscas",
+    "GravityForce.Gravity",
+    "0,0,-400",
+    2
+  ],
+  [
+    "Rastro",
+    "Labaredas",
+    "SpawnRate.SpawnRate",
+    22,
+    2
+  ],
+  [
+    "Rastro",
+    "Labaredas",
+    "InitializeParticle.Lifetime Min",
+    0.14,
+    1
+  ],
+  [
+    "Rastro",
+    "Labaredas",
+    "InitializeParticle.Lifetime Max",
+    0.34,
+    1
+  ],
+  [
+    "Rastro",
+    "Labaredas",
+    "InitializeParticle.Uniform Sprite Size Min",
+    90,
+    1
+  ],
+  [
+    "Rastro",
+    "Labaredas",
+    "InitializeParticle.Uniform Sprite Size Max",
+    155,
+    1
+  ],
+  [
+    "Rastro",
+    "Labaredas",
+    "ShapeLocation.Sphere Radius",
+    155,
+    1
+  ],
+  [
+    "Rastro",
+    "Labaredas",
+    "AddVelocity.Velocity",
+    "0,0,110",
+    1
+  ],
+  [
+    "Rastro",
+    "Fumaca",
+    "SpawnRate.SpawnRate",
+    6,
+    2
+  ],
+  [
+    "Rastro",
+    "Fumaca",
+    "InitializeParticle.Lifetime Min",
+    0.7,
+    1
+  ],
+  [
+    "Rastro",
+    "Fumaca",
+    "InitializeParticle.Lifetime Max",
+    1.25,
+    1
+  ],
+  [
+    "Rastro",
+    "Fumaca",
+    "InitializeParticle.Uniform Sprite Size Min",
+    135,
+    1
+  ],
+  [
+    "Rastro",
+    "Fumaca",
+    "InitializeParticle.Uniform Sprite Size Max",
+    210,
+    1
+  ],
+  [
+    "Rastro",
+    "Fumaca",
+    "ShapeLocation.Sphere Radius",
+    175,
+    1
+  ],
+  [
+    "Rastro",
+    "Fumaca",
+    "GravityForce.Gravity",
+    "0,0,90",
+    2
+  ],
+  [
+    "Explosao",
+    "Brasas",
+    "SpawnBurst_Instantaneous.Spawn Count",
+    60,
+    2
+  ],
+  [
+    "Explosao",
+    "Brasas",
+    "InitializeParticle.Lifetime Min",
+    0.65,
+    1
+  ],
+  [
+    "Explosao",
+    "Brasas",
+    "InitializeParticle.Lifetime Max",
+    1.8,
+    1
+  ],
+  [
+    "Explosao",
+    "Brasas",
+    "InitializeParticle.Uniform Sprite Size Min",
+    2,
+    1
+  ],
+  [
+    "Explosao",
+    "Brasas",
+    "InitializeParticle.Uniform Sprite Size Max",
+    7,
+    1
+  ],
+  [
+    "Explosao",
+    "Brasas",
+    "GravityForce.Gravity",
+    "0,0,-330",
+    2
+  ],
+  [
+    "Explosao",
+    "Brasas",
+    "Drag.Drag",
+    0.6,
+    2
+  ],
+  [
+    "Explosao",
+    "Labaredas",
+    "SpawnBurst_Instantaneous.Spawn Count",
+    14,
+    2
+  ],
+  [
+    "Explosao",
+    "Labaredas",
+    "InitializeParticle.Lifetime Min",
+    0.2,
+    1
+  ],
+  [
+    "Explosao",
+    "Labaredas",
+    "InitializeParticle.Lifetime Max",
+    0.55,
+    1
+  ],
+  [
+    "Explosao",
+    "Labaredas",
+    "InitializeParticle.Uniform Sprite Size Min",
+    150,
+    1
+  ],
+  [
+    "Explosao",
+    "Labaredas",
+    "InitializeParticle.Uniform Sprite Size Max",
+    290,
+    1
+  ],
+  [
+    "Explosao",
+    "Labaredas",
+    "ShapeLocation.Sphere Radius",
+    145,
+    1
+  ],
+  [
+    "Explosao",
+    "Fumaca",
+    "SpawnBurst_Instantaneous.Spawn Count",
+    8,
+    2
+  ],
+  [
+    "Explosao",
+    "Fumaca",
+    "InitializeParticle.Lifetime Min",
+    1.3,
+    1
+  ],
+  [
+    "Explosao",
+    "Fumaca",
+    "InitializeParticle.Lifetime Max",
+    2.5,
+    1
+  ],
+  [
+    "Explosao",
+    "Fumaca",
+    "InitializeParticle.Uniform Sprite Size Min",
+    230,
+    1
+  ],
+  [
+    "Explosao",
+    "Fumaca",
+    "InitializeParticle.Uniform Sprite Size Max",
+    360,
+    1
+  ],
+  [
+    "Explosao",
+    "Fumaca",
+    "ShapeLocation.Sphere Radius",
+    140,
+    1
+  ],
+  [
+    "Explosao",
+    "Fumaca",
+    "GravityForce.Gravity",
+    "0,0,130",
+    2
+  ],
+  [
+    "Explosao",
+    "Clarao",
+    "SpawnBurst_Instantaneous.Spawn Count",
+    1,
+    2
+  ],
+  [
+    "Explosao",
+    "Clarao",
+    "InitializeParticle.Lifetime Min",
+    0.06,
+    1
+  ],
+  [
+    "Explosao",
+    "Clarao",
+    "InitializeParticle.Lifetime Max",
+    0.11,
+    1
+  ],
+  [
+    "Explosao",
+    "Clarao",
+    "InitializeParticle.Uniform Sprite Size Max",
+    680,
+    1
+  ]
+]

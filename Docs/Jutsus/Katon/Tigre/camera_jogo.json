@@ -1,0 +1,7 @@
+{
+  "location": "<Struct 'Vector' (0x000001C08705D370) {x: -360.000000, y: 60.000000, z: 284.132104}>",
+  "rotation": "<Struct 'Rotator' (0x000001C08705D370) {pitch: -19.000000, yaw: 0.000000, roll: -0.000000}>",
+  "fov": 90.0,
+  "map": "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial",
+  "mode": "SceneCapture do personagem temporario com transform da FollowCamera; nao e gravacao PIE"
+}

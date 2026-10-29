@@ -1,0 +1,37 @@
+{
+  "cvars": {
+    "sg.ResolutionQuality": "100",
+    "sg.ViewDistanceQuality": "2",
+    "sg.AntiAliasingQuality": "1",
+    "sg.ShadowQuality": "2",
+    "sg.GlobalIlluminationQuality": "2",
+    "sg.ReflectionQuality": "2",
+    "sg.PostProcessQuality": "2",
+    "sg.TextureQuality": "2",
+    "sg.EffectsQuality": "2",
+    "sg.FoliageQuality": "2",
+    "sg.ShadingQuality": "2",
+    "sg.LandscapeQuality": "2",
+    "r.ScreenPercentage": "100",
+    "r.AntiAliasingMethod": "4",
+    "r.TSR.ShadingRejection.Flickering": "0",
+    "r.TSR.History.ScreenPercentage": "100",
+    "r.TSR.RejectionAntiAliasingQuality": "1",
+    "r.TSR.History.UpdateQuality": "1",
+    "r.TemporalAA.Quality": "1",
+    "r.TemporalAA.Upsampling": "1",
+    "grass.DensityScale": "0.8",
+    "foliage.DensityScale": "0.8",
+    "r.Shadow.CSM.MaxCascades": "4",
+    "r.Shadow.MaxCSMResolution": "2048",
+    "r.Lumen.FinalGatherMethod": "1",
+    "r.VSync": "0",
+    "t.MaxFPS": "0",
+    "t.OverrideFPS": "0",
+    "r.TemporalAACurrentFrameWeight": "0.04"
+  },
+  "disabled": [
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.CharacterMesh0",
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra"
+  ]
+}

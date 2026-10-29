@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "case": "battle_idle",
+      "battle": true,
+      "battle_pose": "/Game/ANAP/Animations/Base/Base_Anim_Armature_CustomMan_Idle_Loop.Base_Anim_Armature_CustomMan_Idle_Loop",
+      "speed": 0.0,
+      "visible_body": "/Game/HypeWorld/Personagens/Shisui/SK_Shisui.SK_Shisui",
+      "mannequin_visible": false,
+      "static_ready_override": null
+    },
+    {
+      "case": "combat_trot",
+      "battle": true,
+      "battle_pose": "/Game/ANAP/Animations/Base/Base_Anim_Armature_CustomMan_Idle_Loop.Base_Anim_Armature_CustomMan_Idle_Loop",
+      "speed": 840.5933863218443,
+      "visible_body": "/Game/HypeWorld/Personagens/Shisui/SK_Shisui.SK_Shisui",
+      "mannequin_visible": false,
+      "static_ready_override": null
+    }
+  ],
+  "note": "Movement exercised on the sloped Tutorial route; flat-ground speed equality was not tested in this correction."
+}

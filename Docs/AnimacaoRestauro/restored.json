@@ -1,0 +1,12 @@
+{
+  "baseline": "f091ba9",
+  "restored": [
+    "Content/Ninja/Characters/Animations/ABP_Ninja.uasset"
+  ],
+  "removed_with_backup": [
+    "Source/HypeWorld/Ninja/NinjaBodyAnimInstance.cpp",
+    "Source/HypeWorld/Ninja/NinjaBodyAnimInstance.h",
+    "Content/HypeWorld/Animacoes/A_Pose_Prontidao_Base.uasset"
+  ],
+  "cpp_change": "Reconnect original CombatReadyPose only above spine_01 for combat trot and stationary battle stance; apply original style idle first to preserve the lower body."
+}

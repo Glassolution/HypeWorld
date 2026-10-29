@@ -1,0 +1,13 @@
+{
+  "mesh": "/Game/HypeWorld/Personagens/ItachiAnbu/SK_ItachiAnbu.SK_ItachiAnbu",
+  "anim_blueprint": "/Game/HypeWorld/Personagens/ItachiAnbu/ABP_ItachiAnbu.ABP_ItachiAnbu",
+  "retargeter": "/Game/HypeWorld/Personagens/ItachiAnbu/RTG_Manequim_Para_ItachiAnbu.RTG_Manequim_Para_ItachiAnbu",
+  "body_component": [
+    "/Game/ThirdPerson/Blueprints/BP_ThirdPersonCharacter.BP_ThirdPersonCharacter_C:Indra_GEN_VARIABLE"
+  ],
+  "jutsu_copies": {
+    "/Game/HypeWorld/Jutsus/Katon/Animacoes/Sasuke/A_Katon_Selo_Tigre.A_Katon_Selo_Tigre": "/Game/HypeWorld/Personagens/ItachiAnbu/Animations/A_Katon_Selo_Tigre_ItachiAnbu.A_Katon_Selo_Tigre_ItachiAnbu",
+    "/Game/HypeWorld/Jutsus/Katon/Animacoes/Sasuke/A_Katon_Sopro_Sasuke.A_Katon_Sopro_Sasuke": "/Game/HypeWorld/Personagens/ItachiAnbu/Animations/A_Katon_Sopro_ItachiAnbu.A_Katon_Sopro_ItachiAnbu",
+    "/Game/HypeWorld/Jutsus/Katon/Hosenka/A_Hosenka_BracosAbertos.A_Hosenka_BracosAbertos": "/Game/HypeWorld/Personagens/ItachiAnbu/Animations/A_Hosenka_BracosAbertos_ItachiAnbu.A_Hosenka_BracosAbertos_ItachiAnbu"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "Alongada": {
+    "system": "/Game/HypeWorld/Jutsus/Katon/Fluidos/Simulacoes/NS_Bake_Alongada",
+    "textures": [
+      "/Game/HypeWorld/Jutsus/Katon/Fluidos/Simulacoes/NS_Bake_Alongada_Density_8x8.NS_Bake_Alongada_Density_8x8",
+      "/Game/HypeWorld/Jutsus/Katon/Fluidos/Simulacoes/NS_Bake_Alongada_Temperature_8x8.NS_Bake_Alongada_Temperature_8x8",
+      "/Game/HypeWorld/Jutsus/Katon/Fluidos/Simulacoes/NS_Bake_Alongada_Velocity_8x8.NS_Bake_Alongada_Velocity_8x8"
+    ],
+    "runtime_fluid_simulation": false,
+    "frames": 64,
+    "atlas_size": [
+      2048,
+      2048
+    ]
+  },
+  "Redonda": {
+    "system": "/Game/HypeWorld/Jutsus/Katon/Fluidos/Simulacoes/NS_Bake_RedondaV2",
+    "textures": [
+      "/Game/HypeWorld/Jutsus/Katon/Fluidos/Simulacoes/NS_Bake_RedondaV2_Density_8x8.NS_Bake_RedondaV2_Density_8x8",
+      "/Game/HypeWorld/Jutsus/Katon/Fluidos/Simulacoes/NS_Bake_RedondaV2_Temperature_8x8.NS_Bake_RedondaV2_Temperature_8x8",
+      "/Game/HypeWorld/Jutsus/Katon/Fluidos/Simulacoes/NS_Bake_RedondaV2_Velocity_8x8.NS_Bake_RedondaV2_Velocity_8x8"
+    ],
+    "runtime_fluid_simulation": false,
+    "frames": 64,
+    "atlas_size": [
+      2048,
+      2048
+    ]
+  },
+  "Fumaca": {
+    "system": "/Game/HypeWorld/Jutsus/Katon/Fluidos/Simulacoes/NS_Bake_Fumaca",
+    "textures": [
+      "/Game/HypeWorld/Jutsus/Katon/Fluidos/Simulacoes/NS_Bake_Fumaca_Density_8x8.NS_Bake_Fumaca_Density_8x8",
+      "/Game/HypeWorld/Jutsus/Katon/Fluidos/Simulacoes/NS_Bake_Fumaca_Temperature_8x8.NS_Bake_Fumaca_Temperature_8x8",
+      "/Game/HypeWorld/Jutsus/Katon/Fluidos/Simulacoes/NS_Bake_Fumaca_Velocity_8x8.NS_Bake_Fumaca_Velocity_8x8"
+    ],
+    "runtime_fluid_simulation": false,
+    "frames": 64,
+    "atlas_size": [
+      2048,
+      2048
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "tsr_atual": {
+    "frames": 300,
+    "size": [
+      1920,
+      1080
+    ],
+    "simulation_fps": 30,
+    "duration_s": 10,
+    "bytes": 54018256,
+    "sha256": "0f9ee1a82c88b9e4593db16a457819edde656b9e4566a95fdaa89c29d8d147df",
+    "first_frame": "C:\\Users\\lucas\\Downloads\\Hype World\\HypeWorld\\Saved\\VisualLab\\AAFrames\\tsr_atual\\0000.png",
+    "last_frame": "C:\\Users\\lucas\\Downloads\\Hype World\\HypeWorld\\Saved\\VisualLab\\AAFrames\\tsr_atual\\0299.png"
+  },
+  "tsr_flickering0": {
+    "frames": 300,
+    "size": [
+      1920,
+      1080
+    ],
+    "simulation_fps": 30,
+    "duration_s": 10,
+    "bytes": 53726474,
+    "sha256": "a93dfe1e32593b82b5c3d1f6eab880e16661c99083b2b9dc1f4c338a7c8fb930",
+    "first_frame": "C:\\Users\\lucas\\Downloads\\Hype World\\HypeWorld\\Saved\\VisualLab\\AAFrames\\tsr_flickering0\\0000.png",
+    "last_frame": "C:\\Users\\lucas\\Downloads\\Hype World\\HypeWorld\\Saved\\VisualLab\\AAFrames\\tsr_flickering0\\0299.png"
+  },
+  "tsr_q1": {
+    "frames": 300,
+    "size": [
+      1920,
+      1080
+    ],
+    "simulation_fps": 30,
+    "duration_s": 10,
+    "bytes": 53564202,
+    "sha256": "3a5d05da58c874379abbf51fc56eed426180814039fe2769cf8886c0f962ad55",
+    "first_frame": "C:\\Users\\lucas\\Downloads\\Hype World\\HypeWorld\\Saved\\VisualLab\\AAFrames\\tsr_q1\\0000.png",
+    "last_frame": "C:\\Users\\lucas\\Downloads\\Hype World\\HypeWorld\\Saved\\VisualLab\\AAFrames\\tsr_q1\\0299.png"
+  },
+  "taa": {
+    "frames": 300,
+    "size": [
+      1920,
+      1080
+    ],
+    "simulation_fps": 30,
+    "duration_s": 10,
+    "bytes": 44767520,
+    "sha256": "e4f992518605ead4a31ec3026221ef38fe3b80e0f5d75c117db1828254fc299e",
+    "first_frame": "C:\\Users\\lucas\\Downloads\\Hype World\\HypeWorld\\Saved\\VisualLab\\AAFrames\\taa\\0000.png",
+    "last_frame": "C:\\Users\\lucas\\Downloads\\Hype World\\HypeWorld\\Saved\\VisualLab\\AAFrames\\taa\\0299.png"
+  }
+}

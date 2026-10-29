@@ -1,0 +1,127 @@
+[
+  {
+    "event": "density_0.4",
+    "elapsed": 0.0067332999997233856,
+    "scheduled": 0.0
+  },
+  {
+    "event": "start_grass_40_r1",
+    "elapsed": 15.005997899999784,
+    "scheduled": 15.0
+  },
+  {
+    "event": "stop_grass_40_r1",
+    "elapsed": 45.01540540000042,
+    "scheduled": 45.0
+  },
+  {
+    "event": "shot_grass_40_r1",
+    "elapsed": 49.70303030000014,
+    "scheduled": 47.0
+  },
+  {
+    "event": "density_1.0",
+    "elapsed": 49.70303030000014,
+    "scheduled": 49.0
+  },
+  {
+    "event": "start_grass_100_r1",
+    "elapsed": 64.00769990000026,
+    "scheduled": 64.0
+  },
+  {
+    "event": "stop_grass_100_r1",
+    "elapsed": 94.0049583,
+    "scheduled": 94.0
+  },
+  {
+    "event": "shot_grass_100_r1",
+    "elapsed": 96.01305680000041,
+    "scheduled": 96.0
+  },
+  {
+    "event": "density_0.4",
+    "elapsed": 98.00773159999972,
+    "scheduled": 98.0
+  },
+  {
+    "event": "start_grass_40_r2",
+    "elapsed": 113.0027726999997,
+    "scheduled": 113.0
+  },
+  {
+    "event": "stop_grass_40_r2",
+    "elapsed": 143.00314909999997,
+    "scheduled": 143.0
+  },
+  {
+    "event": "density_1.0",
+    "elapsed": 147.00261359999968,
+    "scheduled": 147.0
+  },
+  {
+    "event": "start_grass_100_r2",
+    "elapsed": 162.0025953000004,
+    "scheduled": 162.0
+  },
+  {
+    "event": "stop_grass_100_r2",
+    "elapsed": 192.0083407000002,
+    "scheduled": 192.0
+  },
+  {
+    "event": "density_0.4",
+    "elapsed": 196.00162379999983,
+    "scheduled": 196.0
+  },
+  {
+    "event": "start_grass_40_r3",
+    "elapsed": 211.00838120000026,
+    "scheduled": 211.0
+  },
+  {
+    "event": "stop_grass_40_r3",
+    "elapsed": 241.0135419999997,
+    "scheduled": 241.0
+  },
+  {
+    "event": "density_1.0",
+    "elapsed": 245.0048041,
+    "scheduled": 245.0
+  },
+  {
+    "event": "start_grass_100_r3",
+    "elapsed": 260.0010944000005,
+    "scheduled": 260.0
+  },
+  {
+    "event": "stop_grass_100_r3",
+    "elapsed": 290.0004546,
+    "scheduled": 290.0
+  },
+  {
+    "event": "restore_grass40",
+    "elapsed": 294.00481839999975,
+    "scheduled": 294
+  },
+  {
+    "event": "toon_on_shot",
+    "elapsed": 310.00608850000026,
+    "scheduled": 310
+  },
+  {
+    "event": "toon_off",
+    "elapsed": 313.00424010000006,
+    "scheduled": 313
+  },
+  {
+    "event": "toon_off_shot",
+    "elapsed": 323.0123555,
+    "scheduled": 323
+  },
+  {
+    "event": "toon_restore",
+    "elapsed": 326.00946290000047,
+    "scheduled": 326
+  }
+]

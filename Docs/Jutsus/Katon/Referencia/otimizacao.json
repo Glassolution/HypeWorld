@@ -1,0 +1,6 @@
+{
+  "source_vertices": 0,
+  "reduced_vertices": 0,
+  "visible_layers": "opaque core + one masked shell + heat shell",
+  "light_radius": 450
+}

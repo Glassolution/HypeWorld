@@ -1,0 +1,101 @@
+{
+  "Alongada": {
+    "source": "Niagara Baker EXR, float RGBA16",
+    "frames": 64,
+    "atlas": [
+      2048,
+      2048
+    ],
+    "crop_grid_pixels": [
+      76,
+      104,
+      203,
+      245
+    ],
+    "temperature_range": [
+      0.0,
+      2.001953125
+    ],
+    "preview_temperature_scale_p99_5": 1.453125,
+    "density_range": [
+      0.0,
+      1.474609375
+    ],
+    "velocity_x_range": [
+      -332.0,
+      321.75
+    ],
+    "velocity_y_range": [
+      -161.75,
+      776.0
+    ],
+    "velocity_units": "Raw simulation grid velocity; signed values preserved. Runtime UV calibration pending particle stage.",
+    "preview": "Opacity=1-exp(-density*1.5), temperature ramp; common crop, no hand-painted content."
+  },
+  "Redonda": {
+    "source": "Niagara Baker EXR, float RGBA16",
+    "frames": 64,
+    "atlas": [
+      2048,
+      2048
+    ],
+    "crop_grid_pixels": [
+      77,
+      166,
+      199,
+      246
+    ],
+    "temperature_range": [
+      0.0,
+      1.970703125
+    ],
+    "preview_temperature_scale_p99_5": 1.5341796875,
+    "density_range": [
+      0.0,
+      1.474609375
+    ],
+    "velocity_x_range": [
+      -189.875,
+      232.0
+    ],
+    "velocity_y_range": [
+      -138.875,
+      441.25
+    ],
+    "velocity_units": "Raw simulation grid velocity; signed values preserved. Runtime UV calibration pending particle stage.",
+    "preview": "Opacity=1-exp(-density*1.5), temperature ramp; common crop, no hand-painted content."
+  },
+  "Fumaca": {
+    "source": "Niagara Baker EXR, float RGBA16",
+    "frames": 64,
+    "atlas": [
+      2048,
+      2048
+    ],
+    "crop_grid_pixels": [
+      89,
+      172,
+      173,
+      256
+    ],
+    "temperature_range": [
+      0.0,
+      0.0
+    ],
+    "preview_temperature_scale_p99_5": 1.0,
+    "density_range": [
+      0.0,
+      1.9931640625
+    ],
+    "velocity_x_range": [
+      -108.375,
+      138.5
+    ],
+    "velocity_y_range": [
+      -130.5,
+      152.375
+    ],
+    "velocity_units": "Raw simulation grid velocity; signed values preserved. Runtime UV calibration pending particle stage.",
+    "preview": "Opacity=1-exp(-density*1.5), temperature ramp; common crop, no hand-painted content."
+  }
+}

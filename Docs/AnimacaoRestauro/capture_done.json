@@ -1,0 +1,1 @@
+{"frames": 624, "fps": 24, "cases": [["parado", 0, 0, false, 72], ["guarda_frente", 0, 0, false, 72], ["guarda_lado", 0, 0, false, 48], ["guarda_costas", 0, 0, false, 48], ["trote_frente", 0, 1, false, 72], ["trote_direita", 1, 0, false, 72], ["trote_esquerda", -1, 0, false, 72], ["trote_tras", 0, -1, false, 72], ["corrida_ninja", 0, 1, true, 96]]}

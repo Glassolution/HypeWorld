@@ -1,0 +1,39 @@
+{
+  "video_count": 4,
+  "runs_per_case": 3,
+  "all_native_1080": true,
+  "screenshots_unmodified": true,
+  "configuration_differences": {
+    "tsr_atual": {},
+    "tsr_flickering0": {
+      "r.TSR.ShadingRejection.Flickering": [
+        "1",
+        "0"
+      ]
+    },
+    "tsr_q1": {
+      "sg.AntiAliasingQuality": [
+        "2",
+        "1"
+      ],
+      "r.TSR.ShadingRejection.Flickering": [
+        "1",
+        "0"
+      ],
+      "r.TSR.History.UpdateQuality": [
+        "2",
+        "1"
+      ],
+      "r.TSR.ReprojectionField": [
+        "1",
+        "0"
+      ]
+    },
+    "taa": {
+      "r.AntiAliasingMethod": [
+        "4",
+        "2"
+      ]
+    }
+  }
+}

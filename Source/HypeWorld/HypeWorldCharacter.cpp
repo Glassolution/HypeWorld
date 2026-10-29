@@ -3,6 +3,7 @@
 #include "HypeWorldCharacter.h"
 #include "Engine/LocalPlayer.h"
 #include "Camera/CameraComponent.h"
+#include "Camera/PlayerCameraManager.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -36,6 +37,7 @@
 #include "NinjaJutsuData.h"
 #include "NinjaJutsuAbility.h"
 #include "NinjaJutsuProjectile.h"
+#include "NinjaFlameOrbit.h"
 #include "NinjaVisibleBody.h"
 #include "NiagaraComponent.h"
 #include "NiagaraFunctionLibrary.h"
@@ -78,20 +80,23 @@ AHypeWorldCharacter::AHypeWorldCharacter(const FObjectInitializer& ObjectInitial
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	// Câmera única (parado, andando e correndo): atrás, perto e um pouco acima, olhando levemente para baixo,
-	// com o boneco na parte de baixo da tela e o caminho à frente visível
-	CameraBoom->TargetArmLength = 300.0f;
-	CameraBoom->SocketOffset = FVector(0.f, 0.f, 70.f);
-	CameraBoom->bUsePawnControlRotation = true;
-	CameraBoom->bEnableCameraLag = true; // segue suave, mas sem deixar o boneco escapar
-	CameraBoom->CameraLagSpeed = 20.f;
+	CameraBoom->TargetArmLength = CameraZoomDefault;
+	CameraBoom->TargetOffset = CameraTargetOffset;
+	CameraBoom->SocketOffset = CameraSocketOffset;
+	CameraBoom->bUsePawnControlRotation = bCameraUsePawnControlRotation;
+	CameraBoom->bEnableCameraLag = bCameraLagEnabled;
+	CameraBoom->CameraLagSpeed = CameraLagSpeed;
+	CameraBoom->bEnableCameraRotationLag = bCameraRotationLagEnabled;
+	CameraBoom->bDoCollisionTest = bCameraCollisionTest;
+	CameraBoom->ProbeSize = CameraProbeSize;
 	CameraBoom->CameraLagMaxDistance = 25.f;
 
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
-	FollowCamera->SetRelativeRotation(FRotator(-8.f, 0.f, 0.f));
+	FollowCamera->SetRelativeRotation(FRotator::ZeroRotator);
+	FollowCamera->FieldOfView = CameraFOV;
 
 	// Combate: sistema de habilidades no próprio personagem (replicação "Mixed": o dono recebe tudo, os outros o essencial)
 	AbilitySystem = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystem"));
@@ -196,12 +201,64 @@ void AHypeWorldCharacter::Look(const FInputActionValue& Value)
 
 void AHypeWorldCharacter::Zoom(const FInputActionValue& Value)
 {
-	// Rodinha para cima (+1) aproxima, para baixo (-1) afasta
-	CameraZoomGoal = FMath::Clamp(CameraZoomGoal - Value.Get<float>() * CameraZoomStep, CameraZoomMin, CameraZoomMax);
+	DoCameraZoom(Value.Get<float>());
+}
+
+void AHypeWorldCharacter::DoCameraZoom(float ScrollDelta)
+{
+	const float MinLength = FMath::Max(0.f, CameraZoomMin);
+	const float MaxLength = FMath::Max(MinLength, CameraZoomMax);
+	// Positive wheel input moves closer; the orbit, pivot and offsets stay untouched.
+	CameraZoomGoal = FMath::Clamp(CameraZoomGoal - ScrollDelta * CameraZoomStep, MinLength, MaxLength);
+}
+
+void AHypeWorldCharacter::ApplyCameraSettings()
+{
+	CameraBoom->TargetArmLength = FMath::Clamp(CameraZoomDefault, FMath::Max(0.f, CameraZoomMin), FMath::Max(CameraZoomMin, CameraZoomMax));
+	CameraBoom->TargetOffset = CameraTargetOffset;
+	CameraBoom->SocketOffset = CameraSocketOffset;
+	CameraBoom->bUsePawnControlRotation = bCameraUsePawnControlRotation;
+	CameraBoom->bEnableCameraLag = bCameraLagEnabled;
+	CameraBoom->CameraLagSpeed = CameraLagSpeed;
+	CameraBoom->bEnableCameraRotationLag = bCameraRotationLagEnabled;
+	CameraBoom->bDoCollisionTest = bCameraCollisionTest;
+	CameraBoom->ProbeSize = CameraProbeSize;
+	FollowCamera->SetRelativeRotation(FRotator::ZeroRotator);
+	FollowCamera->SetFieldOfView(CameraFOV);
+}
+
+void AHypeWorldCharacter::OnConstruction(const FTransform& Transform)
+{
+	Super::OnConstruction(Transform);
+	ApplyCameraSettings();
+}
+
+void AHypeWorldCharacter::InitializeLocalCamera()
+{
+	APlayerController* PC = Cast<APlayerController>(GetController());
+	if (!PC || !PC->IsLocalController() || !PC->PlayerCameraManager) { return; }
+	PC->PlayerCameraManager->ViewPitchMin = FMath::Min(CameraPitchMin, CameraPitchMax);
+	PC->PlayerCameraManager->ViewPitchMax = FMath::Max(CameraPitchMin, CameraPitchMax);
+	if (!bCameraInitialPitchApplied)
+	{
+		FRotator Rotation = PC->GetControlRotation();
+		Rotation.Pitch = FMath::Clamp(CameraInitialPitch, PC->PlayerCameraManager->ViewPitchMin, PC->PlayerCameraManager->ViewPitchMax);
+		PC->SetControlRotation(Rotation);
+		bCameraInitialPitchApplied = true;
+	}
+}
+
+void AHypeWorldCharacter::PawnClientRestart()
+{
+	Super::PawnClientRestart();
+	// The controller restores the spawn rotation during possession. Apply our pitch
+	// in the following pawn tick, after that rotation has been restored.
+	bCameraInitialPitchApplied = false;
 }
 
 void AHypeWorldCharacter::UpdateCameraZoom(float DeltaSeconds)
 {
+	InitializeLocalCamera();
 	if (CameraZoomGoal > 0.f)
 	{
 		CameraBoom->TargetArmLength = FMath::FInterpTo(CameraBoom->TargetArmLength, CameraZoomGoal, DeltaSeconds, CameraZoomSpeed);
@@ -505,7 +562,8 @@ void AHypeWorldCharacter::BeginPlay()
 	BaseMeshLocation = GetMesh()->GetRelativeLocation();
 	LastYaw = GetActorRotation().Yaw;
 	DefaultRotationRate = GetCharacterMovement()->RotationRate.Yaw;
-	CameraZoomGoal = FMath::Clamp(CameraBoom->TargetArmLength, CameraZoomMin, CameraZoomMax);
+	ApplyCameraSettings();
+	CameraZoomGoal = CameraBoom->TargetArmLength;
 
 	// GAS: dono e avatar são o próprio personagem; habilidades são dadas pelo servidor
 	AbilitySystem->InitAbilityActorInfo(this, this);
@@ -1272,6 +1330,7 @@ int32 AHypeWorldCharacter::ChooseAttack(ENinjaAttackInput Input) const
 
 void AHypeWorldCharacter::DoAttackPressed()
 {
+	if (TryFireFlameOrbit()) { return; }   // com chamas em órbita, o clique esquerdo lança uma em vez de golpear
 	if (!IsCastingJutsu())
 	{
 		StartAttack(ENinjaAttackInput::Light);
@@ -1951,6 +2010,17 @@ USkeletalMeshComponent* AHypeWorldCharacter::GetJutsuBody() const
 	return GetMesh();
 }
 
+UAnimSequenceBase* AHypeWorldCharacter::GetJutsuBodyAnimation(UAnimSequenceBase* Animation, const USkeletalMeshComponent* Body) const
+{
+	const USkeletalMesh* BodyMesh = Body ? Body->GetSkeletalMeshAsset() : nullptr;
+	if (!Animation || !BodyMesh || Animation->GetSkeleton() == BodyMesh->GetSkeleton())
+	{
+		return Animation;
+	}
+	UAnimSequenceBase* BodyVersion = JutsuBodyAnimations.FindRef(Animation);
+	return BodyVersion ? BodyVersion : Animation;
+}
+
 void AHypeWorldCharacter::BeginJutsu(const UNinjaJutsuData* Jutsu)
 {
 	CurrentJutsu = Jutsu;
@@ -1996,8 +2066,9 @@ void AHypeWorldCharacter::PlayJutsuSeals(const UNinjaJutsuData* Jutsu)
 		USkeletalMeshComponent* Body = GetJutsuBody();
 		UAnimInstance* Anim = Body ? Body->GetAnimInstance() : nullptr;
 		if (!Anim) { return; }
+		UAnimSequenceBase* Cast = GetJutsuBodyAnimation(Jutsu->BodyCastAnimation, Body);
 		UAnimMontage* Montage = NewObject<UAnimMontage>(Anim);
-		Montage->SetSkeleton(Jutsu->BodyCastAnimation->GetSkeleton());
+		Montage->SetSkeleton(Cast->GetSkeleton());
 		Montage->SlotAnimTracks.Reset();
 		FSlotAnimationTrack& Slot = Montage->SlotAnimTracks.AddDefaulted_GetRef();
 		Slot.SlotName = FAnimSlotGroup::DefaultSlotName;
@@ -2019,8 +2090,7 @@ void AHypeWorldCharacter::PlayJutsuSeals(const UNinjaJutsuData* Jutsu)
 		{
 			if (Sequence) { AddRange(Sequence, 0.f, Sequence->GetPlayLength(), Duration); }
 		};
-		for (const FNinjaJutsuSeal& Seal : Jutsu->Seals) { AddSegment(Seal.Pose, Seal.Duration); }
-		UAnimSequenceBase* Cast = Jutsu->BodyCastAnimation;
+		for (const FNinjaJutsuSeal& Seal : Jutsu->Seals) { AddSegment(GetJutsuBodyAnimation(Seal.Pose, Body), Seal.Duration); }
 		const float CastLength = Cast->GetPlayLength();
 		const float Recovery = FMath::Max(Jutsu->CastRecoveryRate, 0.05f);
 		if (Jutsu->HasShotWindow())
@@ -2066,7 +2136,7 @@ void AHypeWorldCharacter::StartSeal(int32 Index)
 	if (Anim && Seal.Pose)
 	{
 		// Em loop para não sair sozinho no fim do clipe: UpdateJutsuSeals congela no último quadro e para no fim dos selos
-		SealMontage = Anim->PlaySlotAnimationAsDynamicMontage(Seal.Pose, TEXT("DefaultSlot"), Seal.BlendIn, PresentedJutsu->SealBlendOut, 1.f, 100);
+		SealMontage = Anim->PlaySlotAnimationAsDynamicMontage(GetJutsuBodyAnimation(Seal.Pose, Body), TEXT("DefaultSlot"), Seal.BlendIn, PresentedJutsu->SealBlendOut, 1.f, 100);
 	}
 }
 
@@ -2163,6 +2233,27 @@ void AHypeWorldCharacter::OnJutsuRelease()
 	}
 	// Rajada: cada impulso do sopro dispara um projétil, até Shots
 	bJutsuReleased = ++JutsuShotsFired >= FMath::Max(Jutsu->Shots, 1);
+	if (Jutsu->OrbitClass)
+	{
+		// Órbita: o servidor invoca as chamas em volta do personagem (substitui a órbita anterior)
+		ClearJutsuAnticipation();
+		if (IsLocallyControlled()) { AddCameraShake(Jutsu->CastShake, 0.35f); }
+		if (HasAuthority())
+		{
+			if (ANinjaFlameOrbit* Old = ActiveFlameOrbit.Get()) { Old->Destroy(); }
+			FActorSpawnParameters Params;
+			Params.Owner = this;
+			Params.Instigator = this;
+			const FTransform At(GetActorLocation());
+			if (ANinjaFlameOrbit* Orbit = GetWorld()->SpawnActorDeferred<ANinjaFlameOrbit>(Jutsu->OrbitClass, At, this, this,
+				ESpawnActorCollisionHandlingMethod::AlwaysSpawn))
+			{
+				Orbit->Init(Jutsu);
+				Orbit->FinishSpawning(At);
+			}
+		}
+		return;
+	}
 	ClearJutsuAnticipation();
 	USkeletalMeshComponent* Body = GetJutsuBody();
 	FVector Mouth = GetActorLocation() + FVector(0.f, 0.f, 70.f);
@@ -2220,6 +2311,46 @@ void AHypeWorldCharacter::OnJutsuRelease()
 			Projectile->InitLaunch(Jutsu, Mouth + Dir * 20.f, Dir);
 			Projectile->FinishSpawning(SpawnAt);
 		}
+	}
+}
+
+ANinjaFlameOrbit* AHypeWorldCharacter::GetActiveFlameOrbit() const
+{
+	return ActiveFlameOrbit.Get();
+}
+
+void AHypeWorldCharacter::SetActiveFlameOrbit(ANinjaFlameOrbit* Orbit)
+{
+	ActiveFlameOrbit = Orbit;
+}
+
+bool AHypeWorldCharacter::TryFireFlameOrbit()
+{
+	ANinjaFlameOrbit* Orbit = ActiveFlameOrbit.Get();
+	APlayerController* PC = Cast<APlayerController>(Controller);
+	if (!Orbit || !Orbit->IsActive() || !PC || !IsLocallyControlled())
+	{
+		return false;
+	}
+	// Mira: raio a partir da câmera até o alcance (o que estiver no centro da tela)
+	FVector ViewLocation;
+	FRotator ViewRotation;
+	PC->GetPlayerViewPoint(ViewLocation, ViewRotation);
+	const float Range = Orbit->GetJutsuRange();
+	const FVector End = ViewLocation + ViewRotation.Vector() * Range;
+	FHitResult Hit;
+	FCollisionQueryParams Params(SCENE_QUERY_STAT(NinjaFlameOrbitAim), false, this);
+	Params.AddIgnoredActor(Orbit);
+	const FVector AimPoint = GetWorld()->LineTraceSingleByChannel(Hit, ViewLocation, End, ECC_Visibility, Params) ? Hit.ImpactPoint : End;
+	ServerFireFlameOrbit(AimPoint);
+	return true;
+}
+
+void AHypeWorldCharacter::ServerFireFlameOrbit_Implementation(FVector_NetQuantize AimPoint)
+{
+	if (ANinjaFlameOrbit* Orbit = ActiveFlameOrbit.Get())
+	{
+		Orbit->FireFlame(AimPoint);
 	}
 }
 

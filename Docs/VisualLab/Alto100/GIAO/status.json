@@ -1,0 +1,98 @@
+[
+  {
+    "event": "select_lumen_high",
+    "time": 0.0031546999998681713
+  },
+  {
+    "event": "start_lumen_high_1",
+    "time": 30.00934149999921
+  },
+  {
+    "event": "stop",
+    "time": 60.01135919999979
+  },
+  {
+    "event": "start_lumen_high_2",
+    "time": 65.02481079999961
+  },
+  {
+    "event": "stop",
+    "time": 95.02188989999922
+  },
+  {
+    "event": "start_lumen_high_3",
+    "time": 100.01523429999907
+  },
+  {
+    "event": "stop",
+    "time": 130.02409660000012
+  },
+  {
+    "event": "shot_lumen_high",
+    "time": 134.00186079999912
+  },
+  {
+    "event": "select_irradiance_volume",
+    "time": 140.02564059999895
+  },
+  {
+    "event": "start_irradiance_volume_1",
+    "time": 170.02842019999844
+  },
+  {
+    "event": "stop",
+    "time": 200.00916009999855
+  },
+  {
+    "event": "start_irradiance_volume_2",
+    "time": 205.00704229999974
+  },
+  {
+    "event": "stop",
+    "time": 235.01932269999998
+  },
+  {
+    "event": "start_irradiance_volume_3",
+    "time": 240.00821949999954
+  },
+  {
+    "event": "stop",
+    "time": 270.00726479999867
+  },
+  {
+    "event": "shot_irradiance_volume",
+    "time": 274.0160920999988
+  },
+  {
+    "event": "select_skylight_dfao",
+    "time": 280.01293649999934
+  },
+  {
+    "event": "start_skylight_dfao_1",
+    "time": 310.0085541999997
+  },
+  {
+    "event": "stop",
+    "time": 340.02603589999853
+  },
+  {
+    "event": "start_skylight_dfao_2",
+    "time": 345.00325749999865
+  },
+  {
+    "event": "stop",
+    "time": 375.0248396999996
+  },
+  {
+    "event": "start_skylight_dfao_3",
+    "time": 380.0190695000001
+  },
+  {
+    "event": "stop",
+    "time": 410.02524989999984
+  },
+  {
+    "event": "shot_skylight_dfao",
+    "time": 414.00040909999916
+  }
+]

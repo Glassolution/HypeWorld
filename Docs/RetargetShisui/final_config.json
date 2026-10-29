@@ -1,0 +1,46 @@
+{
+  "ops": [
+    [
+      "Pelvis Motion",
+      true
+    ],
+    [
+      "FK Chains",
+      true
+    ],
+    [
+      "Retarget IK Goals",
+      true
+    ],
+    [
+      "Run IK Rig",
+      true
+    ],
+    [
+      "Root Motion",
+      true
+    ],
+    [
+      "Remap Curves",
+      true
+    ]
+  ],
+  "solvers": [
+    [
+      "hand_l",
+      false
+    ],
+    [
+      "hand_r",
+      false
+    ],
+    [
+      "foot_l",
+      true
+    ],
+    [
+      "foot_r",
+      true
+    ]
+  ]
+}

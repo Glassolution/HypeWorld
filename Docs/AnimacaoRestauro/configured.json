@@ -1,0 +1,22 @@
+{
+  "ready": "/Game/HypeWorld/Animacoes/A_Pose_Prontidao.A_Pose_Prontidao",
+  "components": [
+    {
+      "name": "Indra_GEN_VARIABLE",
+      "visible": false,
+      "mesh": "/Game/HypeWorld/Personagens/Shisui/SK_Shisui.SK_Shisui"
+    },
+    {
+      "name": "CharacterMesh0",
+      "visible": true,
+      "mesh": "/Game/Characters/Mannequins/Meshes/SKM_Quinn_Simple.SKM_Quinn_Simple"
+    }
+  ],
+  "movement": {
+    "run_speed": 900.0,
+    "run_back_speed": 900.0,
+    "run_strafe_speed": 900.0,
+    "sprint_speed": 1400.0,
+    "strafe_max_angle": 180.0
+  }
+}

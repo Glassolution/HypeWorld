@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "<string>", line 31, in bench_tick
+  File "<string>", line 21, in <lambda>
+  File "<string>", line 56, in choose_veg
+  File "<string>", line 32, in set_bush
+Exception: SkeletalMeshComponent: Internal Error - ObjectInstance is null!

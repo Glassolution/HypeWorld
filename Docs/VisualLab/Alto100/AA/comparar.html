@@ -1,0 +1,17 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AA — Alto 1080p nativo</title>
+<style>body{font:16px system-ui;background:#12161b;color:#edf1f5;margin:24px auto;max-width:1800px;padding:0 20px}h1{font-size:25px}p{color:#bdc8d2}button,a{color:#9bdaff}button{background:#25323e;border:1px solid #526471;border-radius:7px;padding:10px 15px;cursor:pointer;margin:0 8px 10px 0}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}article{background:#1b222a;padding:12px;border-radius:10px}h2{font-size:18px;margin:0 0 10px}video,img{width:100%;display:block;background:#000}a{display:inline-block;margin-top:8px}#prints{display:none}@media(max-width:800px){.grid{grid-template-columns:1fr}}</style>
+<h1>AA — Alto, 1920×1080, resolução 100%</h1>
+<p><a href="../AA1b/comparar.html">Novo: bloco 1b — investigar e corrigir o ghosting do TAA</a></p>
+<p>Mesmo percurso de câmera. Vídeos nativos de 10 s em passos de simulação de 1/30 s; o desempenho real é medido separadamente, sem gravação. Abra um vídeo em tela cheia para julgar a grama em 1080p.</p>
+<button id="play">Reiniciar e reproduzir os quatro</button><button id="pause">Pausar todos</button><button id="toggle">Mostrar prints</button>
+<div class="grid" id="videos">
+<article><h2>TSR atual · Q2 · Flickering 1</h2><video muted playsinline controls preload="metadata" poster="tsr_atual.png" src="tsr_atual.mp4"></video><a href="tsr_atual.mp4">Abrir vídeo original</a></article>
+<article><h2>TSR · Q2 · Flickering 0</h2><video muted playsinline controls preload="metadata" poster="tsr_flickering0.png" src="tsr_flickering0.mp4"></video><a href="tsr_flickering0.mp4">Abrir vídeo original</a></article>
+<article><h2>TSR · Q1 · Flickering 0</h2><video muted playsinline controls preload="metadata" poster="tsr_q1.png" src="tsr_q1.mp4"></video><a href="tsr_q1.mp4">Abrir vídeo original</a></article>
+<article><h2>TAA · Q2</h2><video muted playsinline controls preload="metadata" poster="taa.png" src="taa.mp4"></video><a href="taa.mp4">Abrir vídeo original</a></article></div>
+<div class="grid" id="prints">
+<article><h2>TSR atual · frame 30</h2><a href="tsr_atual_movimento.png"><img src="tsr_atual_movimento.png"></a></article>
+<article><h2>TSR Flickering 0 · frame 30</h2><a href="tsr_flickering0_movimento.png"><img src="tsr_flickering0_movimento.png"></a></article>
+<article><h2>TSR qualidade 1 · frame 30</h2><a href="tsr_q1_movimento.png"><img src="tsr_q1_movimento.png"></a></article>
+<article><h2>TAA · frame 30</h2><a href="taa_movimento.png"><img src="taa_movimento.png"></a></article></div>
+<script>const vs=[...document.querySelectorAll('video')];document.querySelector('#play').onclick=async()=>{vs.forEach(v=>{v.pause();v.currentTime=0});await Promise.all(vs.map(v=>v.readyState>=3?Promise.resolve():new Promise(r=>{v.addEventListener('canplay',r,{once:true});v.preload='auto';v.load()})));await Promise.all(vs.map(v=>v.play()))};document.querySelector('#pause').onclick=()=>vs.forEach(v=>v.pause());document.querySelector('#toggle').onclick=()=>{const p=document.querySelector('#prints'),v=document.querySelector('#videos');const show=getComputedStyle(p).display==='none';p.style.display=show?'grid':'none';v.style.display=show?'none':'grid';vs.forEach(v=>v.pause())};</script></html>

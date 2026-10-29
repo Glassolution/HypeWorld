@@ -1,0 +1,47 @@
+{
+  "preset": "Alto (sg=2), 1920x1080, screen percentage 100, vsync off",
+  "gpu": "GTX 1650 4GB",
+  "cases": [
+    [
+      "perto_off1",
+      0,
+      false
+    ],
+    [
+      "perto_on1",
+      0,
+      true
+    ],
+    [
+      "perto_off2",
+      0,
+      false
+    ],
+    [
+      "perto_on2",
+      0,
+      true
+    ],
+    [
+      "longe_off",
+      1300,
+      false
+    ],
+    [
+      "longe_on",
+      1300,
+      true
+    ],
+    [
+      "isolado_off",
+      0,
+      false
+    ],
+    [
+      "isolado_on",
+      0,
+      true
+    ]
+  ],
+  "method": "A/B full effect enabled/disabled. Main flame sprites use masked depth; other layers remain translucent. Isolado cases add a constant unlit backdrop to avoid crediting savings from occluded foliage. The same backdrop exists in both isolated samples. Includes particles, shaders, light, heat distortion and ribbons. 3 s warmup per block, 5 s sampled per block. Frozen full-size projectile, live particles/material clock. No screenshot during samples."
+}

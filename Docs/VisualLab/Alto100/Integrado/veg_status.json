@@ -1,0 +1,110 @@
+[
+  {
+    "event": "select_controle",
+    "time": 0.0033292000007349998
+  },
+  {
+    "event": "start_controle_1",
+    "time": 30.013940199998615
+  },
+  {
+    "event": "stop",
+    "time": 60.01598820000072
+  },
+  {
+    "event": "start_controle_2",
+    "time": 65.0039743999987
+  },
+  {
+    "event": "stop",
+    "time": 95.02176609999879
+  },
+  {
+    "event": "start_controle_3",
+    "time": 100.02243570000064
+  },
+  {
+    "event": "stop",
+    "time": 130.01255110000056
+  },
+  {
+    "event": "shot_controle",
+    "time": 133.02493049999975
+  },
+  {
+    "event": "profile_controle",
+    "time": 137.02189200000066
+  },
+  {
+    "event": "select_arbustos_material",
+    "time": 145.0002229999991
+  },
+  {
+    "event": "start_arbustos_material_1",
+    "time": 175.00486570000066
+  },
+  {
+    "event": "stop",
+    "time": 205.0191365999999
+  },
+  {
+    "event": "start_arbustos_material_2",
+    "time": 210.02431219999926
+  },
+  {
+    "event": "stop",
+    "time": 240.0139952999998
+  },
+  {
+    "event": "start_arbustos_material_3",
+    "time": 245.02876950000064
+  },
+  {
+    "event": "stop",
+    "time": 275.0292006999989
+  },
+  {
+    "event": "shot_arbustos_material",
+    "time": 278.0258995000004
+  },
+  {
+    "event": "profile_arbustos_material",
+    "time": 282.01487160000033
+  },
+  {
+    "event": "select_arbustos_contact",
+    "time": 290.0105967999989
+  },
+  {
+    "event": "start_arbustos_contact_1",
+    "time": 320.01334289999795
+  },
+  {
+    "event": "stop",
+    "time": 350.01970660000006
+  },
+  {
+    "event": "start_arbustos_contact_2",
+    "time": 355.0225862999978
+  },
+  {
+    "event": "stop",
+    "time": 385.0153102999975
+  },
+  {
+    "event": "start_arbustos_contact_3",
+    "time": 390.0222458999997
+  },
+  {
+    "event": "stop",
+    "time": 420.02355629999875
+  },
+  {
+    "event": "shot_arbustos_contact",
+    "time": 423.0074707999993
+  },
+  {
+    "event": "profile_arbustos_contact",
+    "time": 427.0116715999975
+  }
+]

@@ -1,0 +1,54 @@
+[
+  {
+    "event": "select_original",
+    "time": 0.0030960000003688037
+  },
+  {
+    "event": "start_original_1",
+    "time": 25.032309500000338
+  },
+  {
+    "event": "stop",
+    "time": 55.024301900000864
+  },
+  {
+    "event": "start_original_2",
+    "time": 60.01795110000057
+  },
+  {
+    "event": "stop",
+    "time": 90.00536770000144
+  },
+  {
+    "event": "start_original_3",
+    "time": 95.02443050000147
+  },
+  {
+    "event": "stop",
+    "time": 125.00794130000031
+  },
+  {
+    "event": "shot_original",
+    "time": 128.02507800000058
+  },
+  {
+    "event": "select_cortes_pequenos",
+    "time": 135.00481630000104
+  },
+  {
+    "event": "start_cortes_pequenos_1",
+    "time": 160.00410960000045
+  },
+  {
+    "event": "stop",
+    "time": 190.01343570000063
+  },
+  {
+    "event": "start_cortes_pequenos_2",
+    "time": 195.0168784000016
+  },
+  {
+    "event": "stop",
+    "time": 225.02632670000094
+  }
+]

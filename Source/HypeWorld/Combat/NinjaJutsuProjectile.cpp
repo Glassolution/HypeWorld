@@ -325,6 +325,7 @@ void ANinjaJutsuProjectile::SetupVisuals()
 	if (GroundGlowMaterial) { GlowMID = UMaterialInstanceDynamic::Create(GroundGlowMaterial, this); GroundGlow->SetDecalMaterial(GlowMID); }
 	Light->SetLightColor(LightColor);
 	Light->SetAttenuationRadius(LightRadius);
+	Light->SetVisibility(LightIntensity > 0.f);   // sem luz própria (ex.: chamas do Hōsenka, que têm a luz do grupo)
 
 	if (FireballMesh && FireballMaterial)
 	{
@@ -404,6 +405,28 @@ void ANinjaJutsuProjectile::SetupVisuals()
 			Comp->SetMaterial(0, MID);
 			return Comp;
 		};
+		if (MouthBurstTongues > 0 && TongueMesh && TongueMaterial)
+		{
+			// Rajada na boca: lóbulos atrás, línguas, línguas claras do miolo na frente (direção no espaço do lançamento)
+			const int32 Lobes = GlowMesh && LobeMaterial ? MouthBurstLobes : 0;
+			const int32 Inner = InnerTongueMaterial ? FMath::Min(MouthBurstInner, MouthBurstTongues) : 0;
+			for (int32 Index = 0; Index < Lobes + MouthBurstTongues; ++Index)
+			{
+				FBurstFlame& Flame = BurstFlames.AddDefaulted_GetRef();
+				Flame.bLobe = Index < Lobes;
+				const bool bInner = !Flame.bLobe && Index >= Lobes + MouthBurstTongues - Inner;
+				UMaterialInterface* Material = Flame.bLobe ? LobeMaterial.Get() : bInner ? InnerTongueMaterial.Get() : TongueMaterial.Get();
+				Flame.Mesh = MakeIgnite(Flame.bLobe ? GlowMesh.Get() : TongueMesh.Get(), Material, Flame.bLobe ? 9 : bInner ? 12 : 10);
+				Flame.MID = Cast<UMaterialInstanceDynamic>(Flame.Mesh->GetMaterial(0));
+				// Leque aberto para os lados e para cima (de trás do personagem as línguas aparecem de perfil, não de ponta)
+				const float Spread = bInner ? 0.35f : 1.1f;
+				Flame.Dir = FVector(bInner ? 0.7f : 1.f, FMath::FRandRange(-Spread, Spread),
+					bInner ? FMath::FRandRange(0.6f, 1.f) : FMath::FRandRange(0.15f, 0.8f)).GetSafeNormal();
+				Flame.Size = bInner ? FMath::FRandRange(0.75f, 0.9f) : FMath::FRandRange(0.7f, 1.15f);
+				Flame.Delay = bInner ? 0.f : FMath::FRandRange(0.f, 0.03f);
+				Flame.Reach = FMath::FRandRange(0.7f, 1.1f);
+			}
+		}
 		if (GlowMesh && IgniteHaloMaterial) { IgniteGlows.Add(MakeIgnite(GlowMesh, IgniteHaloMaterial, 10)); }
 		if (GlowMesh && IgniteGlowMaterial) { IgniteGlows.Add(MakeIgnite(GlowMesh, IgniteGlowMaterial, 11)); }
 		if (TongueMesh && IgniteFlameMaterial)
@@ -558,6 +581,12 @@ void ANinjaJutsuProjectile::Evaluate(float T, FVector& OutCenter, float& OutRadi
 	Distance = FMath::Min(Distance, Range);
 	OutRadius = FMath::Lerp(StartRadius, FullRadius, Grow);
 	OutCenter = FVector(Launch.Start) + Dir * Distance + FVector(0.f, 0.f, GrowLift * Grow);
+	if (LaunchBend > 0.f)
+	{
+		// Sai da órbita fazendo uma curva: desvia para o lado e volta para a linha da mira
+		const FVector Side = FVector::CrossProduct(Dir, FVector::UpVector).GetSafeNormal() * ((Launch.VisualSeed & 1) ? 1.f : -1.f);
+		OutCenter += (Side + FVector(0.f, 0.f, 0.35f)) * LaunchBend * FMath::Sin(UE_PI * FMath::Clamp(T / FMath::Max(BendTime, 0.01f), 0.f, 1.f));
+	}
 }
 
 void ANinjaJutsuProjectile::UpdateIgnition(float T)
@@ -607,6 +636,48 @@ void ANinjaJutsuProjectile::UpdateIgnition(float T)
 	FirePostProcess->Settings.bOverride_SceneColorTint = false;
 	FirePostProcess->Settings.BloomIntensity = FMath::Lerp(0.55f, IgnitionBloom, Env);
 	FirePostProcess->Settings.BloomThreshold = FMath::Lerp(2.f, 0.6f, Env);
+	// Sem ignição (só bloom normal e sem exposição): nenhum pós-processo de tela por projétil (rajadas baratas)
+	if (IgnitionBloom <= 0.55f && IgnitionExposure <= 0.f) { FirePostProcess->bEnabled = false; }
+}
+
+void ANinjaJutsuProjectile::UpdateMouthBurst(float T)
+{
+	if (BurstFlames.Num() == 0) { return; }
+	const FQuat Frame = FVector(Launch.Direction).ToOrientationQuat();
+	const float Time = FMath::Max(MouthBurstTime, 0.02f);
+	const float GlowRadius = GlowMesh ? FMath::Max(GlowMesh->GetBounds().BoxExtent.GetMax(), 1.f) : 50.f;
+	for (const FBurstFlame& Flame : BurstFlames)
+	{
+		// Sai da boca já grande, avança no cone, estica e se rasga até sumir em Time (a cauda e a bola seguem dali)
+		const float U = (T - Flame.Delay) / Time;
+		Flame.Mesh->SetVisibility(U > 0.f && U < 1.f);
+		if (U <= 0.f || U >= 1.f) { continue; }
+		const FVector Dir = Frame.RotateVector(Flame.Dir);
+		const float Push = 1.f - FMath::Square(1.f - U);
+		const float Grow = FMath::SmoothStep(0.f, 0.25f, U);
+		const float Size = MouthBurstSize * Flame.Size;
+		if (Flame.bLobe)
+		{
+			const float LobeSize = Size * 0.6f * FMath::Lerp(0.6f, 1.f, Grow) * (1.f + 0.3f * U);
+			Flame.Mesh->SetWorldLocationAndRotation(FVector(Launch.Start) + Dir * MouthBurstReach * Flame.Reach * 0.45f * Push,
+				FRotator(Flame.Reach * 90.f, T * 300.f + Flame.Size * 200.f, 0.f));
+			Flame.Mesh->SetWorldScale3D(FVector(LobeSize / GlowRadius) * FVector(1.25f, 1.f, 1.f));
+		}
+		else
+		{
+			const float Height = Size * FMath::Lerp(0.8f, 2.2f, Grow) * (1.f + 0.4f * U);
+			const float Width = Size * 0.45f * (1.f - 0.35f * U);
+			const FQuat Roll(Dir, Flame.Size * 7.f + T * 6.f);
+			Flame.Mesh->SetWorldLocationAndRotation(FVector(Launch.Start) + Dir * MouthBurstReach * Flame.Reach * Push * 0.6f,
+				Roll * FRotationMatrix::MakeFromZ(Dir).ToQuat());
+			Flame.Mesh->SetWorldScale3D(FVector(Width / 40.f, Width / 40.f, Height / 100.f));
+		}
+		if (Flame.MID)
+		{
+			Flame.MID->SetScalarParameterValue(TEXT("Intensity"), 1.f + (MouthBurstIntensity - 1.f) * FMath::Pow(1.f - U, 1.5f));
+			Flame.MID->SetScalarParameterValue(TEXT("Erosion"), FMath::SmoothStep(0.4f, 1.f, U));
+		}
+	}
 }
 
 void ANinjaJutsuProjectile::ApplyBallVisual(const FVector& Center, float Radius, float T)
@@ -750,7 +821,8 @@ void ANinjaJutsuProjectile::ApplyBallVisual(const FVector& Center, float Radius,
 		const FVector HaloShape = FMath::Lerp(bColumn ? FVector(1.f, 1.f, 1.45f) : Stretch, FVector(1.f), Flash);
 		Halo->SetRelativeLocation(FVector(bColumn ? -Radius * 0.3f : 0.f, 0.f, bColumn ? Radius * 0.35f : 0.f));
 		Halo->SetRelativeRotation(FRotator::ZeroRotator);
-		Halo->SetRelativeScale3D(HaloShape * Radius * FMath::Lerp(bColumn ? 1.4f : 1.9f, bColumn ? 2.1f : 2.7f, Flash) / GlowRadius);
+		const float HaloIn = HaloFadeIn > 0.f ? FMath::SmoothStep(0.f, HaloFadeIn, T) : 1.f;
+		Halo->SetRelativeScale3D(HaloShape * Radius * HaloScale * HaloIn * FMath::Lerp(bColumn ? 1.4f : 1.9f, bColumn ? 2.1f : 2.7f, Flash) / GlowRadius);
 		Halo->SetVisibility(HaloMID != nullptr);
 		if (HaloMID) { HaloMID->SetScalarParameterValue(TEXT("Intensity"), 1.f + 1.5f * Flash); }
 	}
@@ -760,6 +832,7 @@ void ANinjaJutsuProjectile::ApplyBallVisual(const FVector& Center, float Radius,
 	Light->SetIntensity(LightIntensity * Flicker * FMath::Lerp(0.5f, 1.f, Grow) * (1.f + IgnitionLightBoost * LightFlash));
 	Light->SetAttenuationRadius(FMath::Lerp(LightRadius, FMath::Max(IgniteLightRadius, LightRadius), LightFlash));
 	UpdateIgnition(T);
+	UpdateMouthBurst(T);
 	if (!Trail->IsActive() && TrailSystem)
 	{
 		Trail->Activate(true);
@@ -958,6 +1031,7 @@ void ANinjaJutsuProjectile::PlayExplosion(const FVector& Location)
 	Ignition->SetVisibility(false);
 	FireBody->SetVisibility(false);
 	HideTongues();
+	for (const FBurstFlame& Flame : BurstFlames) { Flame.Mesh->SetVisibility(false); }
 	for (UNiagaraComponent* Spiral : Spirals) { Spiral->Deactivate(); }
 	FirePostProcess->Settings.BloomIntensity = 0.65f;
 	// A explosão volta ao pós-processo de antes (só perto, sem exposição/tom da ignição)

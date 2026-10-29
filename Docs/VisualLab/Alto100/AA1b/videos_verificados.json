@@ -1,0 +1,83 @@
+{
+  "original": {
+    "frames": 90,
+    "duration": 3.0,
+    "resolution": [
+      1920,
+      1080
+    ],
+    "sha256": "621c4b1fe12cd7dc2b3bd9c94df27c410c72f5386604ef708ec1aac59d8e8a8f"
+  },
+  "sem_casaco": {
+    "frames": 90,
+    "duration": 3.0,
+    "resolution": [
+      1920,
+      1080
+    ],
+    "sha256": "7758b627be0f6e29a871843b32201089678393ef687d9807aebf781994d27077"
+  },
+  "sem_chakra": {
+    "frames": 90,
+    "duration": 3.0,
+    "resolution": [
+      1920,
+      1080
+    ],
+    "sha256": "1b2c3c35eab1980d9d596a9c48097c3784281c53fdf8b422e647dc96d53b4c39"
+  },
+  "sem_toon": {
+    "frames": 90,
+    "duration": 3.0,
+    "resolution": [
+      1920,
+      1080
+    ],
+    "sha256": "41908e554919c4593fa5451f9cffc1150ad184df850ae77cd6da82869b917004"
+  },
+  "sem_tunica_slots23": {
+    "frames": 90,
+    "duration": 3.0,
+    "resolution": [
+      1920,
+      1080
+    ],
+    "sha256": "31ba7e041dd2daba817e23962db2ad3576df693365e9a70cd49ef98467ef7d8b"
+  },
+  "peso010": {
+    "frames": 300,
+    "duration": 10.0,
+    "resolution": [
+      1920,
+      1080
+    ],
+    "sha256": "981b17819eab85e4a9c25599046b90a186864bd61b864e5e4786341be0d8b13d"
+  },
+  "peso020": {
+    "frames": 300,
+    "duration": 10.0,
+    "resolution": [
+      1920,
+      1080
+    ],
+    "sha256": "8ce7f7a6dcac33ce79e6d8fad3caedfb55a457ab0d2110ae21f16ac55c86ec4a"
+  },
+  "peso030": {
+    "frames": 300,
+    "duration": 10.0,
+    "resolution": [
+      1920,
+      1080
+    ],
+    "sha256": "c2450d18cf9e4a67f6e891ddee7260a7310f29ef110f8c6b2cd05d9945bf8989"
+  },
+  "antighost_q3": {
+    "frames": 300,
+    "duration": 10.0,
+    "resolution": [
+      1920,
+      1080
+    ],
+    "sha256": "a76d37c579658982630f8f69985f816f79aac1509d1201f575a92e9fd5c1deea"
+  }
+}

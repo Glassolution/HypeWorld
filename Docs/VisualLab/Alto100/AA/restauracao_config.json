@@ -1,0 +1,22 @@
+[
+  {
+    "File": "Editor.ini",
+    "Identical": true
+  },
+  {
+    "File": "EditorPerProjectUserSettings.ini",
+    "Identical": true
+  },
+  {
+    "File": "Engine.ini",
+    "Identical": true
+  },
+  {
+    "File": "Game.ini",
+    "Identical": true
+  },
+  {
+    "File": "GameUserSettings.ini",
+    "Identical": true
+  }
+]

@@ -1,0 +1,42 @@
+{
+  "config_project_unchanged": true,
+  "game_user_settings_restored_byte_identical": true,
+  "camera_and_player_transform_identical": true,
+  "only_different_cvar_in_grass_AB": {
+    "grass.DensityScale": [
+      "0.4",
+      "1"
+    ]
+  },
+  "toon_restored": true,
+  "screenshots": {
+    "grama_40": {
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "A86634C3E54E873CECFE0FE0C020A0A6A5989B9C1D383F1261DD500DF7FD9645"
+    },
+    "grama_100": {
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "F441A512571540D242C731044F70E3C5964E2DE5B07E8F115347D83AB3146594"
+    },
+    "indra_toon_ligado": {
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "B4EF1FA4B8D9C4F4FC371BF53FFBDF7B232AFEF9B7AB12ED034AFEA30DB891AA"
+    },
+    "indra_toon_desligado": {
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "427DD116096E0A12BD7F7D49477AE4FCF7D96867676CDC2AD8175B719FE4D6DC"
+    }
+  }
+}

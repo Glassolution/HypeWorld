@@ -1,0 +1,1612 @@
+{
+  "runs": {
+    "1": {
+      "DrawCall/SlateUI": {
+        "median": 25.0,
+        "mean": 24.992565055762082,
+        "p95": 25.0
+      },
+      "DrawCall/Basepass": {
+        "median": 52.0,
+        "mean": 52.0,
+        "p95": 52.0
+      },
+      "DrawCall/CustomDepth": {
+        "median": 7.0,
+        "mean": 7.0,
+        "p95": 7.0
+      },
+      "DrawCall/Prepass": {
+        "median": 7.0,
+        "mean": 7.0,
+        "p95": 7.0
+      },
+      "DrawCall/Distortion": {
+        "median": 0.0,
+        "mean": 0.0,
+        "p95": 0.0
+      },
+      "DrawCall/Fog": {
+        "median": 1.0,
+        "mean": 1.0,
+        "p95": 1.0
+      },
+      "DrawCall/FrontLayerTranslucencyGBuffer": {
+        "median": 0.0,
+        "mean": 0.0,
+        "p95": 0.0
+      },
+      "DrawCall/Lights": {
+        "median": 16.0,
+        "mean": 16.0,
+        "p95": 16.0
+      },
+      "DrawCall/BeginOcclusionTests": {
+        "median": 42.0,
+        "mean": 42.32218091697646,
+        "p95": 46.69999999999993
+      },
+      "DrawCall/ScreenSpaceReflections": {
+        "median": 2.0,
+        "mean": 2.0,
+        "p95": 2.0
+      },
+      "DrawCall/ShadowDepths": {
+        "median": 69.0,
+        "mean": 69.0,
+        "p95": 69.0
+      },
+      "DrawCall/DistanceFieldShadows": {
+        "median": 3.0,
+        "mean": 3.0,
+        "p95": 3.0
+      },
+      "DrawCall/SingleLayerWaterDepthPrepass": {
+        "median": 3.0,
+        "mean": 3.0,
+        "p95": 3.0
+      },
+      "DrawCall/SingleLayerWater": {
+        "median": 4.0,
+        "mean": 4.0,
+        "p95": 4.0
+      },
+      "DrawCall/Translucency": {
+        "median": 15.0,
+        "mean": 14.96902106567534,
+        "p95": 17.0
+      },
+      "DrawCall/RenderVelocities": {
+        "median": 45.0,
+        "mean": 45.0,
+        "p95": 45.0
+      },
+      "DrawCall/WaterInfoTexture": {
+        "median": 0.0,
+        "mean": 0.0,
+        "p95": 0.0
+      },
+      "DrawCall/FXSystemPreInitViews": {
+        "median": 0.0,
+        "mean": 0.0,
+        "p95": 0.0
+      },
+      "DrawCall/FXSystemPreRender": {
+        "median": 0.0,
+        "mean": 0.0,
+        "p95": 0.0
+      },
+      "DrawCall/FXSystemPostRenderOpaque": {
+        "median": 0.0,
+        "mean": 0.0,
+        "p95": 0.0
+      },
+      "FrameTime": {
+        "median": 37.1241,
+        "mean": 37.15168451053284,
+        "p95": 38.51589
+      },
+      "RenderThreadTime": {
+        "median": 37.0976,
+        "mean": 37.138429987608426,
+        "p95": 38.45832
+      },
+      "GameThreadTime": {
+        "median": 4.5289,
+        "mean": 4.853661833952912,
+        "p95": 6.20716
+      },
+      "GPUTime": {
+        "median": 36.6604,
+        "mean": 36.65455910780669,
+        "p95": 37.5527
+      },
+      "GPU/RayTracingGeometry": {
+        "median": 0.0009,
+        "mean": 0.0010306071871127632,
+        "p95": 0.0016
+      },
+      "GPU/DistanceFields": {
+        "median": 0.0283,
+        "mean": 0.028718711276332094,
+        "p95": 0.030969999999999994
+      },
+      "GPU/GlobalDistanceFieldUpdate": {
+        "median": 0.0008,
+        "mean": 0.0008256505576208178,
+        "p95": 0.0012
+      },
+      "GPU/AllocateRendertargets": {
+        "median": 0.0008,
+        "mean": 0.0008151177199504338,
+        "p95": 0.0011
+      },
+      "GPU/VisibilityCommands": {
+        "median": 0.0008,
+        "mean": 0.0008407682775712516,
+        "p95": 0.0011
+      },
+      "GPU/UpdateLumenSceneBuffers": {
+        "median": 0.0008,
+        "mean": 0.0009563816604708798,
+        "p95": 0.0019
+      },
+      "GPU/GPUSceneUpdate": {
+        "median": 0.0197,
+        "mean": 0.021186988847583643,
+        "p95": 0.029769999999999994
+      },
+      "GPU/NaniteStreaming": {
+        "median": 0.0008,
+        "mean": 0.0008454770755885998,
+        "p95": 0.0012
+      },
+      "GPU/NaniteReadback": {
+        "median": 0.081,
+        "mean": 0.08256034696406443,
+        "p95": 0.08500999999999997
+      },
+      "GPU/FXSystemPreRender": {
+        "median": 0.0,
+        "mean": 3.4200743494423794e-05,
+        "p95": 0.0001
+      },
+      "GPU/BuildRenderingCommandsDeferred": {
+        "median": 0.0514,
+        "mean": 0.051686988847583645,
+        "p95": 0.053669999999999995
+      },
+      "GPU/Prepass": {
+        "median": 0.1407,
+        "mean": 0.14140793060718712,
+        "p95": 0.1446
+      },
+      "GPU/RenderVelocities": {
+        "median": 1.0404,
+        "mean": 1.044946840148699,
+        "p95": 1.05387
+      },
+      "GPU/NaniteVisBuffer": {
+        "median": 1.983,
+        "mean": 2.0051905824039653,
+        "p95": 2.14804
+      },
+      "GPU/NaniteBasePass": {
+        "median": 0.9354,
+        "mean": 0.9429144981412639,
+        "p95": 0.9559199999999999
+      },
+      "GPU/HZB": {
+        "median": 0.1075,
+        "mean": 0.1082816604708798,
+        "p95": 0.1098
+      },
+      "GPU/BeginOcclusionTests": {
+        "median": 0.056,
+        "mean": 0.05722081784386617,
+        "p95": 0.0635
+      },
+      "GPU/LightGrid": {
+        "median": 0.0476,
+        "mean": 0.048232342007434946,
+        "p95": 0.05136999999999999
+      },
+      "GPU/LightFunctionAtlasGeneration": {
+        "median": 0.0,
+        "mean": 3.965303593556382e-06,
+        "p95": 0.0
+      },
+      "GPU/SkyAtmosphereLUTs": {
+        "median": 0.1204,
+        "mean": 0.12027348203221809,
+        "p95": 0.1229
+      },
+      "GPU/CaptureConvolveSkyEnvMap": {
+        "median": 0.0305,
+        "mean": 0.0328453531598513,
+        "p95": 0.0758
+      },
+      "GPU/CustomDepth": {
+        "median": 0.0382,
+        "mean": 0.03758736059479554,
+        "p95": 0.043
+      },
+      "GPU/SingleLayerWaterDepthPrepass": {
+        "median": 0.3934,
+        "mean": 0.39595774473358114,
+        "p95": 0.421
+      },
+      "GPU/LumenSceneUpdate": {
+        "median": 0.3155,
+        "mean": 0.29188042131350683,
+        "p95": 0.38416999999999996
+      },
+      "GPU/BuildRenderingCommands": {
+        "median": 0.0093,
+        "mean": 0.009838042131350682,
+        "p95": 0.017369999999999993
+      },
+      "GPU/LumenSceneLighting": {
+        "median": 0.8236,
+        "mean": 0.826847335811648,
+        "p95": 0.87977
+      },
+      "GPU/LumenScreenProbeGather": {
+        "median": 3.2687,
+        "mean": 3.2803698884758363,
+        "p95": 3.4504799999999998
+      },
+      "GPU/Basepass": {
+        "median": 2.5939,
+        "mean": 2.6091888475836433,
+        "p95": 2.7868399999999998
+      },
+      "GPU/RenderDeferredLighting": {
+        "median": 1.4611,
+        "mean": 1.470194671623296,
+        "p95": 1.4805499999999998
+      },
+      "GPU/ShadowDepths": {
+        "median": 7.5414,
+        "mean": 7.575617967781908,
+        "p95": 7.875539999999999
+      },
+      "GPU/ScreenSpaceReflections": {
+        "median": 0.2089,
+        "mean": 0.21099702602230483,
+        "p95": 0.2151
+      },
+      "GPU/TranslucentLighting": {
+        "median": 0.1427,
+        "mean": 0.14414299876084263,
+        "p95": 0.14567
+      },
+      "GPU/Lights": {
+        "median": 1.0137,
+        "mean": 1.0182868649318464,
+        "p95": 1.026
+      },
+      "GPU/ShadowProjection": {
+        "median": 2.2971,
+        "mean": 2.3152939281288725,
+        "p95": 2.3433
+      },
+      "GPU/DistanceFieldShadows": {
+        "median": 0.1499,
+        "mean": 0.1569266418835192,
+        "p95": 0.1835
+      },
+      "GPU/VolumetricFog": {
+        "median": 0.3646,
+        "mean": 0.367542750929368,
+        "p95": 0.38220999999999994
+      },
+      "GPU/TemporalSuperResolution": {
+        "median": 8.5465,
+        "mean": 8.414184014869889,
+        "p95": 8.92529
+      },
+      "GPU/SingleLayerWater": {
+        "median": 0.2293,
+        "mean": 0.23038859975216852,
+        "p95": 0.24247
+      },
+      "GPU/SkyAtmosphere": {
+        "median": 0.0263,
+        "mean": 0.026182280049566294,
+        "p95": 0.0277
+      },
+      "GPU/Fog": {
+        "median": 0.211,
+        "mean": 0.21448277571251548,
+        "p95": 0.2158
+      },
+      "GPU/PostRenderOpsFX": {
+        "median": 0.0025,
+        "mean": 0.0025831474597273855,
+        "p95": 0.0034
+      },
+      "GPU/FXSystemPostRenderOpaque": {
+        "median": 0.0031,
+        "mean": 0.0032571251548946718,
+        "p95": 0.0046
+      },
+      "GPU/Translucency": {
+        "median": 0.1246,
+        "mean": 0.1254478314745973,
+        "p95": 0.12927
+      },
+      "GPU/Postprocessing": {
+        "median": 1.2898,
+        "mean": 1.2980151177199504,
+        "p95": 1.30677
+      },
+      "GPU/VirtualTextureUpdate": {
+        "median": 0.064,
+        "mean": 0.06585799256505576,
+        "p95": 0.0703
+      },
+      "GPU/SlateUI": {
+        "median": 0.0289,
+        "mean": 0.02894448574969021,
+        "p95": 0.031
+      },
+      "GPU/Unaccounted": {
+        "median": 0.8299,
+        "mean": 0.8398778190830235,
+        "p95": 0.8799
+      },
+      "RHI/DrawCalls": {
+        "median": 407.0,
+        "mean": 406.42131350681535,
+        "p95": 419.0
+      },
+      "RHI/PrimitivesDrawn": {
+        "median": 1222147.0,
+        "mean": 1239103.3073110285,
+        "p95": 1385860.4
+      },
+      "GPUMem/LocalBudgetMB": {
+        "median": 3202.8789,
+        "mean": 3199.5085685254026,
+        "p95": 3207.2539
+      },
+      "GPUMem/LocalUsedMB": {
+        "median": 2432.8047,
+        "mean": 2432.8047,
+        "p95": 2432.8047
+      },
+      "GPUMem/SystemBudgetMB": {
+        "median": 7491.0459,
+        "mean": 7491.0459,
+        "p95": 7491.0459
+      },
+      "GPUMem/SystemUsedMB": {
+        "median": 159.2148,
+        "mean": 159.25251685254028,
+        "p95": 159.2148
+      },
+      "GPU/VirtualTexture": {
+        "median": 0.0,
+        "mean": 0.003576579925650558,
+        "p95": 0.04602999999999994
+      },
+      "summary": {
+        "frames": 807,
+        "duration_s": 29.9814094,
+        "fps_mean": 26.916679907649705,
+        "fps_1percent_low": 24.618057673544314,
+        "frame_p99_ms": 39.60711199999999,
+        "worst_frame_ms": 43.4983,
+        "gpu_gap_to_16_6_ms": 20.0604,
+        "frame_gap_to_16_6_ms": 20.524099999999997
+      }
+    },
+    "2": {
+      "DrawCall/SlateUI": {
+        "median": 25.0,
+        "mean": 24.99255583126551,
+        "p95": 25.0
+      },
+      "DrawCall/Basepass": {
+        "median": 52.0,
+        "mean": 52.0,
+        "p95": 52.0
+      },
+      "DrawCall/CustomDepth": {
+        "median": 7.0,
+        "mean": 7.0,
+        "p95": 7.0
+      },
+      "DrawCall/Prepass": {
+        "median": 7.0,
+        "mean": 7.0,
+        "p95": 7.0
+      },
+      "DrawCall/Distortion": {
+        "median": 0.0,
+        "mean": 0.0,
+        "p95": 0.0
+      },
+      "DrawCall/Fog": {
+        "median": 1.0,
+        "mean": 1.0,
+        "p95": 1.0
+      },
+      "DrawCall/FrontLayerTranslucencyGBuffer": {
+        "median": 0.0,
+        "mean": 0.0,
+        "p95": 0.0
+      },
+      "DrawCall/Lights": {
+        "median": 16.0,
+        "mean": 16.0,
+        "p95": 16.0
+      },
+      "DrawCall/BeginOcclusionTests": {
+        "median": 42.0,
+        "mean": 42.48138957816377,
+        "p95": 47.0
+      },
+      "DrawCall/ScreenSpaceReflections": {
+        "median": 2.0,
+        "mean": 2.0,
+        "p95": 2.0
+      },
+      "DrawCall/ShadowDepths": {
+        "median": 69.0,
+        "mean": 69.0,
+        "p95": 69.0
+      },
+      "DrawCall/DistanceFieldShadows": {
+        "median": 3.0,
+        "mean": 3.0,
+        "p95": 3.0
+      },
+      "DrawCall/SingleLayerWaterDepthPrepass": {
+        "median": 3.0,
+        "mean": 3.0,
+        "p95": 3.0
+      },
+      "DrawCall/SingleLayerWater": {
+        "median": 4.0,
+        "mean": 4.0,
+        "p95": 4.0
+      },
+      "DrawCall/Translucency": {
+        "median": 15.0,
+        "mean": 14.98014888337469,
+        "p95": 17.0
+      },
+      "DrawCall/RenderVelocities": {
+        "median": 45.0,
+        "mean": 45.0,
+        "p95": 45.0
+      },
+      "DrawCall/WaterInfoTexture": {
+        "median": 0.0,
+        "mean": 0.0,
+        "p95": 0.0
+      },
+      "DrawCall/FXSystemPreInitViews": {
+        "median": 0.0,
+        "mean": 0.0,
+        "p95": 0.0
+      },
+      "DrawCall/FXSystemPreRender": {
+        "median": 0.0,
+        "mean": 0.0,
+        "p95": 0.0
+      },
+      "DrawCall/FXSystemPostRenderOpaque": {
+        "median": 0.0,
+        "mean": 0.0,
+        "p95": 0.0
+      },
+      "FrameTime": {
+        "median": 37.2175,
+        "mean": 37.20163461538461,
+        "p95": 38.35065
+      },
+      "RenderThreadTime": {
+        "median": 37.194900000000004,
+        "mean": 37.188052729528536,
+        "p95": 38.3254
+      },
+      "GameThreadTime": {
+        "median": 4.38635,
+        "mean": 4.600800496277915,
+        "p95": 5.7179
+      },
+      "GPUTime": {
+        "median": 36.72955,
+        "mean": 36.701920843672454,
+        "p95": 37.580375000000004
+      },
+      "GPUMem/LocalBudgetMB": {
+        "median": 3202.8789,
+        "mean": 3201.983446277916,
+        "p95": 3207.2539
+      },
+      "GPUMem/LocalUsedMB": {
+        "median": 2432.8047,
+        "mean": 2432.8047,
+        "p95": 2432.8047
+      },
+      "GPUMem/SystemBudgetMB": {
+        "median": 7491.0459,
+        "mean": 7491.0459,
+        "p95": 7491.0459
+      },
+      "GPUMem/SystemUsedMB": {
+        "median": 155.1523,
+        "mean": 156.20937196029777,
+        "p95": 159.1523
+      },
+      "GPU/RayTracingGeometry": {
+        "median": 0.0009,
+        "mean": 0.001054590570719603,
+        "p95": 0.0017
+      },
+      "GPU/DistanceFields": {
+        "median": 0.0284,
+        "mean": 0.028569602977667495,
+        "p95": 0.0309
+      },
+      "GPU/GlobalDistanceFieldUpdate": {
+        "median": 0.0008,
+        "mean": 0.0008280397022332506,
+        "p95": 0.0012
+      },
+      "GPU/AllocateRendertargets": {
+        "median": 0.0008,
+        "mean": 0.0008302729528535981,
+        "p95": 0.0011
+      },
+      "GPU/VisibilityCommands": {
+        "median": 0.0008,
+        "mean": 0.0008627791563275434,
+        "p95": 0.0012
+      },
+      "GPU/UpdateLumenSceneBuffers": {
+        "median": 0.0008,
+        "mean": 0.0009805210918114144,
+        "p95": 0.002
+      },
+      "GPU/GPUSceneUpdate": {
+        "median": 0.0197,
+        "mean": 0.021280521091811413,
+        "p95": 0.029175
+      },
+      "GPU/NaniteStreaming": {
+        "median": 0.0008,
+        "mean": 0.0008495037220843673,
+        "p95": 0.0012
+      },
+      "GPU/NaniteReadback": {
+        "median": 0.081,
+        "mean": 0.08142617866004963,
+        "p95": 0.0845
+      },
+      "GPU/FXSystemPreRender": {
+        "median": 0.0,
+        "mean": 2.816377171215881e-05,
+        "p95": 0.0001
+      },
+      "GPU/BuildRenderingCommandsDeferred": {
+        "median": 0.0514,
+        "mean": 0.05185334987593052,
+        "p95": 0.053675
+      },
+      "GPU/Prepass": {
+        "median": 0.1409,
+        "mean": 0.14275384615384615,
+        "p95": 0.1454
+      },
+      "GPU/RenderVelocities": {
+        "median": 1.0436,
+        "mean": 1.0497289081885857,
+        "p95": 1.0593499999999998
+      },
+      "GPU/NaniteVisBuffer": {
+        "median": 1.9848,
+        "mean": 2.003467245657568,
+        "p95": 2.1266749999999996
+      },
+      "GPU/NaniteBasePass": {
+        "median": 0.9371,
+        "mean": 0.942303970223325,
+        "p95": 0.955275
+      },
+      "GPU/HZB": {
+        "median": 0.1078,
+        "mean": 0.10846563275434243,
+        "p95": 0.1097
+      },
+      "GPU/BeginOcclusionTests": {
+        "median": 0.0558,
+        "mean": 0.05664627791563275,
+        "p95": 0.064
+      },
+      "GPU/LightGrid": {
+        "median": 0.0475,
+        "mean": 0.04794454094292804,
+        "p95": 0.051
+      },
+      "GPU/LightFunctionAtlasGeneration": {
+        "median": 0.0,
+        "mean": 1.1042183622828784e-05,
+        "p95": 0.0
+      },
+      "GPU/SkyAtmosphereLUTs": {
+        "median": 0.1206,
+        "mean": 0.1212075682382134,
+        "p95": 0.1229
+      },
+      "GPU/CaptureConvolveSkyEnvMap": {
+        "median": 0.0307,
+        "mean": 0.033080521091811414,
+        "p95": 0.07667500000000001
+      },
+      "GPU/CustomDepth": {
+        "median": 0.0383,
+        "mean": 0.0374606699751861,
+        "p95": 0.043
+      },
+      "GPU/SingleLayerWaterDepthPrepass": {
+        "median": 0.39475,
+        "mean": 0.39495694789081887,
+        "p95": 0.417175
+      },
+      "GPU/LumenSceneUpdate": {
+        "median": 0.3268,
+        "mean": 0.31493300248138956,
+        "p95": 0.39175
+      },
+      "GPU/BuildRenderingCommands": {
+        "median": 0.00925,
+        "mean": 0.009830645161290322,
+        "p95": 0.01155
+      },
+      "GPU/LumenSceneLighting": {
+        "median": 0.8248,
+        "mean": 0.8274790322580645,
+        "p95": 0.875175
+      },
+      "GPU/LumenScreenProbeGather": {
+        "median": 3.27125,
+        "mean": 3.2778157568238213,
+        "p95": 3.4
+      },
+      "GPU/Basepass": {
+        "median": 2.5992,
+        "mean": 2.6148254342431763,
+        "p95": 2.75615
+      },
+      "GPU/RenderDeferredLighting": {
+        "median": 1.4632,
+        "mean": 1.4727574441687346,
+        "p95": 1.481875
+      },
+      "GPU/ShadowDepths": {
+        "median": 7.548,
+        "mean": 7.583384491315137,
+        "p95": 7.902850000000001
+      },
+      "GPU/ScreenSpaceReflections": {
+        "median": 0.2092,
+        "mean": 0.21137493796526055,
+        "p95": 0.2168
+      },
+      "GPU/TranslucentLighting": {
+        "median": 0.1431,
+        "mean": 0.14382493796526055,
+        "p95": 0.1458
+      },
+      "GPU/Lights": {
+        "median": 1.0156,
+        "mean": 1.020751612903226,
+        "p95": 1.02855
+      },
+      "GPU/ShadowProjection": {
+        "median": 2.3066500000000003,
+        "mean": 2.318197642679901,
+        "p95": 2.3518
+      },
+      "GPU/DistanceFieldShadows": {
+        "median": 0.1505,
+        "mean": 0.15852617866004962,
+        "p95": 0.1846
+      },
+      "GPU/VolumetricFog": {
+        "median": 0.3648,
+        "mean": 0.36819466501240694,
+        "p95": 0.3814
+      },
+      "GPU/TemporalSuperResolution": {
+        "median": 8.5536,
+        "mean": 8.415622952853598,
+        "p95": 8.9359
+      },
+      "GPU/SingleLayerWater": {
+        "median": 0.22895,
+        "mean": 0.2309575682382134,
+        "p95": 0.24055
+      },
+      "GPU/SkyAtmosphere": {
+        "median": 0.0264,
+        "mean": 0.02621774193548387,
+        "p95": 0.0278
+      },
+      "GPU/Fog": {
+        "median": 0.2114,
+        "mean": 0.21379950372208437,
+        "p95": 0.216475
+      },
+      "GPU/PostRenderOpsFX": {
+        "median": 0.0025,
+        "mean": 0.002559181141439206,
+        "p95": 0.0033
+      },
+      "GPU/FXSystemPostRenderOpaque": {
+        "median": 0.0031,
+        "mean": 0.0032596774193548385,
+        "p95": 0.0046
+      },
+      "GPU/Translucency": {
+        "median": 0.1247,
+        "mean": 0.12597667493796527,
+        "p95": 0.129
+      },
+      "GPU/Postprocessing": {
+        "median": 1.2927,
+        "mean": 1.300662282878412,
+        "p95": 1.3102
+      },
+      "GPU/VirtualTextureUpdate": {
+        "median": 0.0638,
+        "mean": 0.06478250620347395,
+        "p95": 0.0694
+      },
+      "GPU/SlateUI": {
+        "median": 0.029,
+        "mean": 0.029363399503722083,
+        "p95": 0.0311
+      },
+      "GPU/Unaccounted": {
+        "median": 0.83255,
+        "mean": 0.8380574441687345,
+        "p95": 0.8685
+      },
+      "RHI/DrawCalls": {
+        "median": 409.0,
+        "mean": 409.1377171215881,
+        "p95": 420.0
+      },
+      "RHI/PrimitivesDrawn": {
+        "median": 1276453.0,
+        "mean": 1246539.382133995,
+        "p95": 1385823.0
+      },
+      "GPU/VirtualTexture": {
+        "median": 0.0,
+        "mean": 0.002361290322580645,
+        "p95": 0.0
+      },
+      "summary": {
+        "frames": 806,
+        "duration_s": 29.984517500000003,
+        "fps_mean": 26.880539264972334,
+        "fps_1percent_low": 25.04499054273329,
+        "frame_p99_ms": 39.15643000000001,
+        "worst_frame_ms": 42.655,
+        "gpu_gap_to_16_6_ms": 20.129550000000002,
+        "frame_gap_to_16_6_ms": 20.6175
+      }
+    },
+    "3": {
+      "FrameTime": {
+        "median": 37.3697,
+        "mean": 37.45519925093633,
+        "p95": 38.7396
+      },
+      "GPUMem/LocalBudgetMB": {
+        "median": 3194.1289,
+        "mean": 3191.8302017478154,
+        "p95": 3207.2539
+      },
+      "GPUMem/LocalUsedMB": {
+        "median": 2433.9297,
+        "mean": 2433.888189388265,
+        "p95": 2433.9297
+      },
+      "GPUMem/SystemBudgetMB": {
+        "median": 7491.0459,
+        "mean": 7491.0459,
+        "p95": 7491.0459
+      },
+      "GPUMem/SystemUsedMB": {
+        "median": 155.2148,
+        "mean": 155.19404469413234,
+        "p95": 155.2148
+      },
+      "DrawCall/SlateUI": {
+        "median": 25.0,
+        "mean": 24.99250936329588,
+        "p95": 25.0
+      },
+      "DrawCall/Basepass": {
+        "median": 52.0,
+        "mean": 52.0,
+        "p95": 52.0
+      },
+      "DrawCall/CustomDepth": {
+        "median": 7.0,
+        "mean": 7.0,
+        "p95": 7.0
+      },
+      "DrawCall/Prepass": {
+        "median": 7.0,
+        "mean": 7.0,
+        "p95": 7.0
+      },
+      "DrawCall/Distortion": {
+        "median": 0.0,
+        "mean": 0.0,
+        "p95": 0.0
+      },
+      "DrawCall/Fog": {
+        "median": 1.0,
+        "mean": 1.0,
+        "p95": 1.0
+      },
+      "DrawCall/FrontLayerTranslucencyGBuffer": {
+        "median": 0.0,
+        "mean": 0.0,
+        "p95": 0.0
+      },
+      "DrawCall/Lights": {
+        "median": 16.0,
+        "mean": 16.0,
+        "p95": 16.0
+      },
+      "DrawCall/BeginOcclusionTests": {
+        "median": 42.0,
+        "mean": 42.359550561797754,
+        "p95": 46.0
+      },
+      "DrawCall/ScreenSpaceReflections": {
+        "median": 2.0,
+        "mean": 2.0,
+        "p95": 2.0
+      },
+      "DrawCall/ShadowDepths": {
+        "median": 69.0,
+        "mean": 69.0,
+        "p95": 69.0
+      },
+      "DrawCall/DistanceFieldShadows": {
+        "median": 3.0,
+        "mean": 3.0,
+        "p95": 3.0
+      },
+      "DrawCall/SingleLayerWaterDepthPrepass": {
+        "median": 3.0,
+        "mean": 3.0,
+        "p95": 3.0
+      },
+      "DrawCall/SingleLayerWater": {
+        "median": 4.0,
+        "mean": 4.0,
+        "p95": 4.0
+      },
+      "DrawCall/Translucency": {
+        "median": 15.0,
+        "mean": 15.235955056179776,
+        "p95": 17.0
+      },
+      "DrawCall/RenderVelocities": {
+        "median": 45.0,
+        "mean": 45.0,
+        "p95": 45.0
+      },
+      "DrawCall/WaterInfoTexture": {
+        "median": 0.0,
+        "mean": 0.0,
+        "p95": 0.0
+      },
+      "DrawCall/FXSystemPreInitViews": {
+        "median": 0.0,
+        "mean": 0.0,
+        "p95": 0.0
+      },
+      "DrawCall/FXSystemPreRender": {
+        "median": 0.0,
+        "mean": 0.0,
+        "p95": 0.0
+      },
+      "DrawCall/FXSystemPostRenderOpaque": {
+        "median": 0.0,
+        "mean": 0.0,
+        "p95": 0.0
+      },
+      "RenderThreadTime": {
+        "median": 37.363,
+        "mean": 37.44415418227216,
+        "p95": 38.7401
+      },
+      "GameThreadTime": {
+        "median": 4.5114,
+        "mean": 4.785164419475655,
+        "p95": 6.1825
+      },
+      "GPUTime": {
+        "median": 36.8913,
+        "mean": 36.95269288389513,
+        "p95": 37.9884
+      },
+      "GPU/RayTracingGeometry": {
+        "median": 0.0009,
+        "mean": 0.0010473158551810237,
+        "p95": 0.0017
+      },
+      "GPU/DistanceFields": {
+        "median": 0.0284,
+        "mean": 0.02888302122347066,
+        "p95": 0.031
+      },
+      "GPU/GlobalDistanceFieldUpdate": {
+        "median": 0.0008,
+        "mean": 0.0008274656679151061,
+        "p95": 0.0012
+      },
+      "GPU/AllocateRendertargets": {
+        "median": 0.0008,
+        "mean": 0.0008269662921348315,
+        "p95": 0.0012
+      },
+      "GPU/VisibilityCommands": {
+        "median": 0.0008,
+        "mean": 0.0008525593008739076,
+        "p95": 0.0012
+      },
+      "GPU/UpdateLumenSceneBuffers": {
+        "median": 0.0008,
+        "mean": 0.0009680399500624219,
+        "p95": 0.0019
+      },
+      "GPU/GPUSceneUpdate": {
+        "median": 0.0197,
+        "mean": 0.021119225967540574,
+        "p95": 0.0306
+      },
+      "GPU/NaniteStreaming": {
+        "median": 0.0008,
+        "mean": 0.0008362047440699126,
+        "p95": 0.0012
+      },
+      "GPU/NaniteReadback": {
+        "median": 0.0811,
+        "mean": 0.08245156054931335,
+        "p95": 0.085
+      },
+      "GPU/FXSystemPreRender": {
+        "median": 0.0,
+        "mean": 2.297128589263421e-05,
+        "p95": 0.0001
+      },
+      "GPU/BuildRenderingCommandsDeferred": {
+        "median": 0.046,
+        "mean": 0.04669113607990012,
+        "p95": 0.0481
+      },
+      "GPU/Prepass": {
+        "median": 0.141,
+        "mean": 0.14245755305867666,
+        "p95": 0.1453
+      },
+      "GPU/RenderVelocities": {
+        "median": 1.0458,
+        "mean": 1.0569392009987515,
+        "p95": 1.066
+      },
+      "GPU/NaniteVisBuffer": {
+        "median": 1.9895,
+        "mean": 2.015974531835206,
+        "p95": 2.2168
+      },
+      "GPU/NaniteBasePass": {
+        "median": 0.9392,
+        "mean": 0.9496288389513109,
+        "p95": 0.9618
+      },
+      "GPU/HZB": {
+        "median": 0.1079,
+        "mean": 0.10808139825218477,
+        "p95": 0.1097
+      },
+      "GPU/BeginOcclusionTests": {
+        "median": 0.0558,
+        "mean": 0.056586267166042446,
+        "p95": 0.0635
+      },
+      "GPU/LightGrid": {
+        "median": 0.0478,
+        "mean": 0.04808002496878901,
+        "p95": 0.0515
+      },
+      "GPU/LightFunctionAtlasGeneration": {
+        "median": 0.0,
+        "mean": 8.98876404494382e-06,
+        "p95": 0.0
+      },
+      "GPU/SkyAtmosphereLUTs": {
+        "median": 0.1208,
+        "mean": 0.12099325842696629,
+        "p95": 0.1233
+      },
+      "GPU/CaptureConvolveSkyEnvMap": {
+        "median": 0.0307,
+        "mean": 0.03370299625468165,
+        "p95": 0.0767
+      },
+      "GPU/CustomDepth": {
+        "median": 0.0385,
+        "mean": 0.03751210986267166,
+        "p95": 0.043
+      },
+      "GPU/SingleLayerWaterDepthPrepass": {
+        "median": 0.3945,
+        "mean": 0.3986958801498127,
+        "p95": 0.4262
+      },
+      "GPU/LumenSceneUpdate": {
+        "median": 0.3598,
+        "mean": 0.35313171036204744,
+        "p95": 0.4027
+      },
+      "GPU/BuildRenderingCommands": {
+        "median": 0.0094,
+        "mean": 0.009818102372034957,
+        "p95": 0.0168
+      },
+      "GPU/LumenSceneLighting": {
+        "median": 0.8234,
+        "mean": 0.8315694132334582,
+        "p95": 0.8838
+      },
+      "GPU/LumenScreenProbeGather": {
+        "median": 3.28,
+        "mean": 3.301621972534332,
+        "p95": 3.5184
+      },
+      "GPU/Basepass": {
+        "median": 2.6047,
+        "mean": 2.6312664169787765,
+        "p95": 2.872
+      },
+      "GPU/RenderDeferredLighting": {
+        "median": 1.4651,
+        "mean": 1.4757850187265917,
+        "p95": 1.4855
+      },
+      "GPU/ShadowDepths": {
+        "median": 7.5673,
+        "mean": 7.627195880149813,
+        "p95": 8.0206
+      },
+      "GPU/ScreenSpaceReflections": {
+        "median": 0.2097,
+        "mean": 0.21353458177278403,
+        "p95": 0.2164
+      },
+      "GPU/TranslucentLighting": {
+        "median": 0.1432,
+        "mean": 0.14352971285892635,
+        "p95": 0.1461
+      },
+      "GPU/Lights": {
+        "median": 1.0169,
+        "mean": 1.0249314606741573,
+        "p95": 1.0298
+      },
+      "GPU/ShadowProjection": {
+        "median": 2.3093,
+        "mean": 2.3332134831460674,
+        "p95": 2.5751
+      },
+      "GPU/DistanceFieldShadows": {
+        "median": 0.1505,
+        "mean": 0.1586734082397004,
+        "p95": 0.1847
+      },
+      "GPU/VolumetricFog": {
+        "median": 0.3661,
+        "mean": 0.3715958801498127,
+        "p95": 0.3839
+      },
+      "GPU/TemporalSuperResolution": {
+        "median": 8.5656,
+        "mean": 8.466197253433208,
+        "p95": 9.0836
+      },
+      "GPU/SingleLayerWater": {
+        "median": 0.2299,
+        "mean": 0.23188189762796504,
+        "p95": 0.2411
+      },
+      "GPU/SkyAtmosphere": {
+        "median": 0.0265,
+        "mean": 0.026270911360799,
+        "p95": 0.0278
+      },
+      "GPU/Fog": {
+        "median": 0.2121,
+        "mean": 0.21596354556803996,
+        "p95": 0.2169
+      },
+      "GPU/PostRenderOpsFX": {
+        "median": 0.0024,
+        "mean": 0.0025382022471910114,
+        "p95": 0.0033
+      },
+      "GPU/FXSystemPostRenderOpaque": {
+        "median": 0.0031,
+        "mean": 0.003243445692883895,
+        "p95": 0.0044
+      },
+      "GPU/Translucency": {
+        "median": 0.1253,
+        "mean": 0.12849475655430712,
+        "p95": 0.1295
+      },
+      "GPU/Postprocessing": {
+        "median": 1.2944,
+        "mean": 1.3051975031210987,
+        "p95": 1.3125
+      },
+      "GPU/VirtualTextureUpdate": {
+        "median": 0.065,
+        "mean": 0.06617952559300874,
+        "p95": 0.0703
+      },
+      "GPU/SlateUI": {
+        "median": 0.0293,
+        "mean": 0.029208863920099876,
+        "p95": 0.0312
+      },
+      "GPU/Unaccounted": {
+        "median": 0.8329,
+        "mean": 0.8448549313358302,
+        "p95": 0.8926
+      },
+      "RHI/DrawCalls": {
+        "median": 413.0,
+        "mean": 413.14107365792756,
+        "p95": 423.0
+      },
+      "RHI/PrimitivesDrawn": {
+        "median": 1284065.0,
+        "mean": 1261358.0786516855,
+        "p95": 1384811.0
+      },
+      "GPU/VirtualTexture": {
+        "median": 0.0,
+        "mean": 0.003276903870162297,
+        "p95": 0.0454
+      },
+      "summary": {
+        "frames": 801,
+        "duration_s": 30.0016146,
+        "fps_mean": 26.698563083334854,
+        "fps_1percent_low": 24.407084129049473,
+        "frame_p99_ms": 40.1331,
+        "worst_frame_ms": 43.7021,
+        "gpu_gap_to_16_6_ms": 20.2913,
+        "frame_gap_to_16_6_ms": 20.7697
+      }
+    }
+  },
+  "aggregate": {
+    "DrawCall/SlateUI": {
+      "median": 25.0,
+      "mean": 24.992543496271747,
+      "p95": 25.0
+    },
+    "DrawCall/Basepass": {
+      "median": 52.0,
+      "mean": 52.0,
+      "p95": 52.0
+    },
+    "DrawCall/CustomDepth": {
+      "median": 7.0,
+      "mean": 7.0,
+      "p95": 7.0
+    },
+    "DrawCall/Prepass": {
+      "median": 7.0,
+      "mean": 7.0,
+      "p95": 7.0
+    },
+    "DrawCall/Distortion": {
+      "median": 0.0,
+      "mean": 0.0,
+      "p95": 0.0
+    },
+    "DrawCall/Fog": {
+      "median": 1.0,
+      "mean": 1.0,
+      "p95": 1.0
+    },
+    "DrawCall/FrontLayerTranslucencyGBuffer": {
+      "median": 0.0,
+      "mean": 0.0,
+      "p95": 0.0
+    },
+    "DrawCall/Lights": {
+      "median": 16.0,
+      "mean": 16.0,
+      "p95": 16.0
+    },
+    "DrawCall/BeginOcclusionTests": {
+      "median": 42.0,
+      "mean": 42.3877381938691,
+      "p95": 47.0
+    },
+    "DrawCall/ScreenSpaceReflections": {
+      "median": 2.0,
+      "mean": 2.0,
+      "p95": 2.0
+    },
+    "DrawCall/ShadowDepths": {
+      "median": 69.0,
+      "mean": 69.0,
+      "p95": 69.0
+    },
+    "DrawCall/DistanceFieldShadows": {
+      "median": 3.0,
+      "mean": 3.0,
+      "p95": 3.0
+    },
+    "DrawCall/SingleLayerWaterDepthPrepass": {
+      "median": 3.0,
+      "mean": 3.0,
+      "p95": 3.0
+    },
+    "DrawCall/SingleLayerWater": {
+      "median": 4.0,
+      "mean": 4.0,
+      "p95": 4.0
+    },
+    "DrawCall/Translucency": {
+      "median": 15.0,
+      "mean": 15.061309030654515,
+      "p95": 17.0
+    },
+    "DrawCall/RenderVelocities": {
+      "median": 45.0,
+      "mean": 45.0,
+      "p95": 45.0
+    },
+    "DrawCall/WaterInfoTexture": {
+      "median": 0.0,
+      "mean": 0.0,
+      "p95": 0.0
+    },
+    "DrawCall/FXSystemPreInitViews": {
+      "median": 0.0,
+      "mean": 0.0,
+      "p95": 0.0
+    },
+    "DrawCall/FXSystemPreRender": {
+      "median": 0.0,
+      "mean": 0.0,
+      "p95": 0.0
+    },
+    "DrawCall/FXSystemPostRenderOpaque": {
+      "median": 0.0,
+      "mean": 0.0,
+      "p95": 0.0
+    },
+    "FrameTime": {
+      "median": 37.2399,
+      "mean": 37.26907270091135,
+      "p95": 38.571349999999995
+    },
+    "RenderThreadTime": {
+      "median": 37.2378,
+      "mean": 37.256442004971,
+      "p95": 38.542210000000004
+    },
+    "GameThreadTime": {
+      "median": 4.46715,
+      "mean": 4.746506628003314,
+      "p95": 6.0692900000000005
+    },
+    "GPUTime": {
+      "median": 36.757850000000005,
+      "mean": 36.769297597348796,
+      "p95": 37.733599999999996
+    },
+    "GPU/RayTracingGeometry": {
+      "median": 0.0009,
+      "mean": 0.0010441590720795361,
+      "p95": 0.0017
+    },
+    "GPU/DistanceFields": {
+      "median": 0.0284,
+      "mean": 0.028723446561723282,
+      "p95": 0.031
+    },
+    "GPU/GlobalDistanceFieldUpdate": {
+      "median": 0.0008,
+      "mean": 0.0008270505385252693,
+      "p95": 0.0012
+    },
+    "GPU/AllocateRendertargets": {
+      "median": 0.0008,
+      "mean": 0.000824109362054681,
+      "p95": 0.0011
+    },
+    "GPU/VisibilityCommands": {
+      "median": 0.0008,
+      "mean": 0.0008520298260149131,
+      "p95": 0.0012
+    },
+    "GPU/UpdateLumenSceneBuffers": {
+      "median": 0.0008,
+      "mean": 0.0009683098591549296,
+      "p95": 0.002
+    },
+    "GPU/GPUSceneUpdate": {
+      "median": 0.0197,
+      "mean": 0.021195733222866612,
+      "p95": 0.0298
+    },
+    "GPU/NaniteStreaming": {
+      "median": 0.0008,
+      "mean": 0.000843744821872411,
+      "p95": 0.0012
+    },
+    "GPU/NaniteReadback": {
+      "median": 0.081,
+      "mean": 0.08214556752278376,
+      "p95": 0.0848
+    },
+    "GPU/FXSystemPreRender": {
+      "median": 0.0,
+      "mean": 2.8458989229494615e-05,
+      "p95": 0.0001
+    },
+    "GPU/BuildRenderingCommandsDeferred": {
+      "median": 0.0506,
+      "mean": 0.05008483844241922,
+      "p95": 0.0533
+    },
+    "GPU/Prepass": {
+      "median": 0.1409,
+      "mean": 0.1422055923777962,
+      "p95": 0.145235
+    },
+    "GPU/RenderVelocities": {
+      "median": 1.0434,
+      "mean": 1.0505227423363712,
+      "p95": 1.0589
+    },
+    "GPU/NaniteVisBuffer": {
+      "median": 1.9858,
+      "mean": 2.0081934548467273,
+      "p95": 2.1489599999999998
+    },
+    "GPU/NaniteBasePass": {
+      "median": 0.9371,
+      "mean": 0.9449385666942833,
+      "p95": 0.9571
+    },
+    "GPU/HZB": {
+      "median": 0.1078,
+      "mean": 0.10827663628831814,
+      "p95": 0.1098
+    },
+    "GPU/BeginOcclusionTests": {
+      "median": 0.0559,
+      "mean": 0.05681843413421707,
+      "p95": 0.0635
+    },
+    "GPU/LightGrid": {
+      "median": 0.0476,
+      "mean": 0.04808570836785418,
+      "p95": 0.0514
+    },
+    "GPU/LightFunctionAtlasGeneration": {
+      "median": 0.0,
+      "mean": 7.995028997514499e-06,
+      "p95": 0.0
+    },
+    "GPU/SkyAtmosphereLUTs": {
+      "median": 0.1206,
+      "mean": 0.1208241922120961,
+      "p95": 0.1229
+    },
+    "GPU/CaptureConvolveSkyEnvMap": {
+      "median": 0.0307,
+      "mean": 0.03320845070422535,
+      "p95": 0.0764
+    },
+    "GPU/CustomDepth": {
+      "median": 0.0383,
+      "mean": 0.03752009113504557,
+      "p95": 0.043
+    },
+    "GPU/SingleLayerWaterDepthPrepass": {
+      "median": 0.3942,
+      "mean": 0.39653214581607293,
+      "p95": 0.423035
+    },
+    "GPU/LumenSceneUpdate": {
+      "median": 0.3339,
+      "mean": 0.31990140845070425,
+      "p95": 0.3953
+    },
+    "GPU/BuildRenderingCommands": {
+      "median": 0.0093,
+      "mean": 0.009828956089478045,
+      "p95": 0.01673499999999999
+    },
+    "GPU/LumenSceneLighting": {
+      "median": 0.82405,
+      "mean": 0.8286251035625518,
+      "p95": 0.878035
+    },
+    "GPU/LumenScreenProbeGather": {
+      "median": 3.2736,
+      "mean": 3.286568848384424,
+      "p95": 3.47628
+    },
+    "GPU/Basepass": {
+      "median": 2.5992,
+      "mean": 2.6183964788732395,
+      "p95": 2.82664
+    },
+    "GPU/RenderDeferredLighting": {
+      "median": 1.4632,
+      "mean": 1.4729053024026513,
+      "p95": 1.4827
+    },
+    "GPU/ShadowDepths": {
+      "median": 7.55275,
+      "mean": 7.5953253935376965,
+      "p95": 7.95059
+    },
+    "GPU/ScreenSpaceReflections": {
+      "median": 0.2091,
+      "mean": 0.2119652029826015,
+      "p95": 0.2159
+    },
+    "GPU/TranslucentLighting": {
+      "median": 0.143,
+      "mean": 0.14383330571665287,
+      "p95": 0.1459
+    },
+    "GPU/Lights": {
+      "median": 1.0154,
+      "mean": 1.0213145816072908,
+      "p95": 1.0281
+    },
+    "GPU/ShadowProjection": {
+      "median": 2.30465,
+      "mean": 2.3222094034797016,
+      "p95": 2.5301799999999997
+    },
+    "GPU/DistanceFieldShadows": {
+      "median": 0.1502,
+      "mean": 0.15804030654515328,
+      "p95": 0.1843
+    },
+    "GPU/VolumetricFog": {
+      "median": 0.365,
+      "mean": 0.3691053024026512,
+      "p95": 0.382435
+    },
+    "GPU/TemporalSuperResolution": {
+      "median": 8.5546,
+      "mean": 8.4319231980116,
+      "p95": 8.98044
+    },
+    "GPU/SingleLayerWater": {
+      "median": 0.2294,
+      "mean": 0.23107406793703397,
+      "p95": 0.24130499999999996
+    },
+    "GPU/SkyAtmosphere": {
+      "median": 0.0264,
+      "mean": 0.026223529411764705,
+      "p95": 0.0278
+    },
+    "GPU/Fog": {
+      "median": 0.2112,
+      "mean": 0.2147459817729909,
+      "p95": 0.2165
+    },
+    "GPU/PostRenderOpsFX": {
+      "median": 0.0025,
+      "mean": 0.00256023198011599,
+      "p95": 0.0033
+    },
+    "GPU/FXSystemPostRenderOpaque": {
+      "median": 0.0031,
+      "mean": 0.0032534382767191385,
+      "p95": 0.0045
+    },
+    "GPU/Translucency": {
+      "median": 0.1249,
+      "mean": 0.1266354183927092,
+      "p95": 0.1292
+    },
+    "GPU/Postprocessing": {
+      "median": 1.2924,
+      "mean": 1.3012821872410936,
+      "p95": 1.310435
+    },
+    "GPU/VirtualTextureUpdate": {
+      "median": 0.0643,
+      "mean": 0.06560559237779619,
+      "p95": 0.0698
+    },
+    "GPU/SlateUI": {
+      "median": 0.0291,
+      "mean": 0.029172079536039768,
+      "p95": 0.0312
+    },
+    "GPU/Unaccounted": {
+      "median": 0.8319,
+      "mean": 0.8409214995857498,
+      "p95": 0.878705
+    },
+    "RHI/DrawCalls": {
+      "median": 410.0,
+      "mean": 409.55799502899754,
+      "p95": 421.0
+    },
+    "RHI/PrimitivesDrawn": {
+      "median": 1278934.0,
+      "mean": 1248970.56006628,
+      "p95": 1385823.7
+    },
+    "GPUMem/LocalBudgetMB": {
+      "median": 3199.4219,
+      "mean": 3197.787101946976,
+      "p95": 3207.2539
+    },
+    "GPUMem/LocalUsedMB": {
+      "median": 2432.8047,
+      "mean": 2433.1642173985088,
+      "p95": 2433.9297
+    },
+    "GPUMem/SystemBudgetMB": {
+      "median": 7491.0459,
+      "mean": 7491.0459,
+      "p95": 7491.0459
+    },
+    "GPUMem/SystemUsedMB": {
+      "median": 155.2148,
+      "mean": 156.8897948218724,
+      "p95": 159.2148
+    },
+    "GPU/VirtualTexture": {
+      "median": 0.0,
+      "mean": 0.003071375310687655,
+      "p95": 0.043
+    },
+    "summary": {
+      "frames": 2414,
+      "duration_s": 89.96754150000001,
+      "fps_mean": 26.831899146649462,
+      "fps_1percent_low": 24.566794066785125,
+      "frame_p99_ms": 39.736808,
+      "worst_frame_ms": 43.7021,
+      "gpu_gap_to_16_6_ms": 20.157850000000003,
+      "frame_gap_to_16_6_ms": 20.639899999999997
+    }
+  }
+}

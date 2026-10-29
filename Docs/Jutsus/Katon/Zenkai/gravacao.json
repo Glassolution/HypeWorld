@@ -1,0 +1,1548 @@
+{
+  "n": 150,
+  "rows": [
+    {
+      "frame": 0,
+      "chakra": 100.0,
+      "montage": "None",
+      "projectiles": []
+    },
+    {
+      "frame": 1,
+      "chakra": 100.0,
+      "montage": "None",
+      "projectiles": []
+    },
+    {
+      "frame": 2,
+      "chakra": 100.0,
+      "montage": "None",
+      "projectiles": []
+    },
+    {
+      "frame": 3,
+      "chakra": 100.0,
+      "montage": "None",
+      "projectiles": []
+    },
+    {
+      "frame": 4,
+      "chakra": 100.0,
+      "montage": "None",
+      "projectiles": []
+    },
+    {
+      "frame": 5,
+      "chakra": 100.0,
+      "montage": "None",
+      "projectiles": []
+    },
+    {
+      "frame": 6,
+      "chakra": 100.0,
+      "montage": "None",
+      "projectiles": []
+    },
+    {
+      "frame": 7,
+      "chakra": 100.0,
+      "montage": "None",
+      "projectiles": []
+    },
+    {
+      "frame": 8,
+      "chakra": 100.0,
+      "montage": "None",
+      "projectiles": []
+    },
+    {
+      "frame": 9,
+      "chakra": 100.0,
+      "montage": "None",
+      "projectiles": []
+    },
+    {
+      "frame": 10,
+      "chakra": 100.0,
+      "montage": "None",
+      "projectiles": []
+    },
+    {
+      "frame": 11,
+      "chakra": 100.0,
+      "montage": "None",
+      "projectiles": []
+    },
+    {
+      "frame": 12,
+      "chakra": 100.0,
+      "montage": "None",
+      "projectiles": []
+    },
+    {
+      "frame": 13,
+      "chakra": 100.0,
+      "montage": "None",
+      "projectiles": []
+    },
+    {
+      "frame": 14,
+      "chakra": 100.0,
+      "montage": "None",
+      "projectiles": []
+    },
+    {
+      "frame": 15,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": []
+    },
+    {
+      "frame": 16,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": []
+    },
+    {
+      "frame": 17,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": []
+    },
+    {
+      "frame": 18,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": []
+    },
+    {
+      "frame": 19,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": []
+    },
+    {
+      "frame": 20,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": []
+    },
+    {
+      "frame": 21,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": []
+    },
+    {
+      "frame": 22,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": []
+    },
+    {
+      "frame": 23,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": []
+    },
+    {
+      "frame": 24,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": []
+    },
+    {
+      "frame": 25,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": []
+    },
+    {
+      "frame": 26,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": []
+    },
+    {
+      "frame": 27,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": []
+    },
+    {
+      "frame": 28,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": []
+    },
+    {
+      "frame": 29,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": []
+    },
+    {
+      "frame": 30,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": []
+    },
+    {
+      "frame": 31,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": []
+    },
+    {
+      "frame": 32,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": []
+    },
+    {
+      "frame": 33,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": []
+    },
+    {
+      "frame": 34,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": []
+    },
+    {
+      "frame": 35,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": []
+    },
+    {
+      "frame": 36,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": []
+    },
+    {
+      "frame": 37,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": []
+    },
+    {
+      "frame": 38,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": []
+    },
+    {
+      "frame": 39,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": []
+    },
+    {
+      "frame": 40,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": []
+    },
+    {
+      "frame": 41,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": []
+    },
+    {
+      "frame": 42,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": []
+    },
+    {
+      "frame": 43,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000000, y: 79.992044, z: 161.479683}>",
+          "age": 0.0,
+          "exploded": false
+        }
+      ]
+    },
+    {
+      "frame": 44,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000000, y: 191.639448, z: 184.873901}>",
+          "age": 0.03333333507180214,
+          "exploded": false
+        }
+      ]
+    },
+    {
+      "frame": 45,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000000, y: 273.716435, z: 202.072032}>",
+          "age": 0.06666667014360428,
+          "exploded": false
+        }
+      ]
+    },
+    {
+      "frame": 46,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000000, y: 330.772251, z: 214.027318}>",
+          "age": 0.10000000894069672,
+          "exploded": false
+        }
+      ]
+    },
+    {
+      "frame": 47,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000000, y: 367.356204, z: 221.692995}>",
+          "age": 0.13333334028720856,
+          "exploded": false
+        }
+      ]
+    },
+    {
+      "frame": 48,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000000, y: 388.017629, z: 226.022314}>",
+          "age": 0.1666666716337204,
+          "exploded": false
+        }
+      ]
+    },
+    {
+      "frame": 49,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000000, y: 397.305772, z: 227.968521}>",
+          "age": 0.20000001788139343,
+          "exploded": false
+        }
+      ]
+    },
+    {
+      "frame": 50,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000000, y: 399.769971, z: 228.484863}>",
+          "age": 0.23333334922790527,
+          "exploded": false
+        }
+      ]
+    },
+    {
+      "frame": 51,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000000, y: 449.844892, z: 229.914885}>",
+          "age": 0.2666666805744171,
+          "exploded": false
+        }
+      ]
+    },
+    {
+      "frame": 52,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000000, y: 549.805113, z: 232.735210}>",
+          "age": 0.30000001192092896,
+          "exploded": false
+        }
+      ]
+    },
+    {
+      "frame": 53,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000000, y: 649.765303, z: 235.555534}>",
+          "age": 0.3333333432674408,
+          "exploded": false
+        }
+      ]
+    },
+    {
+      "frame": 54,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000000, y: 749.725524, z: 238.375859}>",
+          "age": 0.36666667461395264,
+          "exploded": false
+        }
+      ]
+    },
+    {
+      "frame": 55,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000000, y: 849.685867, z: 241.196187}>",
+          "age": 0.40000003576278687,
+          "exploded": false
+        }
+      ]
+    },
+    {
+      "frame": 56,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000000, y: 949.646088, z: 244.016512}>",
+          "age": 0.4333333671092987,
+          "exploded": false
+        }
+      ]
+    },
+    {
+      "frame": 57,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000000, y: 1049.606309, z: 246.836837}>",
+          "age": 0.46666669845581055,
+          "exploded": false
+        }
+      ]
+    },
+    {
+      "frame": 58,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000000, y: 1149.566408, z: 249.657158}>",
+          "age": 0.5,
+          "exploded": false
+        }
+      ]
+    },
+    {
+      "frame": 59,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 1249.526629, z: 252.477483}>",
+          "age": 0.5333333611488342,
+          "exploded": false
+        }
+      ]
+    },
+    {
+      "frame": 60,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 1349.487094, z: 255.297815}>",
+          "age": 0.5666667222976685,
+          "exploded": false
+        }
+      ]
+    },
+    {
+      "frame": 61,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 1449.447193, z: 258.118136}>",
+          "age": 0.6000000238418579,
+          "exploded": false
+        }
+      ]
+    },
+    {
+      "frame": 62,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 1549.407414, z: 260.938461}>",
+          "age": 0.6333333849906921,
+          "exploded": false
+        }
+      ]
+    },
+    {
+      "frame": 63,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 1649.367513, z: 263.758783}>",
+          "age": 0.6666666865348816,
+          "exploded": false
+        }
+      ]
+    },
+    {
+      "frame": 64,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 1749.327856, z: 266.579111}>",
+          "age": 0.7000000476837158,
+          "exploded": false
+        }
+      ]
+    },
+    {
+      "frame": 65,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 1849.287955, z: 269.399432}>",
+          "age": 0.7333333492279053,
+          "exploded": false
+        }
+      ]
+    },
+    {
+      "frame": 66,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 1949.248298, z: 272.219761}>",
+          "age": 0.7666667103767395,
+          "exploded": false
+        }
+      ]
+    },
+    {
+      "frame": 67,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2049.208640, z: 275.040089}>",
+          "age": 0.8000000715255737,
+          "exploded": false
+        }
+      ]
+    },
+    {
+      "frame": 68,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2149.168617, z: 277.860407}>",
+          "age": 0.8333333730697632,
+          "exploded": false
+        }
+      ]
+    },
+    {
+      "frame": 69,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2249.129082, z: 280.680739}>",
+          "age": 0.8666667342185974,
+          "exploded": false
+        }
+      ]
+    },
+    {
+      "frame": 70,
+      "chakra": 70.0,
+      "montage": "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra.ABP_Sasuke_C_0.AnimMontage_0' (0x000002027B37BD00) Class 'AnimMontage'>",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 0.9000000357627869,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 71,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 0.9333333969116211,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 72,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 0.9666666984558105,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 73,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 1.0,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 74,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 1.033333420753479,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 75,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 1.0666667222976685,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 76,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 1.100000023841858,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 77,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 1.133333444595337,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 78,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 1.1666667461395264,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 79,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 1.2000000476837158,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 80,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 1.2333333492279053,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 81,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 1.2666667699813843,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 82,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 1.3000000715255737,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 83,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 1.3333333730697632,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 84,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 1.3666667938232422,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 85,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 1.4000000953674316,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 86,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 1.433333396911621,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 87,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 1.4666666984558105,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 88,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 1.5000001192092896,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 89,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 1.533333420753479,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 90,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 1.5666667222976685,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 91,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 1.6000001430511475,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 92,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 1.633333444595337,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 93,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 1.6666667461395264,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 94,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 1.7000000476837158,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 95,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 1.7333334684371948,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 96,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 1.7666667699813843,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 97,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 1.8000000715255737,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 98,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 1.8333333730697632,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 99,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 1.8666667938232422,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 100,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 1.9000000953674316,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 101,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 1.933333396911621,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 102,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 1.9666668176651,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 103,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 2.0,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 104,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 2.0333335399627686,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 105,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 2.066666841506958,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 106,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 2.1000001430511475,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 107,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 2.133333444595337,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 108,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 2.1666667461395264,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 109,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 2.200000047683716,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 110,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 2.2333333492279053,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 111,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 2.266666889190674,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 112,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 2.3000001907348633,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 113,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 2.3333334922790527,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 114,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 2.366666793823242,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 115,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 2.4000000953674316,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 116,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 2.433333396911621,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 117,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 2.4666666984558105,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 118,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 2.500000238418579,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 119,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 2.5333335399627686,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 120,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 2.566666841506958,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 121,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 2.6000001430511475,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 122,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 2.633333444595337,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 123,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 2.6666667461395264,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 124,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 2.700000047683716,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 125,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 2.7333335876464844,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 126,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 2.766666889190674,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 127,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 2.8000001907348633,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 128,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 2.8333334922790527,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 129,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 2.866666793823242,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 130,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 2.9000000953674316,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 131,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 2.933333396911621,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 132,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 2.9666669368743896,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 133,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 3.000000238418579,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 134,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 3.0333335399627686,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 135,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 3.066666841506958,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 136,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 3.1000001430511475,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 137,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 3.133333444595337,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 138,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 3.1666667461395264,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 139,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 3.200000286102295,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 140,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 3.2333335876464844,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 141,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 3.266666889190674,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 142,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 3.3000001907348633,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 143,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 3.3333334922790527,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 144,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 3.366666793823242,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 145,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 3.4000000953674316,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 146,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 3.433333396911621,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 147,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 3.4666669368743896,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 148,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 3.500000238418579,
+          "exploded": true
+        }
+      ]
+    },
+    {
+      "frame": 149,
+      "chakra": 70.0,
+      "montage": "None",
+      "projectiles": [
+        {
+          "pos": "<Struct 'Vector' (0x00000201E5DBAD60) {x: -0.000001, y: 2279.116905, z: 281.526829}>",
+          "age": 3.5333335399627686,
+          "exploded": true
+        }
+      ]
+    }
+  ],
+  "accepted": true
+}

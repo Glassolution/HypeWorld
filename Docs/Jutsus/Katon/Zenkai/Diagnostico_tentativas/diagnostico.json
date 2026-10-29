@@ -1,0 +1,36 @@
+{
+  "frozen": true,
+  "n": 0,
+  "components": [
+    {
+      "name": "Core",
+      "materials": [
+        "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_Katon_Goukakyuu_C_3.MID_M_Katon_Nucleo_0' (0x000002D2C2465800) Class 'MaterialInstanceDynamic'>"
+      ]
+    },
+    {
+      "name": "Flames",
+      "materials": [
+        "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_Katon_Goukakyuu_C_3.MID_MI_Katon_ChamasDentro_0' (0x000002D19D7E4000) Class 'MaterialInstanceDynamic'>"
+      ]
+    },
+    {
+      "name": "OuterFlames",
+      "materials": [
+        "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_Katon_Goukakyuu_C_3.MID_MI_Katon_ChamasFora_0' (0x000002D19D7E3800) Class 'MaterialInstanceDynamic'>"
+      ]
+    },
+    {
+      "name": "Heat",
+      "materials": [
+        "<Object '/Game/Maps/Tutorial/L_Tutorial.L_Tutorial:PersistentLevel.BP_Katon_Goukakyuu_C_3.MID_M_Katon_Calor_0' (0x000002D19D7E1000) Class 'MaterialInstanceDynamic'>"
+      ]
+    },
+    {
+      "name": "Ignition",
+      "materials": [
+        "<Object '/Game/HypeWorld/Jutsus/Katon/VFX/Materiais/M_Katon_Ignicao.M_Katon_Ignicao' (0x000002D1A63CC400) Class 'Material'>"
+      ]
+    }
+  ]
+}

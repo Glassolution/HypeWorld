@@ -1,0 +1,12 @@
+{
+  "PostProcessVolume_0": {
+    "override_dynamic_global_illumination_method": "True",
+    "dynamic_global_illumination_method": "<DynamicGlobalIlluminationMethod.LUMEN: 1>",
+    "override_reflection_method": "True",
+    "reflection_method": "<ReflectionMethod.SCREEN_SPACE: 2>",
+    "override_ambient_occlusion_intensity": "True",
+    "ambient_occlusion_intensity": "0.25",
+    "ambient_occlusion_radius": "200.0",
+    "weighted_blendables": "<Struct 'WeightedBlendables' (0x0000014912ECEC88) {array: ((Weight=1.000000,Object=\"/Script/Engine.MaterialInstanceConstant'/Game/Maps/Tutorial/Tutorial_Assets/Materiais/MI_PP_Personagem.MI_PP_Personagem'\"))}>"
+  }
+}

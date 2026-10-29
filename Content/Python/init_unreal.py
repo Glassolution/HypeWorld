@@ -1,0 +1,2 @@
+import indra_character_standard
+indra_character_standard.register_menu()

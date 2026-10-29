@@ -1,0 +1,74 @@
+[
+  {
+    "event": "select_baseline",
+    "time": 0.0031500999994023005
+  },
+  {
+    "event": "start_baseline",
+    "time": 10.02161089999936
+  },
+  {
+    "event": "stop_baseline",
+    "time": 40.021465899999384
+  },
+  {
+    "event": "select_rochas",
+    "time": 45.02483149999898
+  },
+  {
+    "event": "start_rochas",
+    "time": 55.01040979999925
+  },
+  {
+    "event": "stop_rochas",
+    "time": 85.01068799999848
+  },
+  {
+    "event": "select_arvores",
+    "time": 90.00609329999861
+  },
+  {
+    "event": "start_arvores",
+    "time": 100.00572569999895
+  },
+  {
+    "event": "stop_arvores",
+    "time": 130.0243460999991
+  },
+  {
+    "event": "select_arbustos_flores",
+    "time": 135.00566849999996
+  },
+  {
+    "event": "start_arbustos_flores",
+    "time": 145.0150689000002
+  },
+  {
+    "event": "stop_arbustos_flores",
+    "time": 175.01856169999883
+  },
+  {
+    "event": "select_personagens",
+    "time": 180.00636379999924
+  },
+  {
+    "event": "start_personagens",
+    "time": 190.02344139999877
+  },
+  {
+    "event": "stop_personagens",
+    "time": 220.01705339999899
+  },
+  {
+    "event": "select_outros",
+    "time": 225.01999249999972
+  },
+  {
+    "event": "start_outros",
+    "time": 235.0053401999994
+  },
+  {
+    "event": "stop_outros",
+    "time": 265.0257010999994
+  }
+]

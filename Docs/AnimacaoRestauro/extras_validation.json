@@ -1,0 +1,962 @@
+{
+  "checks": [
+    {
+      "case": "esquiva_frente",
+      "played": true,
+      "montages": [
+        "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Frente_Mao.AM_Dash_Frente_Mao"
+      ]
+    },
+    {
+      "case": "esquiva_direita",
+      "played": true,
+      "montages": [
+        "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Direita_Passo.AM_Dash_Direita_Passo"
+      ]
+    },
+    {
+      "case": "esquiva_tras",
+      "played": true,
+      "montages": [
+        "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Tras_Mortal.AM_Dash_Tras_Mortal"
+      ]
+    },
+    {
+      "case": "esquiva_esquerda",
+      "played": true,
+      "montages": [
+        "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Esquerda_Passo.AM_Dash_Esquerda_Passo"
+      ]
+    },
+    {
+      "case": "tigre",
+      "played": true,
+      "montages": [
+        "/Engine/Transient.AnimMontage_0"
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "case": "esquiva_frente",
+      "frame": 49,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Frente_Mao.AM_Dash_Frente_Mao",
+      "speed": 2160.0,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_frente",
+      "frame": 50,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Frente_Mao.AM_Dash_Frente_Mao",
+      "speed": 2144.25927734375,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_frente",
+      "frame": 51,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Frente_Mao.AM_Dash_Frente_Mao",
+      "speed": 2100.74072265625,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_frente",
+      "frame": 52,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Frente_Mao.AM_Dash_Frente_Mao",
+      "speed": 2035.0,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_frente",
+      "frame": 53,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Frente_Mao.AM_Dash_Frente_Mao",
+      "speed": 1952.5926513671875,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_frente",
+      "frame": 54,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Frente_Mao.AM_Dash_Frente_Mao",
+      "speed": 1859.07421875,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_frente",
+      "frame": 55,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Frente_Mao.AM_Dash_Frente_Mao",
+      "speed": 1760.000244140625,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_frente",
+      "frame": 56,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Frente_Mao.AM_Dash_Frente_Mao",
+      "speed": 1660.926025390625,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_frente",
+      "frame": 57,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Frente_Mao.AM_Dash_Frente_Mao",
+      "speed": 1567.4075927734375,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_frente",
+      "frame": 58,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Frente_Mao.AM_Dash_Frente_Mao",
+      "speed": 1485.0001220703125,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_frente",
+      "frame": 59,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Frente_Mao.AM_Dash_Frente_Mao",
+      "speed": 1419.2593994140625,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_frente",
+      "frame": 60,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Frente_Mao.AM_Dash_Frente_Mao",
+      "speed": 1375.7408447265625,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_frente",
+      "frame": 61,
+      "montage": null,
+      "speed": 806.1875783341698,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_frente",
+      "frame": 62,
+      "montage": null,
+      "speed": 717.0070624929036,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_frente",
+      "frame": 63,
+      "montage": null,
+      "speed": 632.2298349236196,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_frente",
+      "frame": 64,
+      "montage": null,
+      "speed": 551.6384832529676,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_frente",
+      "frame": 65,
+      "montage": null,
+      "speed": 475.02632984426714,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_frente",
+      "frame": 66,
+      "montage": null,
+      "speed": 402.1969017698356,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_frente",
+      "frame": 67,
+      "montage": null,
+      "speed": 332.9634269534676,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_frente",
+      "frame": 68,
+      "montage": null,
+      "speed": 267.14835519085926,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_frente",
+      "frame": 69,
+      "montage": null,
+      "speed": 204.58290281964895,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_frente",
+      "frame": 70,
+      "montage": null,
+      "speed": 145.10661987135816,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_frente",
+      "frame": 71,
+      "montage": null,
+      "speed": 88.56697859526435,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_direita",
+      "frame": 49,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Direita_Passo.AM_Dash_Direita_Passo",
+      "speed": 2160.0,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_direita",
+      "frame": 50,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Direita_Passo.AM_Dash_Direita_Passo",
+      "speed": 2140.694091796875,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_direita",
+      "frame": 51,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Direita_Passo.AM_Dash_Direita_Passo",
+      "speed": 2087.856689453125,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_direita",
+      "frame": 52,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Direita_Passo.AM_Dash_Direita_Passo",
+      "speed": 2009.1083984375,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_direita",
+      "frame": 53,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Direita_Passo.AM_Dash_Direita_Passo",
+      "speed": 1912.0704345703125,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_direita",
+      "frame": 54,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Direita_Passo.AM_Dash_Direita_Passo",
+      "speed": 1804.36328125,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_direita",
+      "frame": 55,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Direita_Passo.AM_Dash_Direita_Passo",
+      "speed": 1693.607666015625,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_direita",
+      "frame": 56,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Direita_Passo.AM_Dash_Direita_Passo",
+      "speed": 1587.4248046875,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_direita",
+      "frame": 57,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Direita_Passo.AM_Dash_Direita_Passo",
+      "speed": 1493.43505859375,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_direita",
+      "frame": 58,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Direita_Passo.AM_Dash_Direita_Passo",
+      "speed": 1419.25927734375,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_direita",
+      "frame": 59,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Direita_Passo.AM_Dash_Direita_Passo",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_direita",
+      "frame": 60,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Direita_Passo.AM_Dash_Direita_Passo",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_direita",
+      "frame": 61,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Direita_Passo.AM_Dash_Direita_Passo",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_direita",
+      "frame": 62,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Direita_Passo.AM_Dash_Direita_Passo",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_direita",
+      "frame": 63,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Direita_Passo.AM_Dash_Direita_Passo",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_direita",
+      "frame": 64,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Direita_Passo.AM_Dash_Direita_Passo",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_direita",
+      "frame": 65,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Direita_Passo.AM_Dash_Direita_Passo",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_direita",
+      "frame": 66,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Direita_Passo.AM_Dash_Direita_Passo",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_direita",
+      "frame": 67,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Direita_Passo.AM_Dash_Direita_Passo",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_direita",
+      "frame": 68,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Direita_Passo.AM_Dash_Direita_Passo",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_direita",
+      "frame": 69,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Direita_Passo.AM_Dash_Direita_Passo",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_direita",
+      "frame": 70,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Direita_Passo.AM_Dash_Direita_Passo",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_direita",
+      "frame": 71,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Direita_Passo.AM_Dash_Direita_Passo",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_tras",
+      "frame": 49,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Tras_Mortal.AM_Dash_Tras_Mortal",
+      "speed": 2160.0,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_tras",
+      "frame": 50,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Tras_Mortal.AM_Dash_Tras_Mortal",
+      "speed": 2144.25927734375,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_tras",
+      "frame": 51,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Tras_Mortal.AM_Dash_Tras_Mortal",
+      "speed": 2100.74072265625,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_tras",
+      "frame": 52,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Tras_Mortal.AM_Dash_Tras_Mortal",
+      "speed": 2035.0,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_tras",
+      "frame": 53,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Tras_Mortal.AM_Dash_Tras_Mortal",
+      "speed": 1952.5926513671875,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_tras",
+      "frame": 54,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Tras_Mortal.AM_Dash_Tras_Mortal",
+      "speed": 1859.07421875,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_tras",
+      "frame": 55,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Tras_Mortal.AM_Dash_Tras_Mortal",
+      "speed": 1760.000244140625,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_tras",
+      "frame": 56,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Tras_Mortal.AM_Dash_Tras_Mortal",
+      "speed": 1660.926025390625,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_tras",
+      "frame": 57,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Tras_Mortal.AM_Dash_Tras_Mortal",
+      "speed": 1567.4075927734375,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_tras",
+      "frame": 58,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Tras_Mortal.AM_Dash_Tras_Mortal",
+      "speed": 1485.0001220703125,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_tras",
+      "frame": 59,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Tras_Mortal.AM_Dash_Tras_Mortal",
+      "speed": 1419.2593994140625,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_tras",
+      "frame": 60,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Tras_Mortal.AM_Dash_Tras_Mortal",
+      "speed": 1375.7408447265625,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_tras",
+      "frame": 61,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Tras_Mortal.AM_Dash_Tras_Mortal",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_tras",
+      "frame": 62,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Tras_Mortal.AM_Dash_Tras_Mortal",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_tras",
+      "frame": 63,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Tras_Mortal.AM_Dash_Tras_Mortal",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_tras",
+      "frame": 64,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Tras_Mortal.AM_Dash_Tras_Mortal",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_tras",
+      "frame": 65,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Tras_Mortal.AM_Dash_Tras_Mortal",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_tras",
+      "frame": 66,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Tras_Mortal.AM_Dash_Tras_Mortal",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_tras",
+      "frame": 67,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Tras_Mortal.AM_Dash_Tras_Mortal",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_tras",
+      "frame": 68,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Tras_Mortal.AM_Dash_Tras_Mortal",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_tras",
+      "frame": 69,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Tras_Mortal.AM_Dash_Tras_Mortal",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_tras",
+      "frame": 70,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Tras_Mortal.AM_Dash_Tras_Mortal",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_tras",
+      "frame": 71,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Tras_Mortal.AM_Dash_Tras_Mortal",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_esquerda",
+      "frame": 49,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Esquerda_Passo.AM_Dash_Esquerda_Passo",
+      "speed": 2160.0,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_esquerda",
+      "frame": 50,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Esquerda_Passo.AM_Dash_Esquerda_Passo",
+      "speed": 2140.694091796875,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_esquerda",
+      "frame": 51,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Esquerda_Passo.AM_Dash_Esquerda_Passo",
+      "speed": 2087.856689453125,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_esquerda",
+      "frame": 52,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Esquerda_Passo.AM_Dash_Esquerda_Passo",
+      "speed": 2009.1083984375,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_esquerda",
+      "frame": 53,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Esquerda_Passo.AM_Dash_Esquerda_Passo",
+      "speed": 1912.0704345703125,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_esquerda",
+      "frame": 54,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Esquerda_Passo.AM_Dash_Esquerda_Passo",
+      "speed": 1804.36328125,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_esquerda",
+      "frame": 55,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Esquerda_Passo.AM_Dash_Esquerda_Passo",
+      "speed": 1693.607666015625,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_esquerda",
+      "frame": 56,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Esquerda_Passo.AM_Dash_Esquerda_Passo",
+      "speed": 1587.4248046875,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_esquerda",
+      "frame": 57,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Esquerda_Passo.AM_Dash_Esquerda_Passo",
+      "speed": 1493.43505859375,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_esquerda",
+      "frame": 58,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Esquerda_Passo.AM_Dash_Esquerda_Passo",
+      "speed": 1419.25927734375,
+      "movement_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+      "custom_mode": 1
+    },
+    {
+      "case": "esquiva_esquerda",
+      "frame": 59,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Esquerda_Passo.AM_Dash_Esquerda_Passo",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_esquerda",
+      "frame": 60,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Esquerda_Passo.AM_Dash_Esquerda_Passo",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_esquerda",
+      "frame": 61,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Esquerda_Passo.AM_Dash_Esquerda_Passo",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_esquerda",
+      "frame": 62,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Esquerda_Passo.AM_Dash_Esquerda_Passo",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_esquerda",
+      "frame": 63,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Esquerda_Passo.AM_Dash_Esquerda_Passo",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_esquerda",
+      "frame": 64,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Esquerda_Passo.AM_Dash_Esquerda_Passo",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_esquerda",
+      "frame": 65,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Esquerda_Passo.AM_Dash_Esquerda_Passo",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_esquerda",
+      "frame": 66,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Esquerda_Passo.AM_Dash_Esquerda_Passo",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_esquerda",
+      "frame": 67,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Esquerda_Passo.AM_Dash_Esquerda_Passo",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_esquerda",
+      "frame": 68,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Esquerda_Passo.AM_Dash_Esquerda_Passo",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_esquerda",
+      "frame": 69,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Esquerda_Passo.AM_Dash_Esquerda_Passo",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_esquerda",
+      "frame": 70,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Esquerda_Passo.AM_Dash_Esquerda_Passo",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "esquiva_esquerda",
+      "frame": 71,
+      "montage": "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Esquerda_Passo.AM_Dash_Esquerda_Passo",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "tigre",
+      "frame": 49,
+      "montage": "/Engine/Transient.AnimMontage_0",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "tigre",
+      "frame": 50,
+      "montage": "/Engine/Transient.AnimMontage_0",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "tigre",
+      "frame": 51,
+      "montage": "/Engine/Transient.AnimMontage_0",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "tigre",
+      "frame": 52,
+      "montage": "/Engine/Transient.AnimMontage_0",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "tigre",
+      "frame": 53,
+      "montage": "/Engine/Transient.AnimMontage_0",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "tigre",
+      "frame": 54,
+      "montage": "/Engine/Transient.AnimMontage_0",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "tigre",
+      "frame": 55,
+      "montage": "/Engine/Transient.AnimMontage_0",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "tigre",
+      "frame": 56,
+      "montage": "/Engine/Transient.AnimMontage_0",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "tigre",
+      "frame": 57,
+      "montage": "/Engine/Transient.AnimMontage_0",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "tigre",
+      "frame": 58,
+      "montage": "/Engine/Transient.AnimMontage_0",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "tigre",
+      "frame": 59,
+      "montage": "/Engine/Transient.AnimMontage_0",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "tigre",
+      "frame": 60,
+      "montage": "/Engine/Transient.AnimMontage_0",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "tigre",
+      "frame": 61,
+      "montage": "/Engine/Transient.AnimMontage_0",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "tigre",
+      "frame": 62,
+      "montage": "/Engine/Transient.AnimMontage_0",
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "tigre",
+      "frame": 63,
+      "montage": null,
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "tigre",
+      "frame": 64,
+      "montage": null,
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "tigre",
+      "frame": 65,
+      "montage": null,
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "tigre",
+      "frame": 66,
+      "montage": null,
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "tigre",
+      "frame": 67,
+      "montage": null,
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "tigre",
+      "frame": 68,
+      "montage": null,
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "tigre",
+      "frame": 69,
+      "montage": null,
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "tigre",
+      "frame": 70,
+      "montage": null,
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    },
+    {
+      "case": "tigre",
+      "frame": 71,
+      "montage": null,
+      "speed": 0.0,
+      "movement_mode": "<MovementMode.MOVE_WALKING: 1>",
+      "custom_mode": 0
+    }
+  ],
+  "tiger_result": "<Object '/Engine/Transient.AnimMontage_0' (0x0000016194135400) Class 'AnimMontage'>"
+}

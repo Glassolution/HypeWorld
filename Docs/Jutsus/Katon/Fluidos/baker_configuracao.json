@@ -1,0 +1,20 @@
+{
+  "Alongada": {
+    "result": "READY\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.LightingRT.RenderTarget\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.PressureGrid.Pressure\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.SimGrid.Density\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.SimGrid.Velocity\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.SimGrid.Temperature\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.SimGrid.Boundary\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.SimRT.RenderTarget\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.SourceGrid.Density\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.SourceGrid.Temperature\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.SourceGrid.Velocity\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.SourceGrid.Color\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.TemporaryGrid.SimFloat\n",
+    "vorticity_changes": 2,
+    "start": 0.3,
+    "duration": 1.6
+  },
+  "Redonda": {
+    "result": "READY\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.LightingRT.RenderTarget\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.PressureGrid.Pressure\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.SimGrid.Density\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.SimGrid.Velocity\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.SimGrid.Temperature\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.SimGrid.Boundary\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.SimRT.RenderTarget\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.SourceGrid.Density\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.SourceGrid.Temperature\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.SourceGrid.Velocity\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.SourceGrid.Color\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.TemporaryGrid.SimFloat\n",
+    "vorticity_changes": 2,
+    "start": 0.0,
+    "duration": 1.3
+  },
+  "Fumaca": {
+    "result": "READY\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.LightingRT.RenderTarget\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.PressureGrid.Pressure\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.SimGrid.Density\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.SimGrid.Velocity\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.SimGrid.Temperature\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.SimGrid.Boundary\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.SimRT.RenderTarget\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.SourceGrid.Density\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.SourceGrid.Temperature\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.SourceGrid.Velocity\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.SourceGrid.Color\nEmitterDI.Grid2D_Gas_SmokeFire_Emitter.TemporaryGrid.SimFloat\n",
+    "vorticity_changes": 2,
+    "start": 0.2,
+    "duration": 2.0
+  }
+}

@@ -1,0 +1,230 @@
+[
+  {
+    "image": 1,
+    "region": "grama_sol",
+    "xyxy": [
+      870,
+      565,
+      1250,
+      760
+    ],
+    "rgb_median": [
+      126,
+      154,
+      67
+    ],
+    "h_deg": 79.3,
+    "s_pct": 56.4,
+    "v_pct": 60.4,
+    "linear_luminance_pct": 27.8
+  },
+  {
+    "image": 1,
+    "region": "arbusto_menta",
+    "xyxy": [
+      350,
+      550,
+      440,
+      595
+    ],
+    "rgb_median": [
+      126,
+      173,
+      104
+    ],
+    "h_deg": 101.5,
+    "s_pct": 40.1,
+    "v_pct": 67.8,
+    "linear_luminance_pct": 35.3
+  },
+  {
+    "image": 1,
+    "region": "tunica",
+    "xyxy": [
+      715,
+      550,
+      765,
+      675
+    ],
+    "rgb_median": [
+      231,
+      227,
+      224
+    ],
+    "h_deg": 25.7,
+    "s_pct": 3.0,
+    "v_pct": 90.6,
+    "linear_luminance_pct": 77.3
+  },
+  {
+    "image": 2,
+    "region": "grama_sol",
+    "xyxy": [
+      320,
+      450,
+      575,
+      650
+    ],
+    "rgb_median": [
+      99,
+      151,
+      29
+    ],
+    "h_deg": 85.3,
+    "s_pct": 81.0,
+    "v_pct": 59.2,
+    "linear_luminance_pct": 24.9
+  },
+  {
+    "image": 2,
+    "region": "grama_sombra",
+    "xyxy": [
+      1160,
+      380,
+      1370,
+      440
+    ],
+    "rgb_median": [
+      26,
+      53,
+      19
+    ],
+    "h_deg": 108.0,
+    "s_pct": 63.5,
+    "v_pct": 20.8,
+    "linear_luminance_pct": 2.8
+  },
+  {
+    "image": 2,
+    "region": "montanhas",
+    "xyxy": [
+      620,
+      78,
+      900,
+      125
+    ],
+    "rgb_median": [
+      185,
+      203,
+      219
+    ],
+    "h_deg": 206.8,
+    "s_pct": 15.5,
+    "v_pct": 85.9,
+    "linear_luminance_pct": 57.9
+  },
+  {
+    "image": 3,
+    "region": "pele_braco",
+    "xyxy": [
+      612,
+      340,
+      650,
+      363
+    ],
+    "rgb_median": [
+      180,
+      186,
+      190
+    ],
+    "h_deg": 192.9,
+    "s_pct": 5.2,
+    "v_pct": 74.3,
+    "linear_luminance_pct": 48.9
+  },
+  {
+    "image": 3,
+    "region": "roupa",
+    "xyxy": [
+      642,
+      373,
+      685,
+      440
+    ],
+    "rgb_median": [
+      27,
+      26,
+      32
+    ],
+    "h_deg": 235.0,
+    "s_pct": 18.8,
+    "v_pct": 12.9,
+    "linear_luminance_pct": 1.1
+  },
+  {
+    "image": 3,
+    "region": "montanhas",
+    "xyxy": [
+      950,
+      173,
+      1170,
+      265
+    ],
+    "rgb_median": [
+      119,
+      140,
+      147
+    ],
+    "h_deg": 195.6,
+    "s_pct": 18.7,
+    "v_pct": 57.6,
+    "linear_luminance_pct": 24.7
+  },
+  {
+    "image": 4,
+    "region": "pele_rosto",
+    "xyxy": [
+      690,
+      220,
+      731,
+      251
+    ],
+    "rgb_median": [
+      168,
+      146,
+      136
+    ],
+    "h_deg": 18.2,
+    "s_pct": 19.5,
+    "v_pct": 65.9,
+    "linear_luminance_pct": 30.7
+  },
+  {
+    "image": 4,
+    "region": "roupa_azul",
+    "xyxy": [
+      605,
+      350,
+      775,
+      475
+    ],
+    "rgb_median": [
+      1,
+      19,
+      63
+    ],
+    "h_deg": 223.0,
+    "s_pct": 98.5,
+    "v_pct": 24.7,
+    "linear_luminance_pct": 0.8
+  },
+  {
+    "image": 4,
+    "region": "calca",
+    "xyxy": [
+      613,
+      630,
+      770,
+      720
+    ],
+    "rgb_median": [
+      167,
+      163,
+      169
+    ],
+    "h_deg": 270.0,
+    "s_pct": 4.3,
+    "v_pct": 66.7,
+    "linear_luminance_pct": 37.4
+  }
+]

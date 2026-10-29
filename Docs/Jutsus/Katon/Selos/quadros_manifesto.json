@@ -1,0 +1,164 @@
+[
+  {
+    "path": "/Game/ANAP/Animations/Base/Base_Anim_Armature_CustomMan_RecoveryChakra_Loop",
+    "time": 0.24999999403953552,
+    "center": [
+      -29.113882522888233,
+      26.199814967366866,
+      91.7034726254092
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Base/Base_Anim_Armature_CustomMan_RecoveryChakra_Start",
+    "time": 0.31862744338372173,
+    "center": [
+      -23.34831839629964,
+      31.99479133461528,
+      92.05323191249349
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Base/Base_Anim_Armature_CustomMan_RecoveryChakra_Start",
+    "time": 0.36764705005814047,
+    "center": [
+      -24.15408275942744,
+      29.666400507733023,
+      91.509110186406
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Base/Base_Anim_Armature_CustomMan_RecoveryChakra_Start",
+    "time": 0.4166666567325592,
+    "center": [
+      -29.223216250172435,
+      25.232618066963624,
+      89.69308585556263
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Misc/Misc_Anim_Armature_CustomMan_Beaten_ShadowPossession_Loop",
+    "time": 0.7499999821186065,
+    "center": [
+      -8.953671437298208,
+      47.32142100969527,
+      94.23808427799565
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Pose/PosePack2_SK_CHR_Man_Cloak_01_ao_D21_Lobby_Win_Loop",
+    "time": 0.9166666666666666,
+    "center": [
+      -8.588547145006139,
+      22.94882597684437,
+      125.88724874393303
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Pose/PosePack2_SK_CHR_Man_Cloak_01_ao_D31_Lobby_Win_Loop",
+    "time": 15.333333333333334,
+    "center": [
+      7.06952432392597,
+      3.346550236046096,
+      125.52367963400903
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Pose/PosePack2_SK_CHR_Man_Cloak_01_ao_GaaraNext_Idle_Loop",
+    "time": 3.8615024526354293,
+    "center": [
+      -4.642124416749526,
+      18.641200642848663,
+      132.34553105071228
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Pose/PosePack2_SK_CHR_Man_Cloak_01_ao_Gaara_Lobby_Win_Loop",
+    "time": 5.666666666666667,
+    "center": [
+      -8.605440917916223,
+      25.564746515330256,
+      128.2891055604141
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Pose/PosePack2_SK_CHR_Man_Cloak_01_ao_Itachi_Lobby_Win_Loop",
+    "time": 0.0,
+    "center": [
+      3.135449497848244,
+      -8.86814042057839,
+      83.36639145086609
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Pose/PosePack2_SK_CHR_Man_Cloak_01_ao_Kisame_Lobby_Win_Loop",
+    "time": 1.0833333333333333,
+    "center": [
+      -1.675340914635738,
+      14.075158753048429,
+      129.9345899006215
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Pose/PosePack_SK_CHR_Man_Cloak_01_ao_HashiramaZombie_Ninjutsu_Idle_Loop",
+    "time": 0.0,
+    "center": [
+      -0.025062231775500265,
+      5.388645576983178,
+      90.95616677791283
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Pose/PosePack_SK_CHR_Man_Cloak_01_ao_Hashirama_Lobby_Win_Loop",
+    "time": 0.0,
+    "center": [
+      -1.8666315141194882,
+      -2.3142195236831062,
+      88.52452624523306
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Pose/PosePack_SK_CHR_Man_Cloak_01_ao_Kakashi_Lobby_Win_Loop",
+    "time": 0.0,
+    "center": [
+      2.9923617184893487,
+      -1.7285127016369852,
+      100.70022261360002
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Pose/PosePack_SK_CHR_Man_Cloak_01_ao_Sasuke_Lobby_Win_Loop",
+    "time": 1.5833333333333333,
+    "center": [
+      22.117743018375535,
+      14.338636328930946,
+      135.6988915398936
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Pose/PosePack_SK_CHR_Man_Cloak_01_ao_Shikamaru_Idle_Loop",
+    "time": 0.0,
+    "center": [
+      2.265932678350337,
+      -5.766403640413979,
+      95.1987724179056
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Pose/PosePack_SK_CHR_Man_Cloak_01_ao_Shikamaru_Lobby_GetSet_Loop",
+    "time": 0.0,
+    "center": [
+      -2.105674847077193,
+      -8.62858284365614,
+      95.252478747563
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Pose/PosePack_SK_CHR_Man_Cloak_01_ao_Tobirama_Lobby_Win_Loop",
+    "time": 0.1666666626930237,
+    "center": [
+      0.21022082581135848,
+      8.422966967044204,
+      122.97930264814534
+    ]
+  }
+]

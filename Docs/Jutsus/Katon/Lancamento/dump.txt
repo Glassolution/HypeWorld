@@ -1,0 +1,37 @@
+T=0.09
+Root SceneComponent vis=True
+Core StaticMeshComponent vis=True mat=['MID_M_Katon_Nucleo_0']
+Flames StaticMeshComponent vis=True mat=['MID_MI_Katon_ChamasDentro_0']
+OuterFlames StaticMeshComponent vis=False mat=['WorldGridMaterial']
+Heat StaticMeshComponent vis=True mat=['MID_M_Katon_CalorIntegrado_0']
+Halo StaticMeshComponent vis=True mat=['MID_M_Katon_Halo_0']
+GroundWave StaticMeshComponent vis=False mat=['MID_M_Katon_OndaCalor_0']
+GroundGlow DecalComponent vis=True
+Ignition StaticMeshComponent vis=True mat=['M_Katon_Ignicao']
+Spiral0 NiagaraComponent vis=True asset=NS_Katon_Espiral_Continuo active=False
+Spiral1 NiagaraComponent vis=True asset=NS_Katon_Espiral_Continuo active=False
+Spiral2 NiagaraComponent vis=True asset=NS_Katon_Espiral_Continuo active=False
+Trail NiagaraComponent vis=True asset=None active=False
+BodyFlames NiagaraComponent vis=True asset=NS_Katon_FogoVivo active=True
+Light PointLightComponent vis=True
+BloomBounds SphereComponent vis=False
+FirePostProcess PostProcessComponent vis=True
+
+T=0.22
+Root SceneComponent vis=True
+Core StaticMeshComponent vis=True mat=['MID_M_Katon_Nucleo_0']
+Flames StaticMeshComponent vis=True mat=['MID_MI_Katon_ChamasDentro_0']
+OuterFlames StaticMeshComponent vis=False mat=['WorldGridMaterial']
+Heat StaticMeshComponent vis=True mat=['MID_M_Katon_CalorIntegrado_0']
+Halo StaticMeshComponent vis=True mat=['MID_M_Katon_Halo_0']
+GroundWave StaticMeshComponent vis=False mat=['MID_M_Katon_OndaCalor_0']
+GroundGlow DecalComponent vis=True
+Ignition StaticMeshComponent vis=True mat=['M_Katon_Ignicao']
+Spiral0 NiagaraComponent vis=True asset=NS_Katon_Espiral_Continuo active=True
+Spiral1 NiagaraComponent vis=True asset=NS_Katon_Espiral_Continuo active=True
+Spiral2 NiagaraComponent vis=True asset=NS_Katon_Espiral_Continuo active=True
+Trail NiagaraComponent vis=True asset=None active=False
+BodyFlames NiagaraComponent vis=True asset=NS_Katon_FogoVivo active=True
+Light PointLightComponent vis=True
+BloomBounds SphereComponent vis=False
+FirePostProcess PostProcessComponent vis=True

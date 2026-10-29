@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "C:/Users/lucas/Downloads/Hype World/ferramentas_ia/corpo_base/shading/capture.py", line 8, in capture_tick
+    now=time.monotonic();name,x,y,front=CASES[S['i']]
+                                        ~~~~~^^^^^^^^
+IndexError: list index out of range

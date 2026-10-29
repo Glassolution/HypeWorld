@@ -1,0 +1,16 @@
+{
+  "mesh_wrist_to_tip_cm": 17.975295839211853,
+  "mesh_span_cm": 19.708015784685166,
+  "wrist": [
+    45.4702677310998,
+    -14.3735823172691,
+    105.444050275327
+  ],
+  "middle_03": [
+    49.7826832322901,
+    -22.1270851968634,
+    92.3242329435743
+  ],
+  "hand_vertices": 6450,
+  "note": "Projected wrist-to-fingertip mesh extent using vertices with cumulative hand/finger skin weight above 0.5; same criterion as Shisui."
+}

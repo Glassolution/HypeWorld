@@ -1,0 +1,614 @@
+[
+  {
+    "path": "/Game/ANAP/Animations/Base/Base_Anim_Armature_CustomMan_RecoveryChakra_Loop",
+    "time": 0.24999999403953552,
+    "center": [
+      -29.113882522888233,
+      26.199814967366866,
+      91.7034726254092
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Base/Base_Anim_Armature_CustomMan_RecoveryChakra_Start",
+    "time": 0.31862744338372173,
+    "center": [
+      -23.34831839629964,
+      31.99479133461528,
+      92.05323191249349
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Base/Base_Anim_Armature_CustomMan_RecoveryChakra_Start",
+    "time": 0.36764705005814047,
+    "center": [
+      -24.15408275942744,
+      29.666400507733023,
+      91.509110186406
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Base/Base_Anim_Armature_CustomMan_RecoveryChakra_Start",
+    "time": 0.4166666567325592,
+    "center": [
+      -29.223216250172435,
+      25.232618066963624,
+      89.69308585556263
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Misc/Misc_Anim_Armature_CustomMan_Beaten_ShadowPossession_Loop",
+    "time": 0.7499999821186065,
+    "center": [
+      -8.953671437298208,
+      47.32142100969527,
+      94.23808427799565
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Pose/PosePack2_SK_CHR_Man_Cloak_01_ao_D21_Lobby_Win_Loop",
+    "time": 0.9166666666666666,
+    "center": [
+      -8.588547145006139,
+      22.94882597684437,
+      125.88724874393303
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Pose/PosePack2_SK_CHR_Man_Cloak_01_ao_D31_Lobby_Win_Loop",
+    "time": 15.333333333333334,
+    "center": [
+      7.06952432392597,
+      3.346550236046096,
+      125.52367963400903
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Pose/PosePack2_SK_CHR_Man_Cloak_01_ao_GaaraNext_Idle_Loop",
+    "time": 3.8615024526354293,
+    "center": [
+      -4.642124416749526,
+      18.641200642848663,
+      132.34553105071228
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Pose/PosePack2_SK_CHR_Man_Cloak_01_ao_Gaara_Lobby_Win_Loop",
+    "time": 5.666666666666667,
+    "center": [
+      -8.605440917916223,
+      25.564746515330256,
+      128.2891055604141
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Pose/PosePack2_SK_CHR_Man_Cloak_01_ao_Kisame_Lobby_Win_Loop",
+    "time": 1.0833333333333333,
+    "center": [
+      -1.675340914635738,
+      14.075158753048429,
+      129.9345899006215
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Pose/PosePack_SK_CHR_Man_Cloak_01_ao_Sasuke_Lobby_Win_Loop",
+    "time": 1.5833333333333333,
+    "center": [
+      22.117743018375535,
+      14.338636328930946,
+      135.6988915398936
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Pose/PosePack_SK_CHR_Man_Cloak_01_ao_Tobirama_Lobby_Win_Loop",
+    "time": 0.1666666626930237,
+    "center": [
+      0.21022082581135848,
+      8.422966967044204,
+      122.97930264814534
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Base/Base_Anim_Armature_CustomMan_DoubleJump",
+    "time": 1.25,
+    "center": [
+      -0.9216810643315547,
+      8.142194808517305,
+      167.5313756873599
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Base/Base_Anim_Armature_CustomMan_Kunai_Run_End",
+    "time": 0.37499999222548114,
+    "center": [
+      -18.574644796825844,
+      86.18456741537582,
+      78.86295751923642
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Base/Base_Anim_Armature_CustomMan_Kunai_Walk_End",
+    "time": 0.29166665971279143,
+    "center": [
+      -9.84493709158133,
+      55.18523877721478,
+      113.08579823126294
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Base/Base_Anim_Armature_CustomMan_Land_toChidoriCharge",
+    "time": 0.47058824931873994,
+    "center": [
+      -40.45738549126395,
+      31.701813751007865,
+      74.11458443846672
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Base/Base_Anim_Armature_CustomMan_Land_toD23NJ4Charge",
+    "time": 0.47058824931873994,
+    "center": [
+      -40.45738549126395,
+      31.701813751007865,
+      74.11458443846672
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Base/Base_Anim_Armature_CustomMan_Land_toRecoveryChakra",
+    "time": 0.0,
+    "center": [
+      -0.3939148799848944,
+      35.02319810622207,
+      111.28817676753914
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Base/Base_Anim_Armature_CustomMan_RecoveryChakra_End",
+    "time": 0.0,
+    "center": [
+      -29.23609205882491,
+      25.268295075360832,
+      89.64953562744489
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Misc/Misc_Anim_Armature_CustomMan_Beaten_BellyDown_Large_Start",
+    "time": 0.0,
+    "center": [
+      -19.21613365007452,
+      35.22129320944127,
+      106.64802213499294
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Misc/Misc_Anim_Armature_CustomMan_Beaten_BellyDown_Middle_Start",
+    "time": 0.0,
+    "center": [
+      -19.21613365007452,
+      35.22129320944127,
+      106.64802213499294
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Misc/Misc_Anim_Armature_CustomMan_Beaten_BellyDown_Small_Start",
+    "time": 0.0,
+    "center": [
+      -19.21613365007452,
+      35.22129320944127,
+      106.64802213499294
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Misc/Misc_Anim_Armature_CustomMan_Beaten_Blasted",
+    "time": 0.49264707284815173,
+    "center": [
+      -13.87554033275967,
+      37.65282972592004,
+      85.786005746533
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Misc/Misc_Anim_Armature_CustomMan_Beaten_BlowOff_ChaseAttack",
+    "time": 0.5978260999140532,
+    "center": [
+      5.3405007486887115,
+      35.542035426784594,
+      113.49021192859112
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Misc/Misc_Anim_Armature_CustomMan_Beaten_Burn_Type01",
+    "time": 0.8333333333333334,
+    "center": [
+      -25.407328110365782,
+      39.596925932255274,
+      110.46858129085835
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Misc/Misc_Anim_Armature_CustomMan_Beaten_D29NJ1_End",
+    "time": 2.5416666666666665,
+    "center": [
+      7.843154118954791,
+      34.366238985955455,
+      109.9701610624166
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Misc/Misc_Anim_Armature_CustomMan_Beaten_D29NJ1_LostEnd",
+    "time": 0.125,
+    "center": [
+      -2.2681229197562303,
+      56.04440419342051,
+      121.60716062131638
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Misc/Misc_Anim_Armature_CustomMan_Beaten_DownToFloor",
+    "time": 0.041666666666666664,
+    "center": [
+      14.379710806153506,
+      -12.985556093851148,
+      102.4661160974238
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Misc/Misc_Anim_Armature_CustomMan_Beaten_DownToFloor_Type01",
+    "time": 0.041666666666666664,
+    "center": [
+      -14.3491413686626,
+      13.002722593421886,
+      102.46617958172365
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Misc/Misc_Anim_Armature_CustomMan_Beaten_ElectricShock_End",
+    "time": 0.125,
+    "center": [
+      -2.2681229197562303,
+      56.04440419342051,
+      121.60716062131638
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Misc/Misc_Anim_Armature_CustomMan_Beaten_GuardReverseBlowOff",
+    "time": 0.9482456332758853,
+    "center": [
+      -11.241921312625976,
+      44.20808051189945,
+      86.62607672428959
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Misc/Misc_Anim_Armature_CustomMan_Beaten_Left_Head",
+    "time": 0.375,
+    "center": [
+      -6.742695407177262,
+      9.50236463956376,
+      121.06294339304537
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Misc/Misc_Anim_Armature_CustomMan_Beaten_OneHitDown_Short",
+    "time": 0.041666666666666664,
+    "center": [
+      12.036047602117149,
+      32.07307537113813,
+      109.84275082643491
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Misc/Misc_Anim_Armature_CustomMan_Beaten_Paralysis",
+    "time": 0.125,
+    "center": [
+      -22.562390576169015,
+      11.93591345627723,
+      118.29520366377672
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Misc/Misc_Anim_Armature_CustomMan_Beaten_SpinBlowOff_Bound_Conect_toFall",
+    "time": 0.0,
+    "center": [
+      9.220740873828763,
+      -2.4592450592882584,
+      144.08050191307848
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Misc/Misc_Anim_Armature_CustomMan_Beaten_Struggle_Loop",
+    "time": 0.7083333150760548,
+    "center": [
+      -13.76070923234184,
+      18.131873889797028,
+      139.59551405551773
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Misc/Misc_Anim_Armature_CustomMan_Beaten_Struggle_Start",
+    "time": 0.7499999821186065,
+    "center": [
+      0.07554801868713312,
+      16.403484075827603,
+      134.03900870906241
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Misc/Misc_Anim_Armature_CustomMan_Beaten_Struggle_Start",
+    "time": 0.8333333134651184,
+    "center": [
+      -7.50258425364021,
+      14.392427174081782,
+      137.44100836504336
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Misc/Misc_Anim_Armature_CustomMan_Beaten_UpFront_Head",
+    "time": 0.08333333333333333,
+    "center": [
+      -2.007680003555812,
+      63.26582170740432,
+      105.67728990236792
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Pose/PosePack_SK_CHR_Man_Cloak_01_ao_HinataNext_Idle_Loop",
+    "time": 2.300469546250894,
+    "center": [
+      -14.116922184990838,
+      13.843688839678329,
+      131.68345898078996
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Attack/HandBlades/HandBlades_Anim_Armature_CustomMan_Attack_99Spear_JumpStab",
+    "time": 0.3645833432674408,
+    "center": [
+      -18.89295913993579,
+      -9.574079761886548,
+      205.45118567837534
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Attack/HandBlades/HandBlades_Anim_Armature_CustomMan_Attack_99Spear_ThrustNeedleAttack",
+    "time": 0.4583333333333333,
+    "center": [
+      -14.642658373240165,
+      -86.53339864548234,
+      98.86626952848384
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Attack/HandBlades/HandBlades_Anim_Armature_CustomMan_Attack_BeniHien_BlastPunch",
+    "time": 0.08333333333333333,
+    "center": [
+      -1.8750733848380943,
+      49.50366457314068,
+      142.5839348851193
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Attack/HandBlades/HandBlades_Anim_Armature_CustomMan_Attack_ChakraFistA_BlastPunch",
+    "time": 0.040404041608174644,
+    "center": [
+      -2.8488651475772357,
+      49.651205368801484,
+      141.07997439375018
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Attack/HandBlades/HandBlades_Anim_Armature_CustomMan_Attack_ChakraFistA_cmb08",
+    "time": 1.0833333054104366,
+    "center": [
+      -11.551723942305095,
+      -20.034917299541956,
+      170.10588951007682
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Attack/HandBlades/HandBlades_Anim_Armature_CustomMan_Attack_ChakraGloves_B_Uppercut",
+    "time": 0.24999999403953552,
+    "center": [
+      44.85250680213332,
+      22.364332133614628,
+      102.45414852923648
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Attack/HandBlades/HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_A_DiagonalSlash",
+    "time": 1.0416666302112265,
+    "center": [
+      21.5211442676202,
+      100.55339562576563,
+      91.25525326046679
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Attack/HandBlades/HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_A_ReverseDiagonalSlash",
+    "time": 0.875,
+    "center": [
+      40.13696712470441,
+      27.59415567537883,
+      101.91975799271427
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Attack/HandBlades/HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_A_RightSlash",
+    "time": 0.5,
+    "center": [
+      -40.04833537725279,
+      13.496673976306193,
+      103.93613367929406
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Attack/HandBlades/HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_A_SlashHorizon_Right",
+    "time": 0.24999999445538187,
+    "center": [
+      -39.60581019318964,
+      -36.45096806530279,
+      119.96978175500105
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Attack/HandBlades/HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_A_StabPullOut",
+    "time": 0.0,
+    "center": [
+      38.272663024386596,
+      24.61030397591528,
+      106.32762127830287
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Attack/HandBlades/HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_B_cmb_02_B",
+    "time": 2.4583333333333335,
+    "center": [
+      -3.841140055816111,
+      40.05444817141383,
+      163.69050953911312
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Attack/HandBlades/HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_B_cmb_03",
+    "time": 1.3333333003056513,
+    "center": [
+      29.186456331798357,
+      17.03520106721895,
+      83.68970540283513
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Attack/HandBlades/HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_B_cmb_05",
+    "time": 1.2354651440021605,
+    "center": [
+      42.45744394044439,
+      5.671172824269524,
+      79.05514260382633
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Attack/HandBlades/HandBlades_Anim_Armature_CustomMan_Attack_ChakraKnuckleA_Cmb02",
+    "time": 2.333333264864408,
+    "center": [
+      -10.81746739893086,
+      53.036526134801704,
+      125.76602743258847
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Attack/HandBlades/HandBlades_Anim_Armature_CustomMan_Attack_ChakraKnuckleB_Cmb01",
+    "time": 2.0833333333333335,
+    "center": [
+      -23.564032601666174,
+      26.424881893044436,
+      115.10954521080367
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Attack/HandBlades/HandBlades_Anim_Armature_CustomMan_Attack_cmb07",
+    "time": 0.9166666354451861,
+    "center": [
+      -29.04964372919374,
+      8.181291123016742,
+      123.83586071269613
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Attack/HandBlades/HandBlades_Anim_Armature_CustomMan_Attack_CyakraKnuckley_Cmb03",
+    "time": 1.4166666328907014,
+    "center": [
+      -12.763997477890904,
+      52.16736977806645,
+      120.56453836473104
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Attack/HandBlades/HandBlades_Anim_Armature_CustomMan_Attack_Hand_BackBlow",
+    "time": 0.9583333140925357,
+    "center": [
+      -74.61357767133757,
+      -20.1837329650392,
+      61.051544640235676
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Attack/HandBlades/HandBlades_Anim_Armature_CustomMan_Attack_Hand_BackKick",
+    "time": 0.2499999923090781,
+    "center": [
+      37.15589007221236,
+      -22.87902211919102,
+      110.39190548107464
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Attack/HandBlades/HandBlades_Anim_Armature_CustomMan_Attack_Hand_DragonKick",
+    "time": 0.8333333333333334,
+    "center": [
+      -35.99919907555011,
+      -38.2786819039384,
+      160.0657962057125
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Attack/HandBlades/HandBlades_Anim_Armature_CustomMan_Attack_Hand_MantisFist",
+    "time": 0.2083333283662796,
+    "center": [
+      -39.39861915332418,
+      -30.08127310092102,
+      104.50277563785113
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Attack/HandBlades/HandBlades_Anim_Armature_CustomMan_Attack_Hand_SidePalm",
+    "time": 1.9999999384726248,
+    "center": [
+      -26.376369839460757,
+      -12.89819817624085,
+      84.61129158149569
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Attack/HandBlades/HandBlades_Anim_Armature_CustomMan_Attack_JumpTurnKick_Right",
+    "time": 0.2828282912572225,
+    "center": [
+      -36.24579476176195,
+      -37.10510654502934,
+      161.4738699954367
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Attack/HandBlades/HandBlades_Anim_Armature_CustomMan_Attack_KickUp",
+    "time": 0.0,
+    "center": [
+      10.388676735175048,
+      -19.567747799899013,
+      86.42618398943297
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Attack/HandBlades/HandBlades_Anim_Armature_CustomMan_Attack_TwinFang_BackBlow",
+    "time": 0.5833333333333334,
+    "center": [
+      -45.26396528470444,
+      -16.7348971633673,
+      66.04609379578433
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Attack/HandBlades/HandBlades_Anim_Armature_CustomMan_Attack_TwinFang_PalmSwingUp",
+    "time": 0.541666652115298,
+    "center": [
+      2.384511589405391,
+      97.65960278376023,
+      73.99280320273532
+    ]
+  },
+  {
+    "path": "/Game/ANAP/Animations/Attack/HandBlades/HandBlades_Anim_Armature_CustomMan_RangeAttack_TwinFang",
+    "time": 0.4088050464414201,
+    "center": [
+      55.111615631546364,
+      -7.0808860787648324,
+      148.46435562411318
+    ]
+  }
+]

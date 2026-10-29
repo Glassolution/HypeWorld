@@ -1,0 +1,7 @@
+{
+  "url": "https://gpuopen.com/download/UE-FSR-4_1_1.zip",
+  "version": "4.1.1",
+  "folder": "Saved/VisualLab/Tools/AMD/UE58/FSR",
+  "descriptor_before_sha256": "fd0bc6bd47999837f67eb7d257aedf0fe9bc495a0c01c5d8f89fbe6f196af737",
+  "descriptor_change": "Retained original EngineVersion 5.8.0 after checking actual loader version; BuildId 55116800 matches. No code changes."
+}

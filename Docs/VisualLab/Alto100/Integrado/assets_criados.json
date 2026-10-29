@@ -1,0 +1,13 @@
+{
+  "bush_materials": {
+    "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Arbusto_Comum.MI_MK_Arbusto_Comum": "/Game/HypeWorld/VisualLab/Integrado/Arbustos/MI_MK_Arbusto_Comum_6e4883.MI_MK_Arbusto_Comum_6e4883",
+    "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Materials/Mat_Foliage/MI_Fol_Bushes.MI_Fol_Bushes": "/Game/HypeWorld/VisualLab/Integrado/Arbustos/MI_Fol_Bushes_4a8085.MI_Fol_Bushes_4a8085",
+    "/Game/Maps/Tutorial/Tutorial_Assets/Materiais/MI_Tut_Arbusto_Florido.MI_Tut_Arbusto_Florido": "/Game/HypeWorld/VisualLab/Integrado/Arbustos/MI_Tut_Arbusto_Florido_bb84a6.MI_Tut_Arbusto_Florido_bb84a6",
+    "/Game/Maps/Tutorial/Tutorial_Assets/Materiais/MI_Tut_Arbusto_Claro.MI_Tut_Arbusto_Claro": "/Game/HypeWorld/VisualLab/Integrado/Arbustos/MI_Tut_Arbusto_Claro_77deb5.MI_Tut_Arbusto_Claro_77deb5",
+    "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Arbusto.MI_MK_Arbusto": "/Game/HypeWorld/VisualLab/Integrado/Arbustos/MI_MK_Arbusto_bd2994.MI_MK_Arbusto_bd2994"
+  },
+  "trees": {
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/CommonTree_3.CommonTree_3": "/Game/HypeWorld/VisualLab/Integrado/Copas/SM_CommonTree_3_Opaca.SM_CommonTree_3_Opaca"
+  },
+  "removed_leaf_triangles": "(<Object '/Engine/Transient.DynamicMesh_0' (0x000001AD28F69300) Class 'DynamicMesh'>, 1800)"
+}

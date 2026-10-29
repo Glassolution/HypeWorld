@@ -1,0 +1,10 @@
+{
+  "frames": 300,
+  "accepted": true,
+  "during_cast_rejected": true,
+  "cooldown_rejected": true,
+  "chakra_before": 100.0,
+  "chakra_after": 70.0,
+  "max_projectiles": 1,
+  "multiplayer_two_clients_retested": false
+}

@@ -1,0 +1,10 @@
+{
+ "preset": "scalability 2 (Alto), 1920x1080, 100%, VSync off",
+ "rajada_aceita": true,
+ "stages": [
+  "base_projetil",
+  "projetil",
+  "base_rajada",
+  "rajada"
+ ]
+}

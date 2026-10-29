@@ -1,0 +1,30 @@
+{
+  "effective_pelvis_scale": 0.9625787550408096,
+  "pelvis_scale_control": 1.0,
+  "translation_chains": "Pelvis only; all FK chains None",
+  "auto_align": "CHAIN_TO_CHAIN",
+  "solvers": [
+    {
+      "index": 0,
+      "end": "hand_l",
+      "enabled": false
+    },
+    {
+      "index": 1,
+      "end": "hand_r",
+      "enabled": false
+    },
+    {
+      "index": 2,
+      "end": "foot_l",
+      "enabled": true
+    },
+    {
+      "index": 3,
+      "end": "foot_r",
+      "enabled": true
+    }
+  ],
+  "foot_ik": "temporarily disabled for measurement",
+  "hands_ik": false
+}

@@ -1,0 +1,14 @@
+{
+  "/Game/HypeWorld/Personagens/Indra/M_Indra": {
+    "blend_mode": "<BlendMode.BLEND_OPAQUE: 0>",
+    "blendable_location": "<BlendableLocation.BL_SCENE_COLOR_AFTER_TONEMAPPING: 0>"
+  },
+  "/Game/Ninja/VFX/Materials/M_ChakraFeetShell": {
+    "blend_mode": "<BlendMode.BLEND_TRANSLUCENT: 2>",
+    "blendable_location": "<BlendableLocation.BL_SCENE_COLOR_AFTER_TONEMAPPING: 0>"
+  },
+  "/Game/Maps/Tutorial/Tutorial_Assets/Materiais/M_PP_Personagem": {
+    "blend_mode": "<BlendMode.BLEND_OPAQUE: 0>",
+    "blendable_location": "<BlendableLocation.BL_SCENE_COLOR_BEFORE_DOF: 2>"
+  }
+}

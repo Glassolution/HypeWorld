@@ -107,6 +107,8 @@ A cor do chão também muda a base das lâminas, porque a grama lê o RVT do ter
 
 O WPO do `M_Tut_Grama_Master` e do `M_Tut_Flores_Master` lê esses valores. Árvores e arbustos grandes ficam sem vento.
 
+- 29/10/2026, ampliação do vale (pedido do usuário): copas com vento leve (`MI_Tut_Folhas_*` → "Use Simple Wind on instance?" ligado, vento global do pack); troncos continuam parados. Manchas de grama clara/alta são foliage à parte (`Foliage/Vale/FT_Vale_Grama_*`, `MI_Vale_Grama_Clara/Alta` filhas de `MI_Tut_Grama`); os itens aprovados acima não mudaram.
+
 ## Pós-processo que afeta a cor da grama (visual Zenkai, aprovado)
 
 Saturação 0,9 e contraste 0,95, exposição 1,4, Slope 0,82, ganho de sombras (1,05; 1; 0,88), ganho de luzes (1,03; 1; 0,97). Ficam no PostProcessVolume do L_Tutorial.

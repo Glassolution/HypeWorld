@@ -1,0 +1,15 @@
+{
+  "reason": "Correct positional Rotator and use independent CameraActor; preliminary benchmark excluded.",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "camera": [
+    0,
+    -312.028006,
+    250.352636
+  ],
+  "pitch": -15,
+  "yaw": 90,
+  "final_csv_prefix": "alto60_final"
+}

@@ -137,4 +137,8 @@ public:
 	/** Cria um ator localmente no mundo do jogo (inclusive num cliente de rede, onde summon não funciona), para capturas de teste */
 	UFUNCTION(BlueprintCallable, Category="Ninja|Editor", meta=(WorldContext="WorldContext"))
 	static AActor* SpawnLocalActor(UObject* WorldContext, TSubclassOf<AActor> ActorClass, FVector Location, FRotator Rotation);
+
+	/** Copia a pose de referência da malha (reimportada com juntas em outro lugar) para o asset Skeleton dela */
+	UFUNCTION(BlueprintCallable, Category="Ninja|Editor")
+	static bool UpdateSkeletonRefPoseFromMesh(USkeletalMesh* Mesh);
 };

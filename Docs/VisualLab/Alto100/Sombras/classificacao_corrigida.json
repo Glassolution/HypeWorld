@@ -1,0 +1,8 @@
+{
+  "water_previously_classified_by_package": [
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.WaterBodyRiver_2.WaterInfoMeshComponent",
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.WaterBodyRiver_2.DilatedWaterInfoMeshComponent",
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.WaterBodyRiver_2.WaterBodyStaticMeshComponent_0"
+  ],
+  "grass_actual_casters": 0
+}

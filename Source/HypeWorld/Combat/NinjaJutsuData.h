@@ -14,6 +14,7 @@ class UAnimSequenceBase;
 class UAnimMontage;
 class UTexture2D;
 class ANinjaJutsuProjectile;
+class ANinjaFlameOrbit;
 
 /** Um selo da sequência: a pose (no esqueleto do corpo visível, ex. SKEL_Sasuke) e quanto tempo fica nela */
 USTRUCT(BlueprintType)
@@ -112,6 +113,24 @@ public:
 	float ProjectileSpeed = 0.f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Projétil")
 	float ProjectileRange = 0.f;
+
+	/** Chamas em órbita (Hōsenka): preenchido = o lançamento invoca a órbita em vez de soltar o projétil; cada clique
+	 *  esquerdo lança uma chama (ProjectileClass). Quantas, duração (s), raio (cm), giro (graus/s), intervalo mínimo
+	 *  entre disparos (s) e o nome no contador do HUD */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Órbita")
+	TSubclassOf<ANinjaFlameOrbit> OrbitClass;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Órbita")
+	int32 OrbitFlames = 8;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Órbita")
+	float OrbitDuration = 10.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Órbita")
+	float OrbitRadius = 200.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Órbita")
+	float OrbitSpeed = 120.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Órbita")
+	float OrbitFireInterval = 0.12f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Órbita")
+	FText OrbitLabel;
 
 	/** Dano em área na explosão: dano no centro, raio (cm) e quanto sobra na borda (0..1) */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Dano")

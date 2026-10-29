@@ -1,0 +1,142 @@
+[
+  {
+    "event": "select_peso004",
+    "time": 0.0032429999992018566
+  },
+  {
+    "event": "start_peso004_1",
+    "time": 25.015464999998585
+  },
+  {
+    "event": "stop_peso004_1",
+    "time": 55.003186999998434
+  },
+  {
+    "event": "start_peso004_2",
+    "time": 60.01773019999928
+  },
+  {
+    "event": "stop_peso004_2",
+    "time": 90.01369689999956
+  },
+  {
+    "event": "start_peso004_3",
+    "time": 95.00715459999992
+  },
+  {
+    "event": "stop_peso004_3",
+    "time": 125.00302209999973
+  },
+  {
+    "event": "select_peso010",
+    "time": 130.01914880000004
+  },
+  {
+    "event": "start_peso010_1",
+    "time": 155.01102649999848
+  },
+  {
+    "event": "stop_peso010_1",
+    "time": 185.00885740000012
+  },
+  {
+    "event": "start_peso010_2",
+    "time": 190.02330699999948
+  },
+  {
+    "event": "stop_peso010_2",
+    "time": 220.01542919999883
+  },
+  {
+    "event": "start_peso010_3",
+    "time": 225.0257759999986
+  },
+  {
+    "event": "stop_peso010_3",
+    "time": 255.00661409999884
+  },
+  {
+    "event": "select_peso020",
+    "time": 260.01951459999873
+  },
+  {
+    "event": "start_peso020_1",
+    "time": 285.01429689999895
+  },
+  {
+    "event": "stop_peso020_1",
+    "time": 315.0258692999996
+  },
+  {
+    "event": "start_peso020_2",
+    "time": 320.00893879999967
+  },
+  {
+    "event": "stop_peso020_2",
+    "time": 350.0103535999988
+  },
+  {
+    "event": "start_peso020_3",
+    "time": 355.02845009999874
+  },
+  {
+    "event": "stop_peso020_3",
+    "time": 385.00502909999886
+  },
+  {
+    "event": "select_peso030",
+    "time": 390.0066558999988
+  },
+  {
+    "event": "start_peso030_1",
+    "time": 415.0065489999997
+  },
+  {
+    "event": "stop_peso030_1",
+    "time": 445.0088201999988
+  },
+  {
+    "event": "start_peso030_2",
+    "time": 450.0029749999994
+  },
+  {
+    "event": "stop_peso030_2",
+    "time": 480.0203628999989
+  },
+  {
+    "event": "start_peso030_3",
+    "time": 485.0032089999986
+  },
+  {
+    "event": "stop_peso030_3",
+    "time": 515.0169735999989
+  },
+  {
+    "event": "select_antighost_q3",
+    "time": 520.0208973999997
+  },
+  {
+    "event": "start_antighost_q3_1",
+    "time": 545.0216737999999
+  },
+  {
+    "event": "stop_antighost_q3_1",
+    "time": 575.0177938999987
+  },
+  {
+    "event": "start_antighost_q3_2",
+    "time": 580.0129446999999
+  },
+  {
+    "event": "stop_antighost_q3_2",
+    "time": 610.0163728999996
+  },
+  {
+    "event": "start_antighost_q3_3",
+    "time": 615.0098841999989
+  },
+  {
+    "event": "stop_antighost_q3_3",
+    "time": 645.0243511999997
+  }
+]

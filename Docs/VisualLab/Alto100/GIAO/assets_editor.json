@@ -1,0 +1,208 @@
+{
+  "materials": {
+    "/Game/HypeWorld/Environment/MegaKit/Materiais/M_HW_Tronco.M_HW_Tronco": {
+      "attributes": false,
+      "blend": "<BlendMode.BLEND_OPAQUE: 0>",
+      "bc": "<Object '/Game/HypeWorld/Environment/MegaKit/Materiais/M_HW_Tronco.M_HW_Tronco:MaterialExpressionMultiply_1' (0x00000219EF1E8C00) Class 'MaterialExpressionMultiply'>",
+      "attrs": "None"
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Materiais/M_HW_Folhagem.M_HW_Folhagem": {
+      "attributes": false,
+      "blend": "<BlendMode.BLEND_MASKED: 1>",
+      "bc": "<Object '/Game/HypeWorld/Environment/MegaKit/Materiais/M_HW_Folhagem.M_HW_Folhagem:MaterialExpressionStaticSwitchParameter_0' (0x0000021A75388280) Class 'MaterialExpressionStaticSwitchParameter'>",
+      "attrs": "None"
+    },
+    "/Game/StyleHex_Studio/Shared_Resources/Free_Packs/Master_Materials/M_Foliage_Leaves_Master_STARTER.M_Foliage_Leaves_Master_STARTER": {
+      "attributes": false,
+      "blend": "<BlendMode.BLEND_MASKED: 1>",
+      "bc": "<Object '/Game/StyleHex_Studio/Shared_Resources/Free_Packs/Master_Materials/M_Foliage_Leaves_Master_STARTER.M_Foliage_Leaves_Master_STARTER:MaterialExpressionMaterialFunctionCall_0' (0x0000021A7573BA40) Class 'MaterialExpressionMaterialFunctionCall'>",
+      "attrs": "None"
+    }
+  },
+  "meshes": {
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/CommonTree_3.CommonTree_3": {
+      "bounds": "<Struct 'BoxSphereBounds' (0x0000021A7533BD80) {origin: {x: 4.495789, y: 5.957207, z: 446.982276}, box_extent: {x: 203.142303, y: 212.053871, z: 471.259484}, sphere_radius: 482.649984}>",
+      "slots": [
+        [
+          "Bark_NormalTree",
+          "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Casca_Comum.MI_MK_Casca_Comum"
+        ],
+        [
+          "Leaves_NormalTree",
+          "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Folhas_Comum.MI_MK_Folhas_Comum"
+        ]
+      ]
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/CommonTree_1.CommonTree_1": {
+      "bounds": "<Struct 'BoxSphereBounds' (0x0000021A7533C0C0) {origin: {x: -3.874733, y: 6.433723, z: 338.962043}, box_extent: {x: 215.571144, y: 228.885704, z: 363.239251}, sphere_radius: 372.076810}>",
+      "slots": [
+        [
+          "Bark_NormalTree",
+          "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Casca_Comum.MI_MK_Casca_Comum"
+        ],
+        [
+          "Leaves_NormalTree",
+          "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Folhas_Comum.MI_MK_Folhas_Comum"
+        ]
+      ]
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/TwistedTree_1.TwistedTree_1": {
+      "bounds": "<Struct 'BoxSphereBounds' (0x0000021A7533C1C0) {origin: {x: 458.363632, y: -95.209869, z: 816.127314}, box_extent: {x: 675.787735, y: 577.468231, z: 836.274786}, sphere_radius: 1035.946233}>",
+      "slots": [
+        [
+          "Bark_TwistedTree",
+          "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Casca_Retorcida.MI_MK_Casca_Retorcida"
+        ],
+        [
+          "Leaves_TwistedTree",
+          "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Folhas_Retorcida.MI_MK_Folhas_Retorcida"
+        ]
+      ]
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/TwistedTree_4.TwistedTree_4": {
+      "bounds": "<Struct 'BoxSphereBounds' (0x0000021A7533D300) {origin: {x: 86.308594, y: -149.625336, z: 916.764273}, box_extent: {x: 519.040588, y: 564.654327, z: 936.911753}, sphere_radius: 985.968196}>",
+      "slots": [
+        [
+          "Bark_TwistedTree",
+          "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Casca_Retorcida.MI_MK_Casca_Retorcida"
+        ],
+        [
+          "Leaves_TwistedTree",
+          "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Folhas_Retorcida.MI_MK_Folhas_Retorcida"
+        ]
+      ]
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/Bush_Common_Flowers.Bush_Common_Flowers": {
+      "bounds": "<Struct 'BoxSphereBounds' (0x0000021A7533D440) {origin: {x: 3.394619, y: 0.818111, z: 55.619806}, box_extent: {x: 95.742237, y: 98.257046, z: 79.089285}, sphere_radius: 106.686900}>",
+      "slots": [
+        [
+          "Leaves_NormalTree",
+          "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Arbusto_Comum.MI_MK_Arbusto_Comum"
+        ],
+        [
+          "Flowers",
+          "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Flores.MI_MK_Flores"
+        ]
+      ]
+    },
+    "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Bush_2.SM_Fol_Bush_2": {
+      "bounds": "<Struct 'BoxSphereBounds' (0x0000021A7533FFC0) {origin: {x: -1.356812, y: -5.396698, z: 111.402901}, box_extent: {x: 176.521179, y: 152.255600, z: 129.048920}, sphere_radius: 203.477966}>",
+      "slots": [
+        [
+          "M_Flower_Atlas",
+          "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Materials/Mat_Foliage/MI_Fol_Bushes.MI_Fol_Bushes"
+        ]
+      ]
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/CommonTree_2.CommonTree_2": {
+      "bounds": "<Struct 'BoxSphereBounds' (0x0000021A7533FB40) {origin: {x: 0.913719, y: 28.645584, z: 357.872596}, box_extent: {x: 223.215080, y: 213.792618, z: 382.149804}, sphere_radius: 395.718377}>",
+      "slots": [
+        [
+          "Bark_NormalTree",
+          "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Casca_Comum.MI_MK_Casca_Comum"
+        ],
+        [
+          "Leaves_NormalTree",
+          "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Folhas_Comum.MI_MK_Folhas_Comum"
+        ]
+      ]
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/CommonTree_5.CommonTree_5": {
+      "bounds": "<Struct 'BoxSphereBounds' (0x0000021A7533FB40) {origin: {x: -7.677193, y: -5.262375, z: 326.034797}, box_extent: {x: 183.558266, y: 210.982513, z: 350.312005}, sphere_radius: 367.583435}>",
+      "slots": [
+        [
+          "Bark_NormalTree",
+          "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Casca_Comum.MI_MK_Casca_Comum"
+        ],
+        [
+          "Leaves_NormalTree",
+          "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Folhas_Comum.MI_MK_Folhas_Comum"
+        ]
+      ]
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/CommonTree_4.CommonTree_4": {
+      "bounds": "<Struct 'BoxSphereBounds' (0x0000021A77BE00C0) {origin: {x: 11.566757, y: -20.192482, z: 447.641852}, box_extent: {x: 191.276291, y: 187.768669, z: 471.919061}, sphere_radius: 484.974480}>",
+      "slots": [
+        [
+          "Bark_NormalTree",
+          "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Casca_Comum.MI_MK_Casca_Comum"
+        ],
+        [
+          "Leaves_NormalTree",
+          "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Folhas_Comum.MI_MK_Folhas_Comum"
+        ]
+      ]
+    },
+    "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Bush_1.SM_Fol_Bush_1": {
+      "bounds": "<Struct 'BoxSphereBounds' (0x0000021A77BE0B00) {origin: {x: 13.930412, y: 3.084862, z: 65.195305}, box_extent: {x: 105.545692, y: 88.962296, z: 69.165222}, sphere_radius: 113.199432}>",
+      "slots": [
+        [
+          "M_Flower_Atlas",
+          "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Materials/Mat_Foliage/MI_Fol_Bushes.MI_Fol_Bushes"
+        ]
+      ]
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/Bush_Common.Bush_Common": {
+      "bounds": "<Struct 'BoxSphereBounds' (0x0000021A77BE0180) {origin: {x: 3.394619, y: 0.818111, z: 55.619806}, box_extent: {x: 95.742237, y: 98.257046, z: 79.089285}, sphere_radius: 106.686900}>",
+      "slots": [
+        [
+          "Leaves_TwistedTree",
+          "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Arbusto.MI_MK_Arbusto"
+        ]
+      ]
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/TwistedTree_5.TwistedTree_5": {
+      "bounds": "<Struct 'BoxSphereBounds' (0x0000021A753EBF90) {origin: {x: 100.091858, y: -164.548462, z: 762.961294}, box_extent: {x: 474.735596, y: 469.351440, z: 783.108774}, sphere_radius: 848.673568}>",
+      "slots": [
+        [
+          "Bark_TwistedTree",
+          "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Casca_Retorcida.MI_MK_Casca_Retorcida"
+        ],
+        [
+          "Leaves_TwistedTree",
+          "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Folhas_Retorcida.MI_MK_Folhas_Retorcida"
+        ]
+      ]
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/TwistedTree_3.TwistedTree_3": {
+      "bounds": "<Struct 'BoxSphereBounds' (0x0000021A77BE1380) {origin: {x: 118.872849, y: -76.728241, z: 783.479544}, box_extent: {x: 567.874771, y: 575.280975, z: 803.627024}, sphere_radius: 848.420931}>",
+      "slots": [
+        [
+          "Bark_TwistedTree",
+          "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Casca_Retorcida.MI_MK_Casca_Retorcida"
+        ],
+        [
+          "Leaves_TwistedTree",
+          "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Folhas_Retorcida.MI_MK_Folhas_Retorcida"
+        ]
+      ]
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/DeadTree_2.DeadTree_2": {
+      "bounds": "<Struct 'BoxSphereBounds' (0x0000021A77BE1400) {origin: {x: 103.246521, y: 66.639069, z: 540.856115}, box_extent: {x: 336.480896, y: 318.926788, z: 574.411585}, sphere_radius: 605.020137}>",
+      "slots": [
+        [
+          "Bark_DeadTree",
+          "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Casca_Morta.MI_MK_Casca_Morta"
+        ]
+      ]
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/DeadTree_5.DeadTree_5": {
+      "bounds": "<Struct 'BoxSphereBounds' (0x0000021A753EF0A0) {origin: {x: 20.766434, y: -59.059860, z: 788.313635}, box_extent: {x: 417.819717, y: 420.663406, z: 821.869104}, sphere_radius: 838.041409}>",
+      "slots": [
+        [
+          "Bark_DeadTree",
+          "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Casca_Morta.MI_MK_Casca_Morta"
+        ]
+      ]
+    }
+  },
+  "docs": {
+    "GeometryScriptCopyMeshFromAssetOptions": "Geometry Script Copy Mesh from Asset Options\r\n\r\n**C++ Source:**\r\n\r\n- **Plugin**: GeometryScripting\r\n- **Module**: GeometryScriptingCore\r\n- **File**: MeshAssetFunctions.h\r\n\r\n**Editor Properties:** (see get_editor_property/set_editor_property)\r\n\r\n- ``apply_build_settings`` (bool):  [Read-Write] Whether to apply Build Settings during the mesh copy.\r\n- ``ignore_remove_degenerates`` (bool):  [Read-Write] Whether to ignore the 'remove degenerates' option from Build Settings. Note: Only applies if 'Apply Build Settings' is enabled.\r\n- ``request_tangents`` (bool):  [Read-Write] Whether to request tangents on the copied mesh. If tangents are not requested, tangent-related build settings will also be ignored.\r\n- ``use_build_scale`` (bool):  [Read-Write] Whether to scale the copied mesh by the Build Setting's 'Build Scale'. Note: This is considered separately from the 'Apply Build Settings' option.",
+    "GeometryScriptMeshReadLOD": "Geometry Script Mesh Read LOD\r\n\r\n**C++ Source:**\r\n\r\n- **Plugin**: GeometryScripting\r\n- **Module**: GeometryScriptingCore\r\n- **File**: GeometryScriptTypes.h\r\n\r\n**Editor Properties:** (see get_editor_property/set_editor_property)\r\n\r\n- ``lod_index`` (int32):  [Read-Write]\r\n- ``lod_type`` (GeometryScriptLODType):  [Read-Write]",
+    "GeometryScriptCopyMeshToAssetOptions": "Geometry Script Copy Mesh to Asset Options\r\n\r\n**C++ Source:**\r\n\r\n- **Plugin**: GeometryScripting\r\n- **Module**: GeometryScriptingCore\r\n- **File**: MeshAssetFunctions.h\r\n\r\n**Editor Properties:** (see get_editor_property/set_editor_property)\r\n\r\n- ``apply_nanite_settings`` (bool):  [Read-Write] If enabled, NaniteSettings will be applied to the target Asset if possible\r\n- ``bone_hierarchy_mismatch_handling`` (GeometryScriptBoneHierarchyMismatchHandling):  [Read-Write] An option that specifies, for skeletal mesh assets, how mismatches between the existing reference skeleton on the asset, and the bone\r\n  hierarchy stored on the geometry are handled. By default, no attempt is made to resolve this mismatch.\r\n- ``clean_assigned_materials`` (bool):  [Read-Write] Whether to apply a cleanup pass to assigned materials -- fixing invalid material assignments\r\n- ``defer_mesh_post_edit_change`` (bool):  [Read-Write]\r\n- ``emit_transaction`` (bool):  [Read-Write]\r\n- ``enable_recompute_normals`` (bool):  [Read-Write]\r\n- ``enable_recompute_tangents`` (bool):  [Read-Write]\r\n- ``enable_remove_degenerates`` (bool):  [Read-Write]\r\n- ``generate_lightmap_u_vs`` (GeometryScriptGenerateLightmapUVOptions):  [Read-Write] Whether to generate lightmap UVs\r\n- ``nanite_settings`` (GeometryScriptNaniteOptions):  [Read-Write] Replaced FGeometryScriptNaniteOptions with usage of Engine FMeshNaniteSettings\r\n- ``new_material_slot_names`` (Array[Name]):  [Read-Write] Optional slot names for the New Materials. Ignored if not the same length as the New Materials array.\r\n- ``new_material_usage`` (CopyMeshToAssetUseNewMaterialsOptions):  [Read-Write] If using New Materials, whether to use them as a full replacement of all asset materials, or just to update the target LOD\r\n- ``new_materials`` (Array[MaterialInterface]):  [Read-Write] New materials to set if Replace Materials is enabled. Ignored otherwise.\r\n- ``new_nanite_settings`` (MeshNaniteSettings):  [Read-Write] Nanite Settings applied to the target Asset, if bApplyNaniteSettings = true\r\n- ``remap_bone_indices_to_match_asset`` (bool):  [Read-Write] Deprecated. Use BoneHierarchyMismatchHandling instead.\r\n         // UE_DEPRECATED(5.6, \"Deprecated. Use BoneHierarchyMismatchHandling instead.\")\r\n- ``replace_materials`` (bool):  [Read-Write] Whether to update the materials on the asset with those in the New Materials array\r\n- ``use_build_scale`` (bool):  [Read-Write] Whether to use the build scale on the target asset. If enabled, the inverse scale will be applied when saving to the asset, and the BuildScale will be preserved. Otherwise, BuildScale will be set to 1.0 on the asset BuildSettings.\r\n- ``use_original_vertex_order`` (bool):  [Read-Write] Use the original vertex order found in the source data. This is useful if the inbound mesh was originally non-manifold, and needs to keep\r\n  the non-manifold structure when re-created.",
+    "GeometryScriptMeshWriteLOD": "Geometry Script Mesh Write LOD\r\n\r\n**C++ Source:**\r\n\r\n- **Plugin**: GeometryScripting\r\n- **Module**: GeometryScriptingCore\r\n- **File**: GeometryScriptTypes.h\r\n\r\n**Editor Properties:** (see get_editor_property/set_editor_property)\r\n\r\n- ``lod_index`` (int32):  [Read-Write]\r\n- ``write_hi_res_source`` (bool):  [Read-Write]",
+    "GeometryScript_AssetUtils.copy_mesh_from_static_mesh": "X.copy_mesh_from_static_mesh(from_static_mesh_asset, to_dynamic_mesh, asset_options, requested_lod, debug=None) -> (DynamicMesh, outcome=GeometryScriptOutcomePins)\r\nExtracts a Dynamic Mesh from a Static Mesh Asset, using section indices for the material IDs -- use GetSectionMaterialListFromStaticMesh to get the corresponding materials.\n\nNote that the LOD Index in RequestedLOD will be silently clamped to the available number of LODs (SourceModel or RenderData)\r\n\r\nArgs:\r\n    from_static_mesh_asset (StaticMesh): \r\n    to_dynamic_mesh (DynamicMesh): \r\n    asset_options (GeometryScriptCopyMeshFromAssetOptions): \r\n    requested_lod (GeometryScriptMeshReadLOD): \r\n    debug (GeometryScriptDebug): \r\n\r\nReturns:\r\n    GeometryScriptOutcomePins: \r\n\r\n    outcome (GeometryScriptOutcomePins):",
+    "GeometryScript_AssetUtils.copy_mesh_to_static_mesh": "X.copy_mesh_to_static_mesh(from_dynamic_mesh, to_static_mesh_asset, options, target_lod, use_section_materials=True, debug=None) -> (DynamicMesh, outcome=GeometryScriptOutcomePins)\r\nUpdates a Static Mesh Asset with new geometry converted from a Dynamic Mesh\r\n\r\nArgs:\r\n    from_dynamic_mesh (DynamicMesh): \r\n    to_static_mesh_asset (StaticMesh): \r\n    options (GeometryScriptCopyMeshToAssetOptions): \r\n    target_lod (GeometryScriptMeshWriteLOD): \r\n    use_section_materials (bool): Whether to assume Dynamic Mesh material IDs are section indices in the target Static Mesh. Should match the value passed to CopyMeshFromStaticMesh. Has no effect if replacing the asset materials.\r\n    debug (GeometryScriptDebug): \r\n\r\nReturns:\r\n    GeometryScriptOutcomePins: \r\n\r\n    outcome (GeometryScriptOutcomePins):",
+    "GeometryScript_Materials.delete_triangles_by_material_id": "X.delete_triangles_by_material_id(target_mesh, material_id, defer_change_notifications=False, debug=None) -> (DynamicMesh, num_deleted=int32)\r\nDelete all triangles in TargetMesh with the given MaterialID\r\n\r\nArgs:\r\n    target_mesh (DynamicMesh): \r\n    material_id (int32): \r\n    defer_change_notifications (bool): \r\n    debug (GeometryScriptDebug): \r\n\r\nReturns:\r\n    int32: \r\n\r\n    num_deleted (int32): number of deleted triangles is returned here"
+  }
+}

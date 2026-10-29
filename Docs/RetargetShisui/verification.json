@@ -1,0 +1,2387 @@
+{
+  "pelvis_ratio": 0.9625787550408096,
+  "table": [
+    [
+      "Pelve (cm)",
+      98.13591003417969,
+      94.4635404438086,
+      94.4635404438086
+    ],
+    [
+      "Abertura dos p\u00e9s (cm)",
+      35.62888817486572,
+      32.31555600774257,
+      32.327538137575125
+    ],
+    [
+      "Cabe\u00e7a (graus)",
+      -7.708169085242564,
+      -20.516299946540126,
+      -7.70816906605986
+    ],
+    [
+      "M\u00e3o na malha (cm)",
+      17.975295839211853,
+      16.184017118934406,
+      16.184017118934406
+    ]
+  ],
+  "spine_degrees": {
+    "mannequin": 6.476436955232417,
+    "before": 5.0299671884604,
+    "after": 6.471995122877253
+  },
+  "knee_degrees": {
+    "mannequin": [
+      10.329561319691976,
+      6.895191005797642
+    ],
+    "after": [
+      10.257374520338885,
+      6.678723638934031
+    ]
+  },
+  "hand_mesh": {
+    "hand_weighted_vertex_count": 873,
+    "hand_wrist_to_mesh_tip_cm": 16.184017118934406,
+    "hand_mesh_span_cm": 18.52877667863711,
+    "face_skin_z_bounds_cm": [
+      151.35049438476562,
+      169.31759643554688
+    ],
+    "face_skin_height_estimate_cm": 17.96710205078125,
+    "face_vertex_count": 991,
+    "note": "Mesh hand length is projected along wrist-middle axis; face estimate uses skin-colored frontal vertices, excluding dark hair and headband. It is a mesh estimate, not a clinical anatomical landmark measurement."
+  },
+  "animation_assets_verified": 573,
+  "animation_checks": [
+    {
+      "path": "Content\\ANAP\\ANAP_Demo.umap",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\ANAP_Update1.umap",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\NewAnimMontage.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_99Spear_DoubleSlash.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_99Spear_JumpDoubleSlash.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_99Spear_JumpStab.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_99Spear_SlashHorizon.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_99Spear_SlashHorizon_Teleport.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_99Spear_SlashHorizon_TurnKick.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_99Spear_SlashShoulder.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_99Spear_SlidingTurnSlash.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_99Spear_Thrust.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_99Spear_ThrustNeedleAttack.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_99Spear_NeedleAttack.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_99Spear_SlashHorizon.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_99Spear_SlashHorizon_Teleport.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_99Spear_SlashShoulder.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_99Spear_SlashUp_HeelDropKick.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_99Spear_ThrowKunai.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_Armhammer.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_BeniHien_CutSenpuCut.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraFistA_Punch.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraFistA_TurnKick.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraFist_B_DiveKick_Double.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraFist_B_Hand_DoublePunch.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraFist_B_Palm.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraFist_B_QigongGun.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraFist_B_TurnKick.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraGloves_B_DragonPunch_Double.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraGloves_B_SpinPunch_Large.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraKatana_A_cma_00.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraKatana_A_QuickDrowSlash.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraKatana_A_SlashHorizon_Right.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraKatana_A_SlashUp.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraKatana_A_SpaceSlash.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraKatana_A_TopStab.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraKatana_B_cmb_01.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraKatana_B_cmb_01_B.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraKatana_B_cmb_02.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraKatana_B_cmb_02_B.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraKatana_B_cmb_03.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraKatana_B_cmb_04.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraKatana_B_Range.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraKnuckleA_Cmb01.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_ChakraKnuckleB_Cmb01.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_cmb01.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_cmb04.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_CyakraKnuckley_Cmb01.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_CyakraKnuckley_Cmb02.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_CyakraKnuckley_Cmb03.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_DoubleTurnKick.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_Hand_BlastPunch.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_Hand_ChakraClawsA.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_Hand_ChakraClawsB.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_Hand_DoubleUppercut.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_Hand_DragonPunch_Double.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_Hand_Punch.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_Hand_TurnHeelDropKick.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_Hand_TurnKick.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_TwinFang_DoubleUppercut.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_TwinFang_DoubleUppercut_WEP.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_TwinFang_FigureEightHit.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_TwinFang_FigureEightHit_WEP.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_TwinFang_Punch.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_TwinFang_TurnBodyBlow.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_TwinFang_TurnBodyBlow_WEP.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_TwinFang_TurnKick.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_Y_KnuckleKnife_Uppercut.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Aerial_Y_Y_KnuckleKnife_Cross.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_BeniHien_BlastPunch.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_BeniHien_Uppercut.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraFistA_BlastPunch.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraFistA_cmb08.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraFistA_cmb_00.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraFistA_cmb_14.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraFistA_DragonKick.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraFistA_Palm_Blast.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraFistA_Palm_Large.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraFistA_StraightPunch.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraFistA_Uppercut_Large.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraFist_B_BackBlow.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraFist_B_DoubleTurnKick_Large.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraFist_B_Palm.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraFist_B_QigongGun.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraFist_B_QigongGun_GroundPunch.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraFist_B_StraightPunch.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraGloves_B_DoublePunch_Kick.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraGloves_B_DoublePunch_Uppercut.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraGloves_B_Uppercut.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraGloves_B_Uppercut_Large.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_A_DiagonalSlash.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_A_QuickDrowSlash.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_A_ReverseDiagonalSlash.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_A_RightSlash.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_A_RightUpSlashing.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_A_SlashHorizon_Right.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_A_SpaceSlash.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_A_StabPullOut.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_B_cmb_01.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_B_cmb_01_B.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_B_cmb_02.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_B_cmb_02_B.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_B_cmb_03.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_B_cmb_04.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_B_cmb_04_B.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_B_cmb_05.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKatana_B_Range.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKnuckleA_Cmb01.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKnuckleA_Cmb02.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKnuckleB_Cmb01.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_ChakraKnuckleB_Cmb02.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_cmb05.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_cmb07.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_cmb09.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_CyakraKnuckley_Cmb01.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_CyakraKnuckley_Cmb02.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_CyakraKnuckley_Cmb02_Rateup.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_CyakraKnuckley_Cmb03.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_CyakraKnuckley_Cmb05.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_DoubleTurnKick.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Hand_BackBlow.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Hand_BackKick.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Hand_ChakraClawsA.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Hand_ChakraClawsB.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Hand_ChakraClawsB_cmb_01.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Hand_ChakraClawsB_cmb_12.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Hand_ChargeAttack.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Hand_DragonKick.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Hand_JackCut.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Hand_KneeKickUp.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Hand_MantisFist.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Hand_Punch_Left.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Hand_Short_ChakraClawsA.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Hand_SidePalm.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Hand_StraightPunch.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_Hand_WindMill.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_JumpTurnKick_Right.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_KickUp.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_TwinFang_BackBlow.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_TwinFang_JackCut.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_TwinFang_KneeKickUp.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_TwinFang_PalmSwingUp.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_TwinFang_PalmSwingUp_WEP.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_TwinFang_SideChop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_TwinFang_SideChop_WEP.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_TwinFang_SpinShootDown.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_TwinFang_SpinShootDown_WEP.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_TwinFang_Upper.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_TwinFang_Upper_WEP.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_TwinFang_whirlwind.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_TwinFang_whirlwind_WEP.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_TwinFang_WindMill.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_Attack_TwinFang_WindMill_WEP.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_RangeAttack_99Spear_SlashHorizon.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_RangeAttack_Aerial_99Spear_SomerSaultKick.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_RangeAttack_ChakraFist_B_Hand_BlastPunch.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_RangeAttack_ChakraKatana_A_SheathHit.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_RangeAttack_Hand_BlastPunch.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_RangeAttack_TwinFang.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Attack\\HandBlades\\HandBlades_Anim_Armature_CustomMan_TwinFang_Loop_WEP.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Aerial_Dash_End.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Aerial_Dash_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Aerial_Dash_Start.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Aerial_RecoveryChakra_End.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Aerial_RecoveryChakra_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Aerial_RecoveryChakra_Start.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Aerial_TakeMedicine.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Aerial_WallStop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_BigSword_DashStep_Behind.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_BigSword_DashStep_Front.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_BigSword_Dodge_Run_Left.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_BigSword_Dodge_Run_Right.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_BigSword_HeightLand.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_BigSword_Idle_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_BigSword_Land.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_BigSword_Run_End.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_BigSword_Walk_End.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_ChakraJump_Charge_End.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_ChakraJump_Charge_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_ChakraJump_Charge_Start.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_ChakraJump_Vertical_Charge_End.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_ChakraJump_Vertical_Charge_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_ChakraJump_Vertical_Charge_Start.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_CharaSelect_Idle.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_DashStep_Behind.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_DashStep_Front.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_DashStep_Left.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_DashStep_Right.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Dodge_Run_Left.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Dodge_Run_Right.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_DoubleJump.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Fall_Front_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Fall_Vertical_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_GetUp.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_GetUp_Type01.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Hand_DashStep_Front.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Hand_HeightLand.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Hand_Idle_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Hand_Land.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Hand_Run_End.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Hand_Walk_End.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_HeightLand.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Idle_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Jump_Front.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Jump_Vertical.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Kunai_DashStep_Front.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Kunai_HeightLand.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Kunai_Idle_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Kunai_Land.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Kunai_Run_End.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Kunai_Walk_End.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Land.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Land_toChidoriCharge.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Land_toD23NJ4Charge.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Land_toRasengunCharge.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Land_toRecoveryChakra.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_PaperBomb_Put.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_RecoveryChakra_End.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_RecoveryChakra_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_RecoveryChakra_Start.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Rolling_GetUp.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Run_End.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Run_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Run_TurnLeft180.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Run_TurnLeft180_Start.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Run_TurnLeft90_Start.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Run_TurnRight180.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Run_TurnRight180_Start.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Run_TurnRight90_Start.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Run_Type01_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_TakeMedicine.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Walk_End.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Walk_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Walk_TurnLeft180_Start.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Walk_TurnLeft90_Start.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Walk_TurnRight180_Start.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Walk_TurnRight90_Start.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_Walk_Type01_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_WallJump_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_WallStop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Base\\Base_Anim_Armature_CustomMan_WireJump_Ready.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Aerial_BlowOff_toFall.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Aerial_Conect_toFall.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Aerial_D45NJ3_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Aerial_D45NJ3_Start.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Aerial_D51NJ3_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Aerial_D51NJ3_Start.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Aerial_DownToFloor_Conect_toStand.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Aerial_Large_Front_Conect_toFall.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Aerial_ReaperDeathSeal.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Aerial_Small_Conect_toFall.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Aerial_Stagger_Belly.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Aerial_UniversalPull_Behind_End.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Aerial_UniversalPull_Front_End.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Aerial_UniversalPull_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Aerial_UniversalPull_Start.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_BellyDown_Large_End.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_BellyDown_Large_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_BellyDown_Large_Start.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_BellyDown_Middle_End.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_BellyDown_Middle_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_BellyDown_Middle_Start.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_BellyDown_Small_End.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_BellyDown_Small_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_BellyDown_Small_Start.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Bind_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Blasted.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_BlowOff_ChaseAttack.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Burn_Type01.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_D29NJ1_End.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_D29NJ1_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_D29NJ1_LostEnd.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_D29NJ1_Start.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_D43NJ1.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_D45NJ3_End.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_D45NJ3_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_D45NJ3_Start.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_D51NJ3_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_D51NJ3_Start.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_D55NJ2.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_DownHit.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_DownToFloor.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_DownToFloor_Type01.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_DownToWall.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Down_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Down_Sleep_Type01_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Down_Type01_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Earthquake_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_ElectricShock_End.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_ElectricShock_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Fall_Behind_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Fall_ChaseAttack_Behind_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Fall_ChaseAttack_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Fall_Front_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Frozen_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_GuardReverseBlowOff.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_HideBlowOff.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Hide_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Kamui_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Kunai.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Left.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Left_Head.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Left_Low.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_LowFront_Chin.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_OneHitDown_Long.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_OneHitDown_Short.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Paralysis.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_ReaperDeathSeal.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Restrict_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Right.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_ShadowPossession_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_SpinBlowOff.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_SpinBlowOff_Behind.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_SpinBlowOff_Bound_Conect_toFall.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_SpinBlowOff_Bound_End.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_SpinBlowOff_Bound_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_SpinBlowOff_Bound_Start.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_SpinBlowOff_Conect_toDown.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_SpinBlowOff_Conect_toStand.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_SpinBlowOff_D52NJ3.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_SpinBlowOff_Large_Up.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Stagger_Belly.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Struggle_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_Struggle_Start.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_UpFront_Head.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Misc\\Misc_Anim_Armature_CustomMan_Beaten_UpLeft_Shoulder.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_CustomMan_CharaSelect_Idle.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_D21_Lobby_Win_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_D23_Idle_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_D23_Lobby_Win_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_D24_Idle_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_D24_Lobby_Win_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_D25_Idle_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_D25_Lobby_Win_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_D27_Lobby_Win_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_D29_Lobby_Win_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_D31_Lobby_Win_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_D33_Lobby_Win_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_D34_Lobby_Win_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_D42_Idle_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_D42_Lobby_GetSet_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_D43_Idle_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_GaaraNext_Idle_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_Gaara_Lobby_Win_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_Itachi_Idle_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_Itachi_Lobby_Win_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_KabutoCloak_Idle_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_KabutoCloak_Lobby_Win_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_Kisame_Idle_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_Kisame_Lobby_Win_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_Konan_Lobby_Win_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_MadaraZombie_Idle_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_MadaraZombie_Lobby_Win_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_Minato_Lobby_Win_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_ObitoZombie_Lobby_Win_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_Pain_Lobby_Win_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack2_SK_CHR_Man_Cloak_01_ao_ShinoNext_Idle_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_HashiramaZombie_Ninjutsu_Idle_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_Hashirama_Lobby_Win_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_HinataNext_Idle_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_Hinata_Lobby_Win_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_Hiruzen_Lobby_Win_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_InoNext_Idle_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_KakashiNext_Idle_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_Kakashi_Lobby_Win_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_KonohamaruNext_Idle_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_Mitsuki_Lobby_Idle_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_NarutoNext_Idle_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_Orochimaru_Idle_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_Orochimaru_Lobby_Win_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_SakuraNext_Idle_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_Sakura_Lobby_Win_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_Sarada_Lobby_Win_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_SasukeNext_Idle_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_Sasuke_Lobby_Win_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_ShikamaruNext_Idle_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_Shikamaru_Idle_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_Shikamaru_Lobby_GetSet_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_TentenNext_Idle_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_TentenNext_spk0_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_Tobirama_Lobby_Win_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\ANAP\\Animations\\Pose\\PosePack_SK_CHR_Man_Cloak_01_ao_Tsunade_Lobby_Win_Loop.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ABP_Ninja.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\AM_Ninja_Dash.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\AM_Ninja_HitReact_1.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\AM_Ninja_HitReact_2.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\AM_Ninja_HitReact_3.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\AM_Ninja_IdleOlhar.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\AM_Ninja_Knockout.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\AM_Ninja_Virar180.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\AM_Ninja_VirarDireita.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\AM_Ninja_WallJump.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\AM_Ninja_WallRun.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\BS_Ninja_Locomocao.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_CarregarChakra.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_CorridaParede.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_Dash.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_Golpe_ChuteAereo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_Golpe_ChuteDragao.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_Golpe_ChuteGiro.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_Golpe_Direto.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_Golpe_Gancho.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_Golpe_Investida.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_Golpe_Jab.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_Golpe_SocoForte.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_Golpe_SocosGancho.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_Nocaute.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_PuloChakra_Carga.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_PuloChakra_Salto.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_PuloDuplo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_PuloParede.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_Reacao_Cabeca.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_Reacao_Forte.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_Reacao_Lado.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\AM_ANAP_Reacao_Ombro.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\BS_ANAP_Locomocao.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Aereo\\AM_Mortal_Tras.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Aereo\\AM_Reacao_Ar_Barriga.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Aereo\\AM_Reacao_Ar_Leve.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Aereo\\AM_Reacao_Lancado.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Dash\\AM_Dash_Ar.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Dash\\AM_Dash_Direita_Desvio.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Dash\\AM_Dash_Direita_Passo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Dash\\AM_Dash_Esquerda_Desvio.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Dash\\AM_Dash_Esquerda_Passo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Dash\\AM_Dash_Frente_Mao.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Dash\\AM_Dash_Tras_Mortal.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Aerial_ChakraFist_B_Palm.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Aerial_ChakraFist_B_Palm_Combo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Aerial_ChakraFist_B_TurnKick.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Aerial_ChakraKnuckleA_Cmb01.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Aerial_cmb04.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Aerial_cmb04_Combo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Aerial_CyakraKnuckley_Cmb01.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Aerial_CyakraKnuckley_Cmb01_Combo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Aerial_CyakraKnuckley_Cmb03.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Aerial_CyakraKnuckley_Cmb03_Combo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Aerial_Hand_Punch.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Aerial_Hand_Punch_Combo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Aerial_Hand_TurnHeelDropKick.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Aerial_Hand_TurnKick.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Aerial_Hand_TurnKick_Combo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_BeniHien_BlastPunch.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_BeniHien_Uppercut.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_BeniHien_Uppercut_Combo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFistA_BlastPunch.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFistA_cmb08.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFistA_cmb08_Combo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFistA_cmb_00.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFistA_cmb_00_Combo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFistA_cmb_14.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFistA_cmb_14_Combo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFistA_DragonKick.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFistA_Palm_Large.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFistA_Palm_Large_Combo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFistA_StraightPunch.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFist_B_DoubleTurnKick_Large.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFist_B_Palm.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFist_B_Palm_Combo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFist_B_QigongGun.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFist_B_StraightPunch.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraFist_B_StraightPunch_Combo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraGloves_B_DoublePunch_Kick.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraGloves_B_DoublePunch_Uppercut.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraGloves_B_DoublePunch_Uppercut_Combo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraGloves_B_Uppercut.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraGloves_B_Uppercut_Combo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraGloves_B_Uppercut_Large.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraGloves_B_Uppercut_Large_Combo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraKnuckleA_Cmb01.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraKnuckleA_Cmb02.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraKnuckleA_Cmb02_Combo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraKnuckleB_Cmb01.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_ChakraKnuckleB_Cmb02.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_cmb05.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_cmb05_Combo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_cmb07.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_cmb07_Combo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_cmb09.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_cmb09_Combo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_CyakraKnuckley_Cmb01.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_CyakraKnuckley_Cmb01_Combo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_CyakraKnuckley_Cmb02.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_CyakraKnuckley_Cmb02_Combo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_CyakraKnuckley_Cmb02_Rateup.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_CyakraKnuckley_Cmb02_Rateup_Combo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_CyakraKnuckley_Cmb03.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_CyakraKnuckley_Cmb03_Combo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_CyakraKnuckley_Cmb05.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Hand_BackKick.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Hand_ChakraClawsB_cmb_01.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Hand_ChakraClawsB_cmb_01_Combo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Hand_ChakraClawsB_cmb_12.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Hand_ChakraClawsB_cmb_12_Combo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Hand_DragonKick.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Hand_JackCut.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Hand_MantisFist.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Hand_Punch_Left.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Hand_Punch_Left_Combo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Hand_Short_ChakraClawsA.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Hand_Short_ChakraClawsA_Combo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Hand_SidePalm.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Hand_SidePalm_Combo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Hand_StraightPunch.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_Hand_WindMill.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_JumpTurnKick_Right.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_KickUp.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\ANAP\\Golpes\\AM_G_KickUp_Combo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Dash_Estrela.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Golpe_ChuteAereo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Golpe_ChuteCircular.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Golpe_ChuteESoco.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Golpe_ChuteFrontal.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Golpe_ChuteGiratorio.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Golpe_ChuteVoador.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Golpe_Direto.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Golpe_Gancho.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Golpe_GanchoEsquerdo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Golpe_Investida.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Golpe_Jab.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Golpe_SocoCarregado.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Golpe_SocoCorpo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Golpe_Uppercut.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Golpe_UppercutMartelo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Reacao_Barriga.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Combate\\AM_Reacao_Costela.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\DeepMotion\\A_Ninja_DM_DashEstrela.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Avulsa_Right_Strafe_Walking.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Avulsa_Right_Turn.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Avulsa_Walk2_Backward.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Avulsa_Walk2_Forward.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Avulsa_Walk2_Left.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Avulsa_Walk2_Right.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Avulsa_Walking.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Avulsa_Walking_Turn_180.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Avulsa_Warrior_Idle.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Cover_To_Stand.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Cover_To_Stand_2.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Crouched_Sneaking_Left.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Crouched_Sneaking_Right.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Falling_Idle.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Falling_To_Roll.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Hard_Landing.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Idle.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Idle_2.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Idle_3.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Idle_4.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Idle_5.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Jumping_Up.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Left_Cover_Sneak.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Left_Turn.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Right_Cover_Sneak.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Right_Turn.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Stand_To_Cover.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Stand_To_Cover_2.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\A_Ninja_MX_Walking.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\Corrida\\A_Ninja_MX_Corrida_Normal.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\Luta\\A_Ninja_MX_Luta_Boxing.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\Luta\\A_Ninja_MX_Luta_Hook.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\Luta\\A_Ninja_MX_Luta_Mma_Kick.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\Luta\\A_Ninja_MX_Luta_Mma_Kick_1.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\Luta\\A_Ninja_MX_Luta_Mma_Kick_2.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\Luta\\A_Ninja_MX_Luta_Rib_Hit.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\Luta\\A_Ninja_MX_Luta_Sneaking_Forward.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\Luta\\A_Ninja_MX_Luta_Stomach_Hit.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\Ninja\\Characters\\Animations\\Mixamo\\Luta\\A_Ninja_MX_Luta_Uppercut.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\HypeWorld\\Animacoes\\A_Pose_Prontidao.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\HypeWorld\\Animacoes\\TroteDirecional\\A_Prontidao_Cintura.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\HypeWorld\\Animacoes\\TroteDirecional\\A_Run_Center.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\HypeWorld\\Animacoes\\TroteDirecional\\A_Trote_Direita.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\HypeWorld\\Animacoes\\TroteDirecional\\A_Trote_Esquerda.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\HypeWorld\\Animacoes\\TroteDirecional\\A_Trote_Frente_Baixo.uasset",
+      "unchanged": true
+    },
+    {
+      "path": "Content\\HypeWorld\\Animacoes\\TroteDirecional\\A_Trote_Tras.uasset",
+      "unchanged": true
+    }
+  ],
+  "other_workspace_changes_observed": [
+    "Content\\HypeWorld\\Jutsus\\Katon\\BP_Katon_Goukakyuu.uasset",
+    "Source\\HypeWorld\\Combat\\NinjaJutsuProjectile.cpp",
+    "Source\\HypeWorld\\Combat\\NinjaJutsuProjectile.h"
+  ],
+  "motion_checks": [
+    {
+      "case": "guarda",
+      "speed": 0.0,
+      "source_head_degrees": -23.79826097111032,
+      "target_head_degrees": -23.798261484871627
+    },
+    {
+      "case": "trote",
+      "speed": 900.0,
+      "source_head_degrees": -26.615245794911672,
+      "target_head_degrees": -26.615246401471435
+    },
+    {
+      "case": "ninja",
+      "speed": 1400.0,
+      "source_head_degrees": -31.234561736000078,
+      "target_head_degrees": -31.234562469903477
+    },
+    {
+      "case": "tigre",
+      "speed": 0.0,
+      "source_head_degrees": 3.0347169526965487e-06,
+      "target_head_degrees": 3.3179943439853917e-06
+    }
+  ],
+  "limitations": [
+    "Feet spacing follows the model proportions: 32.33 cm versus mannequin 35.63 cm; no limb lengths or mesh geometry changed.",
+    "Head angle is the head-bone orientation delta relative to the mesh reference pose, not a clinical facial landmark.",
+    "The face skin estimate excludes the headband; the visible facial height already exceeds the hand length."
+  ]
+}

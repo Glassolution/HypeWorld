@@ -1,0 +1,109 @@
+{
+  "build": "Succeeded",
+  "baseline": "f091ba9",
+  "unchanged_protected_files": 2216,
+  "unchanged_animation_assets": 214,
+  "summary": [
+    {
+      "case": "parado",
+      "speed_cm_s": 0.0,
+      "frames": 72,
+      "direction": 0.0,
+      "actor_yaw": 0.0
+    },
+    {
+      "case": "guarda_frente",
+      "speed_cm_s": 0.0,
+      "frames": 72,
+      "direction": 0.0,
+      "actor_yaw": 0.0
+    },
+    {
+      "case": "guarda_lado",
+      "speed_cm_s": 0.0,
+      "frames": 48,
+      "direction": 0.0,
+      "actor_yaw": 0.0
+    },
+    {
+      "case": "guarda_costas",
+      "speed_cm_s": 0.0,
+      "frames": 48,
+      "direction": 0.0,
+      "actor_yaw": 0.0
+    },
+    {
+      "case": "trote_frente",
+      "speed_cm_s": 900.0,
+      "frames": 72,
+      "direction": 0.0,
+      "actor_yaw": 0.0
+    },
+    {
+      "case": "trote_direita",
+      "speed_cm_s": 900.0,
+      "frames": 72,
+      "direction": 90.0,
+      "actor_yaw": 0.0
+    },
+    {
+      "case": "trote_esquerda",
+      "speed_cm_s": 900.0,
+      "frames": 72,
+      "direction": -90.0,
+      "actor_yaw": 0.0
+    },
+    {
+      "case": "trote_tras",
+      "speed_cm_s": 900.0,
+      "frames": 72,
+      "direction": 180.0,
+      "actor_yaw": 0.0
+    },
+    {
+      "case": "corrida_ninja",
+      "speed_cm_s": 1400.0,
+      "frames": 96,
+      "direction": 0.0,
+      "actor_yaw": 0.0
+    }
+  ],
+  "limitation": "The selected git baseline has an upper-body C++ bone mask at spine_01, not a Layered Blend per Bone graph node. No new animation clips or retarget changes were authored.",
+  "extra_checks": [
+    {
+      "case": "esquiva_frente",
+      "played": true,
+      "montages": [
+        "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Frente_Mao.AM_Dash_Frente_Mao"
+      ]
+    },
+    {
+      "case": "esquiva_direita",
+      "played": true,
+      "montages": [
+        "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Direita_Passo.AM_Dash_Direita_Passo"
+      ]
+    },
+    {
+      "case": "esquiva_tras",
+      "played": true,
+      "montages": [
+        "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Tras_Mortal.AM_Dash_Tras_Mortal"
+      ]
+    },
+    {
+      "case": "esquiva_esquerda",
+      "played": true,
+      "montages": [
+        "/Game/Ninja/Characters/Animations/ANAP/Dash/AM_Dash_Esquerda_Passo.AM_Dash_Esquerda_Passo"
+      ]
+    },
+    {
+      "case": "tigre",
+      "played": true,
+      "montages": [
+        "/Engine/Transient.AnimMontage_0"
+      ]
+    }
+  ]
+}

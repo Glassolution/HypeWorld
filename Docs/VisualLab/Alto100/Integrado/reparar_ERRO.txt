@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "C:/Users/lucas/Downloads/Hype World/HypeWorld/Docs/VisualLab/Alto100/Integrado/reparar_material.py", line 18, in <module>
+    assert ML.connect_material_expressions(src,'',v,'Input')
+AssertionError

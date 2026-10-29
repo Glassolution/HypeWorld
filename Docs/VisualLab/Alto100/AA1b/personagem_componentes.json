@@ -1,0 +1,328 @@
+[
+  {
+    "name": "CollisionCylinder",
+    "class": "CapsuleComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.CollisionCylinder"
+  },
+  {
+    "name": "CharMoveComp",
+    "class": "NinjaMovementComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.CharMoveComp"
+  },
+  {
+    "name": "CharacterMesh0",
+    "class": "SkeletalMeshComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.CharacterMesh0",
+    "materials": [
+      "/Game/Characters/Mannequins/Materials/Quinn/MI_Quinn_01.MI_Quinn_01",
+      "/Game/Characters/Mannequins/Materials/Quinn/MI_Quinn_02.MI_Quinn_02"
+    ],
+    "skeletal_mesh_asset": "<Object '/Game/Characters/Mannequins/Meshes/SKM_Quinn_Simple.SKM_Quinn_Simple' (0x000001752C4B7800) Class 'SkeletalMesh'>",
+    "visible": "False",
+    "hidden_in_game": "True"
+  },
+  {
+    "name": "CameraBoom",
+    "class": "SpringArmComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.CameraBoom"
+  },
+  {
+    "name": "FollowCamera",
+    "class": "CameraComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.FollowCamera"
+  },
+  {
+    "name": "AbilitySystem",
+    "class": "AbilitySystemComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.AbilitySystem"
+  },
+  {
+    "name": "ChakraAura",
+    "class": "NinjaChakraAuraComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraAura"
+  },
+  {
+    "name": "ChakraFeetFx",
+    "class": "NinjaChakraFeetComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraFeetFx"
+  },
+  {
+    "name": "CameraProxyMeshComponent_0",
+    "class": "CameraProxyMeshComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.CameraProxyMeshComponent_0",
+    "materials": [
+      "/Engine/EditorMaterials/MatineeCam_mat.MatineeCam_mat"
+    ],
+    "static_mesh": "<Object '/Engine/EditorMeshes/MatineeCam_SM.MatineeCam_SM' (0x0000017657EBF000) Class 'StaticMesh'>",
+    "visible": "True",
+    "hidden_in_game": "True"
+  },
+  {
+    "name": "DrawFrustumComponent_0",
+    "class": "DrawFrustumComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.DrawFrustumComponent_0"
+  },
+  {
+    "name": "Indra",
+    "class": "SkeletalMeshComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.Indra",
+    "materials": [
+      "/Game/HypeWorld/Personagens/Indra/M_Indra_Olhos.M_Indra_Olhos",
+      "/Game/HypeWorld/Personagens/Indra/M_Indra_Olhos.M_Indra_Olhos",
+      "/Game/HypeWorld/Personagens/Indra/M_Indra.M_Indra",
+      "/Game/HypeWorld/Personagens/Indra/M_Indra.M_Indra",
+      "/Game/HypeWorld/Personagens/Indra/M_Indra.M_Indra",
+      "/Game/HypeWorld/Personagens/Indra/M_Indra.M_Indra",
+      "/Game/HypeWorld/Personagens/Indra/M_Indra.M_Indra"
+    ],
+    "skeletal_mesh_asset": "<Object '/Game/HypeWorld/Personagens/Indra/SK_Indra.SK_Indra' (0x0000017526608C00) Class 'SkeletalMesh'>",
+    "visible": "True",
+    "hidden_in_game": "False"
+  },
+  {
+    "name": "PawnInputComponent0",
+    "class": "EnhancedInputComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.PawnInputComponent0"
+  },
+  {
+    "name": "SkeletalMeshComponent_0",
+    "class": "SkeletalMeshComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.SkeletalMeshComponent_0",
+    "materials": [
+      "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraAura.MID_M_Chakra_Shell_0",
+      "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraAura.MID_M_Chakra_Shell_0",
+      "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraAura.MID_M_Chakra_Shell_0",
+      "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraAura.MID_M_Chakra_Shell_0",
+      "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraAura.MID_M_Chakra_Shell_0",
+      "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraAura.MID_M_Chakra_Shell_0",
+      "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraAura.MID_M_Chakra_Shell_0"
+    ],
+    "skeletal_mesh_asset": "<Object '/Game/HypeWorld/Personagens/Indra/SK_Indra.SK_Indra' (0x0000017526608C00) Class 'SkeletalMesh'>",
+    "visible": "False",
+    "hidden_in_game": "False"
+  },
+  {
+    "name": "StaticMeshComponent_0",
+    "class": "StaticMeshComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_0",
+    "materials": [
+      "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraAura.MID_M_Chakra_ToonFlame_0"
+    ],
+    "static_mesh": "<Object '/Engine/BasicShapes/Plane.Plane' (0x000001769B87A000) Class 'StaticMesh'>",
+    "visible": "False",
+    "hidden_in_game": "False"
+  },
+  {
+    "name": "StaticMeshComponent_1",
+    "class": "StaticMeshComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_1",
+    "materials": [
+      "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraAura.MID_M_Chakra_ToonFlame_1"
+    ],
+    "static_mesh": "<Object '/Engine/BasicShapes/Plane.Plane' (0x000001769B87A000) Class 'StaticMesh'>",
+    "visible": "False",
+    "hidden_in_game": "False"
+  },
+  {
+    "name": "StaticMeshComponent_2",
+    "class": "StaticMeshComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_2",
+    "materials": [
+      "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraAura.MID_M_Chakra_GroundGlow_0"
+    ],
+    "static_mesh": "<Object '/Engine/BasicShapes/Plane.Plane' (0x000001769B87A000) Class 'StaticMesh'>",
+    "visible": "False",
+    "hidden_in_game": "False"
+  },
+  {
+    "name": "PointLightComponent_0",
+    "class": "PointLightComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.PointLightComponent_0"
+  },
+  {
+    "name": "AudioComponent_0",
+    "class": "AudioComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.AudioComponent_0"
+  },
+  {
+    "name": "SkeletalMeshComponent_1",
+    "class": "SkeletalMeshComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.SkeletalMeshComponent_1",
+    "materials": [
+      "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraFeetFx.MID_M_ChakraFeetShell_0",
+      "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraFeetFx.MID_M_ChakraFeetShell_0",
+      "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraFeetFx.MID_M_ChakraFeetShell_0",
+      "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraFeetFx.MID_M_ChakraFeetShell_0",
+      "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraFeetFx.MID_M_ChakraFeetShell_0",
+      "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraFeetFx.MID_M_ChakraFeetShell_0",
+      "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraFeetFx.MID_M_ChakraFeetShell_0"
+    ],
+    "skeletal_mesh_asset": "<Object '/Game/HypeWorld/Personagens/Indra/SK_Indra.SK_Indra' (0x0000017526608C00) Class 'SkeletalMesh'>",
+    "visible": "True",
+    "hidden_in_game": "False"
+  },
+  {
+    "name": "StaticMeshComponent_3",
+    "class": "StaticMeshComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_3",
+    "materials": [
+      "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraFeetFx.MID_M_Chakra_FeetGround_0"
+    ],
+    "static_mesh": "<Object '/Engine/BasicShapes/Plane.Plane' (0x000001769B87A000) Class 'StaticMesh'>",
+    "visible": "True",
+    "hidden_in_game": "False"
+  },
+  {
+    "name": "StaticMeshComponent_4",
+    "class": "StaticMeshComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_4",
+    "materials": [
+      "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraFeetFx.MID_M_Chakra_FeetWisp_0"
+    ],
+    "static_mesh": "<Object '/Engine/BasicShapes/Plane.Plane' (0x000001769B87A000) Class 'StaticMesh'>",
+    "visible": "True",
+    "hidden_in_game": "False"
+  },
+  {
+    "name": "StaticMeshComponent_5",
+    "class": "StaticMeshComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_5",
+    "materials": [
+      "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraFeetFx.MID_M_Chakra_FeetWisp_1"
+    ],
+    "static_mesh": "<Object '/Engine/BasicShapes/Plane.Plane' (0x000001769B87A000) Class 'StaticMesh'>",
+    "visible": "True",
+    "hidden_in_game": "False"
+  },
+  {
+    "name": "StaticMeshComponent_6",
+    "class": "StaticMeshComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_6",
+    "materials": [
+      "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraFeetFx.MID_M_Chakra_FeetWisp_2"
+    ],
+    "static_mesh": "<Object '/Engine/BasicShapes/Plane.Plane' (0x000001769B87A000) Class 'StaticMesh'>",
+    "visible": "False",
+    "hidden_in_game": "False"
+  },
+  {
+    "name": "StaticMeshComponent_7",
+    "class": "StaticMeshComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_7",
+    "materials": [
+      "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraFeetFx.MID_M_Chakra_FeetWisp_3"
+    ],
+    "static_mesh": "<Object '/Engine/BasicShapes/Plane.Plane' (0x000001769B87A000) Class 'StaticMesh'>",
+    "visible": "False",
+    "hidden_in_game": "False"
+  },
+  {
+    "name": "StaticMeshComponent_8",
+    "class": "StaticMeshComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_8",
+    "materials": [
+      "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraFeetFx.MID_M_Chakra_FeetWisp_4"
+    ],
+    "static_mesh": "<Object '/Engine/BasicShapes/Plane.Plane' (0x000001769B87A000) Class 'StaticMesh'>",
+    "visible": "False",
+    "hidden_in_game": "False"
+  },
+  {
+    "name": "StaticMeshComponent_9",
+    "class": "StaticMeshComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_9",
+    "materials": [
+      "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraFeetFx.MID_M_Chakra_FeetWisp_5"
+    ],
+    "static_mesh": "<Object '/Engine/BasicShapes/Plane.Plane' (0x000001769B87A000) Class 'StaticMesh'>",
+    "visible": "False",
+    "hidden_in_game": "False"
+  },
+  {
+    "name": "PointLightComponent_1",
+    "class": "PointLightComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.PointLightComponent_1"
+  },
+  {
+    "name": "StaticMeshComponent_10",
+    "class": "StaticMeshComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_10",
+    "materials": [
+      "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraFeetFx.MID_M_Chakra_FeetGround_1"
+    ],
+    "static_mesh": "<Object '/Engine/BasicShapes/Plane.Plane' (0x000001769B87A000) Class 'StaticMesh'>",
+    "visible": "True",
+    "hidden_in_game": "False"
+  },
+  {
+    "name": "StaticMeshComponent_11",
+    "class": "StaticMeshComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_11",
+    "materials": [
+      "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraFeetFx.MID_M_Chakra_FeetWisp_6"
+    ],
+    "static_mesh": "<Object '/Engine/BasicShapes/Plane.Plane' (0x000001769B87A000) Class 'StaticMesh'>",
+    "visible": "True",
+    "hidden_in_game": "False"
+  },
+  {
+    "name": "StaticMeshComponent_12",
+    "class": "StaticMeshComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_12",
+    "materials": [
+      "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraFeetFx.MID_M_Chakra_FeetWisp_7"
+    ],
+    "static_mesh": "<Object '/Engine/BasicShapes/Plane.Plane' (0x000001769B87A000) Class 'StaticMesh'>",
+    "visible": "True",
+    "hidden_in_game": "False"
+  },
+  {
+    "name": "StaticMeshComponent_13",
+    "class": "StaticMeshComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_13",
+    "materials": [
+      "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraFeetFx.MID_M_Chakra_FeetWisp_8"
+    ],
+    "static_mesh": "<Object '/Engine/BasicShapes/Plane.Plane' (0x000001769B87A000) Class 'StaticMesh'>",
+    "visible": "False",
+    "hidden_in_game": "False"
+  },
+  {
+    "name": "StaticMeshComponent_14",
+    "class": "StaticMeshComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_14",
+    "materials": [
+      "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraFeetFx.MID_M_Chakra_FeetWisp_9"
+    ],
+    "static_mesh": "<Object '/Engine/BasicShapes/Plane.Plane' (0x000001769B87A000) Class 'StaticMesh'>",
+    "visible": "False",
+    "hidden_in_game": "False"
+  },
+  {
+    "name": "StaticMeshComponent_15",
+    "class": "StaticMeshComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_15",
+    "materials": [
+      "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraFeetFx.MID_M_Chakra_FeetWisp_10"
+    ],
+    "static_mesh": "<Object '/Engine/BasicShapes/Plane.Plane' (0x000001769B87A000) Class 'StaticMesh'>",
+    "visible": "False",
+    "hidden_in_game": "False"
+  },
+  {
+    "name": "StaticMeshComponent_16",
+    "class": "StaticMeshComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_16",
+    "materials": [
+      "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.ChakraFeetFx.MID_M_Chakra_FeetWisp_11"
+    ],
+    "static_mesh": "<Object '/Engine/BasicShapes/Plane.Plane' (0x000001769B87A000) Class 'StaticMesh'>",
+    "visible": "False",
+    "hidden_in_game": "False"
+  },
+  {
+    "name": "PointLightComponent_2",
+    "class": "PointLightComponent",
+    "path": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.PointLightComponent_2"
+  }
+]

@@ -86,6 +86,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Trajetória") float CollisionRadiusScale = 0.5f;
 	/** Giro das cascas de chamas (graus/s) */
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Trajetória") float SpinSpeed = 160.f;
+	/** Curva curta na saída (cm para o lado, lado sorteado pela semente) que some em BendTime (s) */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Trajetória") float LaunchBend = 0.f;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Trajetória") float BendTime = 0.25f;
 
 	// ---------- Visual ----------
 
@@ -153,6 +156,17 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") float IgnitionExposure = 0.6f;
 	/** Bloom no pico da ignição (o normal do projétil é 0,55) */
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") float IgnitionBloom = 1.6f;
+	/** Rajada na boca (tiros pequenos, no lugar de IgniteGlows/IgniteFlames): línguas (TongueMaterial, as primeiras
+	 *  InnerTongueMaterial) e lóbulos (LobeMaterial) presos ao mundo na boca, saindo para a frente num cone e caindo em
+	 *  MouthBurstTime (s). Tamanho de cada chama e alcance para a frente (cm). 0 línguas = desligada */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") int32 MouthBurstTongues = 0;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") int32 MouthBurstInner = 2;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") int32 MouthBurstLobes = 2;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") float MouthBurstSize = 30.f;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") float MouthBurstReach = 90.f;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") float MouthBurstTime = 0.15f;
+	/** Emissivo da rajada no pico (parâmetro Intensity do material) */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") float MouthBurstIntensity = 3.f;
 	/** Vida de cada língua (s, mín/máx), subida e arrasto para trás (x raio por segundo) */
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") FVector2D TongueLife = FVector2D(0.25f, 0.4f);
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") float TongueRise = 2.4f;
@@ -166,6 +180,10 @@ public:
 	/** Escala de cada casca em relação ao raio */
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") FVector ShellScales = FVector(1.f, 1.18f, 1.42f);
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") float HeatScale = 1.7f;
+	/** Tamanho do halo (GlowMesh + HaloMaterial) em relação ao padrão */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") float HaloScale = 1.f;
+	/** O halo nasce em HaloFadeIn (s) em vez de aparecer cheio no primeiro quadro (0 = desde o início) */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") float HaloFadeIn = 0.f;
 
 	/** Partículas em volta da bola (brasas, faíscas, fumaça), presas a ela */
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") TObjectPtr<UNiagaraSystem> TrailSystem;
@@ -276,6 +294,19 @@ private:
 	TArray<TPair<TObjectPtr<UStaticMeshComponent>, FVector>> IgniteFlames;
 	float BaseExposure = 0.f;
 	void UpdateIgnition(float T);
+	/** Rajada na boca: componente, direção no mundo (cone para a frente), tamanho relativo (X), atraso (Y) e lóbulo (Z>0) */
+	struct FBurstFlame
+	{
+		TObjectPtr<UStaticMeshComponent> Mesh;
+		TObjectPtr<UMaterialInstanceDynamic> MID;
+		FVector Dir = FVector::ForwardVector;
+		float Size = 1.f;
+		float Delay = 0.f;
+		float Reach = 1.f;
+		bool bLobe = false;
+	};
+	TArray<FBurstFlame> BurstFlames;
+	void UpdateMouthBurst(float T);
 	/** Raios finos da ignição (direção no espaço do ator) */
 	TArray<TPair<TObjectPtr<UStaticMeshComponent>, FVector>> Rays;
 	void RespawnTongue(FTongue& Tongue, bool bStagger);

@@ -1,0 +1,8 @@
+{
+  "mesh": "/Game/HypeWorld/Personagens/Indra/SK_Indra.SK_Indra",
+  "abp": "/Game/HypeWorld/Personagens/Indra/ABP_Indra_Base.ABP_Indra_Base",
+  "protected_unchanged": 752,
+  "component": [
+    "/Game/ThirdPerson/Blueprints/BP_ThirdPersonCharacter.BP_ThirdPersonCharacter_C:Indra_GEN_VARIABLE"
+  ]
+}

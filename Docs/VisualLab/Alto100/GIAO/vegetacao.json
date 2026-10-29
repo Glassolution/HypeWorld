@@ -1,0 +1,337 @@
+[
+  {
+    "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_0",
+    "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/CommonTree_3.CommonTree_3",
+    "materials": [
+      {
+        "path": "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Casca_Comum.MI_MK_Casca_Comum",
+        "base": "/Game/HypeWorld/Environment/MegaKit/Materiais/M_HW_Tronco.M_HW_Tronco",
+        "blend": "<BlendMode.BLEND_OPAQUE: 0>"
+      },
+      {
+        "path": "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Folhas_Comum.MI_MK_Folhas_Comum",
+        "base": "/Game/HypeWorld/Environment/MegaKit/Materiais/M_HW_Folhagem.M_HW_Folhagem",
+        "blend": "<BlendMode.BLEND_MASKED: 1>"
+      }
+    ],
+    "bounds": "(<Struct 'Vector' (0x00000217FED4DBE0) {x: -394.806573, y: 1138.609678, z: 571.873512}>, <Struct 'Vector' (0x00000217FED4DA00) {x: 5931.407471, y: 4903.341797, z: 620.741876}>, 7720.73046875)",
+    "transform": "<Struct 'Transform' (0x00000217AE97F660) {rotation: {x: 0.000000, y: 0.000000, z: 0.000000, w: 1.000000}, translation: {x: 0.000000, y: 0.000000, z: 0.000000}, scale3d: {x: 1.000000, y: 1.000000, z: 1.000000}}>",
+    "instances": 11
+  },
+  {
+    "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_1",
+    "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/CommonTree_1.CommonTree_1",
+    "materials": [
+      {
+        "path": "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Casca_Comum.MI_MK_Casca_Comum",
+        "base": "/Game/HypeWorld/Environment/MegaKit/Materiais/M_HW_Tronco.M_HW_Tronco",
+        "blend": "<BlendMode.BLEND_OPAQUE: 0>"
+      },
+      {
+        "path": "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Folhas_Comum.MI_MK_Folhas_Comum",
+        "base": "/Game/HypeWorld/Environment/MegaKit/Materiais/M_HW_Folhagem.M_HW_Folhagem",
+        "blend": "<BlendMode.BLEND_MASKED: 1>"
+      }
+    ],
+    "bounds": "(<Struct 'Vector' (0x00000217FED4DD70) {x: -957.461024, y: 29.208360, z: 445.425718}>, <Struct 'Vector' (0x00000217FED4D960) {x: 5103.211914, y: 5772.472778, z: 488.582240}>, 7720.29296875)",
+    "transform": "<Struct 'Transform' (0x00000217AE97F6F0) {rotation: {x: 0.000000, y: 0.000000, z: 0.000000, w: 1.000000}, translation: {x: 0.000000, y: 0.000000, z: 0.000000}, scale3d: {x: 1.000000, y: 1.000000, z: 1.000000}}>",
+    "instances": 12
+  },
+  {
+    "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_11",
+    "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/TwistedTree_1.TwistedTree_1",
+    "materials": [
+      {
+        "path": "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Casca_Retorcida.MI_MK_Casca_Retorcida",
+        "base": "/Game/HypeWorld/Environment/MegaKit/Materiais/M_HW_Tronco.M_HW_Tronco",
+        "blend": "<BlendMode.BLEND_OPAQUE: 0>"
+      },
+      {
+        "path": "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Folhas_Retorcida.MI_MK_Folhas_Retorcida",
+        "base": "/Game/HypeWorld/Environment/MegaKit/Materiais/M_HW_Folhagem.M_HW_Folhagem",
+        "blend": "<BlendMode.BLEND_MASKED: 1>"
+      }
+    ],
+    "bounds": "(<Struct 'Vector' (0x00000217FED601F0) {x: 3426.924998, y: -997.122173, z: 797.874112}>, <Struct 'Vector' (0x00000217FED60510) {x: 2219.893677, y: 4793.888611, z: 733.253275}>, 5333.56884765625)",
+    "transform": "<Struct 'Transform' (0x00000217AE97F810) {rotation: {x: 0.000000, y: 0.000000, z: 0.000000, w: 1.000000}, translation: {x: 0.000000, y: 0.000000, z: 0.000000}, scale3d: {x: 1.000000, y: 1.000000, z: 1.000000}}>",
+    "instances": 2
+  },
+  {
+    "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_12",
+    "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/TwistedTree_4.TwistedTree_4",
+    "materials": [
+      {
+        "path": "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Casca_Retorcida.MI_MK_Casca_Retorcida",
+        "base": "/Game/HypeWorld/Environment/MegaKit/Materiais/M_HW_Tronco.M_HW_Tronco",
+        "blend": "<BlendMode.BLEND_OPAQUE: 0>"
+      },
+      {
+        "path": "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Folhas_Retorcida.MI_MK_Folhas_Retorcida",
+        "base": "/Game/HypeWorld/Environment/MegaKit/Materiais/M_HW_Folhagem.M_HW_Folhagem",
+        "blend": "<BlendMode.BLEND_MASKED: 1>"
+      }
+    ],
+    "bounds": "(<Struct 'Vector' (0x00000217FED602E0) {x: 2365.836746, y: 1275.143088, z: 879.165197}>, <Struct 'Vector' (0x00000217FED61B90) {x: 2600.873138, y: 4723.521545, z: 823.018738}>, 5454.68212890625)",
+    "transform": "<Struct 'Transform' (0x00000217AE97F930) {rotation: {x: 0.000000, y: 0.000000, z: 0.000000, w: 1.000000}, translation: {x: 0.000000, y: 0.000000, z: 0.000000}, scale3d: {x: 1.000000, y: 1.000000, z: 1.000000}}>",
+    "instances": 2
+  },
+  {
+    "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_18",
+    "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Bush_Common_Flowers.Bush_Common_Flowers",
+    "materials": [
+      {
+        "path": "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Arbusto_Comum.MI_MK_Arbusto_Comum",
+        "base": "/Game/HypeWorld/Environment/MegaKit/Materiais/M_HW_Folhagem.M_HW_Folhagem",
+        "blend": "<BlendMode.BLEND_MASKED: 1>"
+      },
+      {
+        "path": "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Flores.MI_MK_Flores",
+        "base": "/Game/HypeWorld/Environment/MegaKit/Materiais/M_HW_Folhagem.M_HW_Folhagem",
+        "blend": "<BlendMode.BLEND_MASKED: 1>"
+      }
+    ],
+    "bounds": "(<Struct 'Vector' (0x00000217FED60060) {x: 0.000000, y: 0.000000, z: 0.000000}>, <Struct 'Vector' (0x00000217FED61BE0) {x: 0.000000, y: 0.000000, z: 0.000000}>, 0.0)",
+    "transform": "<Struct 'Transform' (0x00000217AE97FA50) {rotation: {x: 0.000000, y: 0.000000, z: 0.000000, w: 1.000000}, translation: {x: 0.000000, y: 0.000000, z: 0.000000}, scale3d: {x: 1.000000, y: 1.000000, z: 1.000000}}>",
+    "instances": 0
+  },
+  {
+    "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_2",
+    "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Bush_2.SM_Fol_Bush_2",
+    "materials": [
+      {
+        "path": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Materials/Mat_Foliage/MI_Fol_Bushes.MI_Fol_Bushes",
+        "base": "/Game/StyleHex_Studio/Shared_Resources/Free_Packs/Master_Materials/M_Foliage_Leaves_Master_STARTER.M_Foliage_Leaves_Master_STARTER",
+        "blend": "<BlendMode.BLEND_MASKED: 1>"
+      }
+    ],
+    "bounds": "(<Struct 'Vector' (0x00000217FED61BE0) {x: 0.000000, y: 0.000000, z: 0.000000}>, <Struct 'Vector' (0x00000217FED60A60) {x: 0.000000, y: 0.000000, z: 0.000000}>, 0.0)",
+    "transform": "<Struct 'Transform' (0x00000217AE97FA50) {rotation: {x: 0.000000, y: 0.000000, z: 0.000000, w: 1.000000}, translation: {x: 0.000000, y: 0.000000, z: 0.000000}, scale3d: {x: 1.000000, y: 1.000000, z: 1.000000}}>",
+    "instances": 0
+  },
+  {
+    "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_3",
+    "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Bush_2.SM_Fol_Bush_2",
+    "materials": [
+      {
+        "path": "/Game/Maps/Tutorial/Tutorial_Assets/Materiais/MI_Tut_Arbusto_Florido.MI_Tut_Arbusto_Florido",
+        "base": "/Game/StyleHex_Studio/Shared_Resources/Free_Packs/Master_Materials/M_Foliage_Leaves_Master_STARTER.M_Foliage_Leaves_Master_STARTER",
+        "blend": "<BlendMode.BLEND_MASKED: 1>"
+      }
+    ],
+    "bounds": "(<Struct 'Vector' (0x00000217FED60A60) {x: 0.000000, y: 0.000000, z: 0.000000}>, <Struct 'Vector' (0x00000217FED61C30) {x: 0.000000, y: 0.000000, z: 0.000000}>, 0.0)",
+    "transform": "<Struct 'Transform' (0x00000217AE97FAE0) {rotation: {x: 0.000000, y: 0.000000, z: 0.000000, w: 1.000000}, translation: {x: 0.000000, y: 0.000000, z: 0.000000}, scale3d: {x: 1.000000, y: 1.000000, z: 1.000000}}>",
+    "instances": 0
+  },
+  {
+    "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_4",
+    "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/CommonTree_2.CommonTree_2",
+    "materials": [
+      {
+        "path": "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Casca_Comum.MI_MK_Casca_Comum",
+        "base": "/Game/HypeWorld/Environment/MegaKit/Materiais/M_HW_Tronco.M_HW_Tronco",
+        "blend": "<BlendMode.BLEND_OPAQUE: 0>"
+      },
+      {
+        "path": "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Folhas_Comum.MI_MK_Folhas_Comum",
+        "base": "/Game/HypeWorld/Environment/MegaKit/Materiais/M_HW_Folhagem.M_HW_Folhagem",
+        "blend": "<BlendMode.BLEND_MASKED: 1>"
+      }
+    ],
+    "bounds": "(<Struct 'Vector' (0x00000217FED61C80) {x: 246.930690, y: 160.582678, z: 444.961133}>, <Struct 'Vector' (0x00000217FED61CD0) {x: 5695.187256, y: 5684.053467, z: 496.717537}>, 8061.6591796875)",
+    "transform": "<Struct 'Transform' (0x00000217AE97FC00) {rotation: {x: 0.000000, y: 0.000000, z: 0.000000, w: 1.000000}, translation: {x: 0.000000, y: 0.000000, z: 0.000000}, scale3d: {x: 1.000000, y: 1.000000, z: 1.000000}}>",
+    "instances": 17
+  },
+  {
+    "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_5",
+    "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/CommonTree_5.CommonTree_5",
+    "materials": [
+      {
+        "path": "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Casca_Comum.MI_MK_Casca_Comum",
+        "base": "/Game/HypeWorld/Environment/MegaKit/Materiais/M_HW_Tronco.M_HW_Tronco",
+        "blend": "<BlendMode.BLEND_OPAQUE: 0>"
+      },
+      {
+        "path": "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Folhas_Comum.MI_MK_Folhas_Comum",
+        "base": "/Game/HypeWorld/Environment/MegaKit/Materiais/M_HW_Folhagem.M_HW_Folhagem",
+        "blend": "<BlendMode.BLEND_MASKED: 1>"
+      }
+    ],
+    "bounds": "(<Struct 'Vector' (0x00000217FED61D20) {x: 308.946122, y: 306.282796, z: 422.170204}>, <Struct 'Vector' (0x00000217FED61D70) {x: 5682.796143, y: 5688.362305, z: 474.547592}>, 8054.61572265625)",
+    "transform": "<Struct 'Transform' (0x00000217AE97FD20) {rotation: {x: 0.000000, y: 0.000000, z: 0.000000, w: 1.000000}, translation: {x: 0.000000, y: 0.000000, z: 0.000000}, scale3d: {x: 1.000000, y: 1.000000, z: 1.000000}}>",
+    "instances": 22
+  },
+  {
+    "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_6",
+    "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/CommonTree_4.CommonTree_4",
+    "materials": [
+      {
+        "path": "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Casca_Comum.MI_MK_Casca_Comum",
+        "base": "/Game/HypeWorld/Environment/MegaKit/Materiais/M_HW_Tronco.M_HW_Tronco",
+        "blend": "<BlendMode.BLEND_OPAQUE: 0>"
+      },
+      {
+        "path": "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Folhas_Comum.MI_MK_Folhas_Comum",
+        "base": "/Game/HypeWorld/Environment/MegaKit/Materiais/M_HW_Folhagem.M_HW_Folhagem",
+        "blend": "<BlendMode.BLEND_MASKED: 1>"
+      }
+    ],
+    "bounds": "(<Struct 'Vector' (0x00000217FED60A10) {x: -146.152209, y: 320.389591, z: 561.470048}>, <Struct 'Vector' (0x00000217FED605B0) {x: 5779.648682, y: 5818.659424, z: 610.155121}>, 8223.9541015625)",
+    "transform": "<Struct 'Transform' (0x00000217AE97FE40) {rotation: {x: 0.000000, y: 0.000000, z: 0.000000, w: 1.000000}, translation: {x: 0.000000, y: 0.000000, z: 0.000000}, scale3d: {x: 1.000000, y: 1.000000, z: 1.000000}}>",
+    "instances": 19
+  },
+  {
+    "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_66",
+    "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Bush_1.SM_Fol_Bush_1",
+    "materials": [
+      {
+        "path": "/Game/Maps/Tutorial/Tutorial_Assets/Materiais/MI_Tut_Arbusto_Claro.MI_Tut_Arbusto_Claro",
+        "base": "/Game/StyleHex_Studio/Shared_Resources/Free_Packs/Master_Materials/M_Foliage_Leaves_Master_STARTER.M_Foliage_Leaves_Master_STARTER",
+        "blend": "<BlendMode.BLEND_MASKED: 1>"
+      }
+    ],
+    "bounds": "(<Struct 'Vector' (0x00000217FED605B0) {x: -945.829004, y: -1180.040034, z: 105.296546}>, <Struct 'Vector' (0x00000217FED61DC0) {x: 4101.881714, y: 3930.929077, z: 136.125634}>, 5682.9716796875)",
+    "transform": "<Struct 'Transform' (0x00000217AE97FED0) {rotation: {x: 0.000000, y: 0.000000, z: 0.000000, w: 1.000000}, translation: {x: 0.000000, y: 0.000000, z: 0.000000}, scale3d: {x: 1.000000, y: 1.000000, z: 1.000000}}>",
+    "instances": 22
+  },
+  {
+    "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_67",
+    "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Bush_Common_Flowers.Bush_Common_Flowers",
+    "materials": [
+      {
+        "path": "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Arbusto_Comum.MI_MK_Arbusto_Comum",
+        "base": "/Game/HypeWorld/Environment/MegaKit/Materiais/M_HW_Folhagem.M_HW_Folhagem",
+        "blend": "<BlendMode.BLEND_MASKED: 1>"
+      },
+      {
+        "path": "/Game/Maps/Tutorial/Tutorial_Assets/Materiais/MI_Zen_FloresBrancas.MI_Zen_FloresBrancas",
+        "base": "/Game/HypeWorld/Environment/MegaKit/Materiais/M_HW_Folhagem.M_HW_Folhagem",
+        "blend": "<BlendMode.BLEND_MASKED: 1>"
+      }
+    ],
+    "bounds": "(<Struct 'Vector' (0x00000217FED61E10) {x: 672.815091, y: -282.040343, z: 183.856435}>, <Struct 'Vector' (0x00000217FED61E60) {x: 4034.290161, y: 4900.994629, z: 230.501076}>, 6352.037109375)",
+    "transform": "<Struct 'Transform' (0x00000217FED8C0F0) {rotation: {x: 0.000000, y: 0.000000, z: 0.000000, w: 1.000000}, translation: {x: 0.000000, y: 0.000000, z: 0.000000}, scale3d: {x: 1.000000, y: 1.000000, z: 1.000000}}>",
+    "instances": 35
+  },
+  {
+    "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_68",
+    "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Bush_1.SM_Fol_Bush_1",
+    "materials": [
+      {
+        "path": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Materials/Mat_Foliage/MI_Fol_Bushes.MI_Fol_Bushes",
+        "base": "/Game/StyleHex_Studio/Shared_Resources/Free_Packs/Master_Materials/M_Foliage_Leaves_Master_STARTER.M_Foliage_Leaves_Master_STARTER",
+        "blend": "<BlendMode.BLEND_MASKED: 1>"
+      }
+    ],
+    "bounds": "(<Struct 'Vector' (0x00000217FED61E60) {x: -96.103035, y: 0.905711, z: 101.827872}>, <Struct 'Vector' (0x00000217FED61EB0) {x: 5118.964600, y: 5286.820923, z: 137.183126}>, 7360.2373046875)",
+    "transform": "<Struct 'Transform' (0x00000217FED8C0F0) {rotation: {x: 0.000000, y: 0.000000, z: 0.000000, w: 1.000000}, translation: {x: 0.000000, y: 0.000000, z: 0.000000}, scale3d: {x: 1.000000, y: 1.000000, z: 1.000000}}>",
+    "instances": 52
+  },
+  {
+    "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_69",
+    "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Bush_Common.Bush_Common",
+    "materials": [
+      {
+        "path": "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Arbusto.MI_MK_Arbusto",
+        "base": "/Game/HypeWorld/Environment/MegaKit/Materiais/M_HW_Folhagem.M_HW_Folhagem",
+        "blend": "<BlendMode.BLEND_MASKED: 1>"
+      }
+    ],
+    "bounds": "(<Struct 'Vector' (0x00000217FED61EB0) {x: -189.159859, y: 57.011077, z: 245.990976}>, <Struct 'Vector' (0x00000217FED60420) {x: 5185.166748, y: 5075.846313, z: 296.604781}>, 7262.103515625)",
+    "transform": "<Struct 'Transform' (0x00000217FED8C0F0) {rotation: {x: 0.000000, y: 0.000000, z: 0.000000, w: 1.000000}, translation: {x: 0.000000, y: 0.000000, z: 0.000000}, scale3d: {x: 1.000000, y: 1.000000, z: 1.000000}}>",
+    "instances": 29
+  },
+  {
+    "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_7",
+    "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/TwistedTree_5.TwistedTree_5",
+    "materials": [
+      {
+        "path": "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Casca_Retorcida.MI_MK_Casca_Retorcida",
+        "base": "/Game/HypeWorld/Environment/MegaKit/Materiais/M_HW_Tronco.M_HW_Tronco",
+        "blend": "<BlendMode.BLEND_OPAQUE: 0>"
+      },
+      {
+        "path": "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Folhas_Retorcida.MI_MK_Folhas_Retorcida",
+        "base": "/Game/HypeWorld/Environment/MegaKit/Materiais/M_HW_Folhagem.M_HW_Folhagem",
+        "blend": "<BlendMode.BLEND_MASKED: 1>"
+      }
+    ],
+    "bounds": "(<Struct 'Vector' (0x00000217FED61F00) {x: -3818.819239, y: 4156.363021, z: 795.499415}>, <Struct 'Vector' (0x00000217FED61F50) {x: 553.230927, y: 550.522797, z: 704.762505}>, 1051.58447265625)",
+    "transform": "<Struct 'Transform' (0x00000217FED8C210) {rotation: {x: 0.000000, y: 0.000000, z: 0.000000, w: 1.000000}, translation: {x: 0.000000, y: 0.000000, z: 0.000000}, scale3d: {x: 1.000000, y: 1.000000, z: 1.000000}}>",
+    "instances": 1
+  },
+  {
+    "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_8",
+    "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/TwistedTree_3.TwistedTree_3",
+    "materials": [
+      {
+        "path": "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Casca_Retorcida.MI_MK_Casca_Retorcida",
+        "base": "/Game/HypeWorld/Environment/MegaKit/Materiais/M_HW_Tronco.M_HW_Tronco",
+        "blend": "<BlendMode.BLEND_OPAQUE: 0>"
+      },
+      {
+        "path": "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Folhas_Retorcida.MI_MK_Folhas_Retorcida",
+        "base": "/Game/HypeWorld/Environment/MegaKit/Materiais/M_HW_Folhagem.M_HW_Folhagem",
+        "blend": "<BlendMode.BLEND_MASKED: 1>"
+      }
+    ],
+    "bounds": "(<Struct 'Vector' (0x00000217FED61FA0) {x: -3639.693070, y: -4205.968912, z: 745.817331}>, <Struct 'Vector' (0x00000217FED60470) {x: 634.848755, y: 631.979950, z: 667.086956}>, 1116.886962890625)",
+    "transform": "<Struct 'Transform' (0x00000217FED8C330) {rotation: {x: 0.000000, y: 0.000000, z: 0.000000, w: 1.000000}, translation: {x: 0.000000, y: 0.000000, z: 0.000000}, scale3d: {x: 1.000000, y: 1.000000, z: 1.000000}}>",
+    "instances": 1
+  },
+  {
+    "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1240.StaticMeshComponent0",
+    "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/DeadTree_2.DeadTree_2",
+    "materials": [
+      {
+        "path": "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Casca_Morta.MI_MK_Casca_Morta",
+        "base": "/Game/HypeWorld/Environment/MegaKit/Materiais/M_HW_Tronco.M_HW_Tronco",
+        "blend": "<BlendMode.BLEND_OPAQUE: 0>"
+      }
+    ],
+    "bounds": "(<Struct 'Vector' (0x00000217FED60470) {x: -2678.242827, y: 812.969138, z: -64.139543}>, <Struct 'Vector' (0x00000217FED61FF0) {x: 509.227887, y: 561.810931, z: 289.428653}>, 520.4163818359375)",
+    "transform": "<Struct 'Transform' (0x00000217FED8C3C0) {rotation: {x: -0.325087, y: 0.627948, z: 0.325087, w: 0.627948}, translation: {x: -2900.000000, y: 400.000000, z: 24.669367}, scale3d: {x: 0.860164, y: 0.860164, z: 0.860164}}>",
+    "instances": null
+  },
+  {
+    "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1241.StaticMeshComponent0",
+    "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/DeadTree_5.DeadTree_5",
+    "materials": [
+      {
+        "path": "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Casca_Morta.MI_MK_Casca_Morta",
+        "base": "/Game/HypeWorld/Environment/MegaKit/Materiais/M_HW_Tronco.M_HW_Tronco",
+        "blend": "<BlendMode.BLEND_OPAQUE: 0>"
+      }
+    ],
+    "bounds": "(<Struct 'Vector' (0x00000217FED61FF0) {x: 2816.182557, y: 1038.659922, z: 9.996189}>, <Struct 'Vector' (0x00000217FED62040) {x: 795.271163, y: 730.450890, z: 365.905318}>, 733.9141845703125)",
+    "transform": "<Struct 'Transform' (0x00000217FED8C450) {rotation: {x: 0.227317, y: 0.669572, z: -0.227317, w: 0.669572}, translation: {x: 2300.000000, y: 1500.000000, z: 28.182378}, scale3d: {x: 0.875749, y: 0.875749, z: 0.875749}}>",
+    "instances": null
+  },
+  {
+    "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1242.StaticMeshComponent0",
+    "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/DeadTree_2.DeadTree_2",
+    "materials": [
+      {
+        "path": "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Casca_Morta.MI_MK_Casca_Morta",
+        "base": "/Game/HypeWorld/Environment/MegaKit/Materiais/M_HW_Tronco.M_HW_Tronco",
+        "blend": "<BlendMode.BLEND_OPAQUE: 0>"
+      }
+    ],
+    "bounds": "(<Struct 'Vector' (0x00000217FED62040) {x: 2917.295074, y: -4387.891996, z: 50.030693}>, <Struct 'Vector' (0x00000217FED62090) {x: 459.777207, y: 380.481850, z: 235.660082}>, 423.736083984375)",
+    "transform": "<Struct 'Transform' (0x00000217FED8C4E0) {rotation: {x: -0.163500, y: 0.687945, z: 0.163500, w: 0.687945}, translation: {x: 2600.000000, y: -4600.000000, z: 122.341138}, scale3d: {x: 0.700367, y: 0.700367, z: 0.700367}}>",
+    "instances": null
+  },
+  {
+    "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1243.StaticMeshComponent0",
+    "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/DeadTree_2.DeadTree_2",
+    "materials": [
+      {
+        "path": "/Game/HypeWorld/Environment/MegaKit/Materiais/MI_MK_Casca_Morta.MI_MK_Casca_Morta",
+        "base": "/Game/HypeWorld/Environment/MegaKit/Materiais/M_HW_Tronco.M_HW_Tronco",
+        "blend": "<BlendMode.BLEND_OPAQUE: 0>"
+      }
+    ],
+    "bounds": "(<Struct 'Vector' (0x00000217FED62090) {x: -3438.855608, y: 3626.398414, z: 7.200004}>, <Struct 'Vector' (0x00000217FED620E0) {x: 583.630081, y: 528.045224, z: 300.569971}>, 540.4493408203125)",
+    "transform": "<Struct 'Transform' (0x00000217FED8C570) {rotation: {x: -0.213119, y: 0.674226, z: 0.213119, w: 0.674226}, translation: {x: -3800.000000, y: 3300.000000, z: 99.427540}, scale3d: {x: 0.893275, y: 0.893275, z: 0.893275}}>",
+    "instances": null
+  }
+]

@@ -1,0 +1,9 @@
+- Referência analisada: 134 quadros, 58,94 FPS, duração 2,27 s; título/UI ocultam parte do efeito.
+- Modelo usado: Energysphere.fbx do arquivo baixado, importado em /Game/HypeWorld/Jutsus/Katon/Modelo; fonte e animações originais preservadas.
+- Corpo oval 1,4×, camada masked turbulenta com erosão, três emissores de ribbons, brasas, fumaça, calor e luz laranja sem sombra; bloom reservado à saída/impacto.
+- Captura real: selo → sopro → voo de 0,90 s → impacto; câmera observadora atrás/acima. Vídeo de 5 s, 1280×720, 30 FPS.
+- Cores médias claro/laranja/vermelho: nossa 26,6/44,0/29,4%; Zenkai 18,3/61,8/19,9%, pelo mesmo classificador em pixels quentes visíveis, excluindo texto/UI/fumaça. Não estima a área escondida pelo título.
+- GTX 1650 4 GB, Alto (sg=2), 1920×1080, 100%: incremento mediano +1,97 e +2,08 ms perto; +1,81 ms longe; margem P95 perto +2,56 ms.
+- Medição A/B contra núcleo opaco simples para preservar oclusão; valores incrementais aproximados, com variância e sem custo trivial do proxy. Meta de 1,5 ms NÃO atingida; explosão não perfilada separadamente.
+- Código compilado; lançamento por slot e chakra 100→70 registrados. Multiplayer e impulso em props não foram revalidados nesta rodada.
+- Ainda fraco: ribbons/fumaça discretos e chama de entrada com menos definição que a referência; falta otimização e acabamento para igualar o Zenkai.

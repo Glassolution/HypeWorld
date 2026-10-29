@@ -1,0 +1,10 @@
+{
+  "seal": "/Game/HypeWorld/Jutsus/Katon/Animacoes/Sasuke/A_Katon_Selo_Tigre.A_Katon_Selo_Tigre",
+  "cast": "/Game/HypeWorld/Jutsus/Katon/Animacoes/Sasuke/A_Katon_Sopro_Sasuke.A_Katon_Sopro_Sasuke",
+  "release_in_cast": 0.375,
+  "release_total": 0.925,
+  "cast_duration": 1.5,
+  "seal_duration": 0.55,
+  "ready_source": "/Game/ANAP/Animations/Base/Base_Anim_Armature_CustomMan_Hand_Idle_Loop.Base_Anim_Armature_CustomMan_Hand_Idle_Loop",
+  "original_pack_edited": false
+}

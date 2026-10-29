@@ -1,0 +1,10 @@
+{
+  "upper_body_source": "ActiveBattleIdle / animated pose from the selected fighting style, including combat trot",
+  "static_ready_override": null,
+  "visible_body": "SK_Shisui",
+  "hidden_driver": "SKM_Quinn_Simple",
+  "driver_tick": "ALWAYS_TICK_POSE_AND_REFRESH_BONES",
+  "body_templates": [
+    "/Game/ThirdPerson/Blueprints/BP_ThirdPersonCharacter.BP_ThirdPersonCharacter_C:Indra_GEN_VARIABLE"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "shadows_restored": true,
+  "fx_hidden_restored": true,
+  "light_distance_restored": true,
+  "toon": "<Struct 'WeightedBlendables' (0x000001751CC44488) {array: ((Weight=1.000000,Object=\"/Script/Engine.MaterialInstanceConstant'/Game/Maps/Tutorial/Tutorial_Assets/Materiais/MI_PP_Personagem.MI_PP_Personagem'\"))}>",
+  "time_override": "0"
+}

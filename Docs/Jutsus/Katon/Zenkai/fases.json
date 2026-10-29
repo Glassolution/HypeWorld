@@ -1,0 +1,30 @@
+{
+  "start_frame": 43,
+  "impact_frame": 70,
+  "flight_seconds": 0.9,
+  "stages": [
+    [
+      "Saida",
+      64,
+      44
+    ],
+    [
+      "Chama estilizada",
+      70,
+      48
+    ],
+    [
+      "Bola viajando",
+      90,
+      58
+    ],
+    [
+      "Impacto",
+      121,
+      72
+    ]
+  ],
+  "reference_fps": 58.94,
+  "reference_frames": 134,
+  "our_fps": 30
+}

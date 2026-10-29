@@ -13,3 +13,10 @@ Saved/
 # Plugins do projeto: mesma regra
 Plugins/**/Binaries/
 Plugins/**/Intermediate/
+
+# Bytecode do Python
+__pycache__/
+*.pyc
+
+# Quadros PNG de teste dos jutsus Katon (~15 GB): ficam só no PC; vídeos e relatórios vão para o git
+Docs/Jutsus/Katon/**/*.png

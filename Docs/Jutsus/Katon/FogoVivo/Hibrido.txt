@@ -1,0 +1,5 @@
+Bola híbrida: malha e material anteriores reativados como núcleo, com a casca antiga e os flipbooks atuais por cima.
+Conjunto visual ampliado em 50%; núcleo/casca ficam a 85% da escala para deixar as chamas aparecerem.
+Contagem de partículas, chakra, cooldown, dano e animações preservados.
+Compilação passou; disparo confirmou Core/Flames visíveis e BodyFlames ativo com escala 1,5.
+O desempenho anterior e os vídeos anteriores não representam esta alteração; não houve novo benchmark.

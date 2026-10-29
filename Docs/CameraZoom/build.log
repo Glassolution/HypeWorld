@@ -1,0 +1,41 @@
+Using bundled DotNet SDK version: 10.0 win-x64
+Running UnrealBuildTool: dotnet "..\..\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.dll" HypeWorldEditor Win64 Development "C:/Users/lucas/Downloads/Hype World/HypeWorld/HypeWorld.uproject" -WaitMutex -NoHotReloadFromIDE
+Log file: C:\Users\lucas\AppData\Local\UnrealBuildTool\Log.txt
+Determining max actions to execute in parallel (6 physical cores, 12 logical cores)
+  Executing up to 6 processes, one per physical core
+Using 'git status' to determine working set for adaptive non-unity build (C:\Users\lucas\Downloads\Hype World\HypeWorld).
+UbaServer - Listening on 0.0.0.0:1345
+UHT compiled-in object format Default
+UHT processed HypeWorldEditor in 5.2008762 seconds (4 generated files written)
+Building HypeWorldEditor...
+===== Toolchain Information =====
+Using ISPC compiler (C:\Program Files\Epic Games\UE_5.8\Engine\Source\ThirdParty\Intel\ISPC\bin\Windows\ispc.exe)
+  Intel(r) Implicit SPMD Program Compiler (Intel(r) ISPC), 1.24.0 (build commit  @ 20250404, LLVM 18.1.2) 
+Using Visual Studio 14.44.35229 toolchain (C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207) and Windows 10.0.22621.0 SDK (C:\Program Files (x86)\Windows Kits\10).
+[Adaptive Build] Excluded from HypeWorld unity file: HypeWorldCharacter.cpp, NinjaFlameOrbit.cpp, NinjaJutsuProjectile.cpp, NinjaEditorTools.cpp, NinjaAnimInstance.cpp, NinjaHUDWidget.cpp
+===== End Toolchain Information =====
+Using Unreal Build Accelerator local executor to run 10 action(s)
+  CPU 6 physical cores, 12 logical cores
+  Memory 15.93 GB physical, 17.31 GB/29.81 GB committed
+  UBA Storage capacity 40 GB
+[1/10] Compile [x64] HypeWorldCharacter.cpp
+[2/10] Compile [x64] Module.HypeWorld.1.cpp
+[3/10] Compile [x64] NinjaAnimInstance.cpp
+[4/10] Compile [x64] Module.HypeWorld.2.cpp
+[5/10] Compile [x64] NinjaFlameOrbit.cpp
+[6/10] Compile [x64] NinjaHUDWidget.cpp
+[7/10] Compile [x64] NinjaJutsuProjectile.cpp
+C:\Users\lucas\Downloads\Hype World\HypeWorld\Source\HypeWorld\Combat\NinjaJutsuProjectile.cpp(445,57): warning C4996: 'UWorld::PostProcessVolumes': Use GetPostProcessVolumeIterator() instead - Please update your code to the new API before upgrading to the next release, otherwise your project will no longer compile.
+		for (IInterface_PostProcessVolume* Volume : GetWorld()->PostProcessVolumes)
+		                                                      ^
+[8/10] Link [x64] UnrealEditor-HypeWorld.lib
+   Criando biblioteca C:/Users/lucas/Downloads/Hype World/HypeWorld/Intermediate/Build/Win64/x64/UnrealEditor/Development/HypeWorld/UnrealEditor-HypeWorld.lib e objeto C:/Users/lucas/Downloads/Hype World/HypeWorld/Intermediate/Build/Win64/x64/UnrealEditor/Development/HypeWorld/UnrealEditor-HypeWorld.exp
+[9/10] Link [x64] UnrealEditor-HypeWorld.dll
+[10/10] WriteMetadata HypeWorldEditor.target [NoUba]
+
+Total time in Unreal Build Accelerator local executor: 118.95 seconds
+Output binary: C:\Program Files\Epic Games\UE_5.8\Engine\Binaries\Win64\UnrealEditor.exe
+
+Result: Succeeded
+Total execution time: 132.18 seconds
+Trace written to file C:\Users\lucas\AppData\Local\UnrealBuildTool\Trace.uba with size 16.5kb

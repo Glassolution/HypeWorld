@@ -1,0 +1,26 @@
+{
+  "body": "Kakashi ANBU uniform, original hands/accessories and rig",
+  "head": "Itachi hairstyle and headband plus neutral unmasked base face",
+  "removed_original_head_triangles": 969,
+  "primitives": 10,
+  "itachi_source": {
+    "extras": {
+      "author": "Tigerar1 (https://sketchfab.com/allanromanreyes)",
+      "license": "SKETCHFAB Standard (https://sketchfab.com/licenses)",
+      "source": "https://sketchfab.com/3d-models/itachi-dce440c42728454f9ca1cdabdf0c5470",
+      "title": "Itachi"
+    },
+    "generator": "Sketchfab-15.83.0",
+    "version": "2.0"
+  },
+  "face_translation_cm": [
+    0,
+    1,
+    11.3
+  ],
+  "hair_translation_cm": [
+    0,
+    0,
+    12.0
+  ]
+}

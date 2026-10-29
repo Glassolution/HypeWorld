@@ -1,0 +1,72 @@
+{
+  "base": {
+    "sg.ResolutionQuality": "100",
+    "sg.ViewDistanceQuality": "2",
+    "sg.AntiAliasingQuality": "1",
+    "sg.ShadowQuality": "2",
+    "sg.GlobalIlluminationQuality": "2",
+    "sg.ReflectionQuality": "2",
+    "sg.PostProcessQuality": "2",
+    "sg.TextureQuality": "2",
+    "sg.EffectsQuality": "2",
+    "sg.FoliageQuality": "2",
+    "sg.ShadingQuality": "2",
+    "sg.LandscapeQuality": "2",
+    "r.ScreenPercentage": "100",
+    "r.AntiAliasingMethod": "4",
+    "r.TSR.ShadingRejection.Flickering": "0",
+    "r.TSR.History.ScreenPercentage": "100",
+    "r.TSR.RejectionAntiAliasingQuality": "1",
+    "r.TSR.History.UpdateQuality": "1",
+    "r.TemporalAA.Quality": "1",
+    "r.TemporalAA.Upsampling": "1",
+    "grass.DensityScale": "0.8",
+    "foliage.DensityScale": "0.8",
+    "r.Shadow.CSM.MaxCascades": "3",
+    "r.Shadow.MaxCSMResolution": "1536",
+    "r.Lumen.FinalGatherMethod": "1",
+    "r.VSync": "0",
+    "t.MaxFPS": "0",
+    "t.OverrideFPS": "0"
+  },
+  "camera": "<Struct 'Vector' (0x00000217FED6FFD0) {x: 0.000000, y: -312.028006, z: 250.352636}>",
+  "rotation": "<Struct 'Rotator' (0x00000217FED6FFD0) {pitch: -15.000000, yaw: 90.000000, roll: 0.000000}>",
+  "disabled": [
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_18",
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_2",
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_3",
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_66",
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_67",
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_68",
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_69",
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1167.StaticMeshComponent0",
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1168.StaticMeshComponent0",
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1169.StaticMeshComponent0",
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1170.StaticMeshComponent0",
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1171.StaticMeshComponent0",
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1172.StaticMeshComponent0",
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1173.StaticMeshComponent0",
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1174.StaticMeshComponent0",
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_221.StaticMeshComponent0",
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_222.StaticMeshComponent0",
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_223.StaticMeshComponent0",
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_224.StaticMeshComponent0"
+  ],
+  "postprocess": {
+    "dynamic_global_illumination_method": "<DynamicGlobalIlluminationMethod.LUMEN: 1>",
+    "override_dynamic_global_illumination_method": "True",
+    "reflection_method": "<ReflectionMethod.SCREEN_SPACE: 2>",
+    "override_reflection_method": "True",
+    "ambient_occlusion_intensity": "0.25"
+  },
+  "skylights": [
+    {
+      "mobility": "<ComponentMobility.MOVABLE: 2>",
+      "intensity": "3.0999999046325684",
+      "cast_shadows": "True",
+      "occlusion_max_distance": "1000.0",
+      "contrast": "0.0",
+      "occlusion_tint": "<Struct 'Color' (0x00000217F4816238) {b: 0, g: 0, r: 0, a: 255}>"
+    }
+  ]
+}

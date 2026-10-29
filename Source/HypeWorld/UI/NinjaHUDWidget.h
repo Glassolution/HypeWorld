@@ -169,6 +169,12 @@ private:
 	/** px da imagem do Felipe -> px do bloco na tela */
 	float K() const { return LifeBlockScale; }
 	UPROPERTY() TObjectPtr<UTextBlock> ComboText;
+	/** Chamas em órbita: contador "Nome n/N" com a barra do tempo embaixo e a mira circular no centro */
+	UPROPERTY() TObjectPtr<UTextBlock> OrbitText;
+	UPROPERTY() TObjectPtr<UProgressBar> OrbitBar;
+	UPROPERTY() TObjectPtr<UImage> OrbitCrosshair;
+	UPROPERTY() TObjectPtr<UImage> OrbitCrosshairDot;
+	int32 ShownOrbitFlames = -1;
 	UPROPERTY() TObjectPtr<UProgressBar> SuperJumpBar;
 	UPROPERTY() TObjectPtr<UCanvasPanelSlot> SuperJumpSlot;
 	UPROPERTY() TObjectPtr<UImage> SuperJumpGlow;

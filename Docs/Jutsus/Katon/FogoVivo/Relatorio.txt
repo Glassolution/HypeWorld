@@ -1,0 +1,10 @@
+Corpo substituído por ~55 chamas vivas, núcleo pequeno, fumaça, brasas e fitas; sem esfera durante o voo.
+Flipbooks aprovados usados com temperatura, fluxo, erosão, recorte e emissão menor à distância; sem solver de fluidos no jogo.
+Slot 1 aceito; chakra 100→70; tentativas durante o selo e o cooldown foram bloqueadas; um único projétil na captura.
+Vídeo real de 5 s a 60 FPS, de trás e acima; prancha de saída, chama inicial, voo e impacto ao lado do Zenkai.
+GTX 1650, Alto, 1920×1080, 100%: custo adicional mediano ~1,85 ms perto (3,3 m) e ~0,49 ms longe (22 m).
+Perto, P95 A/B ~2,34 ms e maior amostra A/B ~2,76 ms; incluem variação estatística do cenário.
+A meta de ~1,5 ms não foi atingida; o processamento temporal ainda pesa. CSVs e método constam em desempenho.json.
+As fitas e a leitura das chamas à distância ainda precisam de refinamento; priorizaria esses pontos e o custo temporal na próxima versão.
+Replicação, dano, animações e HUD preservados; multiplayer com dois clientes não foi revalidado nesta rodada.
+Animações originais não foram alteradas; câmera restaurada e medição encerrada.

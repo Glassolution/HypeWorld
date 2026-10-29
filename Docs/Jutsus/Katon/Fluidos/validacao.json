@@ -1,0 +1,29 @@
+{
+  "Alongada": {
+    "frames_with_density": 64,
+    "mean_temporal_density_difference": 0.010274694301187992,
+    "signed_velocity": true,
+    "png_dimensions": [
+      2048,
+      2048
+    ]
+  },
+  "Redonda": {
+    "frames_with_density": 64,
+    "mean_temporal_density_difference": 0.005163555033504963,
+    "signed_velocity": true,
+    "png_dimensions": [
+      2048,
+      2048
+    ]
+  },
+  "Fumaca": {
+    "frames_with_density": 64,
+    "mean_temporal_density_difference": 0.0029392563737928867,
+    "signed_velocity": true,
+    "png_dimensions": [
+      2048,
+      2048
+    ]
+  }
+}

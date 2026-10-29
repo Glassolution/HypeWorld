@@ -1,0 +1,32 @@
+[
+  {
+    "time": 0,
+    "triangle_intersections": 0,
+    "groups": {},
+    "examples": []
+  },
+  {
+    "time": 0.041666666666666664,
+    "triangle_intersections": 0,
+    "groups": {},
+    "examples": []
+  },
+  {
+    "time": 0.08333333333333333,
+    "triangle_intersections": 0,
+    "groups": {},
+    "examples": []
+  },
+  {
+    "time": 0.125,
+    "triangle_intersections": 0,
+    "groups": {},
+    "examples": []
+  },
+  {
+    "time": 0.3,
+    "triangle_intersections": 0,
+    "groups": {},
+    "examples": []
+  }
+]

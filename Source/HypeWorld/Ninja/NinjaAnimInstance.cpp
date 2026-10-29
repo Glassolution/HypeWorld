@@ -76,8 +76,8 @@ void UNinjaAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		const AHypeWorldCharacter* Ninja = Cast<AHypeWorldCharacter>(Char);
 		const bool bCombatRun = Ninja && Ninja->IsInBattleMode() && ActiveBattleIdle && Move->IsMovingOnGround() && Move->WantsToRun() && !Move->WantsToSprint()
 			&& !Move->IsFocusing() && !Move->IsDashing() && !(Ninja && Ninja->IsAttacking());
-		const float MovingAlpha = FMath::SmoothStep(20.f, 160.f, float(Char->GetVelocity().Size2D()));
-		const float Target = bCombatRun ? MovingAlpha * (1.f - FMath::Clamp(GetSlotMontageGlobalWeight(FName("DefaultSlot")), 0.f, 1.f)) : 0.f;
+		// A prontidão cobre somente o tronco, inclusive na guarda parada; as pernas mantêm a base do estilo.
+		const float Target = bCombatRun ? 1.f - FMath::Clamp(GetSlotMontageGlobalWeight(FName("DefaultSlot")), 0.f, 1.f) : 0.f;
 		CombatAlpha = FMath::FInterpTo(CombatAlpha, Target, DeltaSeconds, CombatBlendSpeed);
 		const float Yaw = Char->GetActorRotation().Yaw;
 		const float YawRate = FMath::FindDeltaAngleDegrees(LastActorYaw, Yaw) / DeltaSeconds;
@@ -326,8 +326,9 @@ void FNinjaAnimInstanceProxy::PreUpdate(UAnimInstance* InAnimInstance, float Del
 		bProceduralPose = Ninja->bProceduralPose;
 		RelaxedHands = Ninja->RelaxedHandsPose;
 		FistHands = Ninja->FistHandsPose;
-		BattleIdle = Ninja->ActiveBattleIdle ? Ninja->ActiveBattleIdle.Get() : Ninja->BattleIdlePose;
-		CombatPose = Ninja->ActiveBattleIdle ? Ninja->ActiveBattleIdle.Get() : Ninja->BattleIdlePose;
+		UAnimSequenceBase* StyleIdle = Ninja->ActiveBattleIdle ? Ninja->ActiveBattleIdle.Get() : Ninja->BattleIdlePose;
+		BattleIdle = StyleIdle;
+		CombatPose = Ninja->CombatReadyPose ? Ninja->CombatReadyPose : StyleIdle;
 		CombatCenterPose = Ninja->CombatRunCenterPose;
 		CombatSpineFromRun = Ninja->CombatSpineFromRun;
 		FistPoseTime = Ninja->FistPoseTime;
@@ -415,8 +416,8 @@ bool FNinjaAnimInstanceProxy::Evaluate_WithRoot(FPoseContext& Output, FAnimNode_
 	}
 	if (InRootNode == GetRootNode())
 	{
-		ApplyCombatReady(Output);
 		ApplyBattleIdle(Output);
+		ApplyCombatReady(Output);
 		ApplyCombatOrientationWarp(Output);
 	}
 	if (InRootNode == GetRootNode() && bProceduralPose)

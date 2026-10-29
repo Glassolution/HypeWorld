@@ -1,0 +1,130 @@
+[
+  {
+    "event": "select_tsr_atual",
+    "time": 0.06418020000091929
+  },
+  {
+    "event": "start_tsr_atual_1",
+    "time": 25.004177700000582
+  },
+  {
+    "event": "stop_tsr_atual_1",
+    "time": 55.013094800000545
+  },
+  {
+    "event": "start_tsr_atual_2",
+    "time": 60.00436040000022
+  },
+  {
+    "event": "stop_tsr_atual_2",
+    "time": 90.02593030000025
+  },
+  {
+    "event": "start_tsr_atual_3",
+    "time": 95.02363040000091
+  },
+  {
+    "event": "stop_tsr_atual_3",
+    "time": 125.01386170000114
+  },
+  {
+    "event": "shot_tsr_atual",
+    "time": 127.02208530000098
+  },
+  {
+    "event": "select_tsr_flickering0",
+    "time": 130.0323485000008
+  },
+  {
+    "event": "start_tsr_flickering0_1",
+    "time": 155.00948620000054
+  },
+  {
+    "event": "stop_tsr_flickering0_1",
+    "time": 185.00884120000046
+  },
+  {
+    "event": "start_tsr_flickering0_2",
+    "time": 190.0201202999997
+  },
+  {
+    "event": "stop_tsr_flickering0_2",
+    "time": 220.01659500000096
+  },
+  {
+    "event": "start_tsr_flickering0_3",
+    "time": 225.03475910000088
+  },
+  {
+    "event": "stop_tsr_flickering0_3",
+    "time": 255.03008520000003
+  },
+  {
+    "event": "shot_tsr_flickering0",
+    "time": 257.0302444000008
+  },
+  {
+    "event": "select_tsr_q1",
+    "time": 260.0099922999998
+  },
+  {
+    "event": "start_tsr_q1_1",
+    "time": 285.03272500000094
+  },
+  {
+    "event": "stop_tsr_q1_1",
+    "time": 315.0171387999999
+  },
+  {
+    "event": "start_tsr_q1_2",
+    "time": 320.02444939999987
+  },
+  {
+    "event": "stop_tsr_q1_2",
+    "time": 350.0297123
+  },
+  {
+    "event": "start_tsr_q1_3",
+    "time": 355.00694400000066
+  },
+  {
+    "event": "stop_tsr_q1_3",
+    "time": 385.00282530000004
+  },
+  {
+    "event": "shot_tsr_q1",
+    "time": 387.0112878
+  },
+  {
+    "event": "select_taa",
+    "time": 390.0256394000007
+  },
+  {
+    "event": "start_taa_1",
+    "time": 415.01515870000003
+  },
+  {
+    "event": "stop_taa_1",
+    "time": 445.0189258999999
+  },
+  {
+    "event": "start_taa_2",
+    "time": 450.00602029999936
+  },
+  {
+    "event": "stop_taa_2",
+    "time": 480.00119240000095
+  },
+  {
+    "event": "start_taa_3",
+    "time": 485.02054880000105
+  },
+  {
+    "event": "stop_taa_3",
+    "time": 515.0169891000005
+  },
+  {
+    "event": "shot_taa",
+    "time": 517.0308592000001
+  }
+]

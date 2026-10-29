@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "<string>", line 26, in measure_tick
+  File "<string>", line 22, in metrics
+AttributeError: 'Quat' object has no attribute 'inverse'

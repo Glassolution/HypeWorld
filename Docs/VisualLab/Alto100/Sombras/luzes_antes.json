@@ -1,0 +1,9 @@
+[
+  {
+    "actor": "DirectionalLight_0",
+    "dynamic_shadow_distance_movable_light": "8000.0",
+    "dynamic_shadow_cascades": "4",
+    "distance_field_shadow_distance": "51200.0",
+    "light_source_angle": "2.5"
+  }
+]

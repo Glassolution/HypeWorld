@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "C:/Users/lucas/Downloads/Hype World/HypeWorld/Docs/VisualLab/Alto60/aplicar_base_e_criar_lab.py", line 40, in <module>
+    assert ES.save_current_level_as(D+'/L_Base_Aprovada')
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'LevelEditorSubsystem' object has no attribute 'save_current_level_as'

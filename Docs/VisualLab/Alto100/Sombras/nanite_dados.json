@@ -1,0 +1,2626 @@
+{
+  "meshes": {
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.WaterBodyRiver_2.WaterInfoMesh_1": {
+      "nanite_triangles": 0,
+      "nanite_vertices": 0
+    },
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.WaterBodyRiver_2.WaterInfoDilatedMesh_1": {
+      "nanite_triangles": 0,
+      "nanite_vertices": 0
+    },
+    "/Water/Meshes/RiverMesh.RiverMesh": {
+      "nanite_triangles": 0,
+      "nanite_vertices": 0
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/CommonTree_3.CommonTree_3": {
+      "nanite_triangles": 3505,
+      "nanite_vertices": 4699
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/CommonTree_1.CommonTree_1": {
+      "nanite_triangles": 6265,
+      "nanite_vertices": 6637
+    },
+    "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_2.SM_Stone_2": {
+      "nanite_triangles": 0,
+      "nanite_vertices": 0
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/TwistedTree_1.TwistedTree_1": {
+      "nanite_triangles": 9564,
+      "nanite_vertices": 9337
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/TwistedTree_4.TwistedTree_4": {
+      "nanite_triangles": 9600,
+      "nanite_vertices": 9892
+    },
+    "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Flower_Clump_3.SM_Fol_Flower_Clump_3": {
+      "nanite_triangles": 0,
+      "nanite_vertices": 0
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/Clover_1.Clover_1": {
+      "nanite_triangles": 379,
+      "nanite_vertices": 267
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/Plant_7.Plant_7": {
+      "nanite_triangles": 48,
+      "nanite_vertices": 54
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/Bush_Common_Flowers.Bush_Common_Flowers": {
+      "nanite_triangles": 1368,
+      "nanite_vertices": 2304
+    },
+    "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Bush_2.SM_Fol_Bush_2": {
+      "nanite_triangles": 0,
+      "nanite_vertices": 0
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/Plant_1_Big.Plant_1_Big": {
+      "nanite_triangles": 360,
+      "nanite_vertices": 324
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/Plant_1.Plant_1": {
+      "nanite_triangles": 120,
+      "nanite_vertices": 108
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/Mushroom_Common.Mushroom_Common": {
+      "nanite_triangles": 880,
+      "nanite_vertices": 555
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/Flower_4_Group.Flower_4_Group": {
+      "nanite_triangles": 1690,
+      "nanite_vertices": 1293
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/Flower_3_Group.Flower_3_Group": {
+      "nanite_triangles": 755,
+      "nanite_vertices": 549
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/CommonTree_2.CommonTree_2": {
+      "nanite_triangles": 5648,
+      "nanite_vertices": 5453
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/CommonTree_5.CommonTree_5": {
+      "nanite_triangles": 3182,
+      "nanite_vertices": 3790
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/CommonTree_4.CommonTree_4": {
+      "nanite_triangles": 4066,
+      "nanite_vertices": 3678
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/Fern_1.Fern_1": {
+      "nanite_triangles": 288,
+      "nanite_vertices": 234
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/Rock_Medium_2.Rock_Medium_2": {
+      "nanite_triangles": 244,
+      "nanite_vertices": 171
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/Rock_Medium_1.Rock_Medium_1": {
+      "nanite_triangles": 342,
+      "nanite_vertices": 230
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/Rock_Medium_3.Rock_Medium_3": {
+      "nanite_triangles": 522,
+      "nanite_vertices": 351
+    },
+    "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Bush_1.SM_Fol_Bush_1": {
+      "nanite_triangles": 0,
+      "nanite_vertices": 0
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/Bush_Common.Bush_Common": {
+      "nanite_triangles": 900,
+      "nanite_vertices": 1800
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/TwistedTree_5.TwistedTree_5": {
+      "nanite_triangles": 10104,
+      "nanite_vertices": 10661
+    },
+    "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Flower_Clump_2.SM_Fol_Flower_Clump_2": {
+      "nanite_triangles": 0,
+      "nanite_vertices": 0
+    },
+    "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Flower_Clump_1.SM_Fol_Flower_Clump_1": {
+      "nanite_triangles": 0,
+      "nanite_vertices": 0
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/TwistedTree_3.TwistedTree_3": {
+      "nanite_triangles": 10089,
+      "nanite_vertices": 10171
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/Pebble_Round_2.Pebble_Round_2": {
+      "nanite_triangles": 114,
+      "nanite_vertices": 80
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/Pebble_Round_1.Pebble_Round_1": {
+      "nanite_triangles": 136,
+      "nanite_vertices": 93
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/Pebble_Round_3.Pebble_Round_3": {
+      "nanite_triangles": 128,
+      "nanite_vertices": 85
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/Pebble_Round_5.Pebble_Round_5": {
+      "nanite_triangles": 124,
+      "nanite_vertices": 85
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/Pebble_Round_4.Pebble_Round_4": {
+      "nanite_triangles": 126,
+      "nanite_vertices": 85
+    },
+    "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_1.SM_Stone_1": {
+      "nanite_triangles": 0,
+      "nanite_vertices": 0
+    },
+    "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1": {
+      "nanite_triangles": 0,
+      "nanite_vertices": 0
+    },
+    "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Placeholder_Ponte10.SM_Placeholder_Ponte10": {
+      "nanite_triangles": 0,
+      "nanite_vertices": 0
+    },
+    "/Engine/BasicShapes/Cylinder.Cylinder": {
+      "nanite_triangles": 0,
+      "nanite_vertices": 0
+    },
+    "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Placeholder_PosteLanterna.SM_Placeholder_PosteLanterna": {
+      "nanite_triangles": 0,
+      "nanite_vertices": 0
+    },
+    "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Zen_Tronco.SM_Zen_Tronco": {
+      "nanite_triangles": 0,
+      "nanite_vertices": 0
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/DeadTree_2.DeadTree_2": {
+      "nanite_triangles": 6557,
+      "nanite_vertices": 4339
+    },
+    "/Game/HypeWorld/Environment/MegaKit/Meshes/DeadTree_5.DeadTree_5": {
+      "nanite_triangles": 5648,
+      "nanite_vertices": 3729
+    },
+    "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Placeholder_Barril.SM_Placeholder_Barril": {
+      "nanite_triangles": 0,
+      "nanite_vertices": 0
+    },
+    "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Placeholder_Toco.SM_Placeholder_Toco": {
+      "nanite_triangles": 0,
+      "nanite_vertices": 0
+    },
+    "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Placeholder_Portal.SM_Placeholder_Portal": {
+      "nanite_triangles": 0,
+      "nanite_vertices": 0
+    },
+    "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.WaterBodyRiver_2.WaterBodyMesh_1": {
+      "nanite_triangles": 0,
+      "nanite_vertices": 0
+    },
+    "/Engine/EditorMeshes/MatineeCam_SM.MatineeCam_SM": {
+      "nanite_triangles": 0,
+      "nanite_vertices": 0
+    },
+    "/Engine/BasicShapes/Plane.Plane": {
+      "nanite_triangles": 0,
+      "nanite_vertices": 0
+    },
+    "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_1.SM_Fol_Grass_Clump_1": {
+      "nanite_triangles": 0,
+      "nanite_vertices": 0
+    },
+    "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_2.SM_Fol_Grass_Clump_2": {
+      "nanite_triangles": 0,
+      "nanite_vertices": 0
+    },
+    "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_3.SM_Fol_Grass_Clump_3": {
+      "nanite_triangles": 0,
+      "nanite_vertices": 0
+    },
+    "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_4.SM_Fol_Grass_Clump_4": {
+      "nanite_triangles": 0,
+      "nanite_vertices": 0
+    },
+    "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_5.SM_Fol_Grass_Clump_5": {
+      "nanite_triangles": 0,
+      "nanite_vertices": 0
+    }
+  },
+  "components": [
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.WaterBodyRiver_2.WaterInfoMeshComponent",
+      "mesh": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.WaterBodyRiver_2.WaterInfoMesh_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.WaterBodyRiver_2.DilatedWaterInfoMeshComponent",
+      "mesh": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.WaterBodyRiver_2.WaterInfoDilatedMesh_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.WaterBodyRiver_2.SplineMeshComponent_0",
+      "mesh": "/Water/Meshes/RiverMesh.RiverMesh",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.WaterBodyRiver_2.SplineMeshComponent_1",
+      "mesh": "/Water/Meshes/RiverMesh.RiverMesh",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.WaterBodyRiver_2.SplineMeshComponent_10",
+      "mesh": "/Water/Meshes/RiverMesh.RiverMesh",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.WaterBodyRiver_2.SplineMeshComponent_11",
+      "mesh": "/Water/Meshes/RiverMesh.RiverMesh",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.WaterBodyRiver_2.SplineMeshComponent_2",
+      "mesh": "/Water/Meshes/RiverMesh.RiverMesh",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.WaterBodyRiver_2.SplineMeshComponent_3",
+      "mesh": "/Water/Meshes/RiverMesh.RiverMesh",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.WaterBodyRiver_2.SplineMeshComponent_4",
+      "mesh": "/Water/Meshes/RiverMesh.RiverMesh",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.WaterBodyRiver_2.SplineMeshComponent_5",
+      "mesh": "/Water/Meshes/RiverMesh.RiverMesh",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.WaterBodyRiver_2.SplineMeshComponent_6",
+      "mesh": "/Water/Meshes/RiverMesh.RiverMesh",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.WaterBodyRiver_2.SplineMeshComponent_7",
+      "mesh": "/Water/Meshes/RiverMesh.RiverMesh",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.WaterBodyRiver_2.SplineMeshComponent_8",
+      "mesh": "/Water/Meshes/RiverMesh.RiverMesh",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.WaterBodyRiver_2.SplineMeshComponent_9",
+      "mesh": "/Water/Meshes/RiverMesh.RiverMesh",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_0",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/CommonTree_3.CommonTree_3",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_1",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/CommonTree_1.CommonTree_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_10",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_2.SM_Stone_2",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_11",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/TwistedTree_1.TwistedTree_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_12",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/TwistedTree_4.TwistedTree_4",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_13",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Flower_Clump_3.SM_Fol_Flower_Clump_3",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_15",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Clover_1.Clover_1",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_17",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Plant_7.Plant_7",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_18",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Bush_Common_Flowers.Bush_Common_Flowers",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_2",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Bush_2.SM_Fol_Bush_2",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_21",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Plant_1_Big.Plant_1_Big",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_25",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Plant_1.Plant_1",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_28",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Mushroom_Common.Mushroom_Common",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_3",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Bush_2.SM_Fol_Bush_2",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_35",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Flower_4_Group.Flower_4_Group",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_36",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Flower_3_Group.Flower_3_Group",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_4",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/CommonTree_2.CommonTree_2",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_5",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/CommonTree_5.CommonTree_5",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_6",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/CommonTree_4.CommonTree_4",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_62",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Fern_1.Fern_1",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_63",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Rock_Medium_2.Rock_Medium_2",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_64",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Rock_Medium_1.Rock_Medium_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_65",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Rock_Medium_3.Rock_Medium_3",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_66",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Bush_1.SM_Fol_Bush_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_67",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Bush_Common_Flowers.Bush_Common_Flowers",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_68",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Bush_1.SM_Fol_Bush_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_69",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Bush_Common.Bush_Common",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_7",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/TwistedTree_5.TwistedTree_5",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_75",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Flower_Clump_2.SM_Fol_Flower_Clump_2",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_76",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Flower_Clump_1.SM_Fol_Flower_Clump_1",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_8",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/TwistedTree_3.TwistedTree_3",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_82",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Pebble_Round_2.Pebble_Round_2",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_83",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Pebble_Round_1.Pebble_Round_1",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_84",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Pebble_Round_3.Pebble_Round_3",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_85",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Pebble_Round_5.Pebble_Round_5",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_86",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Pebble_Round_4.Pebble_Round_4",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_9",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_1.SM_Stone_1",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1000.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1001.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1002.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1003.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1004.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1005.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1006.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1007.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1008.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1009.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1010.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1011.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1012.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1013.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1014.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1015.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1016.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1017.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1018.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1019.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1020.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1021.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1022.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1023.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1024.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1025.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1026.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1027.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1028.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1029.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1030.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1031.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1032.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1033.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1034.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1035.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1036.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1037.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1038.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1039.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1040.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1041.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1042.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1043.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1044.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1045.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1046.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1047.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1048.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1049.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1050.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1051.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1052.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1053.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1054.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1055.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1056.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1057.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1058.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1059.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1060.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1061.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1062.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1063.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1064.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1065.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1066.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1067.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1068.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1069.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1070.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1071.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1072.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1073.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1074.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1075.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1076.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1077.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1078.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1079.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1080.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1081.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1082.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1083.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1084.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1085.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1086.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1087.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1088.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1089.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1090.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1091.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1092.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1093.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1094.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1095.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1096.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1097.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1098.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1099.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1100.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1101.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1102.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1103.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1104.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1105.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1106.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1107.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1108.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1109.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1110.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1111.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1112.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1113.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1114.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1115.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1116.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1117.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1118.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1119.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1120.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1121.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1122.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1123.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1124.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1125.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1126.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1127.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1128.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1129.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1130.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1131.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1132.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1133.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1134.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1135.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1136.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1137.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1138.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1139.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1140.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1141.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1142.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1143.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1144.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1145.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1146.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1147.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1148.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1149.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1150.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1151.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1152.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1153.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1154.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1155.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1156.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1157.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1158.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1159.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1160.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1161.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1162.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1163.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1164.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1165.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1166.StaticMeshComponent0",
+      "mesh": "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Placeholder_Ponte10.SM_Placeholder_Ponte10",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1167.StaticMeshComponent0",
+      "mesh": "/Engine/BasicShapes/Cylinder.Cylinder",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1168.StaticMeshComponent0",
+      "mesh": "/Engine/BasicShapes/Cylinder.Cylinder",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1169.StaticMeshComponent0",
+      "mesh": "/Engine/BasicShapes/Cylinder.Cylinder",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1170.StaticMeshComponent0",
+      "mesh": "/Engine/BasicShapes/Cylinder.Cylinder",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1171.StaticMeshComponent0",
+      "mesh": "/Engine/BasicShapes/Cylinder.Cylinder",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1172.StaticMeshComponent0",
+      "mesh": "/Engine/BasicShapes/Cylinder.Cylinder",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1173.StaticMeshComponent0",
+      "mesh": "/Engine/BasicShapes/Cylinder.Cylinder",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1174.StaticMeshComponent0",
+      "mesh": "/Engine/BasicShapes/Cylinder.Cylinder",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1175.StaticMeshComponent0",
+      "mesh": "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Placeholder_PosteLanterna.SM_Placeholder_PosteLanterna",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1176.StaticMeshComponent0",
+      "mesh": "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Placeholder_PosteLanterna.SM_Placeholder_PosteLanterna",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1177.StaticMeshComponent0",
+      "mesh": "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Placeholder_PosteLanterna.SM_Placeholder_PosteLanterna",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1178.StaticMeshComponent0",
+      "mesh": "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Placeholder_PosteLanterna.SM_Placeholder_PosteLanterna",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1219.StaticMeshComponent0",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Rock_Medium_3.Rock_Medium_3",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1220.StaticMeshComponent0",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Rock_Medium_1.Rock_Medium_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1221.StaticMeshComponent0",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Rock_Medium_1.Rock_Medium_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1222.StaticMeshComponent0",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Rock_Medium_3.Rock_Medium_3",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1223.StaticMeshComponent0",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Rock_Medium_3.Rock_Medium_3",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1224.StaticMeshComponent0",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Rock_Medium_1.Rock_Medium_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1225.StaticMeshComponent0",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Rock_Medium_2.Rock_Medium_2",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1226.StaticMeshComponent0",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Rock_Medium_3.Rock_Medium_3",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1227.StaticMeshComponent0",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Rock_Medium_3.Rock_Medium_3",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1228.StaticMeshComponent0",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Rock_Medium_1.Rock_Medium_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1229.StaticMeshComponent0",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Rock_Medium_3.Rock_Medium_3",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1230.StaticMeshComponent0",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Rock_Medium_3.Rock_Medium_3",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1231.StaticMeshComponent0",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Rock_Medium_3.Rock_Medium_3",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1232.StaticMeshComponent0",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Rock_Medium_2.Rock_Medium_2",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1233.StaticMeshComponent0",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Rock_Medium_2.Rock_Medium_2",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1234.StaticMeshComponent0",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Rock_Medium_1.Rock_Medium_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1235.StaticMeshComponent0",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/Rock_Medium_2.Rock_Medium_2",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1236.StaticMeshComponent0",
+      "mesh": "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Zen_Tronco.SM_Zen_Tronco",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1237.StaticMeshComponent0",
+      "mesh": "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Zen_Tronco.SM_Zen_Tronco",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1238.StaticMeshComponent0",
+      "mesh": "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Zen_Tronco.SM_Zen_Tronco",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1239.StaticMeshComponent0",
+      "mesh": "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Zen_Tronco.SM_Zen_Tronco",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1240.StaticMeshComponent0",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/DeadTree_2.DeadTree_2",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1241.StaticMeshComponent0",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/DeadTree_5.DeadTree_5",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1242.StaticMeshComponent0",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/DeadTree_2.DeadTree_2",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_1243.StaticMeshComponent0",
+      "mesh": "/Game/HypeWorld/Environment/MegaKit/Meshes/DeadTree_2.DeadTree_2",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_221.StaticMeshComponent0",
+      "mesh": "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Placeholder_Barril.SM_Placeholder_Barril",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_222.StaticMeshComponent0",
+      "mesh": "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Placeholder_Barril.SM_Placeholder_Barril",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_223.StaticMeshComponent0",
+      "mesh": "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Placeholder_Barril.SM_Placeholder_Barril",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_224.StaticMeshComponent0",
+      "mesh": "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Placeholder_Barril.SM_Placeholder_Barril",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_225.StaticMeshComponent0",
+      "mesh": "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Placeholder_Toco.SM_Placeholder_Toco",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_226.StaticMeshComponent0",
+      "mesh": "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Placeholder_Toco.SM_Placeholder_Toco",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_227.StaticMeshComponent0",
+      "mesh": "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Placeholder_Toco.SM_Placeholder_Toco",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_228.StaticMeshComponent0",
+      "mesh": "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Placeholder_Toco.SM_Placeholder_Toco",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_958.StaticMeshComponent0",
+      "mesh": "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Placeholder_Portal.SM_Placeholder_Portal",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_959.StaticMeshComponent0",
+      "mesh": "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Placeholder_PosteLanterna.SM_Placeholder_PosteLanterna",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_960.StaticMeshComponent0",
+      "mesh": "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Placeholder_PosteLanterna.SM_Placeholder_PosteLanterna",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_973.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_974.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_975.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_976.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_977.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_978.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_979.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_980.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_981.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_982.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_983.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_984.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_985.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_986.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_987.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_988.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_989.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_990.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_991.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_992.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_993.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_994.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_995.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_996.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_997.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_998.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.StaticMeshActor_999.StaticMeshComponent0",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1.SM_Stone_Boulder_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.WaterBodyRiver_2.WaterBodyStaticMeshComponent_0",
+      "mesh": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.WaterBodyRiver_2.WaterBodyMesh_1",
+      "disallow_nanite": false,
+      "casts": true
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.CameraActor_0.CameraProxyMeshComponent_0",
+      "mesh": "/Engine/EditorMeshes/MatineeCam_SM.MatineeCam_SM",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.CameraActor_1.CameraProxyMeshComponent_0",
+      "mesh": "/Engine/EditorMeshes/MatineeCam_SM.MatineeCam_SM",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.CameraProxyMeshComponent_0",
+      "mesh": "/Engine/EditorMeshes/MatineeCam_SM.MatineeCam_SM",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_0",
+      "mesh": "/Engine/BasicShapes/Plane.Plane",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_1",
+      "mesh": "/Engine/BasicShapes/Plane.Plane",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_2",
+      "mesh": "/Engine/BasicShapes/Plane.Plane",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_3",
+      "mesh": "/Engine/BasicShapes/Plane.Plane",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_4",
+      "mesh": "/Engine/BasicShapes/Plane.Plane",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_5",
+      "mesh": "/Engine/BasicShapes/Plane.Plane",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_6",
+      "mesh": "/Engine/BasicShapes/Plane.Plane",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_7",
+      "mesh": "/Engine/BasicShapes/Plane.Plane",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_8",
+      "mesh": "/Engine/BasicShapes/Plane.Plane",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_9",
+      "mesh": "/Engine/BasicShapes/Plane.Plane",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_10",
+      "mesh": "/Engine/BasicShapes/Plane.Plane",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_11",
+      "mesh": "/Engine/BasicShapes/Plane.Plane",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_12",
+      "mesh": "/Engine/BasicShapes/Plane.Plane",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_13",
+      "mesh": "/Engine/BasicShapes/Plane.Plane",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_14",
+      "mesh": "/Engine/BasicShapes/Plane.Plane",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_15",
+      "mesh": "/Engine/BasicShapes/Plane.Plane",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.BP_ThirdPersonCharacter_C_0.StaticMeshComponent_16",
+      "mesh": "/Engine/BasicShapes/Plane.Plane",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_7",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_1.SM_Fol_Grass_Clump_1",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_8",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_2.SM_Fol_Grass_Clump_2",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_9",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_3.SM_Fol_Grass_Clump_3",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_10",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_1.SM_Fol_Grass_Clump_1",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_11",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_2.SM_Fol_Grass_Clump_2",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_12",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_3.SM_Fol_Grass_Clump_3",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_13",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_1.SM_Fol_Grass_Clump_1",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_14",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_2.SM_Fol_Grass_Clump_2",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_15",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_3.SM_Fol_Grass_Clump_3",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_16",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_4.SM_Fol_Grass_Clump_4",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_17",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_5.SM_Fol_Grass_Clump_5",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_18",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_1.SM_Fol_Grass_Clump_1",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_19",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_2.SM_Fol_Grass_Clump_2",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_20",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_3.SM_Fol_Grass_Clump_3",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_21",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_4.SM_Fol_Grass_Clump_4",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_22",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_5.SM_Fol_Grass_Clump_5",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_23",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_1.SM_Fol_Grass_Clump_1",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_24",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_2.SM_Fol_Grass_Clump_2",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_25",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_3.SM_Fol_Grass_Clump_3",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_26",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_1.SM_Fol_Grass_Clump_1",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_27",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_2.SM_Fol_Grass_Clump_2",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_28",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_3.SM_Fol_Grass_Clump_3",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_29",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_1.SM_Fol_Grass_Clump_1",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_30",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_2.SM_Fol_Grass_Clump_2",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_31",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_3.SM_Fol_Grass_Clump_3",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_32",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_4.SM_Fol_Grass_Clump_4",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_33",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_5.SM_Fol_Grass_Clump_5",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_34",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_1.SM_Fol_Grass_Clump_1",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_35",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_2.SM_Fol_Grass_Clump_2",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_36",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_3.SM_Fol_Grass_Clump_3",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_37",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_4.SM_Fol_Grass_Clump_4",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_38",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_5.SM_Fol_Grass_Clump_5",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_39",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_1.SM_Fol_Grass_Clump_1",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_40",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_2.SM_Fol_Grass_Clump_2",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_41",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_3.SM_Fol_Grass_Clump_3",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_42",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_4.SM_Fol_Grass_Clump_4",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_43",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_5.SM_Fol_Grass_Clump_5",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_44",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_1.SM_Fol_Grass_Clump_1",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_45",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_2.SM_Fol_Grass_Clump_2",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_46",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_3.SM_Fol_Grass_Clump_3",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_47",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_4.SM_Fol_Grass_Clump_4",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_48",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_5.SM_Fol_Grass_Clump_5",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_49",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_1.SM_Fol_Grass_Clump_1",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_50",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_2.SM_Fol_Grass_Clump_2",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_51",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_3.SM_Fol_Grass_Clump_3",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_52",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_4.SM_Fol_Grass_Clump_4",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_53",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_5.SM_Fol_Grass_Clump_5",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_54",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_1.SM_Fol_Grass_Clump_1",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_55",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_2.SM_Fol_Grass_Clump_2",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_56",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_3.SM_Fol_Grass_Clump_3",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_57",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_4.SM_Fol_Grass_Clump_4",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_58",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_5.SM_Fol_Grass_Clump_5",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_59",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_1.SM_Fol_Grass_Clump_1",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_60",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_2.SM_Fol_Grass_Clump_2",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_61",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_3.SM_Fol_Grass_Clump_3",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_62",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_4.SM_Fol_Grass_Clump_4",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_63",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_5.SM_Fol_Grass_Clump_5",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_64",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_1.SM_Fol_Grass_Clump_1",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_65",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_2.SM_Fol_Grass_Clump_2",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_66",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_3.SM_Fol_Grass_Clump_3",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_67",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_5.SM_Fol_Grass_Clump_5",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_68",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_1.SM_Fol_Grass_Clump_1",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_69",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_2.SM_Fol_Grass_Clump_2",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_70",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_3.SM_Fol_Grass_Clump_3",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_71",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_4.SM_Fol_Grass_Clump_4",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_72",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_5.SM_Fol_Grass_Clump_5",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_73",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_1.SM_Fol_Grass_Clump_1",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_74",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_2.SM_Fol_Grass_Clump_2",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_75",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_3.SM_Fol_Grass_Clump_3",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_76",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_4.SM_Fol_Grass_Clump_4",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_77",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_5.SM_Fol_Grass_Clump_5",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_78",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_1.SM_Fol_Grass_Clump_1",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_79",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_2.SM_Fol_Grass_Clump_2",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_80",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_3.SM_Fol_Grass_Clump_3",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_81",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_4.SM_Fol_Grass_Clump_4",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_82",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_5.SM_Fol_Grass_Clump_5",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_83",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_1.SM_Fol_Grass_Clump_1",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_84",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_2.SM_Fol_Grass_Clump_2",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_85",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_3.SM_Fol_Grass_Clump_3",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_86",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_5.SM_Fol_Grass_Clump_5",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_87",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_4.SM_Fol_Grass_Clump_4",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_88",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_5.SM_Fol_Grass_Clump_5",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_89",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_5.SM_Fol_Grass_Clump_5",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_90",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_4.SM_Fol_Grass_Clump_4",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_91",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_5.SM_Fol_Grass_Clump_5",
+      "disallow_nanite": false,
+      "casts": false
+    },
+    {
+      "component": "/Game/HypeWorld/VisualLab/Grama/L_Grama_Baseline.L_Grama_Baseline:PersistentLevel.Landscape_5.GrassInstancedStaticMeshComponent_92",
+      "mesh": "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Foliage/SM_Fol_Grass_Clump_5.SM_Fol_Grass_Clump_5",
+      "disallow_nanite": false,
+      "casts": false
+    }
+  ]
+}

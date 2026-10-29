@@ -1,0 +1,146 @@
+[
+  {
+    "event": "select_tsr_q1",
+    "time": 0.008138400000007096
+  },
+  {
+    "event": "start_tsr_q1_1",
+    "time": 30.014420800000153
+  },
+  {
+    "event": "stop",
+    "time": 60.009630400000106
+  },
+  {
+    "event": "start_tsr_q1_2",
+    "time": 65.02638899999988
+  },
+  {
+    "event": "stop",
+    "time": 95.02624200000014
+  },
+  {
+    "event": "start_tsr_q1_3",
+    "time": 100.00781519999987
+  },
+  {
+    "event": "stop",
+    "time": 130.01303859999985
+  },
+  {
+    "event": "shot_tsr_q1",
+    "time": 133.01138500000002
+  },
+  {
+    "event": "profile_tsr_q1",
+    "time": 137.0037777
+  },
+  {
+    "event": "select_copas_opacas",
+    "time": 145.02770269999996
+  },
+  {
+    "event": "start_copas_opacas_1",
+    "time": 175.02222099999994
+  },
+  {
+    "event": "stop",
+    "time": 205.01708179999991
+  },
+  {
+    "event": "start_copas_opacas_2",
+    "time": 210.01080680000018
+  },
+  {
+    "event": "stop",
+    "time": 240.0029689999999
+  },
+  {
+    "event": "start_copas_opacas_3",
+    "time": 245.01155249999988
+  },
+  {
+    "event": "stop",
+    "time": 275.0121869000002
+  },
+  {
+    "event": "shot_copas_opacas",
+    "time": 278.01442169999996
+  },
+  {
+    "event": "profile_copas_opacas",
+    "time": 282.01787560000025
+  },
+  {
+    "event": "select_fsr_native",
+    "time": 290.0232186999999
+  },
+  {
+    "event": "start_fsr_native_1",
+    "time": 320.0010540999999
+  },
+  {
+    "event": "stop",
+    "time": 350.02602189999993
+  },
+  {
+    "event": "start_fsr_native_2",
+    "time": 355.0092751999998
+  },
+  {
+    "event": "stop",
+    "time": 385.00898519999987
+  },
+  {
+    "event": "start_fsr_native_3",
+    "time": 390.0202449000001
+  },
+  {
+    "event": "stop",
+    "time": 420.0262921000001
+  },
+  {
+    "event": "shot_fsr_native",
+    "time": 423.0066435000001
+  },
+  {
+    "event": "profile_fsr_native",
+    "time": 427.00638920000006
+  },
+  {
+    "event": "select_combinacao",
+    "time": 435.01017220000017
+  },
+  {
+    "event": "start_combinacao_1",
+    "time": 465.0165479
+  },
+  {
+    "event": "stop",
+    "time": 495.00746790000017
+  },
+  {
+    "event": "start_combinacao_2",
+    "time": 500.00213439999993
+  },
+  {
+    "event": "stop",
+    "time": 530.0054238
+  },
+  {
+    "event": "start_combinacao_3",
+    "time": 535.0030402
+  },
+  {
+    "event": "stop",
+    "time": 565.0034550000003
+  },
+  {
+    "event": "shot_combinacao",
+    "time": 568.0068251
+  },
+  {
+    "event": "profile_combinacao",
+    "time": 572.0252057999999
+  }
+]

@@ -1,0 +1,19 @@
+{
+  "camera_zoom_default": "450.0",
+  "camera_zoom_min": "200.0",
+  "camera_zoom_max": "800.0",
+  "camera_zoom_step": "60.0",
+  "camera_zoom_speed": "8.0",
+  "camera_target_offset": "<Struct 'Vector' (0x000001B152593C10) {x: 0.000000, y: 0.000000, z: 60.000000}>",
+  "camera_socket_offset": "<Struct 'Vector' (0x000001B152593C60) {x: 0.000000, y: 0.000000, z: 40.000000}>",
+  "camera_initial_pitch": "-15.0",
+  "camera_pitch_min": "-60.0",
+  "camera_pitch_max": "30.0",
+  "camera_fov": "80.0",
+  "camera_lag_speed": "12.0",
+  "camera_probe_size": "12.0",
+  "camera_use_pawn_control_rotation": "True",
+  "camera_lag_enabled": "True",
+  "camera_rotation_lag_enabled": "False",
+  "camera_collision_test": "True"
+}

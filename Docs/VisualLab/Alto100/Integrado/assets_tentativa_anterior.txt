@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "C:/Users/lucas/Downloads/Hype World/HypeWorld/Docs/VisualLab/Alto100/Integrado/criar_assets.py", line 42, in <module>
+    copied=clone_chain(AL.load_asset(m['path']))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:/Users/lucas/Downloads/Hype World/HypeWorld/Docs/VisualLab/Alto100/Integrado/criar_assets.py", line 33, in clone_chain
+    else:ML.set_material_instance_parent(obj,clone_chain(src.get_editor_property('parent')));ML.update_material_instance(obj)
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:/Users/lucas/Downloads/Hype World/HypeWorld/Docs/VisualLab/Alto100/Integrado/criar_assets.py", line 32, in clone_chain
+    if isinstance(obj,unreal.Material):gradient(obj)
+                                       ^^^^^^^^^^^^^
+  File "C:/Users/lucas/Downloads/Hype World/HypeWorld/Docs/VisualLab/Alto100/Integrado/criar_assets.py", line 18, in gradient
+    code.set_editor_property('inputs',[unreal.CustomInput(input_name=n) for n in ['Local','BMin','BMax']])
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:/Users/lucas/Downloads/Hype World/HypeWorld/Docs/VisualLab/Alto100/Integrado/criar_assets.py", line 18, in <listcomp>
+    code.set_editor_property('inputs',[unreal.CustomInput(input_name=n) for n in ['Local','BMin','BMax']])
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: call() takes at most 0 arguments (1 given)
