@@ -1,0 +1,18 @@
+{
+  "build": "Result: Succeeded",
+  "visual_review": "Identidade, Aparência, Estilo e Confirmar renderizados; símbolo de seleção conferido com fallback da Unreal",
+  "interactions": [
+    {
+      "labels_after_sliders": [
+        "175 cm",
+        "62%"
+      ]
+    },
+    {
+      "labels_after_arrows": [
+        "174 cm",
+        "57%"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,722 @@
+[
+  {
+    "id": "Hair_akatsuki_hat",
+    "bones": 286,
+    "origin_cm": [
+      0.15056800842285156,
+      -5.031048774719238,
+      161.65867614746094
+    ],
+    "extent_cm": [
+      11.598421096801758,
+      17.469611167907715,
+      19.645156860351562
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_akatsuki_hat/MI_Hair_akatsuki_hat.MI_Hair_akatsuki_hat",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_asura",
+    "bones": 286,
+    "origin_cm": [
+      0.2046189308166504,
+      -1.95589017868042,
+      172.00933074951172
+    ],
+    "extent_cm": [
+      12.397242069244385,
+      13.298545360565186,
+      16.562461853027344
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_asura/MI_Hair_asura.MI_Hair_asura",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_b536425a98f64881bd78a48eb127072c",
+    "bones": 286,
+    "origin_cm": [
+      0.016387462615966797,
+      -1.6416316032409668,
+      171.62623596191406
+    ],
+    "extent_cm": [
+      10.627312183380127,
+      12.112462520599365,
+      13.494888305664062
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_b536425a98f64881bd78a48eb127072c/MI_Hair_b536425a98f64881bd78a48eb127072c.MI_Hair_b536425a98f64881bd78a48eb127072c",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_boruto",
+    "bones": 286,
+    "origin_cm": [
+      0.2997279167175293,
+      -3.13104248046875,
+      176.39435577392578
+    ],
+    "extent_cm": [
+      15.222209453582764,
+      16.487281799316406,
+      14.409278869628906
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_boruto/MI_Hair_boruto.MI_Hair_boruto",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_gaara_straight",
+    "bones": 286,
+    "origin_cm": [
+      0.016332149505615234,
+      -1.5393481254577637,
+      170.24629974365234
+    ],
+    "extent_cm": [
+      10.722642421722412,
+      12.419653415679932,
+      15.142005920410156
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_gaara_straight/MI_Hair_gaara_straight.MI_Hair_gaara_straight",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_haku_long",
+    "bones": 286,
+    "origin_cm": [
+      0.01633167266845703,
+      -4.523159980773926,
+      153.46743774414062
+    ],
+    "extent_cm": [
+      11.961108207702637,
+      26.384957313537598,
+      31.490524291992188
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_haku_long/MI_Hair_haku_long.MI_Hair_haku_long",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_hakui",
+    "bones": 286,
+    "origin_cm": [
+      0.01633167266845703,
+      -5.6369948387146,
+      150.43288040161133
+    ],
+    "extent_cm": [
+      10.965080261230469,
+      17.377642154693604,
+      36.06196212768555
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_hakui/MI_Hair_hakui.MI_Hair_hakui",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_hanabi",
+    "bones": 286,
+    "origin_cm": [
+      0.016386985778808594,
+      -13.07151985168457,
+      129.80725479125977
+    ],
+    "extent_cm": [
+      13.31610107421875,
+      35.26153755187988,
+      55.153133392333984
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_hanabi/MI_Hair_hanabi.MI_Hair_hanabi",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_hashirama",
+    "bones": 286,
+    "origin_cm": [
+      0.016386985778808594,
+      -5.095429420471191,
+      151.3227195739746
+    ],
+    "extent_cm": [
+      14.046727180480957,
+      15.507084846496582,
+      33.54472732543945
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_hashirama/MI_Hair_hashirama.MI_Hair_hashirama",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_himawari",
+    "bones": 286,
+    "origin_cm": [
+      0.016386985778808594,
+      -3.8181138038635254,
+      175.0399627685547
+    ],
+    "extent_cm": [
+      17.54927349090576,
+      15.554790019989014,
+      15.865997314453125
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_himawari/MI_Hair_himawari.MI_Hair_himawari",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_hinata",
+    "bones": 286,
+    "origin_cm": [
+      0.016442298889160156,
+      -7.355919361114502,
+      152.38347244262695
+    ],
+    "extent_cm": [
+      12.931632995605469,
+      18.495662212371826,
+      33.0179557800293
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_hinata/MI_Hair_hinata.MI_Hair_hinata",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_hinata_young",
+    "bones": 286,
+    "origin_cm": [
+      0.01666259765625,
+      -3.5199780464172363,
+      172.37408447265625
+    ],
+    "extent_cm": [
+      13.045125007629395,
+      15.535192012786865,
+      13.846527099609375
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_hinata_young/MI_Hair_hinata_young.MI_Hair_hinata_young",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_indra",
+    "bones": 286,
+    "origin_cm": [
+      0.6335773468017578,
+      -29.334378719329834,
+      145.80949020385742
+    ],
+    "extent_cm": [
+      17.471715927124023,
+      42.31646966934204,
+      44.97758865356445
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_indra/MI_Hair_indra.MI_Hair_indra",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_ino",
+    "bones": 286,
+    "origin_cm": [
+      0.018043041229248047,
+      -40.746262073516846,
+      169.24159240722656
+    ],
+    "extent_cm": [
+      9.99461030960083,
+      54.232444286346436,
+      17.18853759765625
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_ino/MI_Hair_ino.MI_Hair_ino",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_inojin",
+    "bones": 286,
+    "origin_cm": [
+      0.2601494789123535,
+      -5.093007564544678,
+      169.97067260742188
+    ],
+    "extent_cm": [
+      10.685271739959717,
+      18.203388690948486,
+      15.274322509765625
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_inojin/MI_Hair_inojin.MI_Hair_inojin",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_itachi",
+    "bones": 286,
+    "origin_cm": [
+      0.15057849884033203,
+      -5.031014919281006,
+      164.50267791748047
+    ],
+    "extent_cm": [
+      11.598444938659668,
+      17.469610691070557,
+      22.489173889160156
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_itachi/MI_Hair_itachi.MI_Hair_itachi",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_jiraiya",
+    "bones": 286,
+    "origin_cm": [
+      0.0575103759765625,
+      -49.78792858123779,
+      127.9998779296875
+    ],
+    "extent_cm": [
+      22.40526580810547,
+      64.59327411651611,
+      67.93336486816406
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_jiraiya/MI_Hair_jiraiya.MI_Hair_jiraiya",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_kabuto",
+    "bones": 286,
+    "origin_cm": [
+      0.016497135162353516,
+      -1.7141122817993164,
+      170.21058654785156
+    ],
+    "extent_cm": [
+      12.446590900421143,
+      13.61727237701416,
+      16.374664306640625
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_kabuto/MI_Hair_kabuto.MI_Hair_kabuto",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_kagemasa",
+    "bones": 286,
+    "origin_cm": [
+      -1.5579142570495605,
+      -11.857878684997559,
+      175.68287658691406
+    ],
+    "extent_cm": [
+      15.928602695465088,
+      24.653618812561035,
+      19.130691528320312
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_kagemasa/MI_Hair_kagemasa.MI_Hair_kagemasa",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_kakashi",
+    "bones": 286,
+    "origin_cm": [
+      3.573636054992676,
+      0.9592709541320801,
+      177.2785415649414
+    ],
+    "extent_cm": [
+      16.726628303527832,
+      16.247823238372803,
+      19.774269104003906
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_kakashi/MI_Hair_kakashi.MI_Hair_kakashi",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_kawaki",
+    "bones": 286,
+    "origin_cm": [
+      0.01638650894165039,
+      -1.1156363487243652,
+      178.40319061279297
+    ],
+    "extent_cm": [
+      11.182844638824463,
+      14.464149951934814,
+      10.296333312988281
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_kawaki/MI_Hair_kawaki.MI_Hair_kawaki",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_kimimaro",
+    "bones": 286,
+    "origin_cm": [
+      -0.101409912109375,
+      -1.6406426429748535,
+      165.7029571533203
+    ],
+    "extent_cm": [
+      11.386421203613281,
+      11.67616605758667,
+      20.195724487304688
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_kimimaro/MI_Hair_kimimaro.MI_Hair_kimimaro",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_konohamaru",
+    "bones": 286,
+    "origin_cm": [
+      0.016386985778808594,
+      -2.8019394874572754,
+      175.68045043945312
+    ],
+    "extent_cm": [
+      11.39525318145752,
+      13.621411800384521,
+      17.0435791015625
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_konohamaru/MI_Hair_konohamaru.MI_Hair_konohamaru",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_madara",
+    "bones": 286,
+    "origin_cm": [
+      0.016716957092285156,
+      -13.028049945831299,
+      144.80255126953125
+    ],
+    "extent_cm": [
+      19.80408000946045,
+      25.127719402313232,
+      48.0103759765625
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_madara/MI_Hair_madara.MI_Hair_madara",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_minato",
+    "bones": 286,
+    "origin_cm": [
+      0.01649761199951172,
+      0.5412969589233398,
+      174.33656311035156
+    ],
+    "extent_cm": [
+      16.36026668548584,
+      15.523049354553223,
+      21.90924072265625
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_minato/MI_Hair_minato.MI_Hair_minato",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_naruto_boruto",
+    "bones": 286,
+    "origin_cm": [
+      -0.13005876541137695,
+      -1.384791374206543,
+      173.9998321533203
+    ],
+    "extent_cm": [
+      11.715026378631592,
+      14.397577285766602,
+      14.913421630859375
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_naruto_boruto/MI_Hair_naruto_boruto.MI_Hair_naruto_boruto",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_naruto_young",
+    "bones": 286,
+    "origin_cm": [
+      0.016386985778808594,
+      -1.4275741577148438,
+      175.04444122314453
+    ],
+    "extent_cm": [
+      15.989764213562012,
+      16.14846420288086,
+      18.621864318847656
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_naruto_young/MI_Hair_naruto_young.MI_Hair_naruto_young",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_neji",
+    "bones": 286,
+    "origin_cm": [
+      0.01655292510986328,
+      -4.683751583099365,
+      147.83402633666992
+    ],
+    "extent_cm": [
+      12.298711776733398,
+      14.684057712554932,
+      39.42323684692383
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_neji/MI_Hair_neji.MI_Hair_neji",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_orochimaru",
+    "bones": 286,
+    "origin_cm": [
+      0.016222000122070312,
+      -3.098240852355957,
+      152.08761978149414
+    ],
+    "extent_cm": [
+      11.84320068359375,
+      15.319685935974121,
+      33.23786544799805
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_orochimaru/MI_Hair_orochimaru.MI_Hair_orochimaru",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_pain",
+    "bones": 286,
+    "origin_cm": [
+      0.016221046447753906,
+      -1.4693036079406738,
+      174.04305267333984
+    ],
+    "extent_cm": [
+      14.627705574035645,
+      15.07979154586792,
+      18.76190948486328
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_pain/MI_Hair_pain.MI_Hair_pain",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_rin",
+    "bones": 286,
+    "origin_cm": [
+      0.016442298889160156,
+      -2.833181381225586,
+      170.9397735595703
+    ],
+    "extent_cm": [
+      12.32752513885498,
+      13.041478157043457,
+      15.228500366210938
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_rin/MI_Hair_rin.MI_Hair_rin",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_rock_lee",
+    "bones": 286,
+    "origin_cm": [
+      0.01622152328491211,
+      -2.4694137573242188,
+      172.95804595947266
+    ],
+    "extent_cm": [
+      12.274754047393799,
+      13.518739700317383,
+      14.904975891113281
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_rock_lee/MI_Hair_rock_lee.MI_Hair_rock_lee",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_sai",
+    "bones": 286,
+    "origin_cm": [
+      0.016387939453125,
+      -0.36386728286743164,
+      173.08014678955078
+    ],
+    "extent_cm": [
+      10.513158798217773,
+      11.748919010162354,
+      13.749748229980469
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_sai/MI_Hair_sai.MI_Hair_sai",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_sasuke_boruto",
+    "bones": 286,
+    "origin_cm": [
+      0.01649761199951172,
+      -2.09725284576416,
+      171.64407348632812
+    ],
+    "extent_cm": [
+      14.926061630249023,
+      14.519070625305176,
+      14.986557006835938
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_sasuke_boruto/MI_Hair_sasuke_boruto.MI_Hair_sasuke_boruto",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_sasuke_headband",
+    "bones": 286,
+    "origin_cm": [
+      -0.22406339645385742,
+      -2.5557985305786133,
+      170.6907196044922
+    ],
+    "extent_cm": [
+      12.708791255950928,
+      14.123122215270996,
+      15.183792114257812
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_sasuke_headband/MI_Hair_sasuke_headband.MI_Hair_sasuke_headband",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_sasuke_young",
+    "bones": 286,
+    "origin_cm": [
+      0.01644277572631836,
+      -4.508172512054443,
+      173.5313491821289
+    ],
+    "extent_cm": [
+      11.020721912384033,
+      15.576042652130127,
+      14.713432312011719
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_sasuke_young/MI_Hair_sasuke_young.MI_Hair_sasuke_young",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_tobirama",
+    "bones": 286,
+    "origin_cm": [
+      0.10470724105834961,
+      -1.6106176376342773,
+      177.56038665771484
+    ],
+    "extent_cm": [
+      15.797338008880615,
+      17.76968479156494,
+      17.745567321777344
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_tobirama/MI_Hair_tobirama.MI_Hair_tobirama",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_yamato",
+    "bones": 286,
+    "origin_cm": [
+      0.017269611358642578,
+      -1.2165436744689941,
+      172.68685150146484
+    ],
+    "extent_cm": [
+      13.38068437576294,
+      14.254499912261963,
+      15.223197937011719
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_yamato/MI_Hair_yamato.MI_Hair_yamato",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_zabusa",
+    "bones": 286,
+    "origin_cm": [
+      -0.5619983673095703,
+      -1.0112552642822266,
+      173.39545440673828
+    ],
+    "extent_cm": [
+      12.235727310180664,
+      12.976123809814453,
+      14.309150695800781
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_zabusa/MI_Hair_zabusa.MI_Hair_zabusa",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Uchiha_Blue_Shinobi_Attire",
+    "bones": 286,
+    "origin_cm": [
+      0.0051727294921875,
+      -0.2685356140136719,
+      78.00234310654923
+    ],
+    "extent_cm": [
+      53.07704162597656,
+      18.282636642456055,
+      77.99660403700545
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Uchiha_Blue_Shinobi_Attire/MI_Uchiha_Blue_Shinobi_Attire.MI_Uchiha_Blue_Shinobi_Attire",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Uchiha_Headless_Shinobi_Armor",
+    "bones": 286,
+    "origin_cm": [
+      -0.020702362060546875,
+      -0.40665721893310547,
+      77.98754838737659
+    ],
+    "extent_cm": [
+      41.65603256225586,
+      18.875052452087402,
+      77.98216291633435
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Uchiha_Headless_Shinobi_Armor/MI_Uchiha_Headless_Shinobi_Armor.MI_Uchiha_Headless_Shinobi_Armor",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Uchiha_Shadow_Striker_Outfit",
+    "bones": 286,
+    "origin_cm": [
+      -6.9738006591796875,
+      0.8106966018676758,
+      78.01484110765159
+    ],
+    "extent_cm": [
+      60.775230407714844,
+      22.330946922302246,
+      77.97350117750466
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Uchiha_Shadow_Striker_Outfit/MI_Uchiha_Shadow_Striker_Outfit.MI_Uchiha_Shadow_Striker_Outfit",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Uchiha_Teal_Tactical_Hero_Uniform",
+    "bones": 286,
+    "origin_cm": [
+      0.006328582763671875,
+      -0.39702320098876953,
+      78.00692125689238
+    ],
+    "extent_cm": [
+      55.07218551635742,
+      18.557127952575684,
+      77.98981336224824
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Uchiha_Teal_Tactical_Hero_Uniform/MI_Uchiha_Teal_Tactical_Hero_Uniform.MI_Uchiha_Teal_Tactical_Hero_Uniform",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_sakura_young",
+    "bones": 286,
+    "origin_cm": [
+      -0.29096126556396484,
+      -0.011570453643798828,
+      161.23645782470703
+    ],
+    "extent_cm": [
+      11.318292617797852,
+      13.768128871917725,
+      20.76354217529297
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_sakura_young/MI_Hair_sakura_young.MI_Hair_sakura_young",
+    "skeletal_material_usage": true
+  },
+  {
+    "id": "Hair_wasabi",
+    "bones": 286,
+    "origin_cm": [
+      0.0,
+      -0.7136988639831543,
+      171.66371154785156
+    ],
+    "extent_cm": [
+      11.68464183807373,
+      12.066858768463135,
+      12.336273193359375
+    ],
+    "material": "/Game/Ninja/Characters/Customization/Hair_wasabi/MI_Hair_wasabi.MI_Hair_wasabi",
+    "skeletal_material_usage": true
+  }
+]

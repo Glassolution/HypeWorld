@@ -1,0 +1,555 @@
+{
+  "head_min": [
+    -0.10913199931383133,
+    -0.122112937271595,
+    1.5083338022232056
+  ],
+  "head_max": [
+    0.10945974290370941,
+    0.12192445993423462,
+    1.7766064405441284
+  ],
+  "parts": [
+    {
+      "id": "Hair_akatsuki_hat",
+      "label": "Akatsuki Hat",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 897,
+      "triangles": 1676,
+      "file": "Hair_akatsuki_hat/Hair_akatsuki_hat.fbx",
+      "texture": "Hair_akatsuki_hat/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_asura",
+      "label": "Asura",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 2177,
+      "triangles": 3476,
+      "file": "Hair_asura/Hair_asura.fbx",
+      "texture": "Hair_asura/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_b536425a98f64881bd78a48eb127072c",
+      "label": "B536425A98F64881Bd78A48Eb127072C",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 1170,
+      "triangles": 1610,
+      "file": "Hair_b536425a98f64881bd78a48eb127072c/Hair_b536425a98f64881bd78a48eb127072c.fbx",
+      "texture": "Hair_b536425a98f64881bd78a48eb127072c/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_boruto",
+      "label": "Boruto",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 1825,
+      "triangles": 3421,
+      "file": "Hair_boruto/Hair_boruto.fbx",
+      "texture": "Hair_boruto/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_gaara_straight",
+      "label": "Gaara Straight",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 845,
+      "triangles": 1255,
+      "file": "Hair_gaara_straight/Hair_gaara_straight.fbx",
+      "texture": "Hair_gaara_straight/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_haku_long",
+      "label": "Haku Long",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 1641,
+      "triangles": 2612,
+      "file": "Hair_haku_long/Hair_haku_long.fbx",
+      "texture": "Hair_haku_long/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_hakui",
+      "label": "Hakui",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 930,
+      "triangles": 1338,
+      "file": "Hair_hakui/Hair_hakui.fbx",
+      "texture": "Hair_hakui/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_hanabi",
+      "label": "Hanabi",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 2256,
+      "triangles": 3604,
+      "file": "Hair_hanabi/Hair_hanabi.fbx",
+      "texture": "Hair_hanabi/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_hashirama",
+      "label": "Hashirama",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 1687,
+      "triangles": 2142,
+      "file": "Hair_hashirama/Hair_hashirama.fbx",
+      "texture": "Hair_hashirama/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_himawari",
+      "label": "Himawari",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 2464,
+      "triangles": 4286,
+      "file": "Hair_himawari/Hair_himawari.fbx",
+      "texture": "Hair_himawari/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_hinata",
+      "label": "Hinata",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 1449,
+      "triangles": 2689,
+      "file": "Hair_hinata/Hair_hinata.fbx",
+      "texture": "Hair_hinata/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_hinata_young",
+      "label": "Hinata Young",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 1083,
+      "triangles": 1612,
+      "file": "Hair_hinata_young/Hair_hinata_young.fbx",
+      "texture": "Hair_hinata_young/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_indra",
+      "label": "Indra",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 2210,
+      "triangles": 4021,
+      "file": "Hair_indra/Hair_indra.fbx",
+      "texture": "Hair_indra/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_ino",
+      "label": "Ino",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 1238,
+      "triangles": 1916,
+      "file": "Hair_ino/Hair_ino.fbx",
+      "texture": "Hair_ino/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_inojin",
+      "label": "Inojin",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 1023,
+      "triangles": 1378,
+      "file": "Hair_inojin/Hair_inojin.fbx",
+      "texture": "Hair_inojin/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_itachi",
+      "label": "Itachi",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 994,
+      "triangles": 1858,
+      "file": "Hair_itachi/Hair_itachi.fbx",
+      "texture": "Hair_itachi/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_jiraiya",
+      "label": "Jiraiya",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 8575,
+      "triangles": 16318,
+      "file": "Hair_jiraiya/Hair_jiraiya.fbx",
+      "texture": "Hair_jiraiya/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_kabuto",
+      "label": "Kabuto",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 1320,
+      "triangles": 2176,
+      "file": "Hair_kabuto/Hair_kabuto.fbx",
+      "texture": "Hair_kabuto/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_kagemasa",
+      "label": "Kagemasa",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 1316,
+      "triangles": 2597,
+      "file": "Hair_kagemasa/Hair_kagemasa.fbx",
+      "texture": "Hair_kagemasa/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_kakashi",
+      "label": "Kakashi",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 1305,
+      "triangles": 2517,
+      "file": "Hair_kakashi/Hair_kakashi.fbx",
+      "texture": "Hair_kakashi/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_kawaki",
+      "label": "Kawaki",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 2102,
+      "triangles": 3714,
+      "file": "Hair_kawaki/Hair_kawaki.fbx",
+      "texture": "Hair_kawaki/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_kimimaro",
+      "label": "Kimimaro",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 1270,
+      "triangles": 2318,
+      "file": "Hair_kimimaro/Hair_kimimaro.fbx",
+      "texture": "Hair_kimimaro/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_konohamaru",
+      "label": "Konohamaru",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 887,
+      "triangles": 1688,
+      "file": "Hair_konohamaru/Hair_konohamaru.fbx",
+      "texture": "Hair_konohamaru/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_madara",
+      "label": "Madara",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 1430,
+      "triangles": 2768,
+      "file": "Hair_madara/Hair_madara.fbx",
+      "texture": "Hair_madara/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_minato",
+      "label": "Minato",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 1716,
+      "triangles": 2496,
+      "file": "Hair_minato/Hair_minato.fbx",
+      "texture": "Hair_minato/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_naruto_boruto",
+      "label": "Naruto Boruto",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 3185,
+      "triangles": 2258,
+      "file": "Hair_naruto_boruto/Hair_naruto_boruto.fbx",
+      "texture": "Hair_naruto_boruto/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_naruto_young",
+      "label": "Naruto Young",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 1370,
+      "triangles": 2700,
+      "file": "Hair_naruto_young/Hair_naruto_young.fbx",
+      "texture": "Hair_naruto_young/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_neji",
+      "label": "Neji",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 1347,
+      "triangles": 2510,
+      "file": "Hair_neji/Hair_neji.fbx",
+      "texture": "Hair_neji/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_orochimaru",
+      "label": "Orochimaru",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 1925,
+      "triangles": 2711,
+      "file": "Hair_orochimaru/Hair_orochimaru.fbx",
+      "texture": "Hair_orochimaru/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_pain",
+      "label": "Pain",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 1291,
+      "triangles": 2475,
+      "file": "Hair_pain/Hair_pain.fbx",
+      "texture": "Hair_pain/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_rin",
+      "label": "Rin",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 1265,
+      "triangles": 2097,
+      "file": "Hair_rin/Hair_rin.fbx",
+      "texture": "Hair_rin/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_rock_lee",
+      "label": "Rock Lee",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 1345,
+      "triangles": 1773,
+      "file": "Hair_rock_lee/Hair_rock_lee.fbx",
+      "texture": "Hair_rock_lee/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_sai",
+      "label": "Sai",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 766,
+      "triangles": 1422,
+      "file": "Hair_sai/Hair_sai.fbx",
+      "texture": "Hair_sai/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_sasuke_boruto",
+      "label": "Sasuke Boruto",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 977,
+      "triangles": 1610,
+      "file": "Hair_sasuke_boruto/Hair_sasuke_boruto.fbx",
+      "texture": "Hair_sasuke_boruto/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_sasuke_headband",
+      "label": "Sasuke Headband",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 1498,
+      "triangles": 1822,
+      "file": "Hair_sasuke_headband/Hair_sasuke_headband.fbx",
+      "texture": "Hair_sasuke_headband/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_sasuke_young",
+      "label": "Sasuke Young",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 762,
+      "triangles": 1438,
+      "file": "Hair_sasuke_young/Hair_sasuke_young.fbx",
+      "texture": "Hair_sasuke_young/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_tobirama",
+      "label": "Tobirama",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 2659,
+      "triangles": 2825,
+      "file": "Hair_tobirama/Hair_tobirama.fbx",
+      "texture": "Hair_tobirama/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_yamato",
+      "label": "Yamato",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 540,
+      "triangles": 850,
+      "file": "Hair_yamato/Hair_yamato.fbx",
+      "texture": "Hair_yamato/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_zabusa",
+      "label": "Zabusa",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 1434,
+      "triangles": 2618,
+      "file": "Hair_zabusa/Hair_zabusa.fbx",
+      "texture": "Hair_zabusa/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Uchiha_Blue_Shinobi_Attire",
+      "label": "Blue Shinobi Attire",
+      "kind": "outfit",
+      "clan": "Uchiha",
+      "vertices": 22502,
+      "triangles": 45000,
+      "file": "Uchiha_Blue_Shinobi_Attire/Uchiha_Blue_Shinobi_Attire.fbx",
+      "texture": "Uchiha_Blue_Shinobi_Attire/BaseColor.png",
+      "mask": {
+        "torso_min_z": 80.0,
+        "torso_max_z": 147.0,
+        "arm_max_t": 49.0,
+        "leg_min_z": 0.0,
+        "foot_max_z": 18.0
+      }
+    },
+    {
+      "id": "Uchiha_Headless_Shinobi_Armor",
+      "label": "Headless Shinobi Armor",
+      "kind": "outfit",
+      "clan": "Uchiha",
+      "vertices": 22498,
+      "triangles": 45000,
+      "file": "Uchiha_Headless_Shinobi_Armor/Uchiha_Headless_Shinobi_Armor.fbx",
+      "texture": "Uchiha_Headless_Shinobi_Armor/BaseColor.png",
+      "mask": {
+        "torso_min_z": 80.0,
+        "torso_max_z": 147.0,
+        "arm_max_t": 29.0,
+        "leg_min_z": 0.0,
+        "foot_max_z": 18.0
+      }
+    },
+    {
+      "id": "Uchiha_Shadow_Striker_Outfit",
+      "label": "Shadow Striker Outfit",
+      "kind": "outfit",
+      "clan": "Uchiha",
+      "vertices": 22478,
+      "triangles": 45000,
+      "file": "Uchiha_Shadow_Striker_Outfit/Uchiha_Shadow_Striker_Outfit.fbx",
+      "texture": "Uchiha_Shadow_Striker_Outfit/BaseColor.png",
+      "mask": {
+        "torso_min_z": 80.0,
+        "torso_max_z": 147.0,
+        "arm_max_t": 49.0,
+        "leg_min_z": 0.0,
+        "foot_max_z": 18.0
+      }
+    },
+    {
+      "id": "Uchiha_Teal_Tactical_Hero_Uniform",
+      "label": "Teal Tactical Hero Uniform",
+      "kind": "outfit",
+      "clan": "Uchiha",
+      "vertices": 22502,
+      "triangles": 45000,
+      "file": "Uchiha_Teal_Tactical_Hero_Uniform/Uchiha_Teal_Tactical_Hero_Uniform.fbx",
+      "texture": "Uchiha_Teal_Tactical_Hero_Uniform/BaseColor.png",
+      "mask": {
+        "torso_min_z": 80.0,
+        "torso_max_z": 147.0,
+        "arm_max_t": 49.0,
+        "leg_min_z": 0.0,
+        "foot_max_z": 18.0
+      }
+    },
+    {
+      "id": "Hair_sakura_young",
+      "label": "Sakura Young",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 2498,
+      "triangles": 4361,
+      "file": "Hair_sakura_young/Hair_sakura_young.fbx",
+      "texture": "Hair_sakura_young/BaseColor.png",
+      "mask": null
+    },
+    {
+      "id": "Hair_wasabi",
+      "label": "Wasabi",
+      "kind": "hair",
+      "clan": "",
+      "vertices": 1759,
+      "triangles": 3424,
+      "file": "Hair_wasabi/Hair_wasabi.fbx",
+      "texture": "Hair_wasabi/BaseColor.png",
+      "mask": null
+    }
+  ],
+  "excluded": [
+    {
+      "file": "naruto.glb",
+      "reason": "full character: hair is not isolated by material"
+    },
+    {
+      "file": "naruto__sasuke_low_poly__rig__texture.glb",
+      "reason": "full character: hair is not isolated by material"
+    },
+    {
+      "file": "naruto_sage.glb",
+      "reason": "full character: hair is not isolated by material"
+    },
+    {
+      "file": "naruto_shippuden-_naruto.glb",
+      "reason": "full character: hair is not isolated by material"
+    },
+    {
+      "file": "zabusa (1).glb",
+      "reason": "identical duplicate of zabusa.glb"
+    }
+  ]
+}

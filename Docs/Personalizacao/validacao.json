@@ -1,0 +1,50 @@
+{
+  "build": "Result: Succeeded",
+  "automation": {
+    "succeeded": 3,
+    "failed": 0,
+    "tests": [
+      {
+        "testDisplayName": "CompatibleAssets",
+        "state": "Success"
+      },
+      {
+        "testDisplayName": "InvalidInput",
+        "state": "Success"
+      },
+      {
+        "testDisplayName": "SaveRoundTrip",
+        "state": "Success"
+      }
+    ]
+  },
+  "base": {
+    "valid": true,
+    "skeleton": "/Game/HypeWorld/Personagens/Indra/SKEL_Indra.SKEL_Indra",
+    "bones": 286
+  },
+  "preview": [
+    {
+      "name": "preview_mesh",
+      "value": "/Game/HypeWorld/Characters/Base/SK_Base_Body.SK_Base_Body"
+    },
+    {
+      "name": "preview_scale",
+      "value": "<Struct 'Vector' (0x5b5498fb5b0) {x: 0.916753, y: 0.916753, z: 0.916753}>"
+    },
+    {
+      "name": "expected_scale",
+      "value": 0.9167531528131585
+    },
+    {
+      "name": "returned_to_identity",
+      "value": true
+    },
+    {
+      "name": "cancel_restores_original",
+      "value": true
+    }
+  ],
+  "visually_verified_draft_name": "Teste Criador",
+  "network_visual_test": "pending"
+}

@@ -26,6 +26,7 @@ class UNinjaChakraAuraComponent;
 class UNinjaChakraFeetComponent;
 class UGameplayAbility;
 class UMaterialInterface;
+class UHypeAppearanceComponent;
 class UNinjaJutsuData;
 struct FInputActionValue;
 
@@ -51,6 +52,9 @@ class AHypeWorldCharacter : public ACharacter, public IAbilitySystemInterface, p
 	/** Sistema de habilidades (GAS): vida, chakra, golpes e jutsus */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	UAbilitySystemComponent* AbilitySystem;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Ninja|Aparencia", meta=(AllowPrivateAccess="true"))
+    TObjectPtr<UHypeAppearanceComponent> AppearanceComponent;
 
 	/** Vida e chakra */
 	UPROPERTY()

@@ -1,0 +1,23 @@
+{
+  "build": "Result: Succeeded",
+  "succeeded": 4,
+  "failed": 0,
+  "tests": [
+    {
+      "testDisplayName": "CharacterWithoutAffiliation",
+      "state": "Success"
+    },
+    {
+      "testDisplayName": "CompatibleAssets",
+      "state": "Success"
+    },
+    {
+      "testDisplayName": "InvalidInput",
+      "state": "Success"
+    },
+    {
+      "testDisplayName": "SaveRoundTrip",
+      "state": "Success"
+    }
+  ]
+}

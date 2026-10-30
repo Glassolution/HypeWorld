@@ -39,6 +39,7 @@
 #include "NinjaJutsuProjectile.h"
 #include "NinjaFlameOrbit.h"
 #include "NinjaVisibleBody.h"
+#include "Ninja/HypeAppearanceComponent.h"
 #include "NiagaraComponent.h"
 #include "NiagaraFunctionLibrary.h"
 
@@ -46,6 +47,7 @@ AHypeWorldCharacter::AHypeWorldCharacter(const FObjectInitializer& ObjectInitial
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UNinjaMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
 	PrimaryActorTick.bCanEverTick = true;
+    AppearanceComponent = CreateDefaultSubobject<UHypeAppearanceComponent>(TEXT("Appearance"));
 
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);

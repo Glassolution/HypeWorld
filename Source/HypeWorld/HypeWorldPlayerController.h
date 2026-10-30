@@ -10,6 +10,7 @@ class UInputMappingContext;
 class UUserWidget;
 class UNinjaHUDWidget;
 class UNinjaCombatMenuWidget;
+class UHypeCharacterSelectWidget;
 
 /**
  *  Basic PlayerController class for a third person game
@@ -70,6 +71,9 @@ public:
 
 protected:
 
+    UPROPERTY() TObjectPtr<UHypeCharacterSelectWidget> EntryScreen;
+    void ShowEntryScreen();
+    FTimerHandle EntryScreenTimer;
 	bool bMouseFree = false;
 
 

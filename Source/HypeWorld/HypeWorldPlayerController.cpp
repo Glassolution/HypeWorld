@@ -8,6 +8,11 @@
 #include "Blueprint/UserWidget.h"
 #include "HypeWorld.h"
 #include "NinjaHUDWidget.h"
+#include "UI/HypeCharacterSelectWidget.h"
+#include "UI/HypeProfileSubsystem.h"
+#include "Engine/GameInstance.h"
+#include "Engine/World.h"
+#include "TimerManager.h"
 #include "NinjaCombatMenuWidget.h"
 #include "Components/Widget.h"
 #include "GameFramework/Character.h"
@@ -18,6 +23,10 @@
 void AHypeWorldPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
+    if (IsLocalPlayerController() && GetNetMode() == NM_Standalone && GetWorld()->WorldType == EWorldType::Game)
+    {
+        GetWorldTimerManager().SetTimer(EntryScreenTimer, this, &AHypeWorldPlayerController::ShowEntryScreen, 0.1f, true);
+    }
 
 	// HUD só para quem está jogando nesta máquina
 	if (IsLocalPlayerController() && HUDWidgetClass)
@@ -47,6 +56,21 @@ void AHypeWorldPlayerController::BeginPlay()
 		}
 
 	}
+}
+
+void AHypeWorldPlayerController::ShowEntryScreen()
+{
+    UHypeProfileSubsystem* Profile = GetGameInstance()->GetSubsystem<UHypeProfileSubsystem>();
+    if (!Profile || Profile->bEntryShown)
+    {
+        GetWorldTimerManager().ClearTimer(EntryScreenTimer);
+        return;
+    }
+    if (!GetPawn()) { return; }
+    UClass* ScreenClass = LoadClass<UHypeCharacterSelectWidget>(nullptr, TEXT("/Game/HypeWorld/UI/CharacterSelect/WBP_CharacterSelect.WBP_CharacterSelect_C"));
+    EntryScreen = CreateWidget<UHypeCharacterSelectWidget>(this, ScreenClass ? ScreenClass : UHypeCharacterSelectWidget::StaticClass());
+    if (EntryScreen) { EntryScreen->AddToViewport(50); }
+    GetWorldTimerManager().ClearTimer(EntryScreenTimer);
 }
 
 void AHypeWorldPlayerController::SetupInputComponent()
@@ -92,6 +116,7 @@ bool AHypeWorldPlayerController::IsCombatMenuOpen() const
 
 void AHypeWorldPlayerController::ToggleCombatMenu()
 {
+	if (EntryScreen && EntryScreen->IsInViewport()) { return; }
 	if (!IsLocalPlayerController())
 	{
 		return;
@@ -140,6 +165,7 @@ void AHypeWorldPlayerController::SetHUDHidden(bool bHideHUD)
 
 void AHypeWorldPlayerController::ToggleFreeMouse()
 {
+    if (EntryScreen && EntryScreen->IsInViewport()) { return; }
 	if (IsCombatMenuOpen())
 	{
 		ToggleCombatMenu();

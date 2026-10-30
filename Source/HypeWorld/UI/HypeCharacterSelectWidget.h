@@ -10,6 +10,8 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Ninja/HypeAppearanceTypes.h"
+#include "Components/ComboBoxString.h"
 #include "HypeCharacterSelectWidget.generated.h"
 
 class UButton;
@@ -17,6 +19,9 @@ class UCanvasPanel;
 class UImage;
 class UTexture2D;
 class ACameraActor;
+class UEditableTextBox;
+class UTextBlock;
+class USlider;
 
 USTRUCT(BlueprintType)
 struct FHypeClanOption
@@ -113,9 +118,55 @@ protected:
 
 private:
 
+    // Criação: 1 identidade, 2 aparência, 3 estilo, 4 confirmação. Vila/clã só no retorno.
+    bool bChoosingAffiliation = false;
+    void ConfirmAffiliation();
+    int32 CreationStep = 1;
+    FHypeAppearance DraftAppearance;
+    UPROPERTY() TObjectPtr<UEditableTextBox> NameInput;
+    UPROPERTY() TObjectPtr<UTextBlock> HeightLabel;
+    UPROPERTY() TObjectPtr<UTextBlock> SkinAmountLabel;
+    UPROPERTY() TArray<TObjectPtr<UImage>> SkinFrames;
+    UPROPERTY() TArray<TObjectPtr<UTextBlock>> SkinChecks;
+    void SyncAppearanceControls();
+    void GoToCategory(int32 Step);
+    UFUNCTION() void ShowIdentityCategory();
+    UFUNCTION() void ShowAppearanceCategory();
+    UFUNCTION() void ShowStyleCategory();
+    UFUNCTION() void ShowConfirmCategory();
+    UFUNCTION() void LighterSkin();
+    UFUNCTION() void DarkerSkin();
+    UFUNCTION() void ShorterHeight();
+    UFUNCTION() void TallerHeight();
+    UPROPERTY() TObjectPtr<USlider> HeightSlider;
+    UPROPERTY() TObjectPtr<USlider> SkinSlider;
+    UPROPERTY() TArray<TObjectPtr<UButton>> SkinButtons;
+    UPROPERTY() TArray<TObjectPtr<UButton>> HairColorButtons;
+    UPROPERTY() TObjectPtr<UComboBoxString> HairChoice;
+    UPROPERTY() TObjectPtr<UComboBoxString> OutfitChoice;
+    TArray<FName> VisibleOutfitIds;
+    UFUNCTION() UWidget* GenerateCosmeticLabel(FString Item);
+    UFUNCTION() void HandleHairSelected(FString Item, ESelectInfo::Type Type);
+    UFUNCTION() void HandleOutfitSelected(FString Item, ESelectInfo::Type Type);
+    UPROPERTY() TObjectPtr<UTextBlock> CreationErrorLabel;
+    UFUNCTION() void NextCreationStep();
+    UFUNCTION() void PreviousCreationStep();
+    UFUNCTION() void HandleCustomizationClick();
+    UFUNCTION() void HandleNameChanged(const FText& Text);
+    UFUNCTION() void HandleHeightChanged(float Value);
+    UFUNCTION() void HandleSkinChanged(float Value);
+    void ApplyDraftPreview();
+    void UpdateCreationCamera(float Dt);
+	bool bCreatingCharacter = false;
+	bool bPawnWasHidden = false;
+	FText ProfileError;
+	UFUNCTION() void StartCreation();
+	UFUNCTION() void CancelCreation();
+	UFUNCTION() void EnterGame();
+	void UpdatePreviewVisibility();
 	void BuildLayout();
 	UTexture2D* GetGeneratedIcon(FName Id, int32 Layer);
-	void Refresh();
+	void Refresh(bool bAnimate = false);
 	void SetupPreviewCamera();
 	void Confirm();
 	void Finish();
@@ -144,6 +195,11 @@ private:
 
 	UPROPERTY() TObjectPtr<ACameraActor> PreviewCamera;
 
+    // Transições leves em tempo real, sem criar assets ou animar o cenário.
+    float PageTime = -1.f;
+    bool bPageRebuildPending = false;
+    TMap<TWeakObjectPtr<UWidget>, float> PageOpacities;
+    TMap<TWeakObjectPtr<UButton>, float> ButtonHover;
 	float Elapsed = 0.f;
 	float ExitTime = -1.f;	// >= 0: saindo (Próximo apertado)
 };

@@ -1,0 +1,119 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "MacBook-Air-de-Luis.local",
+			"instance": "50D2FBF1BA4A9334726AC0AC29776DF4",
+			"instanceName": "MacBook-Air-de-Luis.local-53954",
+			"platform": "MacEditor",
+			"oSVersion": "macOS 26.6.2 25G83",
+			"model": "Default",
+			"gPU": "Apple M1",
+			"cPUModel": "Apple M1",
+			"rAMInGB": 8,
+			"renderMode": "SM5",
+			"rHI": "Metal Bindful (SM5)",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.10.30-04.16.18",
+	"succeeded": 6,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.12978604435920715,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "CharacterWithoutAffiliation",
+			"fullTestPath": "HypeWorld.Appearance.CharacterWithoutAffiliation",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"50D2FBF1BA4A9334726AC0AC29776DF4"
+			],
+			"duration": 0.013133667409420013,
+			"dateTime": "2026.10.30-04.16.18",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "CompatibleAssets",
+			"fullTestPath": "HypeWorld.Appearance.CompatibleAssets",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"50D2FBF1BA4A9334726AC0AC29776DF4"
+			],
+			"duration": 0.019179586321115494,
+			"dateTime": "2026.10.30-04.16.18",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "FirstNameAndAssignedClan",
+			"fullTestPath": "HypeWorld.Appearance.FirstNameAndAssignedClan",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"50D2FBF1BA4A9334726AC0AC29776DF4"
+			],
+			"duration": 0.016601331532001495,
+			"dateTime": "2026.10.30-04.16.18",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "InvalidInput",
+			"fullTestPath": "HypeWorld.Appearance.InvalidInput",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"50D2FBF1BA4A9334726AC0AC29776DF4"
+			],
+			"duration": 0.025904294103384018,
+			"dateTime": "2026.10.30-04.16.18",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "SaveRoundTrip",
+			"fullTestPath": "HypeWorld.Appearance.SaveRoundTrip",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"50D2FBF1BA4A9334726AC0AC29776DF4"
+			],
+			"duration": 0.027568291872739792,
+			"dateTime": "2026.10.30-04.16.18",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "UchihaOutfitRestriction",
+			"fullTestPath": "HypeWorld.Appearance.UchihaOutfitRestriction",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"50D2FBF1BA4A9334726AC0AC29776DF4"
+			],
+			"duration": 0.027398873120546341,
+			"dateTime": "2026.10.30-04.16.18",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

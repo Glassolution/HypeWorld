@@ -17,6 +17,7 @@
 #include "Styling/CoreStyle.h"
 #include "HypeWorldCharacter.h"
 #include "NinjaAttributeSet.h"
+#include "Ninja/HypeAppearanceComponent.h"
 #include "NinjaJutsuData.h"
 #include "NinjaFlameOrbit.h"
 
@@ -361,7 +362,10 @@ void UNinjaHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	// Nome do jogador (o da partida)
 	if (const APlayerState* PS = Ninja->GetPlayerState())
 	{
-		const FString Name = !DisplayName.IsEmpty() ? DisplayName : PS->GetPlayerName().IsEmpty() ? TEXT("Ninja") : PS->GetPlayerName();
+        const UHypeAppearanceComponent* Appearance=Ninja->FindComponentByClass<UHypeAppearanceComponent>();
+        const FString Name = Appearance && Appearance->Appearance.bCustomized && !Appearance->Appearance.Name.IsEmpty()
+            ? Appearance->Appearance.GetFullName()
+            : !DisplayName.IsEmpty() ? DisplayName : PS->GetPlayerName().IsEmpty() ? TEXT("Ninja") : PS->GetPlayerName();
 		if (Name != ShownName && NameText)
 		{
 			ShownName = Name;

@@ -1,0 +1,34 @@
+Setting up bundled DotNet SDK
+/Users/Shared/Epic Games/UE_5.8/Engine/Binaries/ThirdParty/DotNet/10.0/mac-arm64
+Running dotnet Engine/Binaries/DotNET/UnrealBuildTool/UnrealBuildTool.dll HypeWorldEditor Mac Development -project=/Users/luisfelipexavier/Documents/Unreal Projects/HypeWorld/HypeWorld.uproject
+Log file: /Users/luisfelipexavier/Library/Application Support/Epic/UnrealBuildTool/Log.txt
+Determining max actions to execute in parallel (8 physical cores, 8 logical cores)
+  Executing up to 8 processes, one per physical core
+  Requested 1.5 GB memory per action, 8 GB available: limiting max parallel actions to 5
+Using 'git status' to determine working set for adaptive non-unity build (/Users/luisfelipexavier/Documents/Unreal Projects/HypeWorld).
+UbaServer - Listening on 0.0.0.0:1345
+Invalidating makefile for HypeWorldEditor (ispc deleted)
+Compiling with Mac SDK 27.0, minimum Target OS version 14.00
+Building HypeWorldEditor...
+===== Toolchain Information =====
+Using Clang compiler 21.1.6 (/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++)
+  Apple clang version 21.0.0 (clang-2100.3.34.2) Target: arm64-apple-darwin25.6.0 Thread model: posix InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+Using Clang archiver (/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool)
+  Apple clang version 21.0.0 (clang-2100.3.34.2) Target: arm64-apple-darwin25.6.0 Thread model: posix InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+[Adaptive Build] Excluded from HypeWorld unity file: HypeWorldCharacter.cpp, HypeWorldPlayerController.cpp, HypeCharacterSelectWidget.cpp, NinjaHUDWidget.cpp, HypeProfileSubsystem.cpp, HypeAppearanceComponent.cpp, HypeAppearanceTests.cpp
+===== End Toolchain Information =====
+Using Unreal Build Accelerator local executor to run 2 action(s)
+  CPU 8 physical cores, 8 logical cores
+  Memory 8 GB physical, 7.14 GB/8 GB committed
+  UBA Storage capacity 40 GB
+[1/2] Compile [Apple] HypeAppearanceComponent.cpp
+[2/2] Link [Apple] libUnrealEditor-HypeWorld.dylib
+
+Total time in Unreal Build Accelerator local executor: 7.50 seconds
+Output binary: /Users/Shared/Epic Games/UE_5.8/Engine/Binaries/Mac/UnrealEditor
+Deploying HypeWorldEditor Mac Development...
+Deploying now!
+
+Result: Succeeded
+Total execution time: 10.89 seconds
+Trace written to file /Users/luisfelipexavier/Library/Application Support/Epic/UnrealBuildTool/Trace.uba with size 4.6kb

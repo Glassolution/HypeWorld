@@ -1,0 +1,44 @@
+{
+  "build": "Result: Succeeded",
+  "tests": {
+    "succeeded": 5,
+    "failed": 0
+  },
+  "github": {
+    "head": "1886b564db13315158ee5fa80de64bda8bdcc771",
+    "source_assets_checked": 50,
+    "hash_mismatches": [],
+    "unresolved_lfs_pointers_in_updates": []
+  },
+  "local_preservation": {
+    "local_backup_files_compared": 147,
+    "unexpected_changes": []
+  },
+  "ui": [
+    {
+      "category_titles": [
+        "Identidade",
+        "Aparência",
+        "Estilo",
+        "Confirmar"
+      ],
+      "visual_layout": "captured_for_review"
+    },
+    {
+      "empty_name_blocks_forward_category": true
+    },
+    {
+      "category_titles": [
+        "Identidade",
+        "Aparência",
+        "Estilo",
+        "Confirmar"
+      ],
+      "visual_layout": "captured_for_review"
+    },
+    {
+      "category_navigation_preserves_name": true
+    }
+  ],
+  "visual_review": "Títulos separados, sublinhado centralizado no botão ativo, sem sobreposição nas prévias Identidade e Aparência."
+}

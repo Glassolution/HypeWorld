@@ -1,0 +1,52 @@
+[
+  {
+    "check": "Live pawn catalog",
+    "result": {
+      "hair": 41,
+      "outfits": 4
+    }
+  },
+  {
+    "check": "UI hair dropdown count",
+    "result": 42
+  },
+  {
+    "check": "Height 160 cm preserves uniform body scale and attachments",
+    "result": true
+  },
+  {
+    "check": "Cancel restores committed appearance",
+    "result": true
+  },
+  {
+    "check": "Server commit equips Uchiha outfit",
+    "result": true
+  },
+  {
+    "check": "Guard active",
+    "result": true
+  },
+  {
+    "check": "Ninja run actual speed",
+    "result": 975.8587443530663
+  },
+  {
+    "check": "Trot strafe actual speed",
+    "result": 900.0
+  },
+  {
+    "check": "Tigre original clip on base body with attached cosmetics",
+    "result": true
+  },
+  {
+    "check": "Clan assigned by server, client did not select clan",
+    "result": true
+  },
+  {
+    "check": "Automation",
+    "result": {
+      "passed": 6,
+      "failed": 0
+    }
+  }
+]
