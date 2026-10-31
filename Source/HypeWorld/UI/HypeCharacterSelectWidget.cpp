@@ -459,9 +459,9 @@ void UHypeCharacterSelectWidget::BuildLayout()
             FString Jutsus;
             if (Ninja)
             {
-                for (int32 Slot = 0; Slot < 6; ++Slot)
+                for (int32 JutsuSlot = 0; JutsuSlot < 6; ++JutsuSlot)
                 {
-                    if (const UNinjaJutsuData* Jutsu = Ninja->GetJutsuInSlot(Slot))
+                    if (const UNinjaJutsuData* Jutsu = Ninja->GetJutsuInSlot(JutsuSlot))
                     {
                         if (!Jutsus.IsEmpty()) { Jutsus += TEXT("\n"); }
                         Jutsus += Jutsu->DisplayName.ToString();
@@ -1150,13 +1150,13 @@ void UHypeCharacterSelectWidget::NativeTick(const FGeometry& MyGeometry, float I
             PageTime = 0.f;
         }
         const float Progress = FMath::Clamp(PageTime / (bPageRebuildPending ? 0.12f : 0.22f), 0.f, 1.f);
-        const float Visibility = bPageRebuildPending ? 1.f - Progress * Progress : EaseOut(Progress);
+        const float RevealAmount = bPageRebuildPending ? 1.f - Progress * Progress : EaseOut(Progress);
         for (const auto& Entry : PageOpacities)
         {
             if (UWidget* Widget = Entry.Key.Get())
             {
-                Widget->SetRenderOpacity(Entry.Value * Visibility);
-                Widget->SetRenderTranslation(FVector2D(0.f, (1.f - Visibility) * (bPageRebuildPending ? -5.f : 8.f)));
+                Widget->SetRenderOpacity(Entry.Value * RevealAmount);
+                Widget->SetRenderTranslation(FVector2D(0.f, (1.f - RevealAmount) * (bPageRebuildPending ? -5.f : 8.f)));
             }
         }
         if (!bPageRebuildPending && Progress >= 1.f)

@@ -1,3 +1,7 @@
+# CORPO BASE DE REFERÊNCIA: Content/HypeWorld/Characters/Base/SK_Base_Body.fbx = etapa 10 de 30/10/2026 (ombros 2,40
+# larguras de cabeça, cabeça -5%; ferramentas_ia/corpo_base/etapa10_ombros.py). Rig, bind pose e pesos vêm desse FBX.
+# Encaixe original dos trajes Uchiha (o de cabelos foi substituído por ajustar_cabelos.py). Os FBX em Fitted/ já estão
+# no corpo novo (reajustados por ferramentas_ia/customizacao/ombros_pecas.py); rodar isto de novo refaz tudo do zero.
 import bpy,json,math,re,zipfile,bmesh,numpy as np,tempfile
 from pathlib import Path
 from mathutils import Vector,Matrix
@@ -11,16 +15,17 @@ for archive in sorted((ROOT/'SourceAssets/Customization/Clothes').glob('*.zip'))
    if not entry.is_dir() and not Path(entry.filename).is_absolute() and '..' not in Path(entry.filename).parts:
     z.extract(entry,Path(WORK.name)/archive.stem)
 bpy.ops.object.select_all(action='SELECT');bpy.ops.object.delete(use_global=False)
-bpy.ops.import_scene.fbx(filepath=str(ROOT/'Docs/PadraoPersonagem/Indra_Referencia.fbx'))
-rig=next(o for o in bpy.context.scene.objects if o.type=='ARMATURE')
-for o in list(bpy.context.scene.objects):
- if o!=rig:bpy.data.objects.remove(o,do_unlink=True)
-before=set(bpy.data.objects)
+# Rig e doador de pesos do mesmo FBX (corpo base atual). Sem o nulo SK_Indra o rig antigo ficava com os ossos em
+# centímetros no mundo (escala x100), e export() multiplica a malha por 100: o rig do corpo novo recebe a mesma escala.
 bpy.ops.import_scene.fbx(filepath=str(ROOT/'Content/HypeWorld/Characters/Base/SK_Base_Body.fbx'))
-donor=next(o for o in set(bpy.data.objects)-before if o.type=='MESH')
+rig=next(o for o in bpy.context.scene.objects if o.type=='ARMATURE')
+donor=next(o for o in bpy.context.scene.objects if o.type=='MESH')
 world=donor.matrix_world.copy();donor.parent=None;donor.matrix_world=world
-for o in set(bpy.data.objects)-before:
- if o!=donor:bpy.data.objects.remove(o,do_unlink=True)
+for o in list(bpy.context.scene.objects):
+ if o not in (rig,donor):bpy.data.objects.remove(o,do_unlink=True)
+rig.matrix_world=Matrix.Scale(100,4)@rig.matrix_world
+# junta do ombro (metros) do corpo base: as mangas dos trajes são levadas até ela
+ombro=(rig.matrix_world@next(b for b in rig.data.bones if b.name.startswith('9ind00t0-l-upperarm_')).head_local)/100
 # Weight donor is a copy of the actual base body, never the Indra coat.
 for mod in list(donor.modifiers):donor.modifiers.remove(mod)
 bpy.context.view_layer.objects.active=donor;donor.select_set(True)
@@ -112,7 +117,7 @@ for p in sorted(Path(WORK.name).rglob('*.fbx')):
   if x>.14 and q.z>1.12:
    blend=min(1,max(0,(x-.14)/.08));blend=blend*blend*(3-2*blend)
    t=(x-.17)*arm_length;crossz=(q.z-(sz*x+iz))*1.12;crossy=(q.y-(sy*x+iy))*1.12
-   rotated=Vector((side*(.157+(t+crossz)*math.sqrt(.5)),.013+crossy,1.393+(-t+crossz)*math.sqrt(.5)))
+   rotated=Vector((side*(ombro.x+(t+crossz)*math.sqrt(.5)),ombro.y+crossy,ombro.z+(-t+crossz)*math.sqrt(.5)))
    q=q.lerp(rotated,blend)
   elif q.z>1.0:
    q.x*=1.045;q.y*=1.045

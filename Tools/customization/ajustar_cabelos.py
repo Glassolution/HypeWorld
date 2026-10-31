@@ -1,9 +1,12 @@
+# CORPO BASE DE REFERÊNCIA: Content/HypeWorld/Characters/Base/SK_Base_Body.fbx = etapa 10 de 30/10/2026 (ombros 2,40
+# larguras de cabeça, cabeça -5%; ferramentas_ia/corpo_base/etapa10_ombros.py). O rig e a bind pose vêm desse FBX
+# (braço e cabeça fora da pose do Indra_Referencia). Versões antigas: SourceAssets/_Old_Versions.
 # Reajusta os cabelos na cabeça do SK_Base_Body (substitui o encaixe de cabelo do fit_indra_cosmetics.py).
 # blender -b --factory-startup --python ajustar_cabelos.py -- [--ids Hair_itachi,...] [--modo novo|antigo] [--fotos PASTA] [--sem-fbx]
 # Os GLBs originais não são alterados. Saída: SourceAssets/Customization/Fitted/<id>/<id>.fbx (o FBX anterior fica em <id>/antes/).
 import bpy,sys,re,json,math,shutil,argparse,numpy as np
 from pathlib import Path
-from mathutils import Vector
+from mathutils import Vector,Matrix
 from mathutils.bvhtree import BVHTree
 from mathutils.kdtree import KDTree
 ROOT=Path(__file__).resolve().parents[2]
@@ -55,15 +58,15 @@ def fit_ellipsoid(points):
  return Vector((0,cy,cz)),Vector((math.sqrt(g/u),math.sqrt(g/v),math.sqrt(g/s)))
 
 def load_base():
- clear();bpy.ops.import_scene.fbx(filepath=str(ROOT/'Docs/PadraoPersonagem/Indra_Referencia.fbx'))
+ # rig e corpo do mesmo FBX (corpo base atual). Sem o nulo SK_Indra o rig antigo ficava com os ossos em centímetros no
+ # mundo (escala x100) e a exportação multiplica a malha por 100: o rig do corpo novo recebe a mesma escala.
+ clear();bpy.ops.import_scene.fbx(filepath=str(ROOT/'Content/HypeWorld/Characters/Base/SK_Base_Body.fbx'))
  rig=next(o for o in bpy.context.scene.objects if o.type=='ARMATURE')
- for o in list(bpy.context.scene.objects):
-  if o!=rig:bpy.data.objects.remove(o,do_unlink=True)
- before=set(bpy.data.objects);bpy.ops.import_scene.fbx(filepath=str(ROOT/'Content/HypeWorld/Characters/Base/SK_Base_Body.fbx'))
- body=next(o for o in set(bpy.data.objects)-before if o.type=='MESH')
+ body=next(o for o in bpy.context.scene.objects if o.type=='MESH')
  w=body.matrix_world.copy();body.parent=None;body.matrix_world=w
- for o in set(bpy.data.objects)-before:
-  if o!=body:bpy.data.objects.remove(o,do_unlink=True)
+ for o in list(bpy.context.scene.objects):
+  if o not in (rig,body):bpy.data.objects.remove(o,do_unlink=True)
+ rig.matrix_world=Matrix.Scale(100,4)@rig.matrix_world
  for m in list(body.modifiers):body.modifiers.remove(m)
  bpy.ops.object.select_all(action='DESELECT');body.select_set(True);bpy.context.view_layer.objects.active=body;bpy.ops.object.transform_apply(location=True,rotation=True,scale=True)
  body.name='SK_Base_Body'

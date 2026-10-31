@@ -41,6 +41,26 @@ struct FNinjaPoseInputs
 	float BattleAlpha = 0.f;					// 0..1 pose de luta parada (modo de batalha)
 	float BattleTime = 0.f;						// relógio da pose de luta (ela é um loop)
 	float Time = 0.f;							// relógio da animação (respiração)
+	float PostureAlpha = 0.f;					// 0..1 correção de postura (some em montagens, dash, luta, defesa, chakra)
+	float PostureStand = 1.f;					// 0..1 parado (1) ou em movimento (0)
+	float PostureWalk = 0.f;					// 0..1 andando (some correndo)
+};
+
+/** Ajustes da correção de postura, copiados para a thread da pose. */
+struct FNinjaPostureParams
+{
+	float SpinePitch[5] = { 0.f, 0.f, 0.f, 0.f, 0.f };	// spine_01..spine_05, graus (+ = para trás)
+	float NeckPitch[2] = { 0.f, 0.f };					// neck_01, neck_02
+	float MovingSpineScale = 0.f;
+	float GazeLevel = 1.f;
+	float GazePitch = 0.f;
+	float ClavicleRaise = 0.f;
+	float ClavicleBack = 0.f;
+	float ArmsKeep = 1.f;
+	float StandArmsOut = 0.f;
+	float WalkNeckPitch = 0.f;
+	float WalkArmsIn = 0.f;
+	float WalkGazeLevel = 1.f;
 };
 
 USTRUCT()
@@ -74,6 +94,11 @@ private:
 	const UAnimSequenceBase* CombatPose = nullptr;
 	const UAnimSequenceBase* CombatCenterPose = nullptr;
 	float CombatSpineFromRun = 0.25f;
+
+	/** Postura (depois da locomoção): coluna e pescoço inclinados osso a osso, olhar na horizontal, clavículas e braços.
+	 *  Os braços continuam pendurados como na animação quando o tronco muda. */
+	void ApplyPosture(FPoseContext& Output) const;
+	FNinjaPostureParams Posture;
 
 	/** Abre os dedos de uma mão (puxa para a pose de referência, que é a mão aberta). */
 	void OpenHand(FCompactPose& Pose, bool bRight, float Alpha, bool bOnlyIndexAndMiddle = false) const;
@@ -314,6 +339,81 @@ public:
 	UPROPERTY(EditAnywhere, Category="Ninja|Corrida de combate")
 	float CombatLeanSpeed = 8.f;
 
+	// ---------- Postura: correção aplicada depois da locomoção (parado, andar, correr, corrida ninja) ----------
+	// Some durante montagens (golpes, jutsus, reações), dash, defesa, concentrar chakra e pose de luta.
+
+	/** Força geral da correção de postura (0 = animações como vieram). */
+	UPROPERTY(EditAnywhere, Category="Postura", meta=(ClampMin="0", ClampMax="1"))
+	float PosturaAlpha = 1.f;
+
+	/** Rapidez para a correção entrar/sair (ao começar/terminar um golpe, jutsu ou dash). */
+	UPROPERTY(EditAnywhere, Category="Postura")
+	float PosturaBlendSpeed = 8.f;
+
+	/** Inclinação de cada osso da coluna (graus, + = para trás / estende, - = para a frente). Vale parado. */
+	UPROPERTY(EditAnywhere, Category="Postura|Coluna")
+	float PosturaSpine01 = 0.f;
+	UPROPERTY(EditAnywhere, Category="Postura|Coluna")
+	float PosturaSpine02 = 0.f;
+	UPROPERTY(EditAnywhere, Category="Postura|Coluna")
+	float PosturaSpine03 = 0.f;
+	UPROPERTY(EditAnywhere, Category="Postura|Coluna")
+	float PosturaSpine04 = 0.f;
+	UPROPERTY(EditAnywhere, Category="Postura|Coluna")
+	float PosturaSpine05 = 0.f;
+
+	/** Inclinação do pescoço (graus, + = para trás). Vale parado. */
+	UPROPERTY(EditAnywhere, Category="Postura|Coluna")
+	float PosturaNeck01 = 0.f;
+	UPROPERTY(EditAnywhere, Category="Postura|Coluna")
+	float PosturaNeck02 = 0.f;
+
+	/** Em movimento fica só esta fração da coluna e do pescoço acima (as animações de correr já têm a própria postura). */
+	UPROPERTY(EditAnywhere, Category="Postura|Coluna", meta=(ClampMin="0", ClampMax="1"))
+	float PosturaColunaEmMovimento = 0.f;
+
+	/** 0..1: gira só a cabeça (depois do pescoço) até o olhar ficar na horizontal. */
+	UPROPERTY(EditAnywhere, Category="Postura|Cabeça", meta=(ClampMin="0", ClampMax="1"))
+	float PosturaOlharHorizontal = 1.f;
+
+	/** Inclinação do olhar (graus, + = para cima) com PosturaOlharHorizontal = 1. */
+	UPROPERTY(EditAnywhere, Category="Postura|Cabeça")
+	float PosturaOlharInclinacao = 0.f;
+
+	/** Clavícula: quanto o ombro sobe (graus) e vai para trás (graus, abre o peito). Vale parado e em movimento. */
+	UPROPERTY(EditAnywhere, Category="Postura|Ombros")
+	float PosturaClaviculaSobe = 0.f;
+	UPROPERTY(EditAnywhere, Category="Postura|Ombros")
+	float PosturaClaviculaTras = 0.f;
+
+	/** 0..1: os braços continuam pendurados como na animação quando o tronco e as clavículas mudam. */
+	UPROPERTY(EditAnywhere, Category="Postura|Ombros", meta=(ClampMin="0", ClampMax="1"))
+	float PosturaBracosMantem = 1.f;
+
+	/** Parado: braços um pouco para fora (graus, cada braço) para deixar um vão entre o braço e o tronco. */
+	UPROPERTY(EditAnywhere, Category="Postura|Ombros")
+	float PosturaBracosFora = 3.5f;
+
+	/** Andar: força da correção só do andar (0 = andar como veio). */
+	UPROPERTY(EditAnywhere, Category="Postura|Andar", meta=(ClampMin="0", ClampMax="1"))
+	float PosturaAndarAlpha = 1.f;
+
+	/** Andar: braços mais perto do corpo (graus, cada braço). */
+	UPROPERTY(EditAnywhere, Category="Postura|Andar")
+	float PosturaAndarBracosDentro = 10.f;
+
+	/** Andar: pescoço para trás (graus em neck_01 e em neck_02). */
+	UPROPERTY(EditAnywhere, Category="Postura|Andar")
+	float PosturaAndarPescoco = 0.f;
+
+	/** Andar: 0..1 olhar na horizontal. */
+	UPROPERTY(EditAnywhere, Category="Postura|Andar", meta=(ClampMin="0", ClampMax="1"))
+	float PosturaAndarOlharHorizontal = 1.f;
+
+	/** Andar: velocidade (cm/s) até onde vale a correção do andar; some até esta + 150 (correndo). */
+	UPROPERTY(EditAnywhere, Category="Postura|Andar")
+	float PosturaAndarVelocidadeMax = 320.f;
+
 	/** Rapidez com que a mão vai até a parede / volta. */
 	UPROPERTY(EditAnywhere, Category="Ninja|Parede")
 	float WallHandBlendSpeed = 10.f;
@@ -342,6 +442,7 @@ private:
 	float CombatAlpha = 0.f;
 	float CombatLean = 0.f;
 	float LastActorYaw = 0.f;
+	float PostureAlphaSmooth = 0.f;
 
 	/** Velocidade relativa à gravidade (na parede/teto o "chão" é a parede) — escrita nas variáveis do Anim Blueprint */
 	FVector SurfaceVelocity = FVector::ZeroVector;

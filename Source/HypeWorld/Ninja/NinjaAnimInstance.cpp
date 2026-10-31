@@ -13,6 +13,7 @@
 #include "Animation/AnimSequenceBase.h"
 #include "Animation/AnimationPoseData.h"
 #include "Animation/AnimMontageEvaluationState.h"
+#include "Animation/AnimMontage.h"
 #include "Engine/Engine.h"
 #include "HAL/IConsoleManager.h"
 
@@ -219,6 +220,23 @@ void UNinjaAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	PoseInputs.ArmsSpreadAlpha = FMath::FInterpTo(PoseInputs.ArmsSpreadAlpha, SpreadTarget, DeltaSeconds, 12.f);
 	PoseInputs.Time += DeltaSeconds;
 
+	// --- Postura: só na locomoção; some em qualquer montagem (golpe, jutsu, reação, dash), na pose de luta, defesa e chakra ---
+	{
+		float MontageWeight = 0.f;
+		for (const FAnimMontageInstance* Instance : MontageInstances)
+		{
+			if (Instance) MontageWeight = FMath::Max(MontageWeight, Instance->GetWeight());
+		}
+		const float Target = PoseInputs.bDashPose ? 0.f : PosturaAlpha * (1.f - FMath::Clamp(MontageWeight, 0.f, 1.f))
+			* (1.f - BattleAlpha) * (1.f - CombatAlpha) * (1.f - PoseInputs.GuardAlpha) * (1.f - PoseInputs.ChargeAlpha);
+		PostureAlphaSmooth = FMath::FInterpTo(PostureAlphaSmooth, Target, DeltaSeconds, PosturaBlendSpeed);
+		PoseInputs.PostureAlpha = PostureAlphaSmooth;
+		const float Speed = Char->GetVelocity().Size2D();
+		const float Moving = FMath::SmoothStep(10.f, 120.f, Speed);
+		PoseInputs.PostureStand = 1.f - Moving;
+		PoseInputs.PostureWalk = Moving * (1.f - FMath::SmoothStep(PosturaAndarVelocidadeMax, PosturaAndarVelocidadeMax + 150.f, Speed)) * PosturaAndarAlpha;
+	}
+
 	// --- Pouso: agacha proporcional à velocidade da queda ---
 	if (bWasInAir && Move->IsMovingOnGround())
 	{
@@ -359,6 +377,23 @@ void FNinjaAnimInstanceProxy::PreUpdate(UAnimInstance* InAnimInstance, float Del
 		ChargeLean = Ninja->ChargeLean;
 		ChargeHandForward = Ninja->ChargeHandForward;
 		ChargeHandDrop = Ninja->ChargeHandDrop;
+		Posture.SpinePitch[0] = Ninja->PosturaSpine01;
+		Posture.SpinePitch[1] = Ninja->PosturaSpine02;
+		Posture.SpinePitch[2] = Ninja->PosturaSpine03;
+		Posture.SpinePitch[3] = Ninja->PosturaSpine04;
+		Posture.SpinePitch[4] = Ninja->PosturaSpine05;
+		Posture.NeckPitch[0] = Ninja->PosturaNeck01;
+		Posture.NeckPitch[1] = Ninja->PosturaNeck02;
+		Posture.MovingSpineScale = Ninja->PosturaColunaEmMovimento;
+		Posture.GazeLevel = Ninja->PosturaOlharHorizontal;
+		Posture.GazePitch = Ninja->PosturaOlharInclinacao;
+		Posture.ClavicleRaise = Ninja->PosturaClaviculaSobe;
+		Posture.ClavicleBack = Ninja->PosturaClaviculaTras;
+		Posture.ArmsKeep = Ninja->PosturaBracosMantem;
+		Posture.StandArmsOut = Ninja->PosturaBracosFora;
+		Posture.WalkNeckPitch = Ninja->PosturaAndarPescoco;
+		Posture.WalkArmsIn = Ninja->PosturaAndarBracosDentro;
+		Posture.WalkGazeLevel = Ninja->PosturaAndarOlharHorizontal;
 	}
 }
 
@@ -419,6 +454,7 @@ bool FNinjaAnimInstanceProxy::Evaluate_WithRoot(FPoseContext& Output, FAnimNode_
 		ApplyBattleIdle(Output);
 		ApplyCombatReady(Output);
 		ApplyCombatOrientationWarp(Output);
+		ApplyPosture(Output);
 	}
 	if (InRootNode == GetRootNode() && bProceduralPose)
 	{
@@ -1023,4 +1059,98 @@ void FNinjaAnimInstanceProxy::ApplyBattleIdle(FPoseContext& Output) const
 	{
 		Output.Pose[Index].BlendWith(Battle.Pose[Index], Inputs.BattleAlpha);
 	}
+}
+
+void FNinjaAnimInstanceProxy::ApplyPosture(FPoseContext& Output) const
+{
+	const float A = Inputs.PostureAlpha;
+	if (A < 0.01f) return;
+	const FBoneContainer& Bones = Output.Pose.GetBoneContainer();
+	auto Bone = [&Bones](const TCHAR* Name)
+	{
+		FBoneReference Ref(Name);
+		Ref.Initialize(Bones);
+		return Ref.GetCompactPoseIndex(Bones);
+	};
+	const FVector Fwd = Inputs.ForwardCS.GetSafeNormal();
+	const FVector Up = Inputs.UpCS.GetSafeNormal();
+	const FVector Lateral = FVector::CrossProduct(Up, Fwd).GetSafeNormal();
+	// Sinal que faz um giro positivo em volta do eixo lateral levar o topo do osso para trás
+	const float BackSign = FVector::DotProduct(FQuat(Lateral, 0.1f).RotateVector(Up), Fwd) < 0.f ? 1.f : -1.f;
+	auto Pitch = [&](float Deg) { return FQuat(Lateral, BackSign * FMath::DegreesToRadians(Deg)); };
+
+	// Parado vale tudo; em movimento só a fração escolhida da coluna e do pescoço. O andar soma o próprio ajuste.
+	const float SpineScale = A * (Inputs.PostureStand + (1.f - Inputs.PostureStand) * Posture.MovingSpineScale);
+	const float Walk = A * Inputs.PostureWalk;
+
+	FCSPose<FCompactPose> CS;
+	CS.InitPose(Output.Pose);
+	TMap<int32, FQuat> Delta;	// giro (component space) já aplicado em cada osso mudado; os filhos herdam
+	auto Inherited = [&](FCompactPoseBoneIndex I)
+	{
+		const FCompactPoseBoneIndex P = Output.Pose.GetParentBoneIndex(I);
+		const FQuat* D = P.IsValid() ? Delta.Find(P.GetInt()) : nullptr;
+		return D ? *D : FQuat::Identity;
+	};
+	auto SetCS = [&](FCompactPoseBoneIndex I, const FQuat& NewCS)
+	{
+		const FCompactPoseBoneIndex P = Output.Pose.GetParentBoneIndex(I);
+		const FQuat ParentNew = Inherited(I) * CS.GetComponentSpaceTransform(P).GetRotation();
+		Delta.Add(I.GetInt(), (NewCS * CS.GetComponentSpaceTransform(I).GetRotation().Inverse()).GetNormalized());
+		Output.Pose[I].SetRotation((ParentNew.Inverse() * NewCS).GetNormalized());
+	};
+	auto Rotate = [&](FCompactPoseBoneIndex I, const FQuat& Extra)
+	{
+		if (I.IsValid()) SetCS(I, (Extra * Inherited(I) * CS.GetComponentSpaceTransform(I).GetRotation()).GetNormalized());
+	};
+
+	// Coluna e pescoço, de baixo para cima
+	const TCHAR* Spine[] = { TEXT("spine_01"), TEXT("spine_02"), TEXT("spine_03"), TEXT("spine_04"), TEXT("spine_05") };
+	for (int32 i = 0; i < 5; ++i) Rotate(Bone(Spine[i]), Pitch(Posture.SpinePitch[i] * SpineScale));
+	Rotate(Bone(TEXT("neck_01")), Pitch(Posture.NeckPitch[0] * SpineScale + Posture.WalkNeckPitch * Walk));
+	Rotate(Bone(TEXT("neck_02")), Pitch(Posture.NeckPitch[1] * SpineScale + Posture.WalkNeckPitch * Walk));
+
+	// Cabeça: gira só em volta do eixo lateral até o olhar (a frente da cabeça na pose de referência) ficar na horizontal
+	const FCompactPoseBoneIndex Head = Bone(TEXT("head"));
+	if (Head.IsValid())
+	{
+		FCompactPose Ref;
+		Ref.SetBoneContainer(&Bones);
+		Ref.ResetToRefPose();
+		FCSPose<FCompactPose> RefCS;
+		RefCS.InitPose(Ref);
+		const FVector GazeLocal = RefCS.GetComponentSpaceTransform(Head).GetRotation().UnrotateVector(Fwd);
+		const FQuat Now = (Inherited(Head) * CS.GetComponentSpaceTransform(Head).GetRotation()).GetNormalized();
+		const FVector Gaze = Now.RotateVector(GazeLocal);
+		const float Elevation = FMath::RadiansToDegrees(FMath::Asin(FMath::Clamp(FVector::DotProduct(Gaze, Up), -1.f, 1.f)));
+		const float Level = FMath::Clamp(Posture.GazeLevel * SpineScale + Posture.WalkGazeLevel * Walk, 0.f, 1.f);
+		// olhar para cima = topo da cabeça para trás
+		SetCS(Head, (Pitch(Level * (Posture.GazePitch - Elevation)) * Now).GetNormalized());
+	}
+
+	// Clavículas: sobem e vão para trás; os braços continuam pendurados como na animação (e, andando, mais perto do corpo)
+	for (const bool bRight : { false, true })
+	{
+		const FCompactPoseBoneIndex Clav = Bone(bRight ? TEXT("clavicle_r") : TEXT("clavicle_l"));
+		const FCompactPoseBoneIndex Arm = Bone(bRight ? TEXT("upperarm_r") : TEXT("upperarm_l"));
+		const FCompactPoseBoneIndex Elbow = Bone(bRight ? TEXT("lowerarm_r") : TEXT("lowerarm_l"));
+		if (!Clav.IsValid() || !Arm.IsValid() || !Elbow.IsValid()) continue;
+		const FVector D = Inherited(Clav).RotateVector(CS.GetComponentSpaceTransform(Arm).GetLocation() - CS.GetComponentSpaceTransform(Clav).GetLocation()).GetSafeNormal();
+		FQuat Raise(Fwd, FMath::DegreesToRadians(Posture.ClavicleRaise * A));
+		if ((FVector::DotProduct(Raise.RotateVector(D), Up) < FVector::DotProduct(D, Up)) == (Posture.ClavicleRaise > 0.f)) Raise = Raise.Inverse();
+		FQuat Back(Up, FMath::DegreesToRadians(Posture.ClavicleBack * A));
+		if ((FVector::DotProduct(Back.RotateVector(D), Fwd) > FVector::DotProduct(D, Fwd)) == (Posture.ClavicleBack > 0.f)) Back = Back.Inverse();
+		Rotate(Clav, Back * Raise);
+
+		const FQuat ArmOld = CS.GetComponentSpaceTransform(Arm).GetRotation();
+		const FVector ArmDir = (CS.GetComponentSpaceTransform(Elbow).GetLocation() - CS.GetComponentSpaceTransform(Arm).GetLocation()).GetSafeNormal();
+		const FVector Out = bRight ? Inputs.RightCS.GetSafeNormal() : -Inputs.RightCS.GetSafeNormal();
+		// graus para dentro: andando, braços mais perto do corpo; parado, um pouco para fora (vão entre braço e tronco)
+		const float InDeg = Posture.WalkArmsIn * Walk - Posture.StandArmsOut * A * Inputs.PostureStand;
+		FQuat In(Fwd, FMath::DegreesToRadians(InDeg));
+		if ((FVector::DotProduct(In.RotateVector(ArmDir), Out) > FVector::DotProduct(ArmDir, Out)) == (InDeg > 0.f)) In = In.Inverse();
+		const FQuat Followed = (Inherited(Arm) * ArmOld).GetNormalized();
+		SetCS(Arm, (In * FQuat::Slerp(Followed, ArmOld, Posture.ArmsKeep * A)).GetNormalized());
+	}
+	// Filhos dos ossos mudados seguem pelos giros locais (a pose é local); nada mais a fazer
 }

@@ -74,16 +74,20 @@ def capture_reference():
     return profile
 
 
-def validate_mesh(mesh):
+def validate_mesh(mesh, reference_mesh=None):
+    """Confere esqueleto, hierarquia e bind pose. Sem reference_mesh compara com o padrão Indra (json);
+    com reference_mesh compara com a bind pose dessa malha. Roupas e cabelos do corpo base atual (SK_Base_Body da
+    etapa 10, braço e cabeça fora da pose do Indra desde 30/10/2026) passam reference_mesh=SK_Base_Body."""
     profile = json.loads(PROFILE.read_text(encoding='utf-8'))
     if not isinstance(mesh, unreal.SkeletalMesh):
         raise RuntimeError('Selecione uma Skeletal Mesh no Content Browser.')
     if mesh.get_editor_property('skeleton').get_path_name() != profile['skeleton']:
         raise RuntimeError('Malha com outro esqueleto. Vincule uma cópia ao rig do Indra no Blender/Maya e importe com SKEL_Indra. Nenhum arquivo foi alterado.')
     bones = _reference_bones(mesh)
-    if set(bones) != set(profile['reference_bones']):
+    reference = _reference_bones(reference_mesh) if reference_mesh else profile['reference_bones']
+    if set(bones) != set(reference):
         raise RuntimeError('Hierarquia incompatível com o padrão Indra.')
-    for name, expected in profile['reference_bones'].items():
+    for name, expected in reference.items():
         actual = bones[name]
         distance = sum((a-b)**2 for a,b in zip(actual['position_cm'],expected['position_cm'])) ** .5
         dot = abs(sum(a*b for a,b in zip(actual['rotation_xyzw'],expected['rotation_xyzw'])))

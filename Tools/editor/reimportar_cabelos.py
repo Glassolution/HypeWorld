@@ -1,3 +1,5 @@
+# CORPO BASE DE REFERÊNCIA: /Game/HypeWorld/Characters/Base/SK_Base_Body (etapa 10 de 30/10/2026: ombros 2,40 larguras
+# de cabeça, cabeça -5%). A bind pose das peças é copiada dele, não do SK_Indra: braço e cabeça saíram da pose do Indra.
 import unreal,json
 # Reimporta por cima dos SK_Hair_* os FBX gerados por Tools/customization/ajustar_cabelos (mesmo Skeleton, mesmo material).
 # Pode rodar de novo sem duplicar nada. IDS vazio = todos os cabelos do manifesto.
@@ -9,7 +11,8 @@ DATA=ROOT/'SourceAssets/Customization/Fitted';rows=json.loads((DATA/'manifest.js
 E=unreal.EditorAssetLibrary;A=unreal.AssetToolsHelpers.get_asset_tools()
 unreal.SystemLibrary.execute_console_command(None,'Interchange.FeatureFlags.Import.FBX false')
 skel=unreal.load_asset('/Game/HypeWorld/Personagens/Indra/SKEL_Indra')
-ref=unreal.SkeletonModifier();ref.set_skeletal_mesh(unreal.load_asset('/Game/HypeWorld/Personagens/Indra/SK_Indra'));names=ref.get_all_bone_names()
+BODY=unreal.load_asset('/Game/HypeWorld/Characters/Base/SK_Base_Body')
+ref=unreal.SkeletonModifier();ref.set_skeletal_mesh(BODY);names=ref.get_all_bone_names()
 for row in rows:
  id=row['id']
  if row['kind']!='hair' or (IDS and id not in IDS):continue
@@ -19,7 +22,9 @@ for row in rows:
  mesh=unreal.load_asset(folder+'/SK_'+id);assert mesh,id
  mod=unreal.SkeletonModifier();assert mod.set_skeletal_mesh(mesh)
  assert set(map(str,mod.get_all_bone_names()))==set(map(str,names)),id
- # bind pose idêntica à do Indra (igual ao importar_cosmeticos_indra.py)
+ # bind pose idêntica à do corpo base (igual ao importar_cosmeticos_indra.py); antes confere que o FBX já está nela
+ pior=max((mod.get_bone_transform(n,True).translation-ref.get_bone_transform(n,True).translation).length() for n in names)
+ assert pior<.1,(id,'bind pose longe do SK_Base_Body (cm)',pior)
  mod.set_bones_transforms(names,[ref.get_bone_transform(n,False) for n in names],True);mod.commit_skeleton_to_skeletal_mesh()
  if mi:
   # o FBX novo traz o material com outro nome e a reimportação cria um 2º espaço vazio (= material padrão cinza): todos recebem o MI
