@@ -1,3 +1,5 @@
+# CORPO BASE DE REFERÊNCIA: /Game/HypeWorld/Characters/Base/SK_Base_Body (etapa 10 de 30/10/2026: ombros 2,40 larguras
+# de cabeça, cabeça -5%). A bind pose das peças é copiada dele, não do SK_Indra: braço e cabeça saíram da pose do Indra.
 import unreal,sys,json,math
 from pathlib import Path
 ROOT=Path(unreal.Paths.project_dir()).resolve()
@@ -7,7 +9,7 @@ FOLDER='/Game/Ninja/Characters/Customization'
 DATA=ROOT/'SourceAssets/Customization/Fitted';report=json.loads((DATA/'manifest.json').read_text())
 E=unreal.EditorAssetLibrary;A=unreal.AssetToolsHelpers.get_asset_tools();M=unreal.MaterialEditingLibrary
 unreal.SystemLibrary.execute_console_command(None,'Interchange.FeatureFlags.Import.FBX false')
-skel=unreal.load_asset('/Game/HypeWorld/Personagens/Indra/SKEL_Indra');ref=unreal.SkeletonModifier();ref.set_skeletal_mesh(unreal.load_asset('/Game/HypeWorld/Personagens/Indra/SK_Indra'));names=ref.get_all_bone_names();expected=json.loads((ROOT/'Content/Python/indra_character_standard.json').read_text())['reference_bones']
+skel=unreal.load_asset('/Game/HypeWorld/Personagens/Indra/SKEL_Indra');BODY=unreal.load_asset('/Game/HypeWorld/Characters/Base/SK_Base_Body');ref=unreal.SkeletonModifier();ref.set_skeletal_mesh(BODY);names=ref.get_all_bone_names();expected=standard._reference_bones(BODY)
 validated=[]
 def texture(file,folder,name):
  task=unreal.AssetImportTask();task.filename=str(file);task.destination_path=folder;task.destination_name=name;task.automated=True;task.replace_existing=True;task.save=True;A.import_asset_tasks([task]);return unreal.load_asset(folder+'/'+name)
@@ -48,7 +50,7 @@ for i,row in enumerate(report['parts']):
   assert math.dist(a['position_cm'],e['position_cm'])<.1,(id,name,'position')
   assert max(abs(x-y) for x,y in zip(a['scale'],e['scale']))<.001,(id,name,'scale')
   assert abs(sum(x*y for x,y in zip(a['rotation_xyzw'],e['rotation_xyzw'])))>.999,(id,name,'orientation')
- mod.set_bones_transforms(names,[ref.get_bone_transform(n,False) for n in names],True);mod.commit_skeleton_to_skeletal_mesh();standard.validate_mesh(mesh)
+ mod.set_bones_transforms(names,[ref.get_bone_transform(n,False) for n in names],True);mod.commit_skeleton_to_skeletal_mesh();standard.validate_mesh(mesh,BODY)
  tex=texture(DATA/id/'BaseColor.png',folder,'T_'+id)
  master=parent(row['kind']=='hair',tex);mi=unreal.load_asset(folder+'/MI_'+id)
  if not mi:mi=A.create_asset('MI_'+id,folder,unreal.MaterialInstanceConstant,unreal.MaterialInstanceConstantFactoryNew())
