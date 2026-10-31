@@ -37,6 +37,11 @@ struct FHypeAppearance
     UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame) FLinearColor HairColor = FLinearColor(0.025f, 0.02f, 0.02f);
     UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame) FName HairId;
     UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame) FName OutfitId;
+    /** Peças avulsas do DT_CustomizationParts (nome da linha). Com OutfitId (traje inteiro) as avulsas de corpo não aparecem. */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame) FName EyesId;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame) FName TopId;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame) FName BottomId;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame) FName ShoesId;
 
     void Sanitize()
     {

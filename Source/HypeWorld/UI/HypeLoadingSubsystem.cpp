@@ -2,6 +2,8 @@
 
 #include "HypeLoadingSubsystem.h"
 #include "AssetRegistry/IAssetRegistry.h"
+#include "AssetCompilingManager.h"
+#include "UnrealClient.h"
 #include "Blueprint/UserWidget.h"
 #include "Engine/Engine.h"
 #include "Engine/GameInstance.h"
@@ -20,6 +22,37 @@ void UHypeLoadingSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 	PostLoadMapHandle = FCoreUObjectDelegates::PostLoadMapWithWorld.AddUObject(this, &UHypeLoadingSubsystem::OnPostLoadMap);
+	// Jogo fora do editor: sem mensagens de debug na tela ("Preparing Shaders", "'DisableAllScreenMessages' to suppress").
+	// Igual ao comando DisableAllScreenMessages; no editor (Play) continuam aparecendo.
+	if (!GIsEditor)
+	{
+		GAreScreenMessagesEnabled = false;
+	}
+}
+
+int32 UHypeLoadingSubsystem::GetPendingCompiles() const
+{
+	return FAssetCompilingManager::Get().GetNumRemainingAssets();
+}
+
+void UHypeLoadingSubsystem::WarmUp(const TArray<FSoftObjectPath>& Paths)
+{
+	TSet<FString> Packages;
+	for (const FSoftObjectPath& Path : Paths)
+	{
+		if (Path.IsValid()) { Packages.Add(Path.GetLongPackageName()); }
+	}
+	for (const FString& Package : Packages)
+	{
+		LoadPackageAsync(Package, FLoadPackageAsyncDelegate::CreateWeakLambda(this, [this](const FName&, UPackage* Loaded, EAsyncLoadingResult::Type Result)
+		{
+			if (Result == EAsyncLoadingResult::Succeeded && Loaded)
+			{
+				WarmedAssets.Add(Loaded);
+			}
+		}));
+	}
+	UE_LOG(LogHypeLoading, Log, TEXT("Aquecendo %d pacotes (peças da criação de personagem)"), Packages.Num());
 }
 
 void UHypeLoadingSubsystem::Deinitialize()
@@ -211,6 +244,10 @@ bool UHypeLoadingSubsystem::TickFade(float DeltaTime)
 	}
 	if (T >= 1.f)
 	{
+		if (FParse::Param(FCommandLine::Get(), TEXT("CreationShots")))
+		{
+			FScreenshotRequest::RequestScreenshot(TEXT("Criacao_5_Jogo"), true, false);
+		}
 		RemoveFadeOverlay();
 		return false;
 	}

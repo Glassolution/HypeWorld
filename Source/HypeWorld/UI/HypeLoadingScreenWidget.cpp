@@ -3,6 +3,8 @@
 #include "HypeLoadingScreenWidget.h"
 #include "HypeLoadingSubsystem.h"
 #include "HypeCharacterSelectWidget.h"
+#include "Ninja/NinjaCustomization.h"
+#include "Engine/DataTable.h"
 #include "Blueprint/WidgetTree.h"
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
@@ -32,6 +34,7 @@ UHypeLoadingScreenWidget::UHypeLoadingScreenWidget(const FObjectInitializer& Obj
 {
 	MapaSeguinte = TSoftObjectPtr<UWorld>(FSoftObjectPath(TEXT("/Game/Maps/Tutorial/L_Tutorial_Forest.L_Tutorial_Forest")));
 	TelaAoEntrar = TSoftClassPtr<UUserWidget>(FSoftObjectPath(TEXT("/Game/HypeWorld/UI/CharacterSelect/WBP_CharacterSelect.WBP_CharacterSelect_C")));
+	AquecerPecas = TSoftObjectPtr<UDataTable>(FSoftObjectPath(TEXT("/Game/HypeWorld/Characters/Parts/DT_CustomizationParts.DT_CustomizationParts")));
 	Logo = TSoftObjectPtr<UTexture2D>(FSoftObjectPath(TEXT("/Game/HypeWorld/UI/Textures/T_Logo_HypeWorld.T_Logo_HypeWorld")));
 	LogoMaterial = TSoftObjectPtr<UMaterialInterface>(FSoftObjectPath(TEXT("/Game/HypeWorld/UI/Loading/M_UI_LoadingLogo.M_UI_LoadingLogo")));
 	BackgroundMaterial = TSoftObjectPtr<UMaterialInterface>(FSoftObjectPath(TEXT("/Game/HypeWorld/UI/Loading/M_UI_LoadingBackground.M_UI_LoadingBackground")));
@@ -172,7 +175,19 @@ void UHypeLoadingScreenWidget::NativeConstruct()
 	if (UHypeLoadingSubsystem* Loader = GameInstance ? GameInstance->GetSubsystem<UHypeLoadingSubsystem>() : nullptr)
 	{
 		Loader->StartPreload(MapaSeguinte);
+		if (const UDataTable* Parts = AquecerPecas.LoadSynchronous())
+		{
+			TArray<FSoftObjectPath> Paths;
+			Parts->ForeachRow<FNinjaCustomizationPart>(TEXT("Aquecer"), [&Paths](const FName&, const FNinjaCustomizationPart& Part)
+			{
+				Paths.Add(Part.Mesh.ToSoftObjectPath());
+				Paths.Add(Part.Material.ToSoftObjectPath());
+				Paths.Add(Part.EyeTexture.ToSoftObjectPath());
+			});
+			Loader->WarmUp(Paths);
+		}
 	}
+	ShaderWait = 0.f;
 }
 
 void UHypeLoadingScreenWidget::UpdateLayout(const FVector2D& ScreenSize)
@@ -286,6 +301,18 @@ void UHypeLoadingScreenWidget::NativeTick(const FGeometry& MyGeometry, float InD
 			{
 				SetStatus(NSLOCTEXT("HypeLoading", "Fail", "Não foi possível carregar o mapa"));
 				CountdownShown = -2;
+			}
+			PhraseTime = -1000.f;
+		}
+		else if (Shown >= 1.f && Loader && Loader->IsPreloaded() && Elapsed >= MinDisplayTime
+			&& Loader->GetPendingCompiles() > 0 && ShaderWait < MaxShaderWait)
+		{
+			// Mapa pronto, shaders ainda compilando: espera aqui (sem "Preparing Shaders" e sem material cinza no jogo)
+			ShaderWait += Dt;
+			if (CountdownShown != -3)
+			{
+				SetStatus(NSLOCTEXT("HypeLoading", "Shaders", "Preparando os efeitos visuais..."));
+				CountdownShown = -3;
 			}
 			PhraseTime = -1000.f;
 		}

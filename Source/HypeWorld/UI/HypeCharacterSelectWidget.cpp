@@ -4,8 +4,15 @@
 #include "HypeCharacterSelectWidget.h"
 #include "HypeProfileSubsystem.h"
 #include "Ninja/HypeAppearanceComponent.h"
+#include "Combat/NinjaVisibleBody.h"
+#include "HypeLoadingSubsystem.h"
+#include "Camera/PlayerCameraManager.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "GameFramework/Character.h"
+#include "Kismet/GameplayStatics.h"
+#include "Misc/PackageName.h"
+#include "UnrealClient.h"
 #include "Components/EditableTextBox.h"
-#include "Components/Slider.h"
 #include "Components/HorizontalBox.h"
 #include "Components/HorizontalBoxSlot.h"
 #include "Components/VerticalBox.h"
@@ -43,7 +50,10 @@ namespace HypeSelect
     const TArray<FLinearColor> HairColors = {
         FLinearColor(0.025f, 0.02f, 0.02f), FLinearColor(0.12f, 0.055f, 0.025f),
         FLinearColor(0.35f, 0.18f, 0.07f), FLinearColor(0.8f, 0.59f, 0.23f),
-        FLinearColor(0.7f, 0.72f, 0.76f), FLinearColor(0.4f, 0.06f, 0.025f)
+        FLinearColor(0.7f, 0.72f, 0.76f), FLinearColor(0.4f, 0.06f, 0.025f),
+        FLinearColor(0.92f, 0.9f, 0.88f), FLinearColor(0.75f, 0.22f, 0.04f),
+        FLinearColor(0.95f, 0.78f, 0.3f), FLinearColor(0.85f, 0.38f, 0.52f),
+        FLinearColor(0.03f, 0.05f, 0.16f), FLinearColor(0.18f, 0.2f, 0.24f)
     };
 	// Cores medidas na referência (sRGB) convertidas para o espaço linear da interface (sem isso o preto vira cinza)
 	FLinearColor SRGB(uint8 R, uint8 G, uint8 B, float A = 1.f)
@@ -63,12 +73,12 @@ namespace HypeSelect
 
 	float EaseOut(float T) { T = FMath::Clamp(T, 0.f, 1.f); return 1.f - FMath::Pow(1.f - T, 3.f); }
 
-	FSlateBrush Rounded(const FLinearColor& Fill, float Radius)
+	FSlateBrush Rounded(const FLinearColor& Fill, float Radius, const FLinearColor& Outline = FLinearColor::Transparent, float OutlineWidth = 0.f)
 	{
 		FSlateBrush Brush;
 		Brush.DrawAs = ESlateBrushDrawType::RoundedBox;
 		Brush.TintColor = FSlateColor(Fill);
-		Brush.OutlineSettings = FSlateBrushOutlineSettings(Radius, FSlateColor(FLinearColor::Transparent), 0.f);
+		Brush.OutlineSettings = FSlateBrushOutlineSettings(Radius, FSlateColor(Outline), OutlineWidth);
 		return Brush;
 	}
 
@@ -155,6 +165,11 @@ UHypeCharacterSelectWidget::UHypeCharacterSelectWidget(const FObjectInitializer&
 	Suna.IconColor = HypeSelect::SRGB(212, 180, 120);
 	Villages = { Konoha, Suna };
 
+	OptionCardClass = TSoftClassPtr<UHypeOptionCardWidget>(FSoftObjectPath(TEXT("/Game/HypeWorld/UI/CharacterSelect/Components/WBP_OptionCard.WBP_OptionCard_C")));
+	ColorRowClass = TSoftClassPtr<UHypeColorRowWidget>(FSoftObjectPath(TEXT("/Game/HypeWorld/UI/CharacterSelect/Components/WBP_ColorRow.WBP_ColorRow_C")));
+	GradientSliderClass = TSoftClassPtr<UHypeGradientSliderWidget>(FSoftObjectPath(TEXT("/Game/HypeWorld/UI/CharacterSelect/Components/WBP_GradientSlider.WBP_GradientSlider_C")));
+	MapaDoJogo = TSoftObjectPtr<UWorld>(FSoftObjectPath(TEXT("/Game/Maps/Tutorial/L_Tutorial.L_Tutorial")));
+
 	SetIsFocusable(true);
 }
 
@@ -193,19 +208,16 @@ void UHypeCharacterSelectWidget::BuildLayout()
 		WidgetTree->RootWidget = Canvas;
 		Canvas->SetRenderOpacity(0.f);
 	}
-    SkinFrames.Reset();
-    SkinChecks.Reset();
+    Cards.Reset();
+    HairColorRow = nullptr;
+    HairColorHex = nullptr;
+    bPlacingPageContent = false;
     SkinAmountLabel = nullptr;
     NameInput = nullptr;
     HeightLabel = nullptr;
     HeightSlider = nullptr;
     SkinSlider = nullptr;
     CreationErrorLabel = nullptr;
-    SkinButtons.Reset();
-    HairColorButtons.Reset();
-    HairChoice = nullptr;
-    OutfitChoice = nullptr;
-    VisibleOutfitIds.Reset();
     PageOpacities.Reset();
     ButtonHover.Reset();
 	VillageButtons.Reset();
@@ -296,6 +308,13 @@ void UHypeCharacterSelectWidget::BuildLayout()
 			const bool Gap = SegmentDistance(P, FVector2f(-0.36f, -0.36f), FVector2f(0.36f, 0.36f)) < 0.09f;
 			return Slash ? 1.f : ((Outline || Pupil) && !Gap ? 1.f : 0.f);
 		});
+		// Degradê da criação: preto PanelShade na borda esquerda até sumir em PanelShadeReach da largura
+		const float Edge = PanelShade, Reach = FMath::Max(PanelShadeReach, 0.05f);
+		CreatorShadeTexture = MakeTexture(256, 4, [Edge, Reach](float X, float)
+		{
+			const float U = X / 256.f;
+			return Edge * (1.f - FMath::SmoothStep(0.f, Reach, U));
+		});
 		LogoTexture = Logo.LoadSynchronous();
 		if (!LogoTexture)
 		{
@@ -324,7 +343,7 @@ void UHypeCharacterSelectWidget::BuildLayout()
 		{
 			PanelSlot->SetSize(Size);
 		}
-        PageOpacities.Add(Widget, Widget->GetRenderOpacity());
+        if (bPlacingPageContent || !bCreatingCharacter) { PageOpacities.Add(Widget, Widget->GetRenderOpacity()); }
 		return PanelSlot;
 	};
 	auto MakeImage = [this](const FSlateBrush& Brush, float Opacity = 1.f)
@@ -403,6 +422,11 @@ void UHypeCharacterSelectWidget::BuildLayout()
 	UCanvasPanelSlot* ShadeSlot = Canvas->AddChildToCanvas(Shade);
 	ShadeSlot->SetAnchors(FAnchors(0.f, 0.f, 1.f, 1.f));
 	ShadeSlot->SetOffsets(FMargin(0.f));
+	UImage* DragArea = MakeImage(Rounded(FLinearColor::Transparent, 0.f));
+	DragArea->SetVisibility(ESlateVisibility::Visible);
+	UCanvasPanelSlot* DragSlot = Canvas->AddChildToCanvas(DragArea);
+	DragSlot->SetAnchors(FAnchors(0.f, 0.f, 1.f, 1.f));
+	DragSlot->SetOffsets(FMargin(0.f));
 
 	// --- Logo e frase ---
 	if (LogoTexture && !bCreatingCharacter)
@@ -478,51 +502,50 @@ void UHypeCharacterSelectWidget::BuildLayout()
     }
     if (bCreatingCharacter && CreationStep > 0)
     {
-        const float FormLeft=ColumnCenter-172.f;
-        const float FormWidth=344.f;
+        // Layout do Zenkai: painel à esquerda sobre um degradê preto, personagem no centro (câmera própria).
+        const float FormLeft=FormLeftX;
+        const float FormWidth=FormWidthPx;
+        const float FormCenter=FormLeft+FormWidth*0.5f;
         const FLinearColor Muted=SRGB(193,191,185,0.72f);
-        auto Label = [&](const FString& Text, float Y, int32 Size = 11)
+        const FVector2D LeftMid(0.f,0.5f);
+        Shade->SetBrush(TextureBrush(CreatorShadeTexture,FLinearColor::Black));
+
+        if (LogoTexture)
         {
-            UTextBlock* Widget=MakeText(FText::FromString(Text),FontInfo(TEXT("SemiBold"),Size),White);
-            Widget->SetJustification(ETextJustify::Left);
-            Widget->SetWrapTextAt(FormWidth);
-            Place(Widget,TopLeft,FVector2D(FormLeft,Y),FVector2D::ZeroVector,FVector2D(0,0.5f));
+            const float Aspect=LogoTexture->GetSizeX()>64 ? float(LogoTexture->GetSizeY())/float(LogoTexture->GetSizeX()) : 0.55f;
+            Place(MakeImage(TextureBrush(LogoTexture,White)),TopLeft,FVector2D(FormCenter,178),FVector2D(150,150*Aspect),Center);
+        }
+        auto Label = [&](const FString& Text,float X,float Y,int32 Size,const FLinearColor& Color,FVector2D Alignment=FVector2D(0.f,0.5f),const TCHAR* Face=TEXT("SemiBold"))
+        {
+            UTextBlock* Widget=MakeText(FText::FromString(Text),FontInfo(Face,Size),Color);
+            Widget->SetJustification(Alignment.X>0.75f ? ETextJustify::Right : ETextJustify::Left);
+            Place(Widget,TopLeft,FVector2D(X,Y),FVector2D::ZeroVector,Alignment);
             return Widget;
         };
-        auto Action = [&](const FString& Text,float X,float Y,FName Function)
+        auto Icon = [&](FName Name,float Y)
         {
-            const bool bPrimary=Function==TEXT("NextCreationStep");
-            const FVector2D Size(166,44);
-            Place(MakeImage(Rounded(bPrimary ? SRGB(111,101,84,0.70f) : SRGB(8,10,11,0.94f),7.f)),TopLeft,FVector2D(X,Y),Size,Center);
-            UImage* Dashes=MakeImage(TextureBrush(DashTexture,White),bPrimary ? 0.24f : 0.f);
-            Place(Dashes,TopLeft,FVector2D(X,Y),Size,Center);
-            UButton* Button=MakeButton(7.f);
-            Button->OnClicked.Clear();
-            FScriptDelegate Click;
-            Click.BindUFunction(this,Function);
-            Button->OnClicked.Add(Click);
-            Button->AddChild(MakeText(FText::FromString(Text),FontInfo(TEXT("SemiBold"),10),White));
-            Place(Button,TopLeft,FVector2D(X,Y),Size,Center);
-            if (bPrimary) { NextButton=Button; NextDashes=Dashes; }
-            else { BackButton=Button; BackDashes=Dashes; }
-            return Button;
+            if (UTexture2D* Texture=GetCreatorIcon(Name))
+            {
+                Place(MakeImage(TextureBrush(Texture,SRGB(236,232,224,0.6f))),TopLeft,FVector2D(IconColumnX,Y),FVector2D(20,20),Center);
+            }
         };
+
+        // --- Abas: ativa em branco e sublinhada, as outras em cinza ---
         const TCHAR* Tabs[]={TEXT("Identidade"),TEXT("Aparência"),TEXT("Estilo"),TEXT("Confirmar")};
         const FName CategoryActions[]={TEXT("ShowIdentityCategory"),TEXT("ShowAppearanceCategory"),TEXT("ShowStyleCategory"),TEXT("ShowConfirmCategory")};
-        // Largura natural dos títulos + espaços explícitos: fontes/DPI não fazem os textos se sobreporem.
         UHorizontalBox* CategoryRow=WidgetTree->ConstructWidget<UHorizontalBox>();
         for (int32 Index=0;Index<4;++Index)
         {
             const bool bSelected=CreationStep==Index+1;
             UVerticalBox* Content=WidgetTree->ConstructWidget<UVerticalBox>();
-            UTextBlock* Caption=MakeText(FText::FromString(Tabs[Index]),FontInfo(bSelected ? TEXT("Bold") : TEXT("SemiBold"),9),bSelected ? White : Muted);
+            UTextBlock* Caption=MakeText(FText::FromString(Tabs[Index]),FontInfo(bSelected ? TEXT("Bold") : TEXT("SemiBold"),10),bSelected ? White : SRGB(150,148,143,0.8f));
             Content->AddChildToVerticalBox(Caption)->SetHorizontalAlignment(HAlign_Center);
             USizeBox* Underline=WidgetTree->ConstructWidget<USizeBox>();
-            Underline->SetWidthOverride(48.f);
-            Underline->SetHeightOverride(1.5f);
-            Underline->AddChild(MakeImage(Rounded(FLinearColor(1,1,1,0.75f),0.5f),bSelected ? 1.f : 0.f));
+            Underline->SetWidthOverride(34.f);
+            Underline->SetHeightOverride(2.f);
+            Underline->AddChild(MakeImage(Rounded(White,1.f),bSelected ? 1.f : 0.f));
             UVerticalBoxSlot* LineSlot=Content->AddChildToVerticalBox(Underline);
-            LineSlot->SetPadding(FMargin(0,7,0,0));
+            LineSlot->SetPadding(FMargin(0,6,0,0));
             LineSlot->SetHorizontalAlignment(HAlign_Center);
             UButton* Category=MakeButton(4.f);
             Category->OnClicked.Clear();
@@ -534,170 +557,187 @@ void UHypeCharacterSelectWidget::BuildLayout()
             HitBox->SetHeightOverride(40.f);
             HitBox->AddChild(Category);
             UHorizontalBoxSlot* CategorySlot=CategoryRow->AddChildToHorizontalBox(HitBox);
-            CategorySlot->SetPadding(FMargin(0,0,Index<3 ? 22.f : 0.f,0));
+            CategorySlot->SetPadding(FMargin(0,0,Index<3 ? 24.f : 0.f,0));
             CategorySlot->SetVerticalAlignment(VAlign_Center);
         }
-        Place(CategoryRow,TopLeft,FVector2D(FormLeft,176),FVector2D::ZeroVector,FVector2D(0,0.5f));
-        auto Palette = [&](const TArray<FLinearColor>& Colors,float Y,TArray<TObjectPtr<UButton>>& Buttons,const FLinearColor& Selected)
+        Place(CategoryRow,TopLeft,FVector2D(FormLeft,290),FVector2D::ZeroVector,LeftMid);
+
+        // --- Peças reutilizáveis ---
+        auto Card = [&](FName Key,float Y)
         {
-            const float Pitch=FormWidth/Colors.Num();
-            for (int32 Index=0;Index<Colors.Num();++Index)
-            {
-                const float X=FormLeft+(Index+0.5f)*Pitch;
-                const bool bSelected=Colors[Index].Equals(Selected,0.001f);
-                UImage* Frame=MakeImage(Rounded(White,13.f),bSelected ? 0.8f : 0.f);
-                Place(Frame,TopLeft,FVector2D(X,Y),FVector2D(27,48),Center);
-                Place(MakeImage(Rounded(Colors[Index],11.f)),TopLeft,FVector2D(X,Y),FVector2D(23,44),Center);
-                UTextBlock* Check=MakeText(FText::FromString(TEXT("✓")),FCoreStyle::GetDefaultFontStyle(TEXT("Regular"),9),Index<3 ? SRGB(30,27,24) : White);
-                Check->SetRenderOpacity(bSelected ? 1.f : 0.f);
-                Place(Check,TopLeft,FVector2D(X,Y),FVector2D::ZeroVector,Center);
-                if (&Buttons==&SkinButtons) { SkinFrames.Add(Frame); SkinChecks.Add(Check); }
-                UButton* B=MakeButton(11.f,&Buttons);
-                B->OnClicked.Clear();
-                B->OnClicked.AddDynamic(this,&UHypeCharacterSelectWidget::HandleCustomizationClick);
-                Place(B,TopLeft,FVector2D(X,Y),FVector2D(Pitch-4,52),Center);
-            }
+            UClass* Class=OptionCardClass.LoadSynchronous();
+            UHypeOptionCardWidget* Widget=CreateWidget<UHypeOptionCardWidget>(GetOwningPlayer(),Class ? Class : UHypeOptionCardWidget::StaticClass());
+            Widget->Font=Font;
+            Widget->CardSize=FVector2D(FormWidth,72.f);
+            Widget->Key=Key;
+            Widget->OnStep.AddDynamic(this,&UHypeCharacterSelectWidget::HandleCardStep);
+            Place(Widget,TopLeft,FVector2D(FormLeft,Y),Widget->CardSize,FVector2D::ZeroVector);
+            Cards.Add(Key,Widget);
+            return Widget;
         };
-        auto SliderCard = [&](const FString& Title,float Y,UTextBlock*& ValueLabel,FName Minus,FName Plus)
+        auto GradientSlider = [&](FName Key,const TArray<FLinearColor>& Stops,float Y,float BarHeight)
         {
-            Place(MakeImage(Rounded(SRGB(8,9,11,0.88f),7.f)),TopLeft,FVector2D(ColumnCenter,Y+39),FVector2D(FormWidth,78),Center);
-            UTextBlock* Heading=MakeText(FText::FromString(Title),FontInfo(TEXT("SemiBold"),10),White);
-            Place(Heading,TopLeft,FVector2D(FormLeft+18,Y+21),FVector2D::ZeroVector,FVector2D(0,0.5f));
-            Place(MakeImage(Rounded(FLinearColor(1,1,1,0.065f),5.f)),TopLeft,FVector2D(FormLeft+FormWidth-43,Y+21),FVector2D(58,24),Center);
-            ValueLabel=MakeText(FText::GetEmpty(),FontInfo(TEXT("SemiBold"),9),SRGB(219,217,209));
-            Place(ValueLabel,TopLeft,FVector2D(FormLeft+FormWidth-43,Y+21),FVector2D::ZeroVector,Center);
-            auto Arrow = [&](float X,const TCHAR* Text,FName Method)
-            {
-                UButton* B=MakeButton(4.f);
-                B->OnClicked.Clear();
-                FScriptDelegate D; D.BindUFunction(this,Method); B->OnClicked.Add(D);
-                B->AddChild(MakeText(FText::FromString(Text),FontInfo(TEXT("SemiBold"),15),Muted));
-                Place(B,TopLeft,FVector2D(X,Y+54),FVector2D(28,28),Center);
-            };
-            Arrow(FormLeft+18,TEXT("‹"),Minus);
-            Arrow(FormLeft+FormWidth-18,TEXT("›"),Plus);
+            UClass* Class=GradientSliderClass.LoadSynchronous();
+            UHypeGradientSliderWidget* Widget=CreateWidget<UHypeGradientSliderWidget>(GetOwningPlayer(),Class ? Class : UHypeGradientSliderWidget::StaticClass());
+            Widget->Font=Font;
+            Widget->BarSize=FVector2D(FormWidth,BarHeight);
+            Widget->Key=Key;
+            Widget->Setup(Stops,0.f);
+            Widget->OnValueChanged.AddDynamic(this,&UHypeCharacterSelectWidget::HandleSliderChanged);
+            Place(Widget,TopLeft,FVector2D(FormLeft,Y),FVector2D(FormWidth,FMath::Max(Widget->ThumbSize,BarHeight)+6.f),LeftMid);
+            return Widget;
         };
-        auto StyleSlider = [&](USlider* Slider)
-        {
-            FSliderStyle Style;
-            Style.SetBarThickness(2.f);
-            Style.SetNormalBarImage(Rounded(FLinearColor(1,1,1,0.2f),1.5f));
-            Style.SetHoveredBarImage(Rounded(FLinearColor(1,1,1,0.35f),1.5f));
-            FSlateBrush Thumb=Rounded(White,5.f);
-            Thumb.ImageSize=FVector2D(7,7);
-            Style.SetNormalThumbImage(Thumb);
-            Style.SetHoveredThumbImage(Thumb);
-            Style.SetDisabledThumbImage(Thumb);
-            Slider->SetWidgetStyle(Style);
-        };
+
+        bPlacingPageContent=true;
         if (CreationStep == 1)
         {
-            Label(TEXT("Primeiro nome"), 268, 12);
+            Icon(TEXT("Person"),350);
+            Label(TEXT("Primeiro nome"),FormLeft,350,10,White);
             NameInput = WidgetTree->ConstructWidget<UEditableTextBox>();
             FEditableTextBoxStyle InputStyle=NameInput->GetWidgetStyle();
             InputStyle.SetFont(FontInfo(TEXT("SemiBold"),11));
             InputStyle.SetForegroundColor(FSlateColor(White));
             InputStyle.SetFocusedForegroundColor(FSlateColor(White));
-            InputStyle.SetPadding(FMargin(16,10));
-            InputStyle.SetBackgroundImageNormal(Rounded(BackFill,10.f));
-            InputStyle.SetBackgroundImageHovered(Rounded(SRGB(28,28,28,0.95f),10.f));
-            InputStyle.SetBackgroundImageFocused(Rounded(SRGB(38,38,38,0.95f),10.f));
+            InputStyle.SetPadding(FMargin(16,11));
+            InputStyle.SetBackgroundImageNormal(Rounded(SRGB(0,0,0,0.6f),8.f));
+            InputStyle.SetBackgroundImageHovered(Rounded(SRGB(20,20,20,0.7f),8.f));
+            InputStyle.SetBackgroundImageFocused(Rounded(SRGB(26,26,26,0.8f),8.f));
             NameInput->SetWidgetStyle(InputStyle);
             NameInput->SetHintText(FText::FromString(TEXT("Primeiro nome")));
             NameInput->SetText(FText::FromString(DraftAppearance.Name));
             NameInput->OnTextChanged.AddDynamic(this, &UHypeCharacterSelectWidget::HandleNameChanged);
-            Place(NameInput, TopLeft, FVector2D(ColumnCenter, 322), FVector2D(FormWidth,44), Center);
-            Label(TEXT("De 2 a 24 caracteres, sem sobrenome"), 367, 9)->SetColorAndOpacity(FSlateColor(Muted));
-            Label(TEXT("O clã é definido automaticamente pelo jogo."), 424, 10)->SetColorAndOpacity(FSlateColor(Muted));
+            Place(NameInput,TopLeft,FVector2D(FormLeft,394),FVector2D(FormWidth,44),LeftMid);
+            Label(TEXT("De 2 a 24 caracteres, sem sobrenome"),FormLeft,432,8,Muted);
 
+            Icon(TEXT("Drop"),490);
+            Label(TEXT("Tom de pele"),FormLeft,490,10,White);
+            SkinAmountLabel=Label(TEXT(""),FormLeft+FormWidth,490,9,Muted,FVector2D(1.f,0.5f));
+            SkinSlider=GradientSlider(TEXT("Skin"),SkinColors,522,10.f);
+
+            Icon(TEXT("Height"),578);
+            Label(TEXT("Altura do personagem"),FormLeft,578,10,White);
+            HeightLabel=Label(TEXT(""),FormLeft+FormWidth,578,9,Muted,FVector2D(1.f,0.5f));
+            HeightSlider=GradientSlider(TEXT("Height"),{FLinearColor(1,1,1,0.3f),FLinearColor(1,1,1,0.3f)},610,3.f);
+
+            Label(TEXT("O clã é definido automaticamente pelo jogo."),FormLeft,668,8,SRGB(193,191,185,0.5f));
+            SyncAppearanceControls();
         }
         else if (CreationStep == 2)
         {
-            Label(TEXT("Tom de pele"),268,11);
-            Palette(SkinColors,316,SkinButtons,DraftAppearance.SkinTint);
-            UTextBlock* SkinValue=nullptr;
-            SliderCard(TEXT("Nuance da pele"),376,SkinValue,TEXT("LighterSkin"),TEXT("DarkerSkin"));
-            SkinAmountLabel=SkinValue;
-            SkinSlider=WidgetTree->ConstructWidget<USlider>();
-            StyleSlider(SkinSlider);
-            SkinSlider->OnValueChanged.AddDynamic(this,&UHypeCharacterSelectWidget::HandleSkinChanged);
-            Place(SkinSlider,TopLeft,FVector2D(ColumnCenter,430),FVector2D(FormWidth-74,24),Center);
-            UTextBlock* HeightValue=nullptr;
-            SliderCard(TEXT("Altura"),478,HeightValue,TEXT("ShorterHeight"),TEXT("TallerHeight"));
-            HeightLabel=HeightValue;
-            HeightSlider=WidgetTree->ConstructWidget<USlider>();
-            StyleSlider(HeightSlider);
-            HeightSlider->OnValueChanged.AddDynamic(this,&UHypeCharacterSelectWidget::HandleHeightChanged);
-            Place(HeightSlider,TopLeft,FVector2D(ColumnCenter,532),FVector2D(FormWidth-74,24),Center);
-            SyncAppearanceControls();
+            Icon(TEXT("Eye"),386);
+            Card(TEXT("Eyes"),350);
+            Label(TEXT("Arraste para girar · role para aproximar"),FormLeft,452,8,SRGB(193,191,185,0.5f));
         }
         else if (CreationStep == 3)
         {
-            const UHypeAppearanceComponent* Appearance = GetOwningPlayerPawn()->FindComponentByClass<UHypeAppearanceComponent>();
-            Label(TEXT("Cabelo"), 268, 11);
-            auto Parts = [&](const TArray<FHypeCosmeticPart>& Options, FName Selected, float Y, TArray<FName>* VisibleIds=nullptr)
-            {
-                UComboBoxString* Choice=WidgetTree->ConstructWidget<UComboBoxString>();
-                Choice->OnGenerateWidgetEvent.BindDynamic(this,&UHypeCharacterSelectWidget::GenerateCosmeticLabel);
-                FComboBoxStyle ComboStyle=Choice->GetWidgetStyle();
-                ComboStyle.ComboButtonStyle.ButtonStyle.SetNormal(Rounded(BackFill,6));
-                ComboStyle.ComboButtonStyle.ButtonStyle.SetHovered(Rounded(BoxOn,6));
-                ComboStyle.ComboButtonStyle.ButtonStyle.SetPressed(Rounded(BoxOn,6));
-                ComboStyle.ComboButtonStyle.DownArrowImage.TintColor=FSlateColor(White);
-                ComboStyle.ComboButtonStyle.MenuBorderBrush=Rounded(BackFill,6);
-                Choice->SetWidgetStyle(ComboStyle);
-                FTableRowStyle RowStyle=Choice->GetItemStyle();
-                RowStyle.SetActiveBrush(Rounded(NextFill,3));
-                RowStyle.SetInactiveBrush(Rounded(NextFill,3));
-                Choice->SetItemStyle(RowStyle);
-                Choice->SetMaxListHeight(280.f);
-                Choice->AddOption(TEXT("Nenhum"));
-                if (VisibleIds) { VisibleIds->Reset(); VisibleIds->Add(NAME_None); }
-                int32 VisibleIndex=0;
-                const FName Clan=DraftAppearance.Clan.IsNone() ? HypeIdentity::ResolveClan(NAME_None) : DraftAppearance.Clan;
-                int32 SelectedIndex=0;
-                for (int32 Index=0; Index<Options.Num(); ++Index)
-                {
-                    if (!Options[Index].AllowsClan(Clan)) { continue; }
-                    ++VisibleIndex;
-                    Choice->AddOption(Options[Index].Label.ToString());
-                    if (VisibleIds) { VisibleIds->Add(Options[Index].Id); }
-                    if (Options[Index].Id==Selected) { SelectedIndex=VisibleIndex; }
-                }
-                Choice->SetSelectedIndex(SelectedIndex);
-                Place(Choice,TopLeft,FVector2D(ColumnCenter,Y),FVector2D(350,44),Center);
-                return Choice;
-            };
-            // Sem modelos, a interface informa a disponibilidade em vez de oferecer escolhas falsas.
-            if (!Appearance || Appearance->HairOptions.IsEmpty()) { Label(TEXT("Sem opções disponíveis"),314,10)->SetColorAndOpacity(FSlateColor(Muted)); }
-            else
-            {
-                HairChoice=Parts(Appearance->HairOptions,DraftAppearance.HairId,318);
-                HairChoice->OnSelectionChanged.AddDynamic(this,&UHypeCharacterSelectWidget::HandleHairSelected);
-            }
-            Label(TEXT("Cor do cabelo"),390,11);
-            Palette(HairColors,436,HairColorButtons,DraftAppearance.HairColor);
-            for (UButton* B : HairColorButtons) { B->SetIsEnabled(Appearance && !DraftAppearance.HairId.IsNone()); }
-            Label(TEXT("Roupa"),524,11);
-            if (!Appearance || Appearance->OutfitOptions.IsEmpty()) { Label(TEXT("Sem opções disponíveis"),570,10)->SetColorAndOpacity(FSlateColor(Muted)); }
-            else
-            {
-                OutfitChoice=Parts(Appearance->OutfitOptions,DraftAppearance.OutfitId,570,&VisibleOutfitIds);
-                OutfitChoice->OnSelectionChanged.AddDynamic(this,&UHypeCharacterSelectWidget::HandleOutfitSelected);
-            }
+            Icon(TEXT("Hair"),376);
+            Card(TEXT("Hair"),340);
+            Label(TEXT("Cor do cabelo"),FormLeft,436,10,White);
+            HairColorHex=Label(TEXT(""),FormLeft+FormWidth,436,8,Muted,FVector2D(1.f,0.5f));
+            UClass* RowClass=ColorRowClass.LoadSynchronous();
+            HairColorRow=CreateWidget<UHypeColorRowWidget>(GetOwningPlayer(),RowClass ? RowClass : UHypeColorRowWidget::StaticClass());
+            HairColorRow->Font=Font;
+            HairColorRow->Key=TEXT("HairColor");
+            const int32 HairIndex=HairColors.IndexOfByPredicate([&](const FLinearColor& C) { return C.Equals(DraftAppearance.HairColor,0.001f); });
+            HairColorRow->Setup(HairColors,HairIndex);
+            HairColorRow->OnColorPicked.AddDynamic(this,&UHypeCharacterSelectWidget::HandleHairColor);
+            const float RowWidth=48.f+HairColorRow->VisibleCount*(HairColorRow->SwatchSize+HairColorRow->SwatchGap);
+            Place(HairColorRow,TopLeft,FVector2D(FormLeft-6.f,470),FVector2D(RowWidth,HairColorRow->SwatchSize+8.f),LeftMid);
+            Icon(TEXT("Shirt"),536);
+            Card(TEXT("Outfit"),500);
+            Icon(TEXT("Top"),616);
+            Card(TEXT("Top"),580);
+            Icon(TEXT("Pants"),696);
+            Card(TEXT("Bottom"),660);
+            Icon(TEXT("Shoe"),776);
+            Card(TEXT("Shoes"),740);
         }
         else
         {
-            Label(TEXT("Revise seu personagem"),268,16);
-            Label(DraftAppearance.Name,338,18);
-
-            Label(FString::Printf(TEXT("Altura: %.0f cm"),DraftAppearance.HeightCm),398,11);
-            Label(TEXT("Confira as escolhas antes de começar."),466,10)->SetColorAndOpacity(FSlateColor(Muted));
+            Icon(TEXT("Check"),350);
+            Label(TEXT("Revise seu personagem"),FormLeft,350,13,White,LeftMid,TEXT("Bold"));
+            auto PartName = [&](FName Key)
+            {
+                TArray<FName> Ids; TArray<FText> Names;
+                GetPartOptions(Key,Ids,Names);
+                const int32 Index=Ids.IndexOfByKey(DraftPart(Key));
+                return Names.IsValidIndex(Index) ? Names[Index].ToString() : TEXT("—");
+            };
+            struct FRow { FString Title; FString Value; const FLinearColor* Swatch; };
+            const bool bOutfit=!DraftAppearance.OutfitId.IsNone();
+            const TArray<FRow> Rows = {
+                {TEXT("Nome"),DraftAppearance.Name,nullptr},
+                {TEXT("Altura"),FString::Printf(TEXT("%.0f cm"),DraftAppearance.HeightCm),nullptr},
+                {TEXT("Tom de pele"),TEXT(""),&DraftAppearance.SkinTint},
+                {TEXT("Olhos"),PartName(TEXT("Eyes")),nullptr},
+                {TEXT("Cabelo"),PartName(TEXT("Hair")),nullptr},
+                {TEXT("Cor do cabelo"),TEXT(""),&DraftAppearance.HairColor},
+                {TEXT("Roupa completa"),PartName(TEXT("Outfit")),nullptr},
+                {TEXT("Parte de cima"),bOutfit ? TEXT("—") : PartName(TEXT("Top")),nullptr},
+                {TEXT("Parte de baixo"),bOutfit ? TEXT("—") : PartName(TEXT("Bottom")),nullptr},
+                {TEXT("Calçado"),bOutfit ? TEXT("—") : PartName(TEXT("Shoes")),nullptr},
+            };
+            const float Top=384.f, RowHeight=34.f;
+            Place(MakeImage(Rounded(SRGB(0,0,0,0.6f),8.f)),TopLeft,FVector2D(FormLeft,Top),FVector2D(FormWidth,Rows.Num()*RowHeight+16.f),FVector2D::ZeroVector);
+            for (int32 Index=0;Index<Rows.Num();++Index)
+            {
+                const float Y=Top+8.f+(Index+0.5f)*RowHeight;
+                Label(Rows[Index].Title,FormLeft+16.f,Y,9,Muted);
+                if (Rows[Index].Swatch)
+                {
+                    Place(MakeImage(Rounded(*Rows[Index].Swatch,9.f,FLinearColor(1,1,1,0.25f),1.f)),TopLeft,FVector2D(FormLeft+FormWidth-25.f,Y),FVector2D(18,18),Center);
+                }
+                else
+                {
+                    Label(Rows[Index].Value.IsEmpty() ? TEXT("—") : Rows[Index].Value,FormLeft+FormWidth-16.f,Y,9,White,FVector2D(1.f,0.5f));
+                }
+                if (Index>0)
+                {
+                    Place(MakeImage(Rounded(FLinearColor(1,1,1,0.06f),0.f)),TopLeft,FVector2D(FormLeft+16.f,Y-RowHeight*0.5f),FVector2D(FormWidth-32.f,1.f),FVector2D(0.f,0.5f));
+                }
+            }
+            Label(TEXT("Clã definido automaticamente pelo jogo."),FormLeft,Top+Rows.Num()*RowHeight+40.f,8,SRGB(193,191,185,0.5f));
         }
-        Action(TEXT("Voltar"),ColumnCenter-89,660,TEXT("PreviousCreationStep"));
-        Action(CreationStep == 4 ? TEXT("Criar personagem") : TEXT("Próximo"),ColumnCenter+89,660,TEXT("NextCreationStep"));
-        CreationErrorLabel=Label(ProfileError.ToString(),712,9);
-        CreationErrorLabel->SetColorAndOpacity(FSlateColor(SRGB(255,180,160)));
+        bPlacingPageContent=false;
+        UpdateCards();
+
+        // --- Voltar (preto) / Próximo (dourado escuro translúcido com borda tracejada) ---
+        auto Action = [&](const FString& Text,float X,FName Function)
+        {
+            const bool bPrimary=Function==TEXT("NextCreationStep");
+            const FVector2D Size(158,46);
+            const float Y=893.f;
+            Place(MakeImage(Rounded(bPrimary ? SRGB(122,98,56,0.55f) : SRGB(6,7,8,0.96f),7.f)),TopLeft,FVector2D(X,Y),Size,Center);
+            UImage* Dashes=MakeImage(TextureBrush(DashTexture,SRGB(236,212,160)),bPrimary ? 0.55f : 0.f);
+            Place(Dashes,TopLeft,FVector2D(X,Y),Size,Center);
+            UButton* Button=MakeButton(7.f);
+            Button->OnClicked.Clear();
+            FScriptDelegate Click;
+            Click.BindUFunction(this,Function);
+            Button->OnClicked.Add(Click);
+            Button->AddChild(MakeText(FText::FromString(Text),FontInfo(TEXT("SemiBold"),10),White));
+            Place(Button,TopLeft,FVector2D(X,Y),Size,Center);
+            if (bPrimary) { NextButton=Button; NextDashes=Dashes; }
+            else { BackButton=Button; BackDashes=Dashes; }
+        };
+        Action(TEXT("Voltar"),FormLeft+79.f,TEXT("PreviousCreationStep"));
+        Action(CreationStep == 4 ? TEXT("Estou pronto") : TEXT("Próximo"),FormLeft+79.f+174.f,TEXT("NextCreationStep"));
+        CreationErrorLabel=Label(ProfileError.ToString(),FormLeft,942,9,SRGB(255,180,160));
+
+        // --- Câmera fixa (canto de baixo à direita): trava o giro do personagem ---
+        const FVector2D BottomRight(1.f, 1.f);
+        const FVector2D LookPos(-LookButtonMargin.X, -LookButtonMargin.Y);
+        const FVector2D LookSize(LookButtonSize.X+14.f,LookButtonSize.Y);
+        Place(MakeImage(Rounded(bLookFixed ? SRGB(255,255,255,0.16f) : PillFill,6.f)),BottomRight,LookPos,LookSize,BottomRight);
+        const FLinearColor LookColor=bLookFixed ? White : SRGB(230,230,230,0.75f);
+        const float LookLeft=LookPos.X-LookSize.X;
+        Place(MakeImage(TextureBrush(EyeTexture,LookColor)),BottomRight,FVector2D(LookLeft+22.f,LookPos.Y-LookSize.Y*0.5f),FVector2D(16.f,16.f),Center);
+        Place(MakeText(NSLOCTEXT("HypeSelect","FixedCamera","Câmera fixa"),FontInfo(TEXT("SemiBold"),9),LookColor),BottomRight,
+            FVector2D(LookLeft+36.f,LookPos.Y-LookSize.Y*0.5f),FVector2D::ZeroVector,FVector2D(0.f,0.5f));
+        LookButton=MakeButton(6.f);
+        Place(LookButton,BottomRight,LookPos,LookSize,BottomRight);
+        Place(MakeText(NSLOCTEXT("HypeSelect","Version","hype world · alpha"),FontInfo(TEXT("SemiBold"),8),FLinearColor(1.f,1.f,1.f,0.35f)),BottomRight,
+            FVector2D(-16.f,-8.f),FVector2D::ZeroVector,BottomRight);
         return;
     }
 	Place(MakeText(bChoosingAffiliation ? FText::FromString(TEXT("Selecione sua vila")) : Subtitle, FontInfo(TEXT("SemiBold"), 12), FLinearColor(1.f, 1.f, 1.f, 0.92f)), TopLeft, FVector2D(ColumnCenter, SubtitleY), FVector2D::ZeroVector, Center);
@@ -755,7 +795,7 @@ void UHypeCharacterSelectWidget::BuildLayout()
 	// olho à esquerda e o texto logo depois dele (antes o texto ficava em cima do olho)
 	const float LookLeft = LookPos.X - LookButtonSize.X;
 	Place(MakeImage(TextureBrush(EyeTexture, LookColor)), BottomRight, FVector2D(LookLeft + 22.f, LookPos.Y - LookButtonSize.Y * 0.5f), FVector2D(16.f, 16.f), Center);
-	Place(MakeText(NSLOCTEXT("HypeSelect", "LookFixed", "Olhar fixo"), FontInfo(TEXT("SemiBold"), 9), LookColor), BottomRight,
+	Place(MakeText(NSLOCTEXT("HypeSelect", "FixedCamera", "Câmera fixa"), FontInfo(TEXT("SemiBold"), 9), LookColor), BottomRight,
 		FVector2D(LookLeft + 36.f, LookPos.Y - LookButtonSize.Y * 0.5f), FVector2D::ZeroVector, FVector2D(0.f, 0.5f));
 	LookButton = MakeButton(6.f);
 	Place(LookButton, BottomRight, LookPos, LookButtonSize, BottomRight);
@@ -919,7 +959,19 @@ void UHypeCharacterSelectWidget::NativeConstruct()
     }
     Refresh();
 	SetupPreviewCamera();
+    PreloadParts();
     UpdatePreviewVisibility();
+    SetVisibility(ESlateVisibility::Visible);	// recebe arrastar/rolar nos espaços vazios
+    bShots = FParse::Param(FCommandLine::Get(), TEXT("CreationShots"));
+
+    // Tela aberta fora do mapa do jogo (L_CharacterCreation): o jogo carrega em segundo plano enquanto o jogador cria
+    const FString GamePackage = MapaDoJogo.ToSoftObjectPath().GetLongPackageName();
+    const FString ThisPackage = UWorld::RemovePIEPrefix(GetWorld()->GetOutermost()->GetName());
+    bTravelAfter = !GamePackage.IsEmpty() && GamePackage != ThisPackage;
+    if (bTravelAfter)
+    {
+        if (UHypeLoadingSubsystem* Loader = GetGameInstance()->GetSubsystem<UHypeLoadingSubsystem>()) { Loader->StartPreload(MapaDoJogo); }
+    }
 
 	// Mouse livre só para a tela: o personagem não anda nem gira a câmera, e o HUD some
 	PC->SetShowMouseCursor(true);
@@ -943,7 +995,11 @@ void UHypeCharacterSelectWidget::NativeDestruct()
 		PreviewCamera->Destroy();
 		PreviewCamera = nullptr;
 	}
-	if (APawn* Pawn = GetOwningPlayerPawn()) { Pawn->SetActorHiddenInGame(bPawnWasHidden); }
+	if (APawn* Pawn = GetOwningPlayerPawn())
+	{
+		Pawn->SetActorHiddenInGame(bPawnWasHidden);
+		if (PreviewCamera) { Pawn->SetActorRotation(PawnStartRotation); }
+	}
     if (bCreatingCharacter)
     {
         if (APawn* Pawn = GetOwningPlayerPawn())
@@ -964,7 +1020,13 @@ void UHypeCharacterSelectWidget::SetupPreviewCamera()
 		UE_LOG(LogHypeCharacterSelect, Warning, TEXT("Sem personagem: a câmera de prévia não foi criada"));
 		return;
 	}
-	// Câmera parada à frente do personagem, olhando para ele (o personagem fica de frente para a tela)
+	// Câmera parada à frente do personagem, olhando para ele (o personagem fica de frente para a tela).
+	// O palco fica guardado: arrastar gira o personagem, a câmera não acompanha.
+	StageOrigin = Pawn->GetActorLocation();
+	StageForward = Pawn->GetActorForwardVector();
+	StageRight = Pawn->GetActorRightVector();
+	PawnStartRotation = Pawn->GetActorRotation();
+	Zoom = 1.f;
 	const FVector Forward = Pawn->GetActorForwardVector();
 	const FVector Location = Pawn->GetActorLocation() + Forward * CameraDistance + Pawn->GetActorRightVector() * CameraSide + FVector::UpVector * CameraHeight;
 	FRotator Rotation = (-Forward).Rotation();
@@ -1032,6 +1094,7 @@ void UHypeCharacterSelectWidget::HandleClick()
 	else if (LookButton && LookButton->IsHovered())
 	{
 		bLookFixed = !bLookFixed;
+		bDragging = false;
 		Refresh();
 	}
 }
@@ -1068,6 +1131,13 @@ void UHypeCharacterSelectWidget::StartCreation()
     bChoosingAffiliation = false;
     DraftAppearance = FHypeAppearance();
     DraftAppearance.bCustomized = true;
+    // Começa vestido como na referência: primeiro cabelo e primeiro traje do clã
+    for (const FName Key : { FName(TEXT("Hair")), FName(TEXT("Outfit")) })
+    {
+        TArray<FName> Ids; TArray<FText> Names;
+        GetPartOptions(Key, Ids, Names);
+        if (Ids.Num() > 1) { DraftPart(Key) = Ids[1]; }
+    }
     bCreatingCharacter = true;
     ProfileError = FText::GetEmpty();
     Refresh(true);
@@ -1089,10 +1159,24 @@ void UHypeCharacterSelectWidget::EnterGame()
 
 void UHypeCharacterSelectWidget::Finish()
 {
+	if (bTravelAfter)
+	{
+		// Escurece o 3D e viaja para o mapa do jogo quando ele terminar de carregar (NativeTick)
+		if (TravelWait < 0.f)
+		{
+			TravelWait = 0.f;
+			if (APlayerController* PC = GetOwningPlayer())
+			{
+				if (PC->PlayerCameraManager) { PC->PlayerCameraManager->StartCameraFade(0.f, 1.f, 0.3f, FLinearColor::Black, false, true); }
+			}
+		}
+		return;
+	}
 	if (APlayerController* PC = GetOwningPlayer())
 	{
 		if (APawn* Pawn = GetOwningPlayerPawn())
 		{
+			Pawn->SetActorRotation(PawnStartRotation);
 			PC->SetViewTargetWithBlend(Pawn, CameraBlendTime, VTBlend_Cubic);
 		}
 		PC->SetShowMouseCursor(false);
@@ -1130,18 +1214,40 @@ void UHypeCharacterSelectWidget::NativeTick(const FGeometry& MyGeometry, float I
 		Alpha *= 1.f - EaseOut(ExitTime / FMath::Max(FadeOutTime, 0.01f));
 		if (ExitTime >= FadeOutTime)
 		{
+			Canvas->SetRenderOpacity(0.f);
 			Finish();
+			if (TravelWait >= 0.f && TravelWait < 1000.f)
+			{
+				TravelWait += Dt;
+				UHypeLoadingSubsystem* Loader = GetGameInstance() ? GetGameInstance()->GetSubsystem<UHypeLoadingSubsystem>() : nullptr;
+				if (TravelWait >= 0.35f && (!Loader || Loader->IsPreloaded() || Loader->HasLoadFailed()))
+				{
+					TravelWait = 1001.f;
+					if (APlayerController* PC = GetOwningPlayer())
+					{
+						PC->SetShowMouseCursor(false);
+						PC->SetInputMode(FInputModeGameOnly());
+						PC->ResetIgnoreMoveInput();
+						PC->ResetIgnoreLookInput();
+					}
+					if (Loader && Loader->IsPreloaded()) { Loader->TravelToPreloadedMap(0.8f, nullptr); }
+					else { UGameplayStatics::OpenLevelBySoftObjectPtr(this, MapaDoJogo); }
+				}
+			}
 			return;
 		}
 	}
 	Canvas->SetRenderOpacity(Alpha);
+	if (bShots) { TickShots(Dt); }
+	// Entrada: o painel desliza da esquerda junto com o fade
+	Canvas->SetRenderTranslation(FVector2D(ExitTime >= 0.f ? 0.f : -PanelSlide * (1.f - Alpha), 0.f));
     UpdateCreationCamera(Dt);
 
     // Saída curta, troca do conteúdo no ponto invisível e entrada com deslocamento de 8 px.
     if (PageTime >= 0.f)
     {
         PageTime += Dt;
-        if (bPageRebuildPending && PageTime >= 0.12f)
+        if (bPageRebuildPending && PageTime >= 0.09f)
         {
             Canvas->ClearChildren();
             BuildLayout();
@@ -1149,7 +1255,7 @@ void UHypeCharacterSelectWidget::NativeTick(const FGeometry& MyGeometry, float I
             bPageRebuildPending = false;
             PageTime = 0.f;
         }
-        const float Progress = FMath::Clamp(PageTime / (bPageRebuildPending ? 0.12f : 0.22f), 0.f, 1.f);
+        const float Progress = FMath::Clamp(PageTime / (bPageRebuildPending ? 0.09f : 0.13f), 0.f, 1.f);
         const float Visibility = bPageRebuildPending ? 1.f - Progress * Progress : EaseOut(Progress);
         for (const auto& Entry : PageOpacities)
         {
@@ -1191,7 +1297,7 @@ void UHypeCharacterSelectWidget::NativeTick(const FGeometry& MyGeometry, float I
 	}
 	if (NextDashes && NextButton)
 	{
-		NextDashes->SetRenderOpacity(FMath::FInterpTo(NextDashes->GetRenderOpacity(), NextButton->IsHovered() ? 0.8f : (bCreatingCharacter ? 0.24f : 0.f), Dt, 16.f));
+		NextDashes->SetRenderOpacity(FMath::FInterpTo(NextDashes->GetRenderOpacity(), NextButton->IsHovered() ? 0.95f : (bCreatingCharacter ? 0.55f : 0.f), Dt, 16.f));
 	}
 }
 
@@ -1230,49 +1336,6 @@ void UHypeCharacterSelectWidget::HandleSkinChanged(float Value)
     SyncAppearanceControls();
     ApplyDraftPreview();
 }
-void UHypeCharacterSelectWidget::HandleCustomizationClick()
-{
-    for (int32 I=0; I<SkinButtons.Num(); ++I)
-    {
-        if (SkinButtons[I]->IsHovered())
-        {
-            DraftAppearance.SkinTint=HypeSelect::SkinColors[I];
-            ApplyDraftPreview();
-            Refresh();
-            return;
-        }
-    }
-    for (int32 I=0; I<HairColorButtons.Num(); ++I)
-    {
-        if (HairColorButtons[I]->IsHovered()) { DraftAppearance.HairColor=HypeSelect::HairColors[I]; ApplyDraftPreview(); Refresh(); return; }
-    }
-}
-UWidget* UHypeCharacterSelectWidget::GenerateCosmeticLabel(FString Item)
-{
-    UTextBlock* Text=WidgetTree->ConstructWidget<UTextBlock>();
-    UObject* Face=Font.LoadSynchronous();
-    Text->SetFont(Face ? FSlateFontInfo(Face,10,FName(TEXT("Medium"))) : FCoreStyle::GetDefaultFontStyle(TEXT("Regular"),10));
-    Text->SetText(FText::FromString(Item));
-    Text->SetColorAndOpacity(FSlateColor(HypeSelect::White));
-    return Text;
-}
-
-void UHypeCharacterSelectWidget::HandleHairSelected(FString Item, ESelectInfo::Type Type)
-{
-    const UHypeAppearanceComponent* A=GetOwningPlayerPawn()->FindComponentByClass<UHypeAppearanceComponent>();
-    const int32 Index=HairChoice ? HairChoice->GetSelectedIndex()-1 : INDEX_NONE;
-    DraftAppearance.HairId=A && A->HairOptions.IsValidIndex(Index) ? A->HairOptions[Index].Id : NAME_None;
-    ApplyDraftPreview();
-    for (UButton* B : HairColorButtons) { B->SetIsEnabled(!DraftAppearance.HairId.IsNone()); }
-}
-void UHypeCharacterSelectWidget::HandleOutfitSelected(FString Item, ESelectInfo::Type Type)
-{
-    const UHypeAppearanceComponent* A=GetOwningPlayerPawn()->FindComponentByClass<UHypeAppearanceComponent>();
-    const int32 Index=OutfitChoice ? OutfitChoice->GetSelectedIndex() : INDEX_NONE;
-    DraftAppearance.OutfitId=A && VisibleOutfitIds.IsValidIndex(Index) ? VisibleOutfitIds[Index] : NAME_None;
-    ApplyDraftPreview();
-}
-
 void UHypeCharacterSelectWidget::NextCreationStep()
 {
     if (PageTime>=0.f || ExitTime>=0.f) { return; }
@@ -1297,13 +1360,33 @@ void UHypeCharacterSelectWidget::PreviousCreationStep()
 }
 void UHypeCharacterSelectWidget::UpdateCreationCamera(float Dt)
 {
-    const APawn* Pawn=GetOwningPlayerPawn();
+    APawn* Pawn=GetOwningPlayerPawn();
     if (!PreviewCamera || !Pawn || ExitTime>=0.f) { return; }
-    const bool bClose=bCreatingCharacter && CreationStep==3;
-    const float Distance=bClose ? CameraDistance*0.78f : CameraDistance;
-    const float Height=bClose ? CameraHeight+24.f : CameraHeight;
-    const FVector Target=Pawn->GetActorLocation()+Pawn->GetActorForwardVector()*Distance+Pawn->GetActorRightVector()*CameraSide+FVector::UpVector*Height;
-    PreviewCamera->SetActorLocation(FMath::VInterpTo(PreviewCamera->GetActorLocation(),Target,Dt,5.f));
+    // Corpo inteiro (Identidade, Estilo, Confirmar) ou rosto (Aparência)
+    const bool bFace=bCreatingCharacter && CreationStep==2;
+    FVector LookAt, Location;
+    FRotator Rotation;
+    if (bFace)
+    {
+        const USkeletalMeshComponent* Body=GetNinjaVisibleBody(Cast<ACharacter>(Pawn));
+        const FName HeadBone(TEXT("head"));
+        LookAt=(Body && Body->DoesSocketExist(HeadBone)) ? Body->GetSocketLocation(HeadBone)+FVector(0,0,3) : StageOrigin+FVector(0,0,75);
+        Location=LookAt+StageForward*FaceDistance*Zoom+StageRight*CameraSide*0.25f;
+        Rotation=(LookAt-Location).Rotation();
+    }
+    else
+    {
+        Location=StageOrigin+StageForward*CameraDistance*Zoom+StageRight*CameraSide+FVector::UpVector*CameraHeight;
+        LookAt=StageOrigin+FVector::UpVector*CameraHeight;
+        Rotation=(-StageForward).Rotation();
+        Rotation.Pitch=CameraPitch;
+    }
+    // ~99% do caminho em CameraMoveTime, independente do FPS
+    const float Alpha=1.f-FMath::Exp(-4.6f*Dt/FMath::Max(CameraMoveTime,0.05f));
+    PreviewCamera->SetActorLocationAndRotation(FMath::Lerp(PreviewCamera->GetActorLocation(),Location,Alpha),
+        FQuat::Slerp(PreviewCamera->GetActorRotation().Quaternion(),Rotation.Quaternion(),Alpha));
+    FPostProcessSettings& Post=PreviewCamera->GetCameraComponent()->PostProcessSettings;
+    Post.DepthOfFieldFocalDistance=FMath::Lerp(Post.DepthOfFieldFocalDistance,float(FVector::Dist(PreviewCamera->GetActorLocation(),LookAt)),Alpha);
 }
 
 void UHypeCharacterSelectWidget::ConfirmAffiliation()
@@ -1325,6 +1408,7 @@ void UHypeCharacterSelectWidget::ConfirmAffiliation()
 
 void UHypeCharacterSelectWidget::SyncAppearanceControls()
 {
+    // Posição da cor de pele atual no degradê (ponto mais próximo da linha entre as cores de referência)
     float Position=0.f,Best=MAX_flt;
     const auto& Colors=HypeSelect::SkinColors;
     for (int32 I=0;I<Colors.Num()-1;++I)
@@ -1336,38 +1420,13 @@ void UHypeCharacterSelectWidget::SyncAppearanceControls()
         const float Distance=D.R*D.R+D.G*D.G+D.B*D.B;
         if (Distance<Best) { Best=Distance; Position=(I+T)/(Colors.Num()-1); }
     }
-    // UE 5.8 também dispara OnValueChanged em SetValue: não reenviar a alteração de sincronização.
-    if (SkinSlider)
-    {
-        SkinSlider->OnValueChanged.RemoveDynamic(this,&UHypeCharacterSelectWidget::HandleSkinChanged);
-        SkinSlider->SetValue(Position);
-        SkinSlider->OnValueChanged.AddDynamic(this,&UHypeCharacterSelectWidget::HandleSkinChanged);
-    }
-    if (HeightSlider)
-    {
-        HeightSlider->OnValueChanged.RemoveDynamic(this,&UHypeCharacterSelectWidget::HandleHeightChanged);
-        HeightSlider->SetValue((DraftAppearance.HeightCm-160.f)/40.f);
-        HeightSlider->OnValueChanged.AddDynamic(this,&UHypeCharacterSelectWidget::HandleHeightChanged);
-    }
+    if (SkinSlider) { SkinSlider->SetValue(Position); }
+    if (HeightSlider) { HeightSlider->SetValue((DraftAppearance.HeightCm-160.f)/40.f); }
     if (SkinAmountLabel) { SkinAmountLabel->SetText(FText::FromString(FString::Printf(TEXT("%.0f%%"),Position*100.f))); }
     if (HeightLabel) { HeightLabel->SetText(FText::FromString(FString::Printf(TEXT("%.0f cm"),DraftAppearance.HeightCm))); }
-    const int32 Selected=FMath::RoundToInt(Position*(Colors.Num()-1));
-    for (int32 I=0;I<SkinFrames.Num();++I)
-    {
-        const float Opacity=I==Selected ? 0.8f : 0.f;
-        SkinFrames[I]->SetRenderOpacity(Opacity);
-        PageOpacities.Add(SkinFrames[I].Get(),Opacity);
-        if (SkinChecks.IsValidIndex(I))
-        {
-            SkinChecks[I]->SetRenderOpacity(I==Selected ? 1.f : 0.f);
-            PageOpacities.Add(SkinChecks[I].Get(),I==Selected ? 1.f : 0.f);
-        }
-    }
+    if (HairColorHex) { HairColorHex->SetText(FText::FromString(TEXT("#")+DraftAppearance.HairColor.ToFColor(true).ToHex().Left(6))); }
+    if (HairColorRow) { HairColorRow->SetIsEnabled(!DraftAppearance.HairId.IsNone()); }
 }
-void UHypeCharacterSelectWidget::LighterSkin() { HandleSkinChanged((SkinSlider ? SkinSlider->GetValue() : 0.f)-0.05f); }
-void UHypeCharacterSelectWidget::DarkerSkin() { HandleSkinChanged((SkinSlider ? SkinSlider->GetValue() : 0.f)+0.05f); }
-void UHypeCharacterSelectWidget::ShorterHeight() { HandleHeightChanged(FMath::Clamp((DraftAppearance.HeightCm-161.f)/40.f,0.f,1.f)); }
-void UHypeCharacterSelectWidget::TallerHeight() { HandleHeightChanged(FMath::Clamp((DraftAppearance.HeightCm-159.f)/40.f,0.f,1.f)); }
 
 void UHypeCharacterSelectWidget::GoToCategory(int32 Step)
 {
@@ -1387,3 +1446,336 @@ void UHypeCharacterSelectWidget::ShowIdentityCategory() { GoToCategory(1); }
 void UHypeCharacterSelectWidget::ShowAppearanceCategory() { GoToCategory(2); }
 void UHypeCharacterSelectWidget::ShowStyleCategory() { GoToCategory(3); }
 void UHypeCharacterSelectWidget::ShowConfirmCategory() { GoToCategory(4); }
+
+// ---------------------------------------------------------------- criação: peças, prévias e mouse
+
+namespace HypeSelect
+{
+    ENinjaCustomizationSlot CatalogSlot(FName Key)
+    {
+        if (Key == TEXT("Eyes")) { return ENinjaCustomizationSlot::Eyes; }
+        if (Key == TEXT("Bottom")) { return ENinjaCustomizationSlot::Bottom; }
+        if (Key == TEXT("Shoes")) { return ENinjaCustomizationSlot::Shoes; }
+        return ENinjaCustomizationSlot::Top;
+    }
+    FText CardTitle(FName Key)
+    {
+        if (Key == TEXT("Eyes")) { return FText::FromString(TEXT("Olhos")); }
+        if (Key == TEXT("Hair")) { return FText::FromString(TEXT("Cabelo")); }
+        if (Key == TEXT("Outfit")) { return FText::FromString(TEXT("Roupa completa")); }
+        if (Key == TEXT("Top")) { return FText::FromString(TEXT("Parte de cima")); }
+        if (Key == TEXT("Bottom")) { return FText::FromString(TEXT("Parte de baixo")); }
+        return FText::FromString(TEXT("Calçado"));
+    }
+}
+
+void UHypeCharacterSelectWidget::GetPartOptions(FName Key, TArray<FName>& Ids, TArray<FText>& Names) const
+{
+    Ids = { NAME_None };
+    Names = { FText::FromString(Key == TEXT("Eyes") ? TEXT("Padrão") : TEXT("Nenhum")) };
+    const APawn* Pawn = GetOwningPlayerPawn();
+    const UHypeAppearanceComponent* Appearance = Pawn ? Pawn->FindComponentByClass<UHypeAppearanceComponent>() : nullptr;
+    if (!Appearance)
+    {
+        return;
+    }
+    if (Key == TEXT("Hair") || Key == TEXT("Outfit"))
+    {
+        const FName Clan = DraftAppearance.Clan.IsNone() ? HypeIdentity::ResolveClan(NAME_None) : DraftAppearance.Clan;
+        for (const FHypeCosmeticPart& Part : Key == TEXT("Hair") ? Appearance->HairOptions : Appearance->OutfitOptions)
+        {
+            if (Part.AllowsClan(Clan)) { Ids.Add(Part.Id); Names.Add(Part.Label); }
+        }
+        return;
+    }
+    const ENinjaCustomizationSlot Slot = HypeSelect::CatalogSlot(Key);
+    for (const FName& Id : Appearance->GetCatalogParts(Slot))
+    {
+        const FNinjaCustomizationPart* Part = Appearance->FindCatalogPart(Id, Slot);
+        Ids.Add(Id);
+        Names.Add(Part && !Part->DisplayName.IsEmpty() ? Part->DisplayName : FText::FromName(Id));
+    }
+}
+
+FName& UHypeCharacterSelectWidget::DraftPart(FName Key)
+{
+    if (Key == TEXT("Hair")) { return DraftAppearance.HairId; }
+    if (Key == TEXT("Outfit")) { return DraftAppearance.OutfitId; }
+    if (Key == TEXT("Eyes")) { return DraftAppearance.EyesId; }
+    if (Key == TEXT("Top")) { return DraftAppearance.TopId; }
+    if (Key == TEXT("Bottom")) { return DraftAppearance.BottomId; }
+    return DraftAppearance.ShoesId;
+}
+
+UTexture2D* UHypeCharacterSelectWidget::GetThumbnail(FName Key, FName Id)
+{
+    if (Id.IsNone())
+    {
+        return nullptr;
+    }
+    if (Key == TEXT("Eyes"))
+    {
+        const APawn* Pawn = GetOwningPlayerPawn();
+        const UHypeAppearanceComponent* Appearance = Pawn ? Pawn->FindComponentByClass<UHypeAppearanceComponent>() : nullptr;
+        const FNinjaCustomizationPart* Part = Appearance ? Appearance->FindCatalogPart(Id, ENinjaCustomizationSlot::Eyes) : nullptr;
+        return Part ? Part->EyeTexture.LoadSynchronous() : nullptr;
+    }
+    if (const TObjectPtr<UTexture2D>* Cached = ThumbCache.Find(Id))
+    {
+        return Cached->Get();
+    }
+    // Prévia gerada pela câmera de captura (gerar_thumbnails_pecas.py); sem ela o card fica só com o texto
+    const FString Package = FString::Printf(TEXT("%s/T_Thumb_%s"), *ThumbnailFolder, *Id.ToString());
+    UTexture2D* Texture = FPackageName::DoesPackageExist(Package)
+        ? LoadObject<UTexture2D>(nullptr, *FString::Printf(TEXT("%s.T_Thumb_%s"), *Package, *Id.ToString()), nullptr, LOAD_NoWarn | LOAD_Quiet)
+        : nullptr;
+    ThumbCache.Add(Id, Texture);
+    return Texture;
+}
+
+void UHypeCharacterSelectWidget::UpdateCards()
+{
+    for (const auto& Entry : Cards)
+    {
+        UHypeOptionCardWidget* Card = Entry.Value.Get();
+        if (!Card)
+        {
+            continue;
+        }
+        TArray<FName> Ids; TArray<FText> Names;
+        GetPartOptions(Entry.Key, Ids, Names);
+        const int32 Index = FMath::Max(Ids.IndexOfByKey(DraftPart(Entry.Key)), 0);
+        Card->Setup(HypeSelect::CardTitle(Entry.Key), Index, Ids.Num(), Names[Index], GetThumbnail(Entry.Key, Ids[Index]));
+        // Com traje inteiro as peças avulsas de corpo não aparecem: cards apagados
+        const bool bCovered = !DraftAppearance.OutfitId.IsNone() && (Entry.Key == TEXT("Top") || Entry.Key == TEXT("Bottom") || Entry.Key == TEXT("Shoes"));
+        Card->SetRenderOpacity(bCovered ? 0.55f : 1.f);
+        PageOpacities.Add(Card, Card->GetRenderOpacity());
+    }
+}
+
+void UHypeCharacterSelectWidget::PreloadParts()
+{
+    // Tudo em memória antes de abrir: trocar de peça não espera disco (sem "piscar")
+    const APawn* Pawn = GetOwningPlayerPawn();
+    const UHypeAppearanceComponent* Appearance = Pawn ? Pawn->FindComponentByClass<UHypeAppearanceComponent>() : nullptr;
+    if (!Appearance || !Appearance->PartsCatalog)
+    {
+        return;
+    }
+    for (const ENinjaCustomizationSlot Slot : { ENinjaCustomizationSlot::Eyes, ENinjaCustomizationSlot::Top, ENinjaCustomizationSlot::Bottom, ENinjaCustomizationSlot::Shoes })
+    {
+        for (const FName& Id : Appearance->GetCatalogParts(Slot))
+        {
+            if (const FNinjaCustomizationPart* Part = Appearance->FindCatalogPart(Id, Slot))
+            {
+                Part->Material.LoadSynchronous();
+                Part->EyeTexture.LoadSynchronous();
+            }
+        }
+    }
+}
+
+void UHypeCharacterSelectWidget::HandleCardStep(UHypeOptionCardWidget* Card, int32 Delta)
+{
+    if (!Card || ExitTime >= 0.f)
+    {
+        return;
+    }
+    const FName Key = Card->Key;
+    TArray<FName> Ids; TArray<FText> Names;
+    GetPartOptions(Key, Ids, Names);
+    const int32 Current = FMath::Max(Ids.IndexOfByKey(DraftPart(Key)), 0);
+    const FName Chosen = Ids[(Current + Delta + Ids.Num() * 4) % Ids.Num()];
+    DraftPart(Key) = Chosen;
+    // Traje inteiro e peças avulsas de corpo não se misturam
+    if (!Chosen.IsNone() && Key == TEXT("Outfit"))
+    {
+        DraftAppearance.TopId = DraftAppearance.BottomId = DraftAppearance.ShoesId = NAME_None;
+    }
+    else if (!Chosen.IsNone() && (Key == TEXT("Top") || Key == TEXT("Bottom") || Key == TEXT("Shoes")))
+    {
+        DraftAppearance.OutfitId = NAME_None;
+    }
+    ApplyDraftPreview();
+    UpdateCards();
+    SyncAppearanceControls();
+}
+
+void UHypeCharacterSelectWidget::HandleHairColor(UHypeColorRowWidget* Row, int32 Index)
+{
+    if (HypeSelect::HairColors.IsValidIndex(Index))
+    {
+        DraftAppearance.HairColor = HypeSelect::HairColors[Index];
+        ApplyDraftPreview();
+        SyncAppearanceControls();
+    }
+}
+
+void UHypeCharacterSelectWidget::HandleSliderChanged(UHypeGradientSliderWidget* Slider, float Value)
+{
+    if (Slider && Slider->Key == TEXT("Skin")) { HandleSkinChanged(Value); }
+    else if (Slider && Slider->Key == TEXT("Height")) { HandleHeightChanged(Value); }
+}
+
+FReply UHypeCharacterSelectWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+    // Só chega aqui o clique em espaço vazio (botões e cards ficam com o deles): arrastar gira o personagem
+    if (InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton && PreviewCamera && !bLookFixed && ExitTime < 0.f)
+    {
+        bDragging = true;
+        DragLastX = InGeometry.AbsoluteToLocal(InMouseEvent.GetScreenSpacePosition()).X;
+        return FReply::Handled().CaptureMouse(TakeWidget());
+    }
+    return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
+}
+
+FReply UHypeCharacterSelectWidget::NativeOnMouseMove(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+    if (bDragging)
+    {
+        const float X = InGeometry.AbsoluteToLocal(InMouseEvent.GetScreenSpacePosition()).X;
+        if (APawn* Pawn = GetOwningPlayerPawn())
+        {
+            Pawn->AddActorWorldRotation(FRotator(0.f, -(X - DragLastX) * DragDegreesPerPixel, 0.f));
+        }
+        DragLastX = X;
+        return FReply::Handled();
+    }
+    return Super::NativeOnMouseMove(InGeometry, InMouseEvent);
+}
+
+FReply UHypeCharacterSelectWidget::NativeOnMouseButtonUp(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+    if (bDragging)
+    {
+        bDragging = false;
+        return FReply::Handled().ReleaseMouseCapture();
+    }
+    return Super::NativeOnMouseButtonUp(InGeometry, InMouseEvent);
+}
+
+FReply UHypeCharacterSelectWidget::NativeOnMouseWheel(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+    if (PreviewCamera && ExitTime < 0.f)
+    {
+        // Zoom leve: rolar para cima aproxima
+        Zoom = FMath::Clamp(Zoom - InMouseEvent.GetWheelDelta() * 0.05f, ZoomRange.X, ZoomRange.Y);
+        return FReply::Handled();
+    }
+    return Super::NativeOnMouseWheel(InGeometry, InMouseEvent);
+}
+
+UTexture2D* UHypeCharacterSelectWidget::GetCreatorIcon(FName Name)
+{
+    using namespace HypeSelect;
+    const FName CacheKey(*(TEXT("Creator_") + Name.ToString()));
+    if (const TObjectPtr<UTexture2D>* Found = IconCache.Find(CacheKey))
+    {
+        return Found->Get();
+    }
+    // Ícones da coluna fina, desenhados por código (formas simples em 64 px, brancos)
+    auto Box = [](const FVector2f& P, float X0, float Y0, float X1, float Y1) { return P.X >= X0 && P.X <= X1 && P.Y >= Y0 && P.Y <= Y1; };
+    auto Disc = [](const FVector2f& P, const FVector2f& C, float R) { return FVector2f::Distance(P, C) <= R; };
+    TFunction<bool(const FVector2f&)> Shape;
+    if (Name == TEXT("Person"))
+    {
+        Shape = [&](const FVector2f& P) { return Disc(P, FVector2f(0.f, -0.2f), 0.13f) || (P.Y > 0.08f && P.Y < 0.38f && FMath::Square(P.X / 0.3f) + FMath::Square((P.Y - 0.38f) / 0.3f) <= 1.f); };
+    }
+    else if (Name == TEXT("Drop"))
+    {
+        Shape = [&](const FVector2f& P) { return Disc(P, FVector2f(0.f, 0.12f), 0.22f) || (P.Y > -0.38f && P.Y <= 0.12f && FMath::Abs(P.X) <= 0.22f * (P.Y + 0.38f) / 0.5f); };
+    }
+    else if (Name == TEXT("Height"))
+    {
+        Shape = [&](const FVector2f& P)
+        {
+            const bool Stem = FMath::Abs(P.X) < 0.035f && FMath::Abs(P.Y) < 0.36f;
+            const bool Up = P.Y < -0.18f && P.Y > -0.4f && FMath::Abs(P.X) <= (P.Y + 0.4f) * 0.9f;
+            const bool Down = P.Y > 0.18f && P.Y < 0.4f && FMath::Abs(P.X) <= (0.4f - P.Y) * 0.9f;
+            return Stem || Up || Down;
+        };
+    }
+    else if (Name == TEXT("Eye"))
+    {
+        Shape = [&](const FVector2f& P)
+        {
+            const float E = FMath::Sqrt(FMath::Square(P.X / 0.42f) + FMath::Square(P.Y / 0.24f));
+            return FMath::Abs(E - 1.f) < 0.12f || P.Size() < 0.11f;
+        };
+    }
+    else if (Name == TEXT("Hair"))
+    {
+        Shape = [&](const FVector2f& P)
+        {
+            const bool Dome = P.Y <= 0.05f && Disc(P, FVector2f(0.f, 0.05f), 0.36f);
+            const bool Locks = P.Y > 0.05f && P.Y < 0.3f && FMath::Abs(P.X) > 0.2f && FMath::Abs(P.X) < 0.36f;
+            return (Dome && !(P.Y > -0.08f && FMath::Abs(P.X) < 0.2f)) || Locks;
+        };
+    }
+    else if (Name == TEXT("Shirt") || Name == TEXT("Top"))
+    {
+        Shape = [&](const FVector2f& P)
+        {
+            const bool Body = Box(P, -0.21f, -0.28f, 0.21f, 0.38f);
+            const bool Sleeves = Box(P, -0.4f, -0.28f, 0.4f, -0.06f);
+            return (Body || Sleeves) && !Disc(P, FVector2f(0.f, -0.32f), 0.1f);
+        };
+    }
+    else if (Name == TEXT("Pants"))
+    {
+        Shape = [&](const FVector2f& P) { return Box(P, -0.26f, -0.38f, 0.26f, -0.2f) || Box(P, -0.26f, -0.2f, -0.04f, 0.4f) || Box(P, 0.04f, -0.2f, 0.26f, 0.4f); };
+    }
+    else if (Name == TEXT("Shoe"))
+    {
+        Shape = [&](const FVector2f& P) { return Box(P, -0.34f, 0.08f, 0.36f, 0.26f) || Box(P, -0.34f, -0.24f, -0.02f, 0.1f) || Disc(P, FVector2f(0.22f, 0.12f), 0.14f); };
+    }
+    else
+    {
+        Shape = [&](const FVector2f& P)
+        {
+            return SegmentDistance(P, FVector2f(-0.3f, 0.02f), FVector2f(-0.08f, 0.24f)) < 0.07f || SegmentDistance(P, FVector2f(-0.08f, 0.24f), FVector2f(0.32f, -0.22f)) < 0.07f;
+        };
+    }
+    UTexture2D* Texture = MakeTexture(64, 64, [&Shape](float X, float Y) { return Shape(FVector2f(X / 64.f - 0.5f, Y / 64.f - 0.5f)) ? 1.f : 0.f; });
+    IconCache.Add(CacheKey, Texture);
+    return Texture;
+}
+
+void UHypeCharacterSelectWidget::TickShots(float Dt)
+{
+    // Roteiro do teste: cada passo espera o anterior assentar (fade, câmera 0,4 s, troca de aba)
+    ShotClock += Dt;
+    struct FStep { float At; TFunction<void()> Run; };
+    auto Shot = [](const TCHAR* Name)
+    {
+        FScreenshotRequest::RequestScreenshot(FString(Name), true, false);
+        UE_LOG(LogHypeCharacterSelect, Log, TEXT("Foto %s"), Name);
+    };
+    auto Step = [this](FName Key, int32 Delta) { if (const TObjectPtr<UHypeOptionCardWidget>* Card = Cards.Find(Key)) { HandleCardStep(Card->Get(), Delta); } };
+    const TArray<FStep> Steps = {
+        { 2.0f, [this]() { if (!bCreatingCharacter) { StartCreation(); } } },
+        { 3.0f, [this]() { HandleNameChanged(FText::FromString(TEXT("Felipe"))); if (NameInput) { NameInput->SetText(FText::FromString(DraftAppearance.Name)); } HandleSkinChanged(0.3f); } },
+        { 4.0f, [&]() { Shot(TEXT("Criacao_1_Identidade")); } },
+        { 4.5f, [this]() { ShowAppearanceCategory(); } },
+        { 5.5f, [&]() { Step(TEXT("Eyes"), 1); } },
+        { 6.5f, [&]() { Shot(TEXT("Criacao_2_Aparencia")); } },
+        { 7.0f, [this]() { ShowStyleCategory(); } },
+        { 8.0f, [&]() { Step(TEXT("Hair"), 15); if (HairColorRow) { HairColorRow->Setup(HypeSelect::HairColors, 2); } HandleHairColor(HairColorRow, 2); } },
+        { 9.0f, [&]() { Shot(TEXT("Criacao_3_Estilo")); } },
+        { 9.5f, [this]() { ShowConfirmCategory(); } },
+        { 10.5f, [&]() { Shot(TEXT("Criacao_4_Confirmar")); } },
+        { 11.5f, [this]()
+            {
+                UE_LOG(LogHypeCharacterSelect, Log, TEXT("Rascunho: nome %s, pele %s, altura %.0f, cabelo %s, cor %s, roupa %s, olhos %s, cima %s, baixo %s, calçado %s"),
+                    *DraftAppearance.Name, *DraftAppearance.SkinTint.ToString(), DraftAppearance.HeightCm, *DraftAppearance.HairId.ToString(),
+                    *DraftAppearance.HairColor.ToString(), *DraftAppearance.OutfitId.ToString(), *DraftAppearance.EyesId.ToString(),
+                    *DraftAppearance.TopId.ToString(), *DraftAppearance.BottomId.ToString(), *DraftAppearance.ShoesId.ToString());
+                NextCreationStep();
+            } },
+    };
+    if (Steps.IsValidIndex(ShotStep) && ShotClock >= Steps[ShotStep].At)
+    {
+        Steps[ShotStep].Run();
+        ++ShotStep;
+    }
+}

@@ -3,6 +3,8 @@
 #include "UI/HypeProfileSubsystem.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Engine/SkeletalMesh.h"
+#include "Engine/DataTable.h"
+#include "Engine/Texture2D.h"
 #include "Engine/GameInstance.h"
 #include "Engine/World.h"
 #include "Materials/MaterialInstanceDynamic.h"
@@ -15,6 +17,8 @@ UHypeAppearanceComponent::UHypeAppearanceComponent()
     SetIsReplicatedByDefault(true);
     static ConstructorHelpers::FObjectFinder<USkeletalMesh> Mesh(TEXT("/Game/HypeWorld/Characters/Base/SK_Base_Body.SK_Base_Body"));
     static ConstructorHelpers::FObjectFinder<UMaterialInterface> Material(TEXT("/Game/Ninja/Characters/Customization/Materials/MI_CreatorBody.MI_CreatorBody"));
+    static ConstructorHelpers::FObjectFinder<UDataTable> Catalog(TEXT("/Game/HypeWorld/Characters/Parts/DT_CustomizationParts.DT_CustomizationParts"));
+    PartsCatalog = Catalog.Object;
     BaseBody = Mesh.Object;
     SkinMaterial = Material.Object;
     auto AddFitted = [this](const TCHAR* Id,const TCHAR* Label,bool bHair,const FNinjaBodyMask& Mask=FNinjaBodyMask())
@@ -49,6 +53,63 @@ void UHypeAppearanceComponent::ValidateParts(FHypeAppearance& Value) const
     };
     if (!Valid(Value.HairId, HairOptions)) { Value.HairId = NAME_None; }
     if (!Valid(Value.OutfitId, OutfitOptions)) { Value.OutfitId = NAME_None; }
+    if (!FindCatalogPart(Value.EyesId, ENinjaCustomizationSlot::Eyes)) { Value.EyesId = NAME_None; }
+    if (!FindCatalogPart(Value.TopId, ENinjaCustomizationSlot::Top)) { Value.TopId = NAME_None; }
+    if (!FindCatalogPart(Value.BottomId, ENinjaCustomizationSlot::Bottom)) { Value.BottomId = NAME_None; }
+    if (!FindCatalogPart(Value.ShoesId, ENinjaCustomizationSlot::Shoes)) { Value.ShoesId = NAME_None; }
+}
+
+const FNinjaCustomizationPart* UHypeAppearanceComponent::FindCatalogPart(FName Id, ENinjaCustomizationSlot Slot) const
+{
+    if (Id.IsNone() || !PartsCatalog) { return nullptr; }
+    const FNinjaCustomizationPart* Part = PartsCatalog->FindRow<FNinjaCustomizationPart>(Id, TEXT("Aparencia"), false);
+    if (!Part || Part->Slot != Slot) { return nullptr; }
+    if (Slot == ENinjaCustomizationSlot::Eyes) { return Part->EyeTexture.IsNull() ? nullptr : Part; }
+    // Só peças no esqueleto do corpo base (Leader Pose exige o mesmo esqueleto)
+    const USkeletalMesh* Mesh = Part->Mesh.LoadSynchronous();
+    return Mesh && BaseBody && Mesh->GetSkeleton() == BaseBody->GetSkeleton() ? Part : nullptr;
+}
+
+TArray<FName> UHypeAppearanceComponent::GetCatalogParts(ENinjaCustomizationSlot Slot) const
+{
+    TArray<FName> Ids;
+    if (PartsCatalog)
+    {
+        for (const FName& Row : PartsCatalog->GetRowNames())
+        {
+            if (FindCatalogPart(Row, Slot)) { Ids.Add(Row); }
+        }
+    }
+    return Ids;
+}
+
+void UHypeAppearanceComponent::ApplyCatalogPart(const FNinjaCustomizationPart* Selected, USkeletalMeshComponent*& Part)
+{
+    USkeletalMesh* Mesh = Selected ? Selected->Mesh.LoadSynchronous() : nullptr;
+    if (!Mesh)
+    {
+        if (Part) { Part->SetVisibility(false); }
+        return;
+    }
+    if (!Part)
+    {
+        Part = NewObject<USkeletalMeshComponent>(GetOwner());
+        Part->SetupAttachment(Body);
+        Part->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+        GetOwner()->AddInstanceComponent(Part);
+        Part->RegisterComponent();
+    }
+    if (Part->GetSkeletalMeshAsset() != Mesh)
+    {
+        Part->EmptyOverrideMaterials();
+        Part->SetSkeletalMesh(Mesh);
+        if (UMaterialInterface* Material = Selected->Material.LoadSynchronous())
+        {
+            for (int32 Index=0; Index<Part->GetNumMaterials(); ++Index) { Part->SetMaterial(Index, Material); }
+        }
+    }
+    Part->SetLeaderPoseComponent(Body);
+    Part->SetVisibility(true);
 }
 
 void UHypeAppearanceComponent::Commit(const FHypeAppearance& Value)
@@ -65,6 +126,8 @@ void UHypeAppearanceComponent::ServerCommit_Implementation(FHypeAppearance Value
     Value.Clan=Value.bCustomized ? HypeIdentity::ResolveClan(Appearance.Clan.IsNone() ? Value.Clan : Appearance.Clan) : NAME_None;
     ValidateParts(Value);
     Appearance = Value;
+    UE_LOG(LogTemp, Log, TEXT("Aparência confirmada: %s | cabelo %s | roupa %s | olhos %s | cima %s | baixo %s | calçado %s"), *Value.GetFullName(),
+        *Value.HairId.ToString(), *Value.OutfitId.ToString(), *Value.EyesId.ToString(), *Value.TopId.ToString(), *Value.BottomId.ToString(), *Value.ShoesId.ToString());
     OnRep_Appearance();
     GetOwner()->ForceNetUpdate();
 }
@@ -128,6 +191,7 @@ bool UHypeAppearanceComponent::Apply(const FHypeAppearance& Input)
         SkinMID = nullptr;
         if (Hair) { Hair->SetVisibility(false); }
         if (Outfit) { Outfit->SetVisibility(false); }
+        for (USkeletalMeshComponent* Extra : { Top.Get(), Bottom.Get(), Shoes.Get() }) { if (Extra) { Extra->SetVisibility(false); } }
         return true;
     }
     if (!BaseBody || !SkinMaterial || BaseBody->GetSkeleton() != OriginalMesh->GetSkeleton()) { return false; }
@@ -151,12 +215,26 @@ bool UHypeAppearanceComponent::Apply(const FHypeAppearance& Input)
     {
         SkinMID->SetVectorParameterValue(TEXT("BaseColor Tint"),Value.SkinTint);
         const FHypeCosmeticPart* Selected=OutfitOptions.FindByPredicate([&](const FHypeCosmeticPart& P) { return P.Id==Value.OutfitId && P.AllowsClan(Value.Clan); });
-        const FNinjaBodyMask Mask=Selected ? Selected->BodyMask : FNinjaBodyMask();
+        FNinjaBodyMask Mask=Selected ? Selected->BodyMask : FNinjaBodyMask();
+        if (!Selected)
+        {
+            // Sem traje inteiro: a pele some embaixo de cada peça avulsa
+            for (const FNinjaCustomizationPart* Extra : { FindCatalogPart(Value.TopId, ENinjaCustomizationSlot::Top),
+                FindCatalogPart(Value.BottomId, ENinjaCustomizationSlot::Bottom), FindCatalogPart(Value.ShoesId, ENinjaCustomizationSlot::Shoes) })
+            {
+                if (Extra) { Mask.Combine(Extra->BodyMask); }
+            }
+        }
         SkinMID->SetScalarParameterValue(TEXT("Mask_TorsoMinZ"),Mask.TorsoMinZ);
         SkinMID->SetScalarParameterValue(TEXT("Mask_TorsoMaxZ"),Mask.TorsoMaxZ);
         SkinMID->SetScalarParameterValue(TEXT("Mask_ArmMaxT"),Mask.ArmMaxT);
         SkinMID->SetScalarParameterValue(TEXT("Mask_LegMinZ"),Mask.LegMinZ);
         SkinMID->SetScalarParameterValue(TEXT("Mask_FootMaxZ"),Mask.FootMaxZ);
+        // Íris projetada no rosto (mesmos parâmetros do M_Character_Master usados pelo NinjaCustomization)
+        const FNinjaCustomizationPart* Eyes = FindCatalogPart(Value.EyesId, ENinjaCustomizationSlot::Eyes);
+        UTexture2D* EyeTexture = Eyes ? Eyes->EyeTexture.LoadSynchronous() : nullptr;
+        SkinMID->SetScalarParameterValue(TEXT("EyeSwap"), EyeTexture ? 1.f : 0.f);
+        if (EyeTexture) { SkinMID->SetTextureParameterValue(TEXT("EyeTexture"), EyeTexture); }
     }
     USkeletalMeshComponent* HairPtr = Hair;
     ApplyPart(Value.HairId, HairOptions, HairPtr, true, Value);
@@ -171,6 +249,16 @@ bool UHypeAppearanceComponent::Apply(const FHypeAppearance& Input)
     USkeletalMeshComponent* OutfitPtr = Outfit;
     ApplyPart(Value.OutfitId, OutfitOptions, OutfitPtr, false, Value);
     Outfit = OutfitPtr;
+    const bool bFullOutfit = Outfit && Outfit->IsVisible();
+    USkeletalMeshComponent* TopPtr = Top;
+    USkeletalMeshComponent* BottomPtr = Bottom;
+    USkeletalMeshComponent* ShoesPtr = Shoes;
+    ApplyCatalogPart(bFullOutfit ? nullptr : FindCatalogPart(Value.TopId, ENinjaCustomizationSlot::Top), TopPtr);
+    ApplyCatalogPart(bFullOutfit ? nullptr : FindCatalogPart(Value.BottomId, ENinjaCustomizationSlot::Bottom), BottomPtr);
+    ApplyCatalogPart(bFullOutfit ? nullptr : FindCatalogPart(Value.ShoesId, ENinjaCustomizationSlot::Shoes), ShoesPtr);
+    Top = TopPtr;
+    Bottom = BottomPtr;
+    Shoes = ShoesPtr;
     return true;
 }
 

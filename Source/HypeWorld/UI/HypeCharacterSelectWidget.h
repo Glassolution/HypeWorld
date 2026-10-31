@@ -11,7 +11,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Ninja/HypeAppearanceTypes.h"
-#include "Components/ComboBoxString.h"
+#include "HypeCreatorWidgets.h"
 #include "HypeCharacterSelectWidget.generated.h"
 
 class UButton;
@@ -21,7 +21,10 @@ class UTexture2D;
 class ACameraActor;
 class UEditableTextBox;
 class UTextBlock;
-class USlider;
+class UHypeOptionCardWidget;
+class UHypeColorRowWidget;
+class UHypeGradientSliderWidget;
+class USkeletalMeshComponent;
 
 USTRUCT(BlueprintType)
 struct FHypeClanOption
@@ -94,7 +97,7 @@ public:
 
 	/** Câmera de frente para o personagem: distância à frente, para o lado (+ = direita do personagem) e altura
 	 *  (relativas ao centro da cápsula), inclinação e campo de visão */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Camera") float CameraDistance = 380.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Camera") float CameraDistance = 440.f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Camera") float CameraSide = 15.f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Camera") float CameraHeight = 44.f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Camera") float CameraPitch = -1.f;
@@ -102,12 +105,37 @@ public:
 	/** Volta da câmera para as costas do personagem ao apertar Próximo (s) */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Camera") float CameraBlendTime = 0.9f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Tempo") float FadeInDelay = 0.3f;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Tempo") float FadeInTime = 0.6f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Tempo") float FadeInDelay = 0.2f;
+	/** Entrada do painel: desliza da esquerda (PanelSlide px) com fade */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Tempo") float FadeInTime = 0.35f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Tempo") float PanelSlide = 48.f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Tempo") float FadeOutTime = 0.35f;
 
-	/** Botão "Olhar fixo" ligado (só o visual por enquanto: o que ele faz ainda não foi decidido) */
+	/** Botão "Câmera fixa" ligado: arrastar o mouse não gira o personagem */
 	UPROPERTY(BlueprintReadOnly, Category="Selecao") bool bLookFixed = false;
+
+	/** Criação (30/10/2026, referência do Zenkai): peças reutilizáveis (WBP_ filhos das classes C++; sem eles usa o C++) */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Criacao") TSoftClassPtr<UHypeOptionCardWidget> OptionCardClass;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Criacao") TSoftClassPtr<UHypeColorRowWidget> ColorRowClass;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Criacao") TSoftClassPtr<UHypeGradientSliderWidget> GradientSliderClass;
+	/** Prévias das peças: <ThumbnailFolder>/T_Thumb_<Id> (geradas por Tools/editor/gerar_thumbnails_pecas.py) */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Criacao") FString ThumbnailFolder = TEXT("/Game/HypeWorld/UI/CharacterSelect/Thumbs");
+	/** Mapa do jogo: quando a tela abre em outro mapa (L_CharacterCreation), ele é carregado em segundo plano e o
+	 *  Próximo / Entrar viaja para ele. Na própria tela do jogo, a câmera só volta para as costas. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Criacao") TSoftObjectPtr<UWorld> MapaDoJogo;
+	/** Painel: coluna de ícones, começo e largura dos cards (px de 1080p, medidos na referência ×1,45) */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Criacao") float IconColumnX = 134.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Criacao") float FormLeftX = 198.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Criacao") float FormWidthPx = 340.f;
+	/** Escurecido da esquerda: opacidade na borda e até onde vai (fração da largura) */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Criacao") float PanelShade = 0.85f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Criacao") float PanelShadeReach = 0.55f;
+	/** Rosto (aba Aparência): distância da câmera à cabeça e tempo das transições da câmera (s) */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Camera") float FaceDistance = 95.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Camera") float CameraMoveTime = 0.4f;
+	/** Graus de giro do personagem por px arrastado e zoom do scroll (multiplica a distância) */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Camera") float DragDegreesPerPixel = 0.45f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Selecao|Camera") FVector2D ZoomRange = FVector2D(0.8f, 1.12f);
 
 protected:
 
@@ -115,6 +143,10 @@ protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	virtual FReply NativeOnMouseMove(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	virtual FReply NativeOnMouseButtonUp(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	virtual FReply NativeOnMouseWheel(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 
 private:
 
@@ -126,32 +158,29 @@ private:
     UPROPERTY() TObjectPtr<UEditableTextBox> NameInput;
     UPROPERTY() TObjectPtr<UTextBlock> HeightLabel;
     UPROPERTY() TObjectPtr<UTextBlock> SkinAmountLabel;
-    UPROPERTY() TArray<TObjectPtr<UImage>> SkinFrames;
-    UPROPERTY() TArray<TObjectPtr<UTextBlock>> SkinChecks;
     void SyncAppearanceControls();
     void GoToCategory(int32 Step);
     UFUNCTION() void ShowIdentityCategory();
     UFUNCTION() void ShowAppearanceCategory();
     UFUNCTION() void ShowStyleCategory();
     UFUNCTION() void ShowConfirmCategory();
-    UFUNCTION() void LighterSkin();
-    UFUNCTION() void DarkerSkin();
-    UFUNCTION() void ShorterHeight();
-    UFUNCTION() void TallerHeight();
-    UPROPERTY() TObjectPtr<USlider> HeightSlider;
-    UPROPERTY() TObjectPtr<USlider> SkinSlider;
-    UPROPERTY() TArray<TObjectPtr<UButton>> SkinButtons;
-    UPROPERTY() TArray<TObjectPtr<UButton>> HairColorButtons;
-    UPROPERTY() TObjectPtr<UComboBoxString> HairChoice;
-    UPROPERTY() TObjectPtr<UComboBoxString> OutfitChoice;
-    TArray<FName> VisibleOutfitIds;
-    UFUNCTION() UWidget* GenerateCosmeticLabel(FString Item);
-    UFUNCTION() void HandleHairSelected(FString Item, ESelectInfo::Type Type);
-    UFUNCTION() void HandleOutfitSelected(FString Item, ESelectInfo::Type Type);
+    UPROPERTY() TObjectPtr<UHypeGradientSliderWidget> HeightSlider;
+    UPROPERTY() TObjectPtr<UHypeGradientSliderWidget> SkinSlider;
+    UPROPERTY() TObjectPtr<UHypeColorRowWidget> HairColorRow;
+    UPROPERTY() TObjectPtr<UTextBlock> HairColorHex;
+    /** Cards das peças pela chave (Hair, Eyes, Outfit, Top, Bottom, Shoes) */
+    UPROPERTY() TMap<FName, TObjectPtr<UHypeOptionCardWidget>> Cards;
+    /** Opções de uma chave: ids (o primeiro é NAME_None = "Nenhum") e nomes */
+    void GetPartOptions(FName Key, TArray<FName>& Ids, TArray<FText>& Names) const;
+    FName& DraftPart(FName Key);
+    void UpdateCards();
+    void PreloadParts();
+    UFUNCTION() void HandleCardStep(UHypeOptionCardWidget* Card, int32 Delta);
+    UFUNCTION() void HandleHairColor(UHypeColorRowWidget* Row, int32 Index);
+    UFUNCTION() void HandleSliderChanged(UHypeGradientSliderWidget* Slider, float Value);
     UPROPERTY() TObjectPtr<UTextBlock> CreationErrorLabel;
     UFUNCTION() void NextCreationStep();
     UFUNCTION() void PreviousCreationStep();
-    UFUNCTION() void HandleCustomizationClick();
     UFUNCTION() void HandleNameChanged(const FText& Text);
     UFUNCTION() void HandleHeightChanged(float Value);
     UFUNCTION() void HandleSkinChanged(float Value);
@@ -194,6 +223,28 @@ private:
 	UPROPERTY() TMap<FName, TObjectPtr<UTexture2D>> IconCache;
 
 	UPROPERTY() TObjectPtr<ACameraActor> PreviewCamera;
+	/** Palco: de onde a câmera olha (fixo; o personagem gira, a câmera não) */
+	FVector StageOrigin = FVector::ZeroVector;
+	FVector StageForward = FVector::ForwardVector;
+	FVector StageRight = FVector::RightVector;
+	FRotator PawnStartRotation = FRotator::ZeroRotator;
+	float Zoom = 1.f;
+	bool bDragging = false;
+	float DragLastX = 0.f;
+	/** Viagem ao mapa do jogo depois da criação (tela aberta no L_CharacterCreation) */
+	bool bTravelAfter = false;
+	float TravelWait = -1.f;
+	UPROPERTY() TMap<FName, TObjectPtr<UTexture2D>> ThumbCache;
+	UTexture2D* GetThumbnail(FName Key, FName Id);
+	UPROPERTY() TObjectPtr<UTexture2D> CreatorShadeTexture;
+	UTexture2D* GetCreatorIcon(FName Name);
+	/** Os widgets do conteúdo da aba (os que somem na troca); logo, abas e fundo ficam */
+	bool bPlacingPageContent = false;
+	/** Teste: -CreationShots percorre as abas sozinho, tira uma foto de cada (Saved/Screenshots) e cria o personagem */
+	bool bShots = false;
+	float ShotClock = 0.f;
+	int32 ShotStep = 0;
+	void TickShots(float Dt);
 
     // Transições leves em tempo real, sem criar assets ou animar o cenário.
     float PageTime = -1.f;

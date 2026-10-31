@@ -8,6 +8,7 @@ class USkeletalMesh;
 class USkeletalMeshComponent;
 class UMaterialInterface;
 class UMaterialInstanceDynamic;
+class UDataTable;
 
 USTRUCT(BlueprintType)
 struct FHypeCosmeticPart
@@ -32,6 +33,11 @@ public:
     UPROPERTY(EditAnywhere, Category="Aparencia") TObjectPtr<UMaterialInterface> SkinMaterial;
     UPROPERTY(EditAnywhere, Category="Aparencia") TArray<FHypeCosmeticPart> HairOptions;
     UPROPERTY(EditAnywhere, Category="Aparencia") TArray<FHypeCosmeticPart> OutfitOptions;
+    /** Peças avulsas (olhos, parte de cima, de baixo, calçado): linhas do DT_CustomizationParts */
+    UPROPERTY(EditAnywhere, Category="Aparencia") TObjectPtr<UDataTable> PartsCatalog;
+    /** Linhas do catálogo de um slot, na ordem da tabela (só as que servem no corpo base) */
+    TArray<FName> GetCatalogParts(ENinjaCustomizationSlot Slot) const;
+    const FNinjaCustomizationPart* FindCatalogPart(FName Id, ENinjaCustomizationSlot Slot) const;
     /** Quanto o topo da cabeça (máscara do couro cabeludo) pega a cor do cabelo quando há cabelo. */
     UPROPERTY(EditAnywhere, Category="Aparencia", meta=(ClampMin="0", ClampMax="1")) float ScalpStrength = 0.85f;
     UPROPERTY(ReplicatedUsing=OnRep_Appearance, BlueprintReadOnly, Category="Aparencia") FHypeAppearance Appearance;
@@ -47,12 +53,17 @@ private:
     bool Apply(const FHypeAppearance& Value);
     void ValidateParts(FHypeAppearance& Value) const;
     void ApplyPart(FName Id, const TArray<FHypeCosmeticPart>& Options, USkeletalMeshComponent*& Part, bool bHair, const FHypeAppearance& Value);
+    /** Peça avulsa do catálogo num componente próprio (nullptr = esconde) */
+    void ApplyCatalogPart(const FNinjaCustomizationPart* Selected, USkeletalMeshComponent*& Part);
     UPROPERTY() TObjectPtr<USkeletalMeshComponent> Body;
     UPROPERTY() TObjectPtr<USkeletalMesh> OriginalMesh;
     UPROPERTY() TArray<TObjectPtr<UMaterialInterface>> OriginalMaterials;
     UPROPERTY() TObjectPtr<UMaterialInstanceDynamic> SkinMID;
     UPROPERTY() TObjectPtr<USkeletalMeshComponent> Hair;
     UPROPERTY() TObjectPtr<USkeletalMeshComponent> Outfit;
+    UPROPERTY() TObjectPtr<USkeletalMeshComponent> Top;
+    UPROPERTY() TObjectPtr<USkeletalMeshComponent> Bottom;
+    UPROPERTY() TObjectPtr<USkeletalMeshComponent> Shoes;
     FVector OriginalScale = FVector::OneVector;
     bool bLocalProfileLoaded = false;
     bool bPendingApply = true;

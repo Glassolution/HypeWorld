@@ -14,6 +14,8 @@
 #include "Blueprint/UserWidget.h"
 #include "HypeLoadingScreenWidget.generated.h"
 
+class UDataTable;
+
 class UImage;
 class UTextBlock;
 class UCanvasPanelSlot;
@@ -35,6 +37,10 @@ public:
 
 	/** Tela aberta quando o mapa seguinte entra (seleção do personagem). Vazio = direto ao jogo */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Carregamento") TSoftClassPtr<UUserWidget> TelaAoEntrar;
+	/** Peças da criação de personagem carregadas junto (os shaders delas compilam aqui, não na tela de criação) */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Carregamento") TSoftObjectPtr<UDataTable> AquecerPecas;
+	/** Espera os shaders terminarem de compilar antes de entrar (s, no máximo) */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Carregamento") float MaxShaderWait = 180.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Carregamento|Visual") TSoftObjectPtr<UTexture2D> Logo;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Carregamento|Visual") TSoftObjectPtr<UMaterialInterface> LogoMaterial;
@@ -112,6 +118,7 @@ private:
 
 	EPhase Phase = EPhase::Loading;
 	float Elapsed = 0.f;
+	float ShaderWait = 0.f;
 	float PhaseTime = 0.f;
 	float Shown = 0.f;			// progresso mostrado (persegue o real suavemente)
 	float LogoAspect = 0.55f;	// altura / largura da textura

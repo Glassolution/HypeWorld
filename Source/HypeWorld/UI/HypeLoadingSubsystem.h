@@ -30,6 +30,10 @@ public:
 	float GetProgress() const;
 	bool IsPreloaded() const { return LoadedWorld != nullptr; }
 	bool HasLoadFailed() const { return bLoadFailed; }
+	/** Materiais/texturas/malhas ainda compilando (o "Preparing Shaders (N)" da Unreal) */
+	int32 GetPendingCompiles() const;
+	/** Carrega estes assets em segundo plano e os segura (os shaders deles compilam durante a tela de carregamento) */
+	void WarmUp(const TArray<FSoftObjectPath>& Paths);
 
 	/** Abre o mapa (já em memória) e faz o fade in do preto quando ele estiver pronto.
 	 *  ScreenAfter: tela aberta assim que o mapa tiver o personagem (ex.: seleção do personagem); vazio = direto ao jogo */
@@ -45,6 +49,7 @@ private:
 	bool TryShowScreenAfter(float DeltaTime);
 
 	UPROPERTY() TSubclassOf<UUserWidget> PendingScreen;
+	UPROPERTY() TArray<TObjectPtr<UObject>> WarmedAssets;
 	FTSTicker::FDelegateHandle ScreenTicker;
 	float ScreenWait = 0.f;
 
