@@ -36,7 +36,8 @@ void UNinjaChakraFeetComponent::BeginPlay()
 
 UNinjaChakraFeetComponent::FPart UNinjaChakraFeetComponent::MakePart(UMaterialInterface* Material)
 {
-	static UStaticMesh* Plane = LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Plane.Plane"));
+	// Sem static: ao trocar de mapa o GC pode liberar o plano e o ponteiro ficaria inválido (crash).
+	UStaticMesh* Plane = LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Plane.Plane"));
 	FPart Part;
 	Part.Mesh = NewObject<UStaticMeshComponent>(GetOwner());
 	Part.Mesh->SetStaticMesh(Plane);
