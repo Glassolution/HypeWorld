@@ -15,14 +15,28 @@ UHypeAppearanceComponent::UHypeAppearanceComponent()
 {
     PrimaryComponentTick.bCanEverTick = true;
     SetIsReplicatedByDefault(true);
-    static ConstructorHelpers::FObjectFinder<USkeletalMesh> Mesh(TEXT("/Game/HypeWorld/Characters/Base/SK_Base_Body.SK_Base_Body"));
-    static ConstructorHelpers::FObjectFinder<UMaterialInterface> Material(TEXT("/Game/Ninja/Characters/Customization/Materials/MI_CreatorBody.MI_CreatorBody"));
-    static ConstructorHelpers::FObjectFinder<UDataTable> Catalog(TEXT("/Game/HypeWorld/Characters/Parts/DT_CustomizationParts.DT_CustomizationParts"));
-    PartsCatalog = Catalog.Object;
+    static ConstructorHelpers::FObjectFinder<USkeletalMesh> Mesh(TEXT("/Game/HypeWorld/Personagens/Indra/Modular/SK_Indra_Head.SK_Indra_Head"));
+    static ConstructorHelpers::FObjectFinder<USkeletalMesh> OldBody(TEXT("/Game/HypeWorld/Characters/Base/SK_Base_Body.SK_Base_Body"));
+    static ConstructorHelpers::FObjectFinder<UMaterialInterface> Material(TEXT("/Game/HypeWorld/Personagens/Indra/Modular/M_Indra_Cranio.M_Indra_Cranio"));
+    // PartsCatalog fica vazio: as peças avulsas do DT_CustomizationParts foram feitas para o corpo antigo.
     BaseBody = Mesh.Object;
+    EffectsBody = OldBody.Object;
     SkinMaterial = Material.Object;
+    auto AddModular = [this](const TCHAR* Id,const TCHAR* Label,bool bHair,const TCHAR* Path)
+    {
+        ConstructorHelpers::FObjectFinder<USkeletalMesh> Found(Path);
+        if (!Found.Succeeded()) { return; }
+        FHypeCosmeticPart Part;
+        Part.Id=FName(Id);Part.Label=FText::FromString(Label);Part.Mesh=Found.Object;
+        (bHair ? HairOptions : OutfitOptions).Add(Part);
+    };
+    AddModular(TEXT("Outfit_ItachiAnbu"),TEXT("Anbu"),false,TEXT("/Game/HypeWorld/Personagens/Indra/Modular/Trajes/ItachiAnbu/SK_Outfit_ItachiAnbu.SK_Outfit_ItachiAnbu"));
+    AddModular(TEXT("Outfit_Indra"),TEXT("Indra"),false,TEXT("/Game/HypeWorld/Personagens/Indra/Modular/SK_Outfit_Indra.SK_Outfit_Indra"));
+    AddModular(TEXT("Hair_Indra"),TEXT("Indra"),true,TEXT("/Game/HypeWorld/Personagens/Indra/Modular/SK_Hair_Indra.SK_Hair_Indra"));
     auto AddFitted = [this](const TCHAR* Id,const TCHAR* Label,bool bHair,const FNinjaBodyMask& Mask=FNinjaBodyMask())
     {
+        // Os trajes antigos contam com o corpo antigo embaixo (mãos e pele); na cabeça modular ficariam sem mãos.
+        if (!bHair) { return; }
         const FString Path=FString::Printf(TEXT("/Game/Ninja/Characters/Customization/%s/SK_%s.SK_%s"),Id,Id,Id);
         ConstructorHelpers::FObjectFinder<USkeletalMesh> Found(*Path);
         if (!Found.Succeeded()) { return; }
@@ -148,6 +162,8 @@ void UHypeAppearanceComponent::ApplyPart(FName Id, const TArray<FHypeCosmeticPar
         Part = NewObject<USkeletalMeshComponent>(GetOwner());
         Part->SetupAttachment(Body);
         Part->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+        // A aura usa o Custom Depth para ficar atrás do personagem; o corpo agora está no traje
+        Part->SetRenderCustomDepth(true);
         GetOwner()->AddInstanceComponent(Part);
         Part->RegisterComponent();
     }
@@ -181,75 +197,39 @@ bool UHypeAppearanceComponent::Apply(const FHypeAppearance& Input)
         if (!Body || !Body->GetSkeletalMeshAsset()) { Body = nullptr; return false; }
         OriginalMesh = Body->GetSkeletalMeshAsset();
         OriginalScale = Body->GetRelativeScale3D();
-        for (int32 Index=0; Index<Body->GetNumMaterials(); ++Index) { OriginalMaterials.Add(Body->GetMaterial(Index)); }
     }
-    if (!Input.bCustomized)
-    {
-        if (Body->GetSkeletalMeshAsset() != OriginalMesh) { Body->SetSkeletalMesh(OriginalMesh, false); Body->EmptyOverrideMaterials(); }
-        Body->SetRelativeScale3D(OriginalScale);
-        for (int32 Index=0; Index<OriginalMaterials.Num(); ++Index) { Body->SetMaterial(Index, OriginalMaterials[Index]); }
-        SkinMID = nullptr;
-        if (Hair) { Hair->SetVisibility(false); }
-        if (Outfit) { Outfit->SetVisibility(false); }
-        for (USkeletalMeshComponent* Extra : { Top.Get(), Bottom.Get(), Shoes.Get() }) { if (Extra) { Extra->SetVisibility(false); } }
-        return true;
-    }
-    if (!BaseBody || !SkinMaterial || BaseBody->GetSkeleton() != OriginalMesh->GetSkeleton()) { return false; }
+    if (!BaseBody || BaseBody->GetSkeleton() != OriginalMesh->GetSkeleton()) { return false; }
     FHypeAppearance Value = Input;
     ValidateParts(Value);
+    // A malha base é só a cabeça: o resto do corpo vem do traje. Sem escolha (ou perfil antigo) usa o traje padrão.
+    if (Value.OutfitId.IsNone() && OutfitOptions.Num()>0) { Value.OutfitId = OutfitOptions[0].Id; }
     if (Body->GetSkeletalMeshAsset() != BaseBody)
     {
         Body->SetSkeletalMesh(BaseBody, false);
         // Remove overrides do modelo anterior só nesta instância; assets permanecem intactos.
         Body->EmptyOverrideMaterials();
-        SkinMID = nullptr;
     }
     // Escala uniforme visual: não deforma ossos nem muda cápsula, alcance ou velocidades.
     Body->SetRelativeScale3D(OriginalScale * (Value.HeightCm / 190.782f));
-    if (!SkinMID)
-    {
-        Body->SetMaterial(0, SkinMaterial);
-        SkinMID = Body->CreateDynamicMaterialInstance(0, SkinMaterial);
-    }
-    if (SkinMID)
-    {
-        SkinMID->SetVectorParameterValue(TEXT("BaseColor Tint"),Value.SkinTint);
-        const FHypeCosmeticPart* Selected=OutfitOptions.FindByPredicate([&](const FHypeCosmeticPart& P) { return P.Id==Value.OutfitId && P.AllowsClan(Value.Clan); });
-        FNinjaBodyMask Mask=Selected ? Selected->BodyMask : FNinjaBodyMask();
-        if (!Selected)
-        {
-            // Sem traje inteiro: a pele some embaixo de cada peça avulsa
-            for (const FNinjaCustomizationPart* Extra : { FindCatalogPart(Value.TopId, ENinjaCustomizationSlot::Top),
-                FindCatalogPart(Value.BottomId, ENinjaCustomizationSlot::Bottom), FindCatalogPart(Value.ShoesId, ENinjaCustomizationSlot::Shoes) })
-            {
-                if (Extra) { Mask.Combine(Extra->BodyMask); }
-            }
-        }
-        SkinMID->SetScalarParameterValue(TEXT("Mask_TorsoMinZ"),Mask.TorsoMinZ);
-        SkinMID->SetScalarParameterValue(TEXT("Mask_TorsoMaxZ"),Mask.TorsoMaxZ);
-        SkinMID->SetScalarParameterValue(TEXT("Mask_ArmMaxT"),Mask.ArmMaxT);
-        SkinMID->SetScalarParameterValue(TEXT("Mask_LegMinZ"),Mask.LegMinZ);
-        SkinMID->SetScalarParameterValue(TEXT("Mask_FootMaxZ"),Mask.FootMaxZ);
-        // Íris projetada no rosto (mesmos parâmetros do M_Character_Master usados pelo NinjaCustomization)
-        const FNinjaCustomizationPart* Eyes = FindCatalogPart(Value.EyesId, ENinjaCustomizationSlot::Eyes);
-        UTexture2D* EyeTexture = Eyes ? Eyes->EyeTexture.LoadSynchronous() : nullptr;
-        SkinMID->SetScalarParameterValue(TEXT("EyeSwap"), EyeTexture ? 1.f : 0.f);
-        if (EyeTexture) { SkinMID->SetTextureParameterValue(TEXT("EyeTexture"), EyeTexture); }
-    }
     USkeletalMeshComponent* HairPtr = Hair;
     ApplyPart(Value.HairId, HairOptions, HairPtr, true, Value);
     Hair = HairPtr;
-    if (SkinMID)
-    {
-        // Couro cabeludo com a cor do cabelo (máscara T_Base_Body_ScalpMask): sem pele clara entre as mechas.
-        const bool bHasHair = Hair && Hair->IsVisible();
-        SkinMID->SetVectorParameterValue(TEXT("Scalp Color"), Value.HairColor);
-        SkinMID->SetScalarParameterValue(TEXT("Scalp Strength"), bHasHair ? ScalpStrength : 0.0f);
-    }
     USkeletalMeshComponent* OutfitPtr = Outfit;
     ApplyPart(Value.OutfitId, OutfitOptions, OutfitPtr, false, Value);
     Outfit = OutfitPtr;
     const bool bFullOutfit = Outfit && Outfit->IsVisible();
+    // Mesmo tom no rosto e nos braços; SkinTint é multiplicado na cor do rosto (branco = pele original).
+    const FLinearColor SkinTone = FLinearColor(FColor(238, 206, 189)) * Value.SkinTint;
+    for (USkeletalMeshComponent* Skin : { Body.Get(), Outfit.Get() })
+    {
+        for (int32 Index=0; Skin && Index<Skin->GetNumMaterials(); ++Index)
+        {
+            if (UMaterialInstanceDynamic* MID = Skin->CreateDynamicMaterialInstance(Index))
+            {
+                MID->SetVectorParameterValue(TEXT("SkinTone"), SkinTone);
+            }
+        }
+    }
     USkeletalMeshComponent* TopPtr = Top;
     USkeletalMeshComponent* BottomPtr = Bottom;
     USkeletalMeshComponent* ShoesPtr = Shoes;

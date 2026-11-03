@@ -342,9 +342,9 @@ public:
 	// ---------- Postura: correção aplicada depois da locomoção (parado, andar, correr, corrida ninja) ----------
 	// Some durante montagens (golpes, jutsus, reações), dash, defesa, concentrar chakra e pose de luta.
 
-	/** Força geral da correção de postura (0 = animações como vieram). */
+	/** Força geral da correção de postura (0 = animações como vieram). Desligada: era para o SK_Base_Body. */
 	UPROPERTY(EditAnywhere, Category="Postura", meta=(ClampMin="0", ClampMax="1"))
-	float PosturaAlpha = 1.f;
+	float PosturaAlpha = 0.f;
 
 	/** Rapidez para a correção entrar/sair (ao começar/terminar um golpe, jutsu ou dash). */
 	UPROPERTY(EditAnywhere, Category="Postura")

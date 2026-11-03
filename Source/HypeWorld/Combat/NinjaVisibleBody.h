@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/Character.h"
+#include "Ninja/HypeAppearanceComponent.h"
 
 /** O Mesh do personagem ou, se ele estiver escondido (só anima, como no retarget do Indra), o primeiro Skeletal Mesh
  *  visível preso nele. */
@@ -25,4 +26,11 @@ inline USkeletalMeshComponent* GetNinjaVisibleBody(const ACharacter* Character)
 		}
 	}
 	return Body;
+}
+
+/** Malha das cascas de efeito: o corpo visível pode ser só a cabeça, e a casca precisa do corpo inteiro. */
+inline USkeletalMesh* GetNinjaEffectsMesh(const ACharacter* Character, const USkeletalMeshComponent* Body)
+{
+	const UHypeAppearanceComponent* Appearance = Character ? Character->FindComponentByClass<UHypeAppearanceComponent>() : nullptr;
+	return Appearance && Appearance->EffectsBody ? Appearance->EffectsBody.Get() : Body->GetSkeletalMeshAsset();
 }

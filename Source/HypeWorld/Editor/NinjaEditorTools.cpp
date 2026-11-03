@@ -1040,3 +1040,9 @@ bool UNinjaEditorTools::UpdateSkeletonRefPoseFromMesh(USkeletalMesh* Mesh)
 	return false;
 #endif
 }
+
+AActor* UNinjaEditorTools::SpawnActorInPlayWorld(AActor* AnyActorInWorld, TSubclassOf<AActor> ActorClass)
+{
+	UWorld* World = AnyActorInWorld ? AnyActorInWorld->GetWorld() : nullptr;
+	return World && *ActorClass ? World->SpawnActor<AActor>(ActorClass, AnyActorInWorld->GetActorTransform()) : nullptr;
+}

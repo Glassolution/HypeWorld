@@ -28,6 +28,10 @@ class HYPEWORLD_API UNinjaEditorTools : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 public:
+	/** Cria um ator no mundo do Play (o Python só cria atores no mapa do editor). Usado pelos testes. */
+	UFUNCTION(BlueprintCallable, Category="Ninja|Editor")
+	static AActor* SpawnActorInPlayWorld(AActor* AnyActorInWorld, TSubclassOf<AActor> ActorClass);
+
 	UFUNCTION(BlueprintCallable, Category="Ninja|Editor")
 	static bool AddNiagaraUpdateModule(UNiagaraSystem* System, const FString& EmitterName, const FString& ScriptPath, int32 Index);
 	UFUNCTION(BlueprintCallable, Category="Ninja|Editor")

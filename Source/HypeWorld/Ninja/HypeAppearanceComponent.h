@@ -29,7 +29,10 @@ class HYPEWORLD_API UHypeAppearanceComponent : public UActorComponent
     GENERATED_BODY()
 public:
     UHypeAppearanceComponent();
+    /** Cabeça modular; o resto do corpo vem do traje. */
     UPROPERTY(EditAnywhere, Category="Aparencia") TObjectPtr<USkeletalMesh> BaseBody;
+    /** Corpo inteiro para as cascas de efeito (aura, chakra nos pés), que precisam de pés e tronco. */
+    UPROPERTY(EditAnywhere, Category="Aparencia") TObjectPtr<USkeletalMesh> EffectsBody;
     UPROPERTY(EditAnywhere, Category="Aparencia") TObjectPtr<UMaterialInterface> SkinMaterial;
     UPROPERTY(EditAnywhere, Category="Aparencia") TArray<FHypeCosmeticPart> HairOptions;
     UPROPERTY(EditAnywhere, Category="Aparencia") TArray<FHypeCosmeticPart> OutfitOptions;
@@ -38,8 +41,6 @@ public:
     /** Linhas do catálogo de um slot, na ordem da tabela (só as que servem no corpo base) */
     TArray<FName> GetCatalogParts(ENinjaCustomizationSlot Slot) const;
     const FNinjaCustomizationPart* FindCatalogPart(FName Id, ENinjaCustomizationSlot Slot) const;
-    /** Quanto o topo da cabeça (máscara do couro cabeludo) pega a cor do cabelo quando há cabelo. */
-    UPROPERTY(EditAnywhere, Category="Aparencia", meta=(ClampMin="0", ClampMax="1")) float ScalpStrength = 0.85f;
     UPROPERTY(ReplicatedUsing=OnRep_Appearance, BlueprintReadOnly, Category="Aparencia") FHypeAppearance Appearance;
     void Preview(const FHypeAppearance& Draft);
     void Restore();
@@ -57,8 +58,6 @@ private:
     void ApplyCatalogPart(const FNinjaCustomizationPart* Selected, USkeletalMeshComponent*& Part);
     UPROPERTY() TObjectPtr<USkeletalMeshComponent> Body;
     UPROPERTY() TObjectPtr<USkeletalMesh> OriginalMesh;
-    UPROPERTY() TArray<TObjectPtr<UMaterialInterface>> OriginalMaterials;
-    UPROPERTY() TObjectPtr<UMaterialInstanceDynamic> SkinMID;
     UPROPERTY() TObjectPtr<USkeletalMeshComponent> Hair;
     UPROPERTY() TObjectPtr<USkeletalMeshComponent> Outfit;
     UPROPERTY() TObjectPtr<USkeletalMeshComponent> Top;

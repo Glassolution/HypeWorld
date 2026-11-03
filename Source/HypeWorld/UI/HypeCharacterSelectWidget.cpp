@@ -1472,7 +1472,7 @@ namespace HypeSelect
 void UHypeCharacterSelectWidget::GetPartOptions(FName Key, TArray<FName>& Ids, TArray<FText>& Names) const
 {
     Ids = { NAME_None };
-    Names = { FText::FromString(Key == TEXT("Eyes") ? TEXT("Padrão") : TEXT("Nenhum")) };
+    Names = { FText::FromString(Key == TEXT("Eyes") || Key == TEXT("Outfit") ? TEXT("Padrão") : TEXT("Nenhum")) };
     const APawn* Pawn = GetOwningPlayerPawn();
     const UHypeAppearanceComponent* Appearance = Pawn ? Pawn->FindComponentByClass<UHypeAppearanceComponent>() : nullptr;
     if (!Appearance)

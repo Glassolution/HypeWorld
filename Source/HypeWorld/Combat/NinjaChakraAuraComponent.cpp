@@ -186,7 +186,7 @@ void UNinjaChakraAuraComponent::BuildAura()
 	if (Body && ShellMaterial)
 	{
 		Shell = NewObject<USkeletalMeshComponent>(Owner);
-		Shell->SetSkeletalMeshAsset(Body->GetSkeletalMeshAsset());
+		Shell->SetSkeletalMeshAsset(GetNinjaEffectsMesh(Owner, Body));
 		Shell->SetupAttachment(Body);
 		Shell->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		Shell->SetCastShadow(false);

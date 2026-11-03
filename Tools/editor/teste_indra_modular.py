@@ -19,6 +19,9 @@ IA = {k: c.get_editor_property(k) for k in ("move_action", "sprint_action", "jum
 st = {"t": 0.0, "log": [], "done": set(), "cam": None, "view": None, "original": unreal.load_asset("/Game/HypeWorld/Personagens/Indra/SK_Indra")}
 unreal._teste_im = st
 HEAD_BONE = "9ind00t0-head1_0243_150"
+MODO = getattr(unreal, "_teste_modo", "")
+# modo "itachi": traje piloto no lugar do corpo do Indra
+TRAJE = "Trajes/ItachiAnbu/SK_Outfit_ItachiAnbu" if MODO == "itachi" else "SK_Outfit_Indra"
 
 
 def log(msg):
@@ -50,7 +53,7 @@ def montar(modular, cabelo):
     body.set_relative_scale3d(unreal.Vector(1.06, 1.06, 1.06))
     if modular:
         body.set_skinned_asset_and_update(unreal.load_asset(PASTA + "SK_Indra_Head"))
-        for h, nome in ((out, "SK_Outfit_Indra"), (hair, "SK_Hair_Indra")):
+        for h, nome in ((out, TRAJE), (hair, "SK_Hair_Indra")):
             comp = h.skeletal_mesh_component
             comp.set_mobility(unreal.ComponentMobility.MOVABLE)
             comp.set_collision_enabled(unreal.CollisionEnabled.NO_COLLISION)
@@ -147,7 +150,76 @@ def roteiro():
     return eventos
 
 
-EVENTOS = roteiro()
+def roteiro_gola(original):
+    """Só as animações, câmera atrás e de lado na altura da gola: 'original' = SK_Indra inteiro, senão modular com cabelo."""
+    tag = "orig" if original else "mod"
+    eventos = [(0.3, "setup", lambda: (camera(), montar(not original, True)))]
+    t = 0.8
+    eventos.append((t, "v", lambda: view(-230, 170, 40, -30, fov=45.0))); t += 0.6
+    eventos.append((t, "s_idle", lambda: shot(tag + "_idle"))); t += 0.2
+    st["corre_ini"] = t + 0.1
+    eventos.append((t, "sp", lambda: press("sprint_action"))); t += 1.3
+    eventos.append((t, "s_corrida", lambda: shot(tag + "_corrida"))); t += 0.4
+    eventos.append((t, "j", lambda: press("jump_action"))); t += 0.35
+    eventos.append((t, "s_pulo", lambda: shot(tag + "_pulo"))); t += 0.9
+    eventos.append((t, "d", lambda: press("dash_action"))); t += 0.25
+    eventos.append((t, "s_dash", lambda: shot(tag + "_dash"))); t += 0.4
+    st["corre_fim"] = t
+    t += 1.2
+    eventos.append((t, "a", lambda: press("attack_action"))); t += 0.3
+    eventos.append((t, "s_ataque", lambda: shot(tag + "_ataque"))); t += 1.0
+    eventos.append((t + 0.3, "fim", None))
+    return eventos
+
+
+def tom_de_pele(cor):
+    """Mesmo SkinTone na cabeça e no traje, como a personalização vai fazer."""
+    for comp in (body, holder("TesteOutfit").skeletal_mesh_component):
+        for i in range(comp.get_num_materials()):
+            mat = comp.get_material(i)
+            if mat and "Olhos" not in mat.get_name():
+                mid = comp.create_dynamic_material_instance(i)
+                if cor:
+                    mid.set_vector_parameter_value("SkinTone", cor)
+
+
+def roteiro_itachi():
+    """Close da emenda (frente, lado, costas), corpo inteiro, SkinTone e as 5 animações (corpo inteiro e close)."""
+    eventos = [(0.3, "setup", lambda: (camera(), montar(True, False), holder("TesteHair").set_actor_hidden_in_game(True)))]
+    t = 0.8
+    for nome, v in (("emenda_frente", (60, 0, 3, -6)), ("emenda_lado", (0, 60, 3, -6)), ("emenda_costas", (-60, 0, 3, -6)),
+                    ("emenda_tres_quartos", (45, 40, 8, -6))):
+        eventos.append((t, "v_" + nome, lambda v=v: view(*v, fov=30.0))); t += 0.5
+        eventos.append((t, "s_" + nome, lambda n=nome: shot(n))); t += 0.2
+    for nome, v in (("corpo_frente", (430, 0, 10, -75)), ("corpo_lado", (0, 430, 10, -75)), ("corpo_costas", (-430, 0, 10, -75))):
+        eventos.append((t, "v_" + nome, lambda v=v: view(*v, fov=45.0))); t += 0.5
+        eventos.append((t, "s_" + nome, lambda n=nome: shot(n))); t += 0.2
+    eventos.append((t, "v_pele", lambda: view(150, 60, 0, -35, fov=40.0))); t += 0.5
+    eventos.append((t, "s_pele", lambda: shot("pele_padrao"))); t += 0.2
+    eventos.append((t, "tom", lambda: tom_de_pele(unreal.LinearColor(0.35, 0.2, 0.13, 1)))); t += 0.4
+    eventos.append((t, "s_pele2", lambda: shot("pele_tom_escuro"))); t += 0.2
+    eventos.append((t, "tom0", lambda: tom_de_pele(unreal.LinearColor(0.84, 0.62, 0.51, 1)))); t += 0.3
+    st["passadas"] = []
+    for prefixo, v, fov in (("anim", (0, 430, 25, -60), 48.0), ("close", (70, 55, 5, -6), 30.0)):
+        eventos.append((t, "v_i_" + prefixo, lambda v=v, f=fov: view(*v, fov=f))); t += 0.8
+        eventos.append((t, "s_i_" + prefixo, lambda p=prefixo: shot(p + "_idle"))); t += 0.2
+        ini = t + 0.1
+        eventos.append((t, "sp_" + prefixo, lambda: press("sprint_action"))); t += 1.3
+        eventos.append((t, "s_c_" + prefixo, lambda p=prefixo: shot(p + "_corrida"))); t += 0.4
+        eventos.append((t, "j_" + prefixo, lambda: press("jump_action"))); t += 0.35
+        eventos.append((t, "s_p_" + prefixo, lambda p=prefixo: shot(p + "_pulo"))); t += 0.9
+        eventos.append((t, "d_" + prefixo, lambda: press("dash_action"))); t += 0.25
+        eventos.append((t, "s_d_" + prefixo, lambda p=prefixo: shot(p + "_dash"))); t += 0.4
+        st["passadas"].append((ini, t))
+        eventos.append((t, "sp2_" + prefixo, lambda: press("sprint_action"))); t += 1.4
+        eventos.append((t, "a_" + prefixo, lambda: press("attack_action"))); t += 0.3
+        eventos.append((t, "s_a_" + prefixo, lambda p=prefixo: shot(p + "_ataque"))); t += 1.2
+    eventos.append((t + 0.3, "fim", None))
+    return eventos
+
+
+# unreal._teste_modo antes de rodar: "gola_original" / "gola_modular" (comparação da gola) ou "itachi" (traje piloto)
+EVENTOS = roteiro_itachi() if MODO == "itachi" else roteiro_gola(MODO == "gola_original") if MODO.startswith("gola") else roteiro()
 
 
 def tick(dt):
@@ -160,7 +232,7 @@ def tick(dt):
                 return
             if fn:
                 once(k, tt, fn)
-        if st.get("corre_ini", 99) <= st["t"] < st.get("corre_fim", 0):
+        if st.get("corre_ini", 99) <= st["t"] < st.get("corre_fim", 0) or any(a <= st["t"] < b for a, b in st.get("passadas", [])):
             move(0, 1)
         place_cam(dt)
     except Exception as e:

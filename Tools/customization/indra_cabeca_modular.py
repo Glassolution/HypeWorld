@@ -19,7 +19,7 @@ args = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []
 FOTOS = Path(args[args.index('--fotos') + 1]) if '--fotos' in args else None
 SEM_FBX = '--sem-fbx' in args
 
-CORTE_Z = 1.485        # m: abaixo do queixo (1,519) e da mandíbula, acima do trapézio; nuca original inteira aqui
+CORTE_Z = 1.50         # m: abaixo do queixo (1,519); pescoço ainda é um tubo (±5 cm). A 1,485 já alarga para o trapézio
 PASSO = 0.009          # m: espaçamento dos vértices novos da cúpula
 FOLGA_CABELO = 0.004   # m: a cúpula fica pelo menos isso por dentro do cabelo
 MAT_ROSTO, MAT_PELE, MAT_GOLA = 4, 2, 3
@@ -294,6 +294,11 @@ def z0_em(theta):
     fr = math.sin(theta) * -1          # 1 = frente (-Y)
     t = min(max((fr - 0.3) / 0.5, 0.0), 1.0); t = t * t * (3 - 2 * t)
     return 1.62 + 0.045 * t
+def peso_orelha(co):
+    if not (-0.012 < co.y < 0.042 and 1.57 < co.z < 1.66):
+        return 0.0
+    t = min(max((abs(co.x) - 0.071) / 0.006, 0.0), 1.0)
+    return t * t * (3 - 2 * t)
 perfil = {}   # vértice -> (phi, R, H, direção radial) para a normal
 movidos = 0
 for v in bm_cabeca.verts:
@@ -319,8 +324,28 @@ for v in bm_cabeca.verts:
         phi = u * math.pi / 2
         r_novo = rho - R * (1 - math.cos(phi))
         perfil[v] = (phi, R, H, rad, abs(rho - R))
-    v.co = Vector((eixo.x + rad.x * r_novo, eixo.y + rad.y * r_novo, z0 + H * math.sin(phi)))
+    alvo_ = Vector((eixo.x + rad.x * r_novo, eixo.y + rad.y * r_novo, z0 + H * math.sin(phi)))
+    # a orelha não entra no arredondamento (a ponta deformava e ficava com a normal errada)
+    v.co = alvo_ if v in interior_set else alvo_.lerp(v.co, peso_orelha(v.co))
     movidos += 1
+# Costas das orelhas: no rip são uma placa plana. Os vértices de dentro dessa placa recuam até ORELHA_VOLUME,
+# formando uma calota arredondada; a frente da orelha não muda porque o movimento é só para trás (+Y).
+ORELHA_VOLUME = 0.004
+bm_cabeca.normal_update()
+def face_costas(f):
+    return f.material_index == MAT_PELE and (f.normal.y > 0.1 or f.normal.z > 0.3)
+orelha_vs = {v for v in bm_cabeca.verts if v not in interior_set and peso_orelha(v.co) > 0.99}
+orelha_costas = {v for v in orelha_vs if any(face_costas(f) for f in v.link_faces)}
+for sg in (1, -1):
+    lado = [v for v in orelha_costas if v.co.x * sg > 0]
+    dentro_ = [v for v in lado if all(face_costas(f) for f in v.link_faces) and all(e.other_vert(v) in orelha_vs for e in v.link_edges)]
+    aro = [v for v in lado if v not in dentro_]
+    dm = {v: min((v.co - a.co).length for a in aro) for v in dentro_} if aro else {}
+    mx = max(dm.values(), default=1.0)
+    for v, d in dm.items():
+        t = min(d / mx, 1.0)
+        v.co.y += ORELHA_VOLUME * math.sqrt(t * (2 - t))
+    print('ORELHA', sg, 'vértices', len([v for v in orelha_vs if v.co.x * sg > 0]), 'costas', len(lado), 'recuados', len(dm))
 print('ARREDONDADO', movidos, 'vértices; topo', round(max(v.co.z for v in bm_cabeca.verts), 4))
 bm_cabeca.normal_update()
 
@@ -383,6 +408,7 @@ def objeto(nome, bm, cap=None):
 bm_cabeca.verts.index_update()
 dist_cap = {v.index: (kd.find(v.co)[2], topo[kd.find(v.co)[1]].index) for v in interior}
 perfil_i = {v.index: d for v, d in perfil.items()}
+orelha_i = {v.index for v in orelha_costas}
 ob_cab = objeto('SK_Indra_Head', bm_cabeca, cap=True)
 ob_hair = objeto('SK_Hair_Indra', bm_cabelo)
 ob_corpo = objeto('SK_Outfit_Indra', bm_corpo)
@@ -398,6 +424,43 @@ def copiar_normais(ob):
 
 for ob in (ob_hair, ob_corpo, ob_cab):
     copiar_normais(ob)
+
+# O rosto tem duas cascas sobrepostas (máscara e cilindro) e o Data Transfer pega o polígono mais próximo, que pode ser
+# o da outra casca: boca e nariz mudavam de forma. Canto com mesma posição e UV do original recebe a normal exata dele;
+# se houver mais de um (cascas coincidentes, como no cinto), vale o da face virada para o mesmo lado.
+def chave(co, uv):
+    return (round(co.x, 4), round(co.y, 4), round(co.z, 4), round(uv.x, 4), round(uv.y, 4))
+originais = {}
+src_uv = src.data.uv_layers.active.data
+src_rot = src.matrix_world.to_3x3().inverted().transposed()
+for pol in src.data.polygons:
+    face_n = (src_rot @ Vector(pol.normal)).normalized()
+    for li in pol.loop_indices:
+        k = chave(M @ src.data.vertices[src.data.loops[li].vertex_index].co, src_uv[li].uv)
+        originais.setdefault(k, []).append((face_n, (src_rot @ Vector(src.data.corner_normals[li].vector)).normalized()))
+
+def normais_exatas(ob):
+    me = ob.data
+    mw = ob.matrix_world
+    para_local = mw.to_3x3().transposed()
+    rot = mw.to_3x3().inverted().transposed()
+    uvs = me.uv_layers.active.data
+    ns = [Vector(n.vector) for n in me.corner_normals]
+    achados = empates = 0
+    for pol in me.polygons:
+        face_n = (rot @ Vector(pol.normal)).normalized()
+        for li in pol.loop_indices:
+            cands = originais.get(chave(mw @ me.vertices[me.loops[li].vertex_index].co, uvs[li].uv))
+            if cands:
+                n = max(cands, key=lambda c: c[0].dot(face_n))[1]
+                ns[li] = (para_local @ n).normalized()
+                achados += 1
+                empates += len(cands) > 1
+    me.normals_split_custom_set(ns)
+    print('NORMAIS_EXATAS', ob.name, achados, 'de', len(ns), 'com empate', empates)
+
+for ob in (ob_hair, ob_corpo, ob_cab):
+    normais_exatas(ob)
 
 def limpar(ob):
     """Só os espaços de material usados (mesma ordem) e, na cabeça, só a cor de vértice Couro."""
@@ -467,6 +530,19 @@ for p in me.polygons:
             continue
         nw = (rad * (math.cos(phi) / R) + Vector((0, 0, math.sin(phi) / H))).normalized()
         loop_n[li] = loop_n[li].lerp((M3t @ nw).normalized(), w).normalized()
+# costas e ponta da orelha: normal lisa da própria geometria (só das faces de trás/de cima, a frente fica como era)
+n_orelha = {}
+pol_orelha = []
+for p in me.polygons:
+    if p.material_index == MAT_PELE and all(vi in orelha_i for vi in p.vertices):
+        nw = (M.to_3x3().inverted().transposed() @ Vector(p.normal)).normalized()
+        if nw.y > 0.1 or nw.z > 0.3:
+            pol_orelha.append(p)
+            for vi in p.vertices:
+                n_orelha[vi] = n_orelha.get(vi, Vector()) + Vector(p.normal) * p.area
+for p in pol_orelha:
+    for li in p.loop_indices:
+        loop_n[li] = n_orelha[me.loops[li].vertex_index].normalized()
 me.normals_split_custom_set(loop_n)
 for ob in (ob_hair, ob_corpo, ob_cab):
     limpar(ob)

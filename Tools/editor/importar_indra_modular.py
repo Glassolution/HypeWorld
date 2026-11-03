@@ -93,10 +93,14 @@ for nome in PECAS:
     slots = mesh.get_editor_property('materials')
     for i, slot in enumerate(slots):
         sn = str(slot.get_editor_property('imported_material_slot_name'))
-        mat = m_cranio if sn == 'M_Indra_Cranio' else (m_olhos if sn.startswith('M_Indra_Olhos') else m_indra)
+        # na cabeça toda a pele usa o material do crânio (tem o SkinTone; fora da cúpula o escurecimento é zero)
+        pele_cab = nome == 'SK_Indra_Head' and sn.startswith('M_Indra') and not sn.startswith('M_Indra_Olhos')
+        mat = m_cranio if pele_cab else (m_olhos if sn.startswith('M_Indra_Olhos') else m_indra)
         slot.set_editor_property('material_interface', mat)
         slots[i] = slot
     mesh.call_method('SetMaterials', (slots,))
+    # limites na cena vêm do PHYS_Indra (o corpo todo): a cabeça sozinha tem ~9 cm e sumia nas poses de dash e ataque
+    mesh.set_editor_property('physics_asset', unreal.load_asset(INDRA_DIR + '/PHYS_Indra'))
     E.save_loaded_asset(mesh, False)
     unreal.log('INDRA_MODULAR %s ok: %d ossos, pior diferença %.4f cm, materiais %s' % (
         nome, len(real), pior, [str(s.get_editor_property('imported_material_slot_name')) for s in slots]))
