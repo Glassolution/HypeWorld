@@ -1,6 +1,8 @@
 // Ferramentas chamadas pelos scripts do editor.
 
 #include "NinjaEditorTools.h"
+#include "Ninja/NinjaCustomization.h"
+#include "Engine/DataTable.h"
 #include "Curves/CurveLinearColor.h"
 #include "Animation/BlendSpace.h"
 #include "Animation/AnimMontage.h"
@@ -1035,6 +1037,23 @@ bool UNinjaEditorTools::UpdateSkeletonRefPoseFromMesh(USkeletalMesh* Mesh)
 	Skeleton->Modify();
 	Skeleton->UpdateReferencePoseFromMesh(Mesh);
 	Skeleton->MarkPackageDirty();
+	return true;
+#else
+	return false;
+#endif
+}
+
+bool UNinjaEditorTools::SetOutfitCatalogRow(UDataTable* Catalog, FName RowName, const FText& DisplayName, USkeletalMesh* Mesh, bool bOculto)
+{
+#if WITH_EDITOR
+	if (!Catalog || !Mesh || Catalog->GetRowStruct() != FNinjaCustomizationPart::StaticStruct()) { return false; }
+	FNinjaCustomizationPart Row;
+	Row.DisplayName = DisplayName;
+	Row.Slot = ENinjaCustomizationSlot::Outfit;
+	Row.Mesh = Mesh;
+	Row.bOculto = bOculto;
+	Catalog->AddRow(RowName, Row);
+	Catalog->MarkPackageDirty();
 	return true;
 #else
 	return false;

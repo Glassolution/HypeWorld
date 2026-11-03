@@ -42,6 +42,11 @@ Se você é o Claude rodando na nuvem, valem estas regras além das outras:
 - **Não mexer pela nuvem** (a não ser que o Felipe peça): combate, movimento, animações, Input, mapas e qualquer `.uasset` existente.
 
 
+### Trajes modulares do Indra (03/11/2026)
+- Processo: `Tools/customization/traje_itachi_piloto.py -- --personagem <Nome>` (Blender) → `Tools/editor/importar_traje_modular.py` → `Tools/editor/registrar_traje_catalogo.py` (DT_CustomizationParts, slot `Outfit`/Traje, `bOculto`; o personagem lê o DT ao carregar: reabrir o editor) → teste `Tools/editor/teste_traje.py`. Fotos: `Docs/Personalizacao/IndraModular/Trajes/`.
+- O anel real é de 36 vértices em 1,50 m (`anel_pescoco.json`), não 42 em 1,485.
+- **Kakashi Anbu = mesmo corpo do Itachi Anbu:** GLBs com vértices, UVs, ossos e texturas iguais; os dois trajes só diferem na faixa do pescoço (1,46–1,49 m). Fios no peito e fresta no braço em poses extremas vêm dessa malha.
+
 ### Cabelos e roupas Uchiha (30/10/2026)
 - Catálogo do criador: 41 cabelos e quatro trajes completos, em `Content/Ninja/Characters/Customization`. Fontes ajustadas e quatro ZIPs originais em `SourceAssets/Customization/Fitted` e `Clothes`; originais de Downloads preservados.
 - Roupas restritas a Uchiha (`RequiredClan`), filtradas no menu e validadas pelo servidor após atribuir clã. Materiais de cada cabelo são reiniciados ao trocar a malha. Corpo usa `MI_CreatorBody`, instância própria com máscara; sem alteração do corpo/rig/animações originais.

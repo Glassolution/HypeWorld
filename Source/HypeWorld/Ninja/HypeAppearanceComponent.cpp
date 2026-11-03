@@ -33,6 +33,19 @@ UHypeAppearanceComponent::UHypeAppearanceComponent()
     AddModular(TEXT("Outfit_ItachiAnbu"),TEXT("Anbu"),false,TEXT("/Game/HypeWorld/Personagens/Indra/Modular/Trajes/ItachiAnbu/SK_Outfit_ItachiAnbu.SK_Outfit_ItachiAnbu"));
     AddModular(TEXT("Outfit_Indra"),TEXT("Indra"),false,TEXT("/Game/HypeWorld/Personagens/Indra/Modular/SK_Outfit_Indra.SK_Outfit_Indra"));
     AddModular(TEXT("Hair_Indra"),TEXT("Indra"),true,TEXT("/Game/HypeWorld/Personagens/Indra/Modular/SK_Hair_Indra.SK_Hair_Indra"));
+    // Trajes modulares do catálogo (slot Traje); só estas linhas valem aqui, as outras eram do corpo antigo.
+    ConstructorHelpers::FObjectFinder<UDataTable> Parts(TEXT("/Game/HypeWorld/Characters/Parts/DT_CustomizationParts.DT_CustomizationParts"));
+    if (Parts.Succeeded())
+    {
+        for (const TPair<FName,uint8*>& Row : Parts.Object->GetRowMap())
+        {
+            const FNinjaCustomizationPart* Part = Parts.Object->GetRowStruct()==FNinjaCustomizationPart::StaticStruct() ? reinterpret_cast<const FNinjaCustomizationPart*>(Row.Value) : nullptr;
+            if (Part && Part->Slot==ENinjaCustomizationSlot::Outfit && !Part->bOculto)
+            {
+                AddModular(*Row.Key.ToString(),*Part->DisplayName.ToString(),false,*Part->Mesh.ToSoftObjectPath().ToString());
+            }
+        }
+    }
     auto AddFitted = [this](const TCHAR* Id,const TCHAR* Label,bool bHair,const FNinjaBodyMask& Mask=FNinjaBodyMask())
     {
         // Os trajes antigos contam com o corpo antigo embaixo (mãos e pele); na cabeça modular ficariam sem mãos.

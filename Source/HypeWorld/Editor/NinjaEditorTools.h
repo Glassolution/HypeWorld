@@ -17,6 +17,7 @@ class ALandscape;
 class UAnimBlueprint;
 class USkeletalMesh;
 
+class UDataTable;
 class UNiagaraSystem;
 class UCurveLinearColor;
 class UNiagaraEmitter;
@@ -31,6 +32,10 @@ public:
 	/** Cria um ator no mundo do Play (o Python só cria atores no mapa do editor). Usado pelos testes. */
 	UFUNCTION(BlueprintCallable, Category="Ninja|Editor")
 	static AActor* SpawnActorInPlayWorld(AActor* AnyActorInWorld, TSubclassOf<AActor> ActorClass);
+
+	/** Cria ou atualiza a linha de um traje modular no catálogo (slot Traje), sem mexer nas outras linhas */
+	UFUNCTION(BlueprintCallable, Category="Ninja|Editor")
+	static bool SetOutfitCatalogRow(UDataTable* Catalog, FName RowName, const FText& DisplayName, USkeletalMesh* Mesh, bool bOculto);
 
 	UFUNCTION(BlueprintCallable, Category="Ninja|Editor")
 	static bool AddNiagaraUpdateModule(UNiagaraSystem* System, const FString& EmitterName, const FString& ScriptPath, int32 Index);

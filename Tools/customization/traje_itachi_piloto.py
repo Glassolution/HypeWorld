@@ -7,22 +7,26 @@
 # - Pescoço: corta logo abaixo do anel e costura uma faixa até os vértices do anel da cabeça, com a mesma posição,
 #   os mesmos pesos e as normais da cabeça: a emenda não abre nas animações.
 # - Pele: máscara por cor das texturas (T_*_SkinMask) para o parâmetro SkinTone do material.
-# Uso: blender -b --factory-startup --python Tools/customization/traje_itachi_piloto.py -- [--fotos <pasta>] [--sem-fbx]
+# Uso: blender -b --factory-startup --python Tools/customization/traje_itachi_piloto.py -- [--personagem KakashiAnbu] [--fotos <pasta>] [--sem-fbx]
+# Sem --personagem = Itachi Anbu (o piloto). Vale para os GLBs no rig padrão da Unreal, em Docs/<Personagem>/SK_<Personagem>.glb.
 import bpy, bmesh, json, math, struct, sys, tempfile
 import numpy as np
 from pathlib import Path
 from mathutils import Vector, Matrix
 
 ROOT = Path(__file__).resolve().parents[2]
-GLB = ROOT / 'Docs/ItachiAnbu/SK_ItachiAnbu.glb'
 BASE = ROOT / 'SourceAssets/Customization/IndraModular'
-OUT = BASE / 'ItachiAnbu'
 args = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []
+PERSONAGEM = args[args.index('--personagem') + 1] if '--personagem' in args else 'ItachiAnbu'
+GLB = ROOT / f'Docs/{PERSONAGEM}/SK_{PERSONAGEM}.glb'
+OUT = BASE / PERSONAGEM
 FOTOS = Path(args[args.index('--fotos') + 1]) if '--fotos' in args else None
 SEM_FBX = '--sem-fbx' in args
-NOME = 'SK_Outfit_ItachiAnbu'
-SLOTS_CORPO = (0, 1)         # kk2_tex01 / kk2_tex02; os outros são rosto, olhos, faixa e cabelo do Itachi
-FAIXA = 0.012                # m: altura da faixa costurada entre o corte do corpo e o anel
+NOME = f'SK_Outfit_{PERSONAGEM}'
+MATERIAIS_CORPO = ('kk2_tex01', 'kk2_tex02')   # os outros são rosto, olhos, faixa e cabelo
+# m: altura da faixa costurada entre o corte do corpo e o anel. A gola do Itachi já termina em 1,4775 m; quem tem a gola
+# inteira corta nessa mesma altura (cortar mais alto deixa um dente na gola de costas).
+FAIXA = 0.012 if PERSONAGEM == 'ItachiAnbu' else 0.0225
 OUT.mkdir(parents=True, exist_ok=True)
 
 # ---------------------------------------------------------------- Indra (cabeça + rig)
@@ -77,7 +81,9 @@ antes = set(bpy.data.objects)
 bpy.ops.import_scene.gltf(filepath=str(tmp))
 novos = set(bpy.data.objects) - antes
 arm_i = next(o for o in novos if o.type == 'ARMATURE')
-src = next(o for o in novos if o.type == 'MESH' and o.name.startswith('SK_ItachiAnbu'))
+src = next(o for o in novos if o.type == 'MESH' and any(m and m.name.startswith(MATERIAIS_CORPO) for m in o.data.materials))
+SLOTS_CORPO = [i for n in MATERIAIS_CORPO for i, m in enumerate(src.data.materials) if m and m.name.startswith(n)]
+print('SLOTS corpo', SLOTS_CORPO, [m.name for m in src.data.materials])
 arm_i.data.pose_position = 'REST'
 bpy.context.view_layer.update()
 AM = arm_i.matrix_world.copy()
@@ -233,6 +239,8 @@ for v in bm.verts:
 peso_v = {v: pesos_indra(fit_w[v.index], fit_co[v.index]) for v in bm.verts}
 bmesh.ops.delete(bm, geom=[f for f in bm.faces if f.material_index not in SLOTS_CORPO], context='FACES')
 bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context='VERTS')
+for f in bm.faces:
+    f.material_index = SLOTS_CORPO.index(f.material_index)
 # o rip tem triângulos soltos: solda os coincidentes (o UV fica por canto, não se perde)
 bmesh.ops.remove_doubles(bm, verts=list(bm.verts), dist=2e-5)
 peso_v = {v: w for v, w in peso_v.items() if v.is_valid}
@@ -252,6 +260,14 @@ for v0 in bm.verts:
                     vis.add(x); pil.append(x)
     visto |= vis; ilhas.append(vis)
 Z_FIM = CORTE_Z - FAIXA
+# cabeça do próprio personagem (cabelo, rosto, máscara em pedaços soltos): ilha toda acima do corte e perto do pescoço sai
+def so_cabeca(vs):
+    return all(v.co.z > Z_FIM and np.linalg.norm(np.array(v.co[:2]) - centro_xy) < 0.35 for v in vs)
+ilhas_cabeca = [i for i in ilhas if so_cabeca(i)]
+print('ILHAS só de cabeça removidas', len(ilhas_cabeca), 'vértices', sum(len(i) for i in ilhas_cabeca))
+ilhas = [i for i in ilhas if i not in ilhas_cabeca]
+bmesh.ops.delete(bm, geom=[v for i in ilhas_cabeca for v in i], context='VERTS')
+peso_v = {v: w for v, w in peso_v.items() if v.is_valid}
 def tem_pescoco(vs):
     return sum(1 for v in vs if v.co.z > Z_FIM and np.linalg.norm(np.array(v.co[:2]) - centro_xy) < raio_anel * 2.2)
 ilhas_pescoco = [i for i in ilhas if tem_pescoco(i)]
@@ -304,7 +320,22 @@ def rodeia(l_):
     """O laço dá a volta no pescoço (ângulos em todos os quadrantes), não é um buraco lateral."""
     return len({int(math.atan2(v.co.y - centro_xy[1], v.co.x - centro_xy[0]) // (math.pi / 2)) for v in l_}) == 4
 print('LACOS gola', [(len(l_), round(raio_medio(l_), 3), round(z_medio(l_), 3), rodeia(l_)) for l_ in lacos], 'raio anel', round(raio_anel, 3))
-laco = max((l_ for l_ in lacos if rodeia(l_) and raio_medio(l_) < 0.12), key=z_medio)
+candidatos = [l_ for l_ in lacos if rodeia(l_) and raio_medio(l_) < 0.12]
+topo = max(z_medio(l_) for l_ in candidatos)
+no_corte = [l_ for l_ in candidatos if z_medio(l_) > topo - 0.005]
+laco = max(no_corte, key=raio_medio)   # a gola é a borda maior; outra borda no mesmo corte é o resto da cabeça por dentro dela
+for l_ in no_corte:
+    if l_ is not laco:
+        vis, pil = set(l_), list(l_)
+        while pil:
+            for e in pil.pop().link_edges:
+                for x in e.verts:
+                    if x not in vis:
+                        vis.add(x); pil.append(x)
+        assert not vis & set(laco)
+        print('RESTO da cabeça removido', len(vis), 'vértices')
+        bmesh.ops.delete(bm, geom=list(vis), context='VERTS')
+peso_v = {v: w for v, w in peso_v.items() if v.is_valid}
 # sobra da máscara do Kakashi: plaquinha embaixo do queixo, virada para baixo, solta à frente do pescoço
 plaq = [f for f in bm.faces if f.material_index == 0 and f.calc_center_median().z > 1.45 and f.calc_center_median().y < 0.0
         and abs(f.calc_center_median().x) < 0.03]
@@ -351,6 +382,7 @@ for f in faces_faixa:
         l[uvl].uv = uv0
     f.smooth = True
 print('FAIXA', len(faces_faixa), 'corpo', nb, 'anel', nc)
+print('TOPO do traje', round(max(v.co.z for v in bm.verts), 4), 'corte', CORTE_Z)
 
 # ---------------------------------------------------------------- objeto final, com o rig e os pesos do Indra
 bm.verts.index_update()
@@ -360,7 +392,7 @@ bm.transform(HMi)
 me = bpy.data.meshes.new(NOME); bm.to_mesh(me); bm.free()
 ob = bpy.data.objects.new(NOME, me); bpy.context.scene.collection.objects.link(ob)
 ob.parent = cabeca.parent; ob.matrix_parent_inverse = cabeca.matrix_parent_inverse.copy(); ob.matrix_basis = cabeca.matrix_basis.copy()
-mats = ['M_Traje_ItachiAnbu_1', 'M_Traje_ItachiAnbu_2']
+mats = [f'M_Traje_{PERSONAGEM}_1', f'M_Traje_{PERSONAGEM}_2']
 for n in mats:
     me.materials.append(bpy.data.materials.get(n) or bpy.data.materials.new(n))
 usados = sorted({p.material_index for p in me.polygons}); print('SLOTS usados', usados)
@@ -406,11 +438,11 @@ for k, im in imgs.items():
     borrado = pele.astype(np.float32)
     for _ in range(1):
         borrado = (borrado + np.roll(borrado, 1, 0) + np.roll(borrado, -1, 0) + np.roll(borrado, 1, 1) + np.roll(borrado, -1, 1)) / 5
-    masc = bpy.data.images.new(f'T_ItachiAnbu_SkinMask_{k}', W, H_, alpha=False)
+    masc = bpy.data.images.new(f'T_{PERSONAGEM}_SkinMask_{k}', W, H_, alpha=False)
     masc.colorspace_settings.name = 'Non-Color'
     rgba = np.dstack([borrado, borrado, borrado, np.ones_like(borrado)]).astype(np.float32)
     masc.pixels = rgba.ravel().tolist()
-    masc.filepath_raw = str(OUT / f'T_ItachiAnbu_SkinMask_{k}.png'); masc.file_format = 'PNG'; masc.save()
+    masc.filepath_raw = str(OUT / f'T_{PERSONAGEM}_SkinMask_{k}.png'); masc.file_format = 'PNG'; masc.save()
     print('MASCARA', k, 'pixels de pele', int(pele.sum()), 'de', W * H_)
 ref_srgb = np.median(np.vstack(amostras), axis=0)
 (OUT / 'info.json').write_text(json.dumps({'pele_ref_srgb': [round(float(c), 4) for c in ref_srgb], 'escala_grossura': round(ESCALA, 4),

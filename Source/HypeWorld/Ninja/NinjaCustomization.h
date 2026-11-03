@@ -28,7 +28,9 @@ enum class ENinjaCustomizationSlot : uint8
 	Gloves,
 	Pouch,
 	Wraps,
-	Eyes
+	Eyes,
+	/** Traje modular inteiro, do pescoço para baixo: vira opção do menu no HypeAppearanceComponent */
+	Outfit UMETA(DisplayName="Traje")
 };
 
 /** O que uma roupa esconde do corpo base (cm, bind pose do Indra). Valores padrão = não esconde nada. */
@@ -66,6 +68,8 @@ struct FNinjaCustomizationPart : public FTableRowBase
 	/** Olhos: íris (T_Eyes_<Nome>) projetada no rosto do corpo base */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TSoftObjectPtr<UTexture2D> EyeTexture;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FNinjaBodyMask BodyMask;
+	/** Importado, mas fora do menu (qualidade baixa, decidir depois) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) bool bOculto = false;
 };
 
 /** Veste peças do catálogo num corpo base. Funciona no editor (preview) e no jogo; em rede o servidor decide as peças
