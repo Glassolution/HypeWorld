@@ -12,7 +12,7 @@
 import bpy, bmesh, json, math, struct, sys, tempfile
 import numpy as np
 from pathlib import Path
-from mathutils import Vector, Matrix
+from mathutils import Vector, Matrix, kdtree
 
 ROOT = Path(__file__).resolve().parents[2]
 BASE = ROOT / 'SourceAssets/Customization/IndraModular'
@@ -383,6 +383,56 @@ for f in faces_faixa:
     f.smooth = True
 print('FAIXA', len(faces_faixa), 'corpo', nb, 'anel', nc)
 print('TOPO do traje', round(max(v.co.z for v in bm.verts), 4), 'corte', CORTE_Z)
+
+# ---------------------------------------------------------------- costuras do rip
+# Os triângulos do rip vêm soltos: cada costura são duas arestas abertas quase coladas, com pesos um pouco diferentes, que
+# se abrem quando o corpo dobra. Só aresta aberta com par nas duas pontas conta como costura; os vértices dela passam a ter
+# a mesma posição e os mesmos pesos. Não solda nada: UV, normais e material ficam por canto, como estavam.
+COSTURA = 0.004
+fixos = set(cima) | set(baixo)
+abertas = [e for e in bm.edges if e.is_boundary and not (set(e.verts) & fixos)]
+pos_v = list({v for e in abertas for v in e.verts})
+kd_c = kdtree.KDTree(len(pos_v))
+for i_, v in enumerate(pos_v):
+    kd_c.insert(v.co, i_)
+kd_c.balance()
+abertas_de = {}
+for e in abertas:
+    for v in e.verts:
+        abertas_de.setdefault(v, []).append(e)
+pai = {v: v for v in pos_v}
+def raiz(v):
+    while pai[v] is not v:
+        pai[v] = pai[pai[v]]; v = pai[v]
+    return v
+n_costuras = 0
+for e in abertas:
+    a_, b_ = e.verts
+    if e.calc_length() < COSTURA * 2:
+        continue
+    for co_, j_, d_ in kd_c.find_range(a_.co, COSTURA):
+        c_ = pos_v[j_]
+        if c_ is a_ or c_ is b_:
+            continue
+        for e2 in abertas_de[c_]:
+            d2 = e2.other_vert(c_)
+            if e2 is not e and d2 is not a_ and d2 is not b_ and (d2.co - b_.co).length < COSTURA:
+                pai[raiz(a_)] = raiz(c_); pai[raiz(b_)] = raiz(d2); n_costuras += 1
+grupos_c = {}
+for v in pos_v:
+    grupos_c.setdefault(raiz(v), []).append(v)
+grupos_c = [g_ for g_ in grupos_c.values() if len(g_) > 1]
+maior = 0.0
+for g_ in grupos_c:
+    medio = sum((v.co for v in g_), Vector()) / len(g_)
+    maior = max(maior, max((v.co - medio).length for v in g_))
+    soma = {}
+    for v in g_:
+        for n_, x in peso_v.get(v, {}).items():
+            soma[n_] = soma.get(n_, 0) + x / len(g_)
+    for v in g_:
+        v.co = medio.copy(); peso_v[v] = dict(soma)
+print('COSTURAS', n_costuras // 2, 'arestas,', len(grupos_c), 'grupos,', sum(len(g_) for g_ in grupos_c), 'vértices; maior ajuste', round(maior * 1000, 2), 'mm')
 
 # ---------------------------------------------------------------- objeto final, com o rig e os pesos do Indra
 bm.verts.index_update()

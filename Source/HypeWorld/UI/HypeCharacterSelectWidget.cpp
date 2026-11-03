@@ -8,6 +8,7 @@
 #include "HypeLoadingSubsystem.h"
 #include "Camera/PlayerCameraManager.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Engine/SkeletalMesh.h"
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
 #include "Misc/PackageName.h"
@@ -962,7 +963,8 @@ void UHypeCharacterSelectWidget::NativeConstruct()
     PreloadParts();
     UpdatePreviewVisibility();
     SetVisibility(ESlateVisibility::Visible);	// recebe arrastar/rolar nos espaços vazios
-    bShots = FParse::Param(FCommandLine::Get(), TEXT("CreationShots"));
+    bSwapShots = FParse::Param(FCommandLine::Get(), TEXT("TrocaTrajeShots"));
+    bShots = bSwapShots || FParse::Param(FCommandLine::Get(), TEXT("CreationShots"));
 
     // Tela aberta fora do mapa do jogo (L_CharacterCreation): o jogo carrega em segundo plano enquanto o jogador cria
     const FString GamePackage = MapaDoJogo.ToSoftObjectPath().GetLongPackageName();
@@ -1752,6 +1754,56 @@ void UHypeCharacterSelectWidget::TickShots(float Dt)
         UE_LOG(LogHypeCharacterSelect, Log, TEXT("Foto %s"), Name);
     };
     auto Step = [this](FName Key, int32 Delta) { if (const TObjectPtr<UHypeOptionCardWidget>* Card = Cards.Find(Key)) { HandleCardStep(Card->Get(), Delta); } };
+    if (bSwapShots)
+    {
+        // Mesmo caminho da seta do card: HandleCardStep -> prévia no personagem. O menu lista o que está disponível.
+        auto Pick = [this](FName Key, FName Id)
+        {
+            TArray<FName> Ids; TArray<FText> Names;
+            GetPartOptions(Key, Ids, Names);
+            const int32 Target = Ids.IndexOfByKey(Id), Current = FMath::Max(Ids.IndexOfByKey(DraftPart(Key)), 0);
+            if (const TObjectPtr<UHypeOptionCardWidget>* Card = Cards.Find(Key)) { if (Target != INDEX_NONE) { HandleCardStep(Card->Get(), Target - Current); } }
+            FString Lista;
+            for (const FName& Option : Ids) { Lista += Option.ToString() + TEXT(" "); }
+            UE_LOG(LogHypeCharacterSelect, Log, TEXT("Troca %s -> %s; opções: %s"), *Key.ToString(), *DraftPart(Key).ToString(), *Lista);
+        };
+        auto Report = [this](const TCHAR* Name)
+        {
+            int32 Visible = 0;
+            TArray<USkeletalMeshComponent*> Meshes;
+            if (APawn* Pawn = GetOwningPlayerPawn()) { Pawn->GetComponents(Meshes); }
+            FString Lista;
+            for (const USkeletalMeshComponent* Mesh : Meshes)
+            {
+                if (Mesh->IsVisible() && Mesh->GetSkeletalMeshAsset())
+                {
+                    ++Visible;
+                    Lista += Mesh->GetSkeletalMeshAsset()->GetName() + TEXT(" ");
+                }
+            }
+            UE_LOG(LogHypeCharacterSelect, Log, TEXT("Malhas %s: %d visíveis de %d: %s"), Name, Visible, Meshes.Num(), *Lista);
+            FScreenshotRequest::RequestScreenshot(FString(Name), true, false);
+        };
+        const TArray<FStep> SwapSteps = {
+            { 2.0f, [this]() { if (!bCreatingCharacter) { StartCreation(); } } },
+            { 3.0f, [this]() { HandleNameChanged(FText::FromString(TEXT("Felipe"))); ShowStyleCategory(); } },
+            { 5.0f, [&]() { Pick(TEXT("Hair"), TEXT("Hair_Indra")); Pick(TEXT("Outfit"), TEXT("Outfit_Indra")); } },
+            { 7.0f, [&]() { Report(TEXT("Troca_1_Indra")); } },
+            { 8.0f, [&]() { Pick(TEXT("Outfit"), TEXT("Outfit_ItachiAnbu")); } },
+            { 10.0f, [&]() { Report(TEXT("Troca_2_Itachi")); } },
+            { 11.0f, [&]() { Pick(TEXT("Outfit"), TEXT("Outfit_Indra")); } },
+            { 13.0f, [&]() { Report(TEXT("Troca_3_Indra")); } },
+            { 14.0f, [&]() { Pick(TEXT("Outfit"), TEXT("Outfit_ItachiAnbu")); Step(TEXT("Hair"), 15); } },
+            { 16.0f, [&]() { Report(TEXT("Troca_4_Itachi_OutroCabelo")); } },
+            { 18.0f, [this]() { CancelCreation(); if (APlayerController* PC = GetOwningPlayer()) { PC->ConsoleCommand(TEXT("quit")); } } },
+        };
+        if (SwapSteps.IsValidIndex(ShotStep) && ShotClock >= SwapSteps[ShotStep].At)
+        {
+            SwapSteps[ShotStep].Run();
+            ++ShotStep;
+        }
+        return;
+    }
     const TArray<FStep> Steps = {
         { 2.0f, [this]() { if (!bCreatingCharacter) { StartCreation(); } } },
         { 3.0f, [this]() { HandleNameChanged(FText::FromString(TEXT("Felipe"))); if (NameInput) { NameInput->SetText(FText::FromString(DraftAppearance.Name)); } HandleSkinChanged(0.3f); } },

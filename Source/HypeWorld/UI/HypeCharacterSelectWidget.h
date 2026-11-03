@@ -242,6 +242,8 @@ private:
 	bool bPlacingPageContent = false;
 	/** Teste: -CreationShots percorre as abas sozinho, tira uma foto de cada (Saved/Screenshots) e cria o personagem */
 	bool bShots = false;
+	/** Teste: -TrocaTrajeShots troca traje e cabelo pelas setas do menu e registra as malhas visíveis a cada troca; não grava */
+	bool bSwapShots = false;
 	float ShotClock = 0.f;
 	int32 ShotStep = 0;
 	void TickShots(float Dt);
