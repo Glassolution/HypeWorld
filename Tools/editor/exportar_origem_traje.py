@@ -24,7 +24,6 @@ for nome, path in ORIGENS.items():
     out = ROOT / 'SourceAssets/Customization/IndraModular/Origem' / nome
     out.mkdir(parents=True, exist_ok=True)
     m = unreal.load_asset(path)
-    ossos = [str(b) for b in m.get_editor_property('skeleton').get_editor_property('bone_tree')] if False else []
     ok = exportar(m, out / (nome + '.fbx'), unreal.SkeletalMeshExporterFBX())
     unreal.log('ORIGEM %s fbx %s' % (nome, ok))
     for slot in m.get_editor_property('materials'):
