@@ -1,7 +1,8 @@
 # Trajes modulares (03/11/2026): importa SK_Outfit_<Personagem> (gerado por Tools/customization/traje_itachi_piloto) no
 # SKEL_Indra, confere a bind pose e cria as instâncias do M_Traje_Pele do piloto (sem alterar esse material).
 # Uso no editor: PERSONAGEM = 'KakashiAnbu'; PASTA_TEXTURAS = '/Game/HypeWorld/Personagens/KakashiAnbu'; PREFIXO_TEXTURA = 'T_KakashiAnbu_'
-# e depois este arquivo. Pode rodar de novo: substitui a malha e reaproveita o resto.
+# e depois este arquivo. Com TEXTURAS (lista de caminhos das texturas, uma por slot) em vez de PASTA_TEXTURAS/PREFIXO_TEXTURA,
+# vale para personagens com outro número de slots. Pode rodar de novo: substitui a malha e reaproveita o resto.
 import unreal, sys, math, json
 from pathlib import Path
 
@@ -45,14 +46,17 @@ esperado = standard._reference_bones(unreal.load_asset(INDRA_DIR + '/SK_Indra'))
 info = json.loads((DATA / 'info.json').read_text())
 ref = unreal.LinearColor(*[linear(c) for c in info['pele_ref_srgb']], 1)
 m_traje = unreal.load_asset(TRAJES + '/ItachiAnbu/M_Traje_Pele')
+if 'TEXTURAS' not in globals():
+    TEXTURAS = [PASTA_TEXTURAS + '/' + PREFIXO_TEXTURA + k for k in ('1', '2')]
 instancias = {}
-for k in ('1', '2'):
+for i_, caminho in enumerate(TEXTURAS):
+    k = str(i_ + 1)
     nome_mi = 'MI_Traje_%s_%s' % (PERSONAGEM, k)
     path = FOLDER + '/' + nome_mi
     mi = unreal.load_asset(path) if E.does_asset_exist(path) else A.create_asset(
         nome_mi, FOLDER, unreal.MaterialInstanceConstant, unreal.MaterialInstanceConstantFactoryNew())
     mi.set_editor_property('parent', m_traje)
-    L.set_material_instance_texture_parameter_value(mi, 'Textura', unreal.load_asset(PASTA_TEXTURAS + '/' + PREFIXO_TEXTURA + k))
+    L.set_material_instance_texture_parameter_value(mi, 'Textura', unreal.load_asset(caminho))
     L.set_material_instance_texture_parameter_value(mi, 'SkinMask', importar_mascara(k))
     L.set_material_instance_vector_parameter_value(mi, 'SkinRef', ref)
     L.update_material_instance(mi)
@@ -87,7 +91,7 @@ assert pior < 0.1, ('bind pose diferente do SK_Indra', pior)
 slots = mesh.get_editor_property('materials')
 for i, slot in enumerate(slots):
     sn = str(slot.get_editor_property('imported_material_slot_name'))
-    slot.set_editor_property('material_interface', instancias['2' if sn.endswith('_2') else '1'])
+    slot.set_editor_property('material_interface', instancias[sn.rsplit('_', 1)[1]])
     slots[i] = slot
 mesh.call_method('SetMaterials', (slots,))
 # limites na cena vêm do PHYS_Indra (o corpo todo), senão a malha some quando a pose sai dos limites dela

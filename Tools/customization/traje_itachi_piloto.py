@@ -19,6 +19,24 @@ BASE = ROOT / 'SourceAssets/Customization/IndraModular'
 args = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []
 PERSONAGEM = args[args.index('--personagem') + 1] if '--personagem' in args else 'ItachiAnbu'
 GLB = ROOT / f'Docs/{PERSONAGEM}/SK_{PERSONAGEM}.glb'
+ORIGEM = BASE / 'Origem' / PERSONAGEM
+# Personagens que só existem na Unreal (exportados por Tools/editor/exportar_origem_traje): materiais do corpo e texturas
+ORIGENS_FBX = {
+    'Shisui': {'materiais': ('MI_Shisui_Corpo',), 'texturas': ('T_Shisui_Corpo',)},
+    'Sasuke': {'materiais': ('M_Sasuke_Blusa', 'M_Sasuke_Calca', 'M_Sasuke_Sapato'), 'texturas': ('T_Sasuke_Blusa', 'T_Sasuke_Calca', 'T_Sasuke_Sapato')},
+}
+FBX_ORIGEM = ORIGENS_FBX.get(PERSONAGEM)
+# Rig do Sasuke -> nomes do rig padrão da Unreal, que o resto do script usa; ossos fora do mapa seguem o pai (arma, mochila)
+def nomes_sasuke():
+    m = {'bone_Hips': 'pelvis', 'bone_Spine': 'spine_01', 'bone_Spine1': 'spine_03', 'bone_Neck': 'neck_01', 'bone_Head': 'head', 'bone_Head_end': 'head_end'}
+    for lado, s in (('Left', 'l'), ('Right', 'r')):
+        m.update({f'bone_{lado}Clav': f'clavicle_{s}', f'bone_{lado}Arm': f'upperarm_{s}', f'bone_{lado}ForeArm': f'lowerarm_{s}', f'bone_{lado}Hand': f'hand_{s}',
+                  f'bone_{lado}LegUpper': f'thigh_{s}', f'bone_{lado}Leg': f'calf_{s}', f'bone_{lado}Ankle': f'foot_{s}', f'bone_{lado}Toe': f'ball_{s}', f'bone_{lado}Toe_end': f'ball_end_{s}'})
+        for k, dedo in enumerate(('thumb', 'index', 'middle', 'ring', 'pinky')):
+            m.update({f'bone_{lado}_Finger{k}1' if k else f'bone_{lado}_Finger01': f'{dedo}_01_{s}', f'bone_{lado}_Finger{k}2' if k else f'bone_{lado}_Finger02': f'{dedo}_02_{s}',
+                      f'bone_{lado}_Finger{k}2_end' if k else f'bone_{lado}_Finger02_end': f'{dedo}_03_{s}'})
+    return m
+RENOMEAR = nomes_sasuke() if PERSONAGEM == 'Sasuke' else {}
 OUT = BASE / PERSONAGEM
 FOTOS = Path(args[args.index('--fotos') + 1]) if '--fotos' in args else None
 SEM_FBX = '--sem-fbx' in args
@@ -68,23 +86,30 @@ ANEL = anel_da_cabeca()
 assert len(ANEL) == len(anel_json['pontos_m']), len(ANEL)
 
 # ---------------------------------------------------------------- Itachi (cópia do GLB com o sampler que falta)
-b = GLB.read_bytes()
-L = struct.unpack('<I', b[12:16])[0]; g = json.loads(b[20:20 + L]); resto = b[20 + L:]
-g.setdefault('samplers', [{}])
-for t in g.get('textures', []):
-    if t.get('sampler', 0) >= len(g['samplers']):
-        t['sampler'] = 0
-j = json.dumps(g).encode(); j += b' ' * ((4 - len(j) % 4) % 4)
-tmp = Path(tempfile.mkdtemp()) / 'itachi.glb'
-tmp.write_bytes(struct.pack('<III', 0x46546C67, 2, 12 + 8 + len(j) + len(resto)) + struct.pack('<I', len(j)) + b'JSON' + j + resto)
 antes = set(bpy.data.objects)
-bpy.ops.import_scene.gltf(filepath=str(tmp))
+if FBX_ORIGEM:
+    bpy.ops.import_scene.fbx(filepath=str(ORIGEM / (PERSONAGEM + '.fbx')))
+    MATERIAIS_CORPO = FBX_ORIGEM['materiais']
+else:
+    b = GLB.read_bytes()
+    L = struct.unpack('<I', b[12:16])[0]; g = json.loads(b[20:20 + L]); resto = b[20 + L:]
+    g.setdefault('samplers', [{}])
+    for t in g.get('textures', []):
+        if t.get('sampler', 0) >= len(g['samplers']):
+            t['sampler'] = 0
+    j = json.dumps(g).encode(); j += b' ' * ((4 - len(j) % 4) % 4)
+    tmp = Path(tempfile.mkdtemp()) / 'itachi.glb'
+    tmp.write_bytes(struct.pack('<III', 0x46546C67, 2, 12 + 8 + len(j) + len(resto)) + struct.pack('<I', len(j)) + b'JSON' + j + resto)
+    bpy.ops.import_scene.gltf(filepath=str(tmp))
 novos = set(bpy.data.objects) - antes
 arm_i = next(o for o in novos if o.type == 'ARMATURE')
 src = next(o for o in novos if o.type == 'MESH' and any(m and m.name.startswith(MATERIAIS_CORPO) for m in o.data.materials))
 SLOTS_CORPO = [i for n in MATERIAIS_CORPO for i, m in enumerate(src.data.materials) if m and m.name.startswith(n)]
 print('SLOTS corpo', SLOTS_CORPO, [m.name for m in src.data.materials])
 arm_i.data.pose_position = 'REST'
+for velho, novo in RENOMEAR.items():
+    if velho in arm_i.data.bones:
+        arm_i.data.bones[velho].name = novo   # o Blender renomeia junto os grupos de vértices da malha ligada
 bpy.context.view_layer.update()
 AM = arm_i.matrix_world.copy()
 H0 = {b.name: np.array(AM @ b.head_local) for b in arm_i.data.bones}
@@ -92,10 +117,12 @@ print('ITACHI pe', H0['foot_l'], 'dedo', H0['ball_l'], 'ombro', H0['upperarm_l']
 
 # ---------------------------------------------------------------- juntas de destino
 ESCALA = float((J('head') - J('pelvis'))[2] / (H0['head'] - H0['pelvis'])[2])
-ESCALA = min(ESCALA, 1.8 / 1.93)                     # grossura: altura do Indra / altura do Itachi
+# os dois Anbu têm a altura medida no GLB inteiro (o Itachi sem o cabelo daria 1,91 e mudaria o traje aprovado)
+ALTURA_ORIGEM = round(max((src.matrix_world @ v.co).z for v in src.data.vertices), 2) if FBX_ORIGEM else 1.93
+ESCALA = min(ESCALA, 1.8 / ALTURA_ORIGEM)            # grossura: altura do Indra / altura do personagem
 T = {'root': np.zeros(3), 'pelvis': J('pelvis')}
 # coluna: mesma fração do comprimento, ao longo pelvis -> spine -> spine1 -> neck do Indra
-cad = ['pelvis', 'spine_01', 'spine_02', 'spine_03', 'spine_04', 'spine_05', 'neck_01']
+cad = [n for n in ('pelvis', 'spine_01', 'spine_02', 'spine_03', 'spine_04', 'spine_05', 'neck_01') if n in H0]
 comp = np.cumsum([0] + [np.linalg.norm(H0[cad[i + 1]] - H0[cad[i]]) for i in range(len(cad) - 1)]); comp /= comp[-1]
 linha = [J('pelvis'), J('spine'), J('spine1'), J('neck')]
 seg = np.cumsum([0] + [np.linalg.norm(linha[i + 1] - linha[i]) for i in range(3)]); seg /= seg[-1]
@@ -112,17 +139,22 @@ for s, i in (('l', 'l'), ('r', 'r')):
     T[f'thumb_01_{s}'] = J(f'{i}-finger0'); T[f'thumb_02_{s}'] = J(f'{i}-finger01'); T[f'thumb_03_{s}'] = J(f'{i}-finger02')
     for dedo, k in FALANGES.items():
         T[f'{dedo}_01_{s}'] = J(f'{i}-finger{k}'); T[f'{dedo}_02_{s}'] = J(f'{i}-finger{k}1'); T[f'{dedo}_03_{s}'] = J(f'{i}-finger{k}2')
-        r = np.linalg.norm(H0[f'{dedo}_metacarpal_{s}'] - H0[f'hand_{s}']) / np.linalg.norm(H0[f'{dedo}_01_{s}'] - H0[f'hand_{s}'])
-        T[f'{dedo}_metacarpal_{s}'] = T[f'hand_{s}'] + (T[f'{dedo}_01_{s}'] - T[f'hand_{s}']) * r
+        if f'{dedo}_metacarpal_{s}' in H0:
+            r = np.linalg.norm(H0[f'{dedo}_metacarpal_{s}'] - H0[f'hand_{s}']) / np.linalg.norm(H0[f'{dedo}_01_{s}'] - H0[f'hand_{s}'])
+            T[f'{dedo}_metacarpal_{s}'] = T[f'hand_{s}'] + (T[f'{dedo}_01_{s}'] - T[f'hand_{s}']) * r
 
-FILHO = {'spine_01': 'spine_02', 'spine_02': 'spine_03', 'spine_03': 'spine_04', 'spine_04': 'spine_05', 'spine_05': 'neck_01',
-         'neck_01': 'neck_02', 'neck_02': 'head'}
+FILHO = {a_: c_ for a_, c_ in zip(cad[1:], cad[2:])}
+if 'neck_02' in H0:
+    FILHO.update({'neck_01': 'neck_02', 'neck_02': 'head'})
+else:
+    FILHO['neck_01'] = 'head'
 for s in 'lr':
     FILHO.update({f'clavicle_{s}': f'upperarm_{s}', f'upperarm_{s}': f'lowerarm_{s}', f'lowerarm_{s}': f'hand_{s}',
                   f'thigh_{s}': f'calf_{s}', f'calf_{s}': f'foot_{s}', f'foot_{s}': f'ball_{s}',
                   f'thumb_01_{s}': f'thumb_02_{s}', f'thumb_02_{s}': f'thumb_03_{s}'})
     for dedo in FALANGES:
         FILHO.update({f'{dedo}_metacarpal_{s}': f'{dedo}_01_{s}', f'{dedo}_01_{s}': f'{dedo}_02_{s}', f'{dedo}_02_{s}': f'{dedo}_03_{s}'})
+FILHO = {a_: c_ for a_, c_ in FILHO.items() if a_ in H0 and c_ in H0}
 
 def rot_entre(a, b_):
     return np.array(Vector(a).normalized().rotation_difference(Vector(b_).normalized()).to_matrix())
@@ -174,9 +206,16 @@ for s in 'lr':
 nome_i = lambda frag: osso_indra(frag).name
 GRUPOS_REP = {k: (J(a), J(c), [(nome_i(f), t_ao_longo(f, a, c)) for f in fs]) for k, (a, c, fs) in REPARTE.items()}
 
+PAI_I = {b.name: b.parent.name if b.parent else None for b in arm_i.data.bones}
+def conhecido(n):
+    """Osso sem equivalente (twist, arma, mochila): vale o primeiro pai que tem."""
+    while n not in GRUPOS_REP and n not in MAPA and PAI_I.get(n):
+        n = PAI_I[n]
+    return n if n in GRUPOS_REP or n in MAPA else 'pelvis'
 def pesos_indra(ossos_w, p):
     out = {}
-    for n, w in ossos_w.items():
+    for n0, w in ossos_w.items():
+        n = conhecido(n0)
         if n in GRUPOS_REP:
             va, vc, lista = GRUPOS_REP[n]
             t = float(np.dot(p - va, vc - va) / np.dot(vc - va, vc - va))
@@ -238,6 +277,15 @@ for v in bm.verts:
         del v[dl][g_]
 peso_v = {v: pesos_indra(fit_w[v.index], fit_co[v.index]) for v in bm.verts}
 bmesh.ops.delete(bm, geom=[f for f in bm.faces if f.material_index not in SLOTS_CORPO], context='FACES')
+if PERSONAGEM == 'Shisui':
+    # cabeça na mesma malha do corpo: dentes, língua e rosto ficam abaixo do corte depois do encaixe; saem pelo peso no osso da cabeça
+    def so_na_cabeca(v):
+        w = fit_w[v.index]
+        return sum(x for n, x in w.items() if n in ('head', 'head_end', 'Boca')) >= 0.5 * (sum(w.values()) or 1.0)
+    na_cabeca = {v for v in bm.verts if so_na_cabeca(v)}
+    faces_cabeca = [f for f in bm.faces if all(v in na_cabeca for v in f.verts)]
+    print('CABECA por peso', len(faces_cabeca), 'faces')
+    bmesh.ops.delete(bm, geom=faces_cabeca, context='FACES')
 bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context='VERTS')
 for f in bm.faces:
     f.material_index = SLOTS_CORPO.index(f.material_index)
@@ -323,9 +371,9 @@ print('LACOS gola', [(len(l_), round(raio_medio(l_), 3), round(z_medio(l_), 3), 
 candidatos = [l_ for l_ in lacos if rodeia(l_) and raio_medio(l_) < 0.12]
 topo = max(z_medio(l_) for l_ in candidatos)
 no_corte = [l_ for l_ in candidatos if z_medio(l_) > topo - 0.005]
-laco = max(no_corte, key=raio_medio)   # a gola é a borda maior; outra borda no mesmo corte é o resto da cabeça por dentro dela
+laco = min(no_corte, key=lambda l_: abs(raio_medio(l_) - raio_anel))   # a gola é a borda do tamanho do anel
 for l_ in no_corte:
-    if l_ is not laco:
+    if l_ is not laco and raio_medio(l_) < raio_medio(laco):   # por dentro dela é resto da cabeça; por fora é gola alta, fica
         vis, pil = set(l_), list(l_)
         while pil:
             for e in pil.pop().link_edges:
@@ -337,7 +385,7 @@ for l_ in no_corte:
         bmesh.ops.delete(bm, geom=list(vis), context='VERTS')
 peso_v = {v: w for v, w in peso_v.items() if v.is_valid}
 # sobra da máscara do Kakashi: plaquinha embaixo do queixo, virada para baixo, solta à frente do pescoço
-plaq = [f for f in bm.faces if f.material_index == 0 and f.calc_center_median().z > 1.45 and f.calc_center_median().y < 0.0
+plaq = [] if FBX_ORIGEM else [f for f in bm.faces if f.material_index == 0 and f.calc_center_median().z > 1.45 and f.calc_center_median().y < 0.0
         and abs(f.calc_center_median().x) < 0.03]
 print('PLAQUINHA removida', len(plaq), 'faces')
 bmesh.ops.delete(bm, geom=plaq, context='FACES')
@@ -442,7 +490,7 @@ bm.transform(HMi)
 me = bpy.data.meshes.new(NOME); bm.to_mesh(me); bm.free()
 ob = bpy.data.objects.new(NOME, me); bpy.context.scene.collection.objects.link(ob)
 ob.parent = cabeca.parent; ob.matrix_parent_inverse = cabeca.matrix_parent_inverse.copy(); ob.matrix_basis = cabeca.matrix_basis.copy()
-mats = [f'M_Traje_{PERSONAGEM}_1', f'M_Traje_{PERSONAGEM}_2']
+mats = [f'M_Traje_{PERSONAGEM}_{k + 1}' for k in range(len(SLOTS_CORPO))]
 for n in mats:
     me.materials.append(bpy.data.materials.get(n) or bpy.data.materials.new(n))
 usados = sorted({p.material_index for p in me.polygons}); print('SLOTS usados', usados)
@@ -476,7 +524,10 @@ bpy.data.objects.remove(ref_ob)
 
 # ---------------------------------------------------------------- máscaras de pele (por cor da textura)
 info_pele = {}
-imgs = {'1': bpy.data.images['T_KakashiAnbu_1'], '2': bpy.data.images['T_KakashiAnbu_2']}
+if FBX_ORIGEM:
+    imgs = {str(k + 1): bpy.data.images.load(str(ORIGEM / (n + '.png'))) for k, n in enumerate(FBX_ORIGEM['texturas'])}
+else:
+    imgs = {'1': bpy.data.images['T_KakashiAnbu_1'], '2': bpy.data.images['T_KakashiAnbu_2']}
 amostras = []
 for k, im in imgs.items():
     W, H_ = im.size
