@@ -1,0 +1,387 @@
+====================================================================================================
+RELATORIO FASE 1 — AUDITORIA SOMENTE LEITURA DE OTIMIZACAO DO MAPA (Hype World)
+Data: 05/11/2026    Engine: 5.8.4-58902052+++UE5+Release-5.8
+Escopo: SOMENTE assets de ambiente (niveis, static meshes, foliage, props,
+        materiais de cenario). NENHUM asset foi alterado nesta fase.
+Fora de escopo (nao tocados): personagens, rig, animacoes, blueprints de
+        personagem e logica do criador de personagem.
+====================================================================================================
+
+1. NIVEIS IDENTIFICADOS
+----------------------------------------------------------------------------------------------------
+   Nivel principal do jogo : Content/Maps/Tutorial/L_Tutorial.umap
+        (unico mapa de gameplay; vale estilo Zenkai, ponte, rio, trilha)
+        atores = 592 | componentes StaticMesh distintos = 57 | instancias somadas = 6349
+   Nivel do criador        : Content/Maps/CharacterCreation/L_CharacterCreation.umap
+        atores = 412 | componentes StaticMesh distintos = 56 | instancias somadas = 6248
+   Observacao: nao existe mapa de 'vila' separado. O fluxo do jogo e
+        L_Boot -> L_CharacterCreation -> L_Tutorial.
+   ALERTA (fora do escopo, so avisando): Source/HypeWorld/UI/HypeLoadingScreenWidget.cpp:35
+        aponta MapaSeguinte para 'L_Tutorial_Forest', que nao existe mais.
+   Os dois niveis usam o MESMO conjunto de assets de ambiente (127 static meshes).
+   O L_Tutorial tem alem disso placeholders: SM_Placeholder_Ponte10,
+   SM_Placeholder_PosteLanterna, SM_Placeholder_Barril, SM_Placeholder_Toco,
+   SM_Placeholder_BonecoTreino, SM_Placeholder_Portal.
+
+2. SUPORTE A NANITE NAS CONFIGURACOES DO PROJETO
+----------------------------------------------------------------------------------------------------
+   r.Nanite.ProjectEnabled = True   (Config/DefaultEngine.ini:70)  -> LIGADO
+   r.Nanite.Foliage        = False   (Config/DefaultEngine.ini:192) -> foliage NAO usa Nanite
+   Nao ha nada a ligar: o suporte ja esta ativo. So falta habilitar por mesh.
+
+3. SITUACAO ATUAL DOS MESHES DE AMBIENTE (127 auditados)
+----------------------------------------------------------------------------------------------------
+   Com Nanite habilitado        : 89 / 127
+   Sem Nanite                   : 38 / 127
+   Com mais de 1 LOD (reducao)  : 40
+   Com apenas 1 LOD (sem reducao): 87  <- se nao ganharem Nanite, nao reduzem em distancia
+   Quem ja usa Nanite (lista):
+      Bush_Common, Bush_Common_Flowers, Clover_1, Clover_2, CommonTree_1, CommonTree_2, CommonTree_3, CommonTree_4, CommonTree_5, DeadTree_1, DeadTree_2, DeadTree_3, DeadTree_4, DeadTree_5, Fern_1, Flower_3_Group, Flower_3_Single, Flower_4_Group, Flower_4_Single, Grass_Common_Short, Grass_Common_Tall, Grass_Wispy_Short, Grass_Wispy_Tall, Mushroom_Common, Mushroom_Laetiporus, NullCube, PCG_AxisTripod, PCG_Boulder_02, PCG_Cube, PCG_CubeWireframe, PCG_CubeWireframeBasePivot, PCG_Seedling_01, PCG_Tree_01, PCG_Tree_02, PCG_Tree_03, Pebble_Round_1, Pebble_Round_2, Pebble_Round_3, Pebble_Round_4, Pebble_Round_5, Pebble_Square_1, Pebble_Square_2, Pebble_Square_3, Pebble_Square_4, Pebble_Square_5, Pebble_Square_6, Petal_1, Petal_2, Petal_3, Petal_4, Petal_5, Pine_1, Pine_2, Pine_3, Pine_4, Pine_5, Plant_1, Plant_1_Big, Plant_7, Plant_7_Big, RockPath_Round_Small_1, RockPath_Round_Small_2, RockPath_Round_Small_3, RockPath_Round_Thin, RockPath_Round_Wide, RockPath_Square_Small_1, RockPath_Square_Small_2, RockPath_Square_Small_3, RockPath_Square_Thin, RockPath_Square_Wide, Rock_Medium_1, Rock_Medium_2, Rock_Medium_3, SM_ChamferCube, SM_Cube, SM_Cylinder, SM_Door, SM_DoorFrame_Corner, SM_DoorFrame_Edge, SM_Plane, SM_QuarterCylinder, SM_QuarterCylinderOuter, SM_Ramp, SM_TargetBaseMesh, TwistedTree_1, TwistedTree_2, TwistedTree_3, TwistedTree_4, TwistedTree_5
+
+4. MESHES COM MAIS TRIANGULOS E INSTANCIAS (nivel principal L_Tutorial)
+----------------------------------------------------------------------------------------------------
+   Custo total na cena = triangulos LOD0 x numero de instancias.
+   MESH                               TRI_LOD0    INST      CUSTO  NANITE/LODS
+   SM_Stone_Boulder_1                    1286     163     209618  nanite=False lods=4
+   SM_Stone_3                             582     285     165870  nanite=False lods=4
+   SM_Fol_Grass_Clump_2                   106    1256     133136  nanite=False lods=3
+   SM_Fol_Grass_Clump_3                    99    1287     127413  nanite=False lods=3
+   SM_Stone_2                             510     216     110160  nanite=False lods=4
+   SM_Tree_Broadleaf_1                   2438      36      87768  nanite=False lods=4
+   SM_Fol_Grass_Clump_1                    65    1275      82875  nanite=False lods=3
+   SM_Stone_1                             338     242      81796  nanite=False lods=4
+   SM_Fol_Bush_1                          256     290      74240  nanite=False lods=3
+   SM_Fol_Flower_Clump_2                   80     849      67920  nanite=False lods=3
+   SM_Tree_Broadleaf_2                   1806      22      39732  nanite=False lods=4
+   SM_Fol_Bush_2                          408      67      27336  nanite=False lods=3
+   SM_Tree_Birch_1                       2712      10      27120  nanite=False lods=4
+   SM_Fol_Flower_Clump_1                   72     235      16920  nanite=False lods=3
+   SM_Placeholder_PosteLanterna          1680       6      10080  nanite=False lods=1
+   SM_Zen_Tronco                          512      19       9728  nanite=False lods=1
+   SM_Placeholder_BonecoTreino           3008       3       9024  nanite=False lods=1
+   SM_Placeholder_Ponte10                6368       1       6368  nanite=False lods=1
+   SM_Placeholder_Barril                 1536       4       6144  nanite=False lods=1
+   SM_Tree_Birch_2                       2602       2       5204  nanite=False lods=4
+
+   Mesmos dados para o criador (L_CharacterCreation) — top 10:
+   SM_Stone_3                             582     278     161796  nanite=False lods=4
+   SM_Stone_Boulder_1                    1286     111     142746  nanite=False lods=4
+   SM_Fol_Grass_Clump_2                   106    1252     132712  nanite=False lods=3
+   SM_Fol_Grass_Clump_3                    99    1283     127017  nanite=False lods=3
+   SM_Stone_2                             510     216     110160  nanite=False lods=4
+   SM_Tree_Broadleaf_1                   2438      36      87768  nanite=False lods=4
+   SM_Fol_Grass_Clump_1                    65    1272      82680  nanite=False lods=3
+   SM_Stone_1                             338     242      81796  nanite=False lods=4
+   SM_Fol_Bush_1                          256     290      74240  nanite=False lods=3
+   SM_Fol_Flower_Clump_2                   80     849      67920  nanite=False lods=3
+
+   Soma de 'custo' (tri x instancias) no L_Tutorial  : 1342291
+   Soma de 'custo' (tri x instancias) no L_CharCreate: 1257602
+   Nota: e um indicador relativo, nao o total renderizado (que na Fase 4 sai
+   da mesma forma nos 3 pontos de camera fixos antes/depois).
+
+5. CANDIDATOS A ATIVAR NANITE / NAO CANDIDATOS
+----------------------------------------------------------------------------------------------------
+   Criterio: SIM = mesh opaco denso ou com muitas instancias (rochas, paredoes,
+   predios, pontes, troncos, props grandes). NAO = simples, pequeno, translucido
+   ou com material que o Nanite nao suporta bem.
+
+   MESH                               TRI_LOD0    INST      CUSTO  VEREDITO
+   SM_Stone_Boulder_1                    1286     163     209618  SIM (candidato forte)
+   SM_Stone_3                             582     285     165870  SIM (candidato forte)
+   SM_Stone_2                             510     216     110160  SIM (candidato forte)
+   SM_Stone_1                             338     242      81796  SIM (candidato forte)
+   SM_Placeholder_PosteLanterna          1680       6      10080  SIM (candidato forte)
+   SM_Placeholder_BonecoTreino           3008       3       9024  SIM (candidato forte)
+   SM_Placeholder_Ponte10                6368       1       6368  SIM (candidato forte)
+   SM_Placeholder_Barril                 1536       4       6144  SIM (candidato forte)
+   SM_Placeholder_Toco                   1024       4       4096  SIM (candidato medio)
+   SM_Placeholder_Portal                 3360       1       3360  SIM (candidato forte)
+
+   Nao recomendados neste lote (criterios de exclusao):
+   SM_Fol_Grass_Clump_2                   106    1256     133136  AVALIAR (foliage mascarada — caso a caso)
+   SM_Fol_Grass_Clump_3                    99    1287     127413  AVALIAR (foliage mascarada — caso a caso)
+   SM_Tree_Broadleaf_1                   2438      36      87768  AVALIAR (foliage mascarada — caso a caso)
+   SM_Fol_Grass_Clump_1                    65    1275      82875  AVALIAR (foliage mascarada — caso a caso)
+   SM_Fol_Bush_1                          256     290      74240  AVALIAR (foliage mascarada — caso a caso)
+   SM_Fol_Flower_Clump_2                   80     849      67920  AVALIAR (foliage mascarada — caso a caso)
+   SM_Tree_Broadleaf_2                   1806      22      39732  AVALIAR (foliage mascarada — caso a caso)
+   SM_Fol_Bush_2                          408      67      27336  AVALIAR (foliage mascarada — caso a caso)
+   SM_Tree_Birch_1                       2712      10      27120  AVALIAR (foliage mascarada — caso a caso)
+   SM_Fol_Flower_Clump_1                   72     235      16920  AVALIAR (foliage mascarada — caso a caso)
+   SM_Zen_Tronco                          512      19       9728  AVALIAR (ganho pequeno)
+   SM_Tree_Birch_2                       2602       2       5204  AVALIAR (foliage mascarada — caso a caso)
+   TwistedTree_5                         4354       1       4354  JA USA NANITE
+   TwistedTree_3                         4286       1       4286  JA USA NANITE
+   TwistedTree_4                         4102       1       4102  JA USA NANITE
+   TwistedTree_1                         3948       1       3948  JA USA NANITE
+   CommonTree_1                          2755       1       2755  JA USA NANITE
+   CommonTree_2                          2343       1       2343  JA USA NANITE
+   CommonTree_3                          2234       1       2234  JA USA NANITE
+   CommonTree_5                          1755       1       1755  JA USA NANITE
+   Flower_4_Group                        1467       1       1467  JA USA NANITE
+   SM_Fol_Grass_Clump_5                   112      12       1344  AVALIAR (foliage mascarada — caso a caso)
+   CommonTree_4                          1322       1       1322  JA USA NANITE
+   Bush_Common_Flowers                   1187       1       1187  JA USA NANITE
+   Bush_Common                            899       1        899  JA USA NANITE
+   Mushroom_Common                        760       1        760  JA USA NANITE
+   Flower_3_Group                         488       1        488  JA USA NANITE
+   Rock_Medium_3                          474       1        474  JA USA NANITE
+   SM_Fol_Grass_Clump_4                    40      11        440  AVALIAR (foliage mascarada — caso a caso)
+   Rock_Medium_1                          328       1        328  JA USA NANITE
+   Plant_1_Big                            310       1        310  JA USA NANITE
+   Clover_1                               291       1        291  NAO (geometria muito simples)
+   Fern_1                                 256       1        256  NAO (geometria muito simples)
+   Rock_Medium_2                          244       1        244  NAO (geometria muito simples)
+   Pebble_Round_1                         136       1        136  NAO (pequeno e poucas instancias)
+   Pebble_Round_3                         128       1        128  NAO (pequeno e poucas instancias)
+   Pebble_Round_4                         126       1        126  NAO (pequeno e poucas instancias)
+   Pebble_Round_5                         124       1        124  NAO (pequeno e poucas instancias)
+   Plant_1                                120       1        120  NAO (geometria muito simples)
+   Pebble_Round_2                         114       1        114  NAO (pequeno e poucas instancias)
+   Plant_7                                 48       1         48  NAO (geometria muito simples)
+
+   Materiais TRANSLUCIDOS (Nanite nao suporta bem — excluir):
+      PCG_HoleWindow, PCG_Window, SM_CircularBand, SM_CircularGlow
+   Foliage com material MASCARADO (51 meshes) — Nanite suporta, mas exigem
+   avaliacao caso a caso (r.Nanite.Foliage esta False no projeto):
+      Bush_Common, Bush_Common_Flowers, Clover_1, Clover_2, CommonTree_1, CommonTree_2, CommonTree_3, CommonTree_4, CommonTree_5, Fern_1, Flower_3_Group, Flower_3_Single, Flower_4_Group, Flower_4_Single, Grass_Common_Short, Grass_Common_Tall, Grass_Wispy_Short, Grass_Wispy_Tall, Petal_1, Petal_2, Petal_3, Petal_4, Petal_5, Pine_1, Pine_2, Pine_3, Pine_4, Pine_5, Plant_1, Plant_1_Big, Plant_7, Plant_7_Big, SM_Fol_Bush_1, SM_Fol_Bush_2, SM_Fol_Flower_Clump_1, SM_Fol_Flower_Clump_2, SM_Fol_Flower_Clump_3, SM_Fol_Grass_Clump_1, SM_Fol_Grass_Clump_2, SM_Fol_Grass_Clump_3, SM_Fol_Grass_Clump_4, SM_Fol_Grass_Clump_5, SM_Tree_Birch_1, SM_Tree_Birch_2, SM_Tree_Broadleaf_1, SM_Tree_Broadleaf_2, TwistedTree_1, TwistedTree_2, TwistedTree_3, TwistedTree_4, TwistedTree_5
+
+6. COLISAO DE CADA MESH
+----------------------------------------------------------------------------------------------------
+   Total auditado                       : 127
+   Usando COMPLEX_AS_SIMPLE (render como colisao): 37
+   Sem NENHUMA primitiva simples        : 26
+   Com primitivas simples (caixa/capsula/convexa/esfera): 101
+
+   6.1 Piores casos — usam a geometria de renderizacao como colisao E nao tem
+       primitiva simples nenhuma (o pior dos dois mundos):
+      SM_Placeholder_Ponte               tri= 12048  FORA DO MAPA (asset nao colocado)    raio=1318.6 cm
+      SM_Placeholder_Ponte10             tri=  6368  no mapa: 1                           raio=533.8 cm
+      SM_Placeholder_Portal              tri=  3360  no mapa: 1                           raio=318.9 cm
+      SM_Placeholder_BonecoTreino        tri=  3008  no mapa: 3                           raio=104.9 cm
+      SM_Placeholder_PosteLanterna       tri=  1680  no mapa: 6                           raio=167.0 cm
+      SM_Placeholder_Barril              tri=  1536  no mapa: 4                           raio=59.0 cm
+      PCG_Window                         tri=  1426  FORA DO MAPA (asset nao colocado)    raio=180.6 cm
+      SM_Placeholder_Cerca               tri=  1120  FORA DO MAPA (asset nao colocado)    raio=117.2 cm
+      SM_Placeholder_Toco                tri=  1024  no mapa: 4                           raio=49.6 cm
+      PCG_HoleWindow                     tri=   728  FORA DO MAPA (asset nao colocado)    raio=180.6 cm
+      SM_Zen_Tronco                      tri=   512  no mapa: 19                          raio=201.6 cm
+      PCG_Wall                           tri=    12  FORA DO MAPA (asset nao colocado)    raio=180.6 cm
+      PCG_Column                         tri=    12  FORA DO MAPA (asset nao colocado)    raio=151.0 cm
+      (FORA DO MAPA = existe o asset, com colisao complexa, mas nao esta
+       colocado no L_Tutorial — resolve-se mudando o asset ou nao importa.)
+
+   6.2 COMPLEX_AS_SIMPLE, mas JA tem primitiva simples (a flag pode ser
+       removida mantendo a colisao existente):
+      TwistedTree_5                      tri=  4354  primitivas_simples=1
+      TwistedTree_3                      tri=  4286  primitivas_simples=1
+      TwistedTree_2                      tri=  4163  primitivas_simples=1
+      TwistedTree_4                      tri=  4102  primitivas_simples=1
+      TwistedTree_1                      tri=  3948  primitivas_simples=1
+      CommonTree_1                       tri=  2755  primitivas_simples=1
+      CommonTree_2                       tri=  2343  primitivas_simples=1
+      DeadTree_1                         tri=  2243  primitivas_simples=1
+      CommonTree_3                       tri=  2234  primitivas_simples=1
+      DeadTree_2                         tri=  2163  primitivas_simples=1
+      DeadTree_4                         tri=  2001  primitivas_simples=1
+      DeadTree_5                         tri=  1973  primitivas_simples=1
+      DeadTree_3                         tri=  1809  primitivas_simples=1
+      CommonTree_5                       tri=  1755  primitivas_simples=1
+      Pine_4                             tri=  1494  primitivas_simples=1
+      CommonTree_4                       tri=  1322  primitivas_simples=1
+      Pine_5                             tri=  1230  primitivas_simples=1
+      Pine_1                             tri=  1196  primitivas_simples=1
+      Pine_2                             tri=  1056  primitivas_simples=1
+      Pine_3                             tri=  1030  primitivas_simples=1
+      SM_Cylinder                        tri=   252  primitivas_simples=1
+      SM_QuarterCylinderOuter            tri=   252  primitivas_simples=3
+      SM_QuarterCylinder                 tri=   252  primitivas_simples=1
+      SM_Plane                           tri=     2  primitivas_simples=1
+
+   6.3 SEM colisao nenhuma (ja estao como queremos para decorativos):
+      SM_Fol_Bush_2                      tri=   408  flag=<CollisionTraceFlag.CTF_USE_DEFAULT: 0>
+      SM_Fol_Bush_1                      tri=   256  flag=<CollisionTraceFlag.CTF_USE_DEFAULT: 0>
+      SM_Fol_Grass_Clump_5               tri=   112  flag=<CollisionTraceFlag.CTF_USE_DEFAULT: 0>
+      SM_Fol_Grass_Clump_2               tri=   106  flag=<CollisionTraceFlag.CTF_USE_DEFAULT: 0>
+      SM_Fol_Grass_Clump_3               tri=    99  flag=<CollisionTraceFlag.CTF_USE_DEFAULT: 0>
+      SM_Fol_Flower_Clump_3              tri=    88  flag=<CollisionTraceFlag.CTF_USE_DEFAULT: 0>
+      SM_Fol_Flower_Clump_2              tri=    80  flag=<CollisionTraceFlag.CTF_USE_DEFAULT: 0>
+      SM_Fol_Flower_Clump_1              tri=    72  flag=<CollisionTraceFlag.CTF_USE_DEFAULT: 0>
+      SM_Fol_Grass_Clump_1               tri=    65  flag=<CollisionTraceFlag.CTF_USE_DEFAULT: 0>
+      SM_Fol_Grass_Clump_4               tri=    40  flag=<CollisionTraceFlag.CTF_USE_DEFAULT: 0>
+      ... 10 meshes de foliage decorativo ja sem colisao
+
+   Poderiam ficar SEM colisao (decorativos, sem papel no gameplay):
+      RockPath_Square_Small_1            tri=   743  raio=68.9    colisao_simples=1
+      RockPath_Square_Small_2            tri=   555  raio=67.7    colisao_simples=1
+      RockPath_Square_Small_3            tri=   554  raio=68.3    colisao_simples=1
+      Clover_2                           tri=   442  raio=65.2    colisao_simples=1
+      Pebble_Round_1                     tri=   136  raio=28.0    colisao_simples=1
+      Pebble_Round_3                     tri=   128  raio=28.0    colisao_simples=1
+      Pebble_Round_4                     tri=   126  raio=25.4    colisao_simples=1
+      Pebble_Round_5                     tri=   124  raio=22.6    colisao_simples=1
+      Pebble_Round_2                     tri=   114  raio=25.8    colisao_simples=1
+      SM_Fol_Grass_Clump_5               tri=   112  raio=35.0    colisao_simples=0
+      SM_Fol_Grass_Clump_2               tri=   106  raio=58.7    colisao_simples=0
+      Pebble_Square_1                    tri=   104  raio=31.3    colisao_simples=1
+      SM_Fol_Grass_Clump_3               tri=    99  raio=47.8    colisao_simples=0
+      SM_Fol_Flower_Clump_3              tri=    88  raio=32.7    colisao_simples=0
+      SM_Fol_Flower_Clump_2              tri=    80  raio=31.7    colisao_simples=0
+      ... 28 no total (ver lista completa no JSON Saved/auditoria_fase1_L_Tutorial.json)
+
+   Ja corretos: SM_Fol_* (foliage StyleHex) estao com CTF_USE_DEFAULT e
+   0 primitivas — ou seja, sem colisao de jogo.
+
+7. MATERIAIS E FOLIAGE
+----------------------------------------------------------------------------------------------------
+   Materiais distintos usados pelo cenario: 44
+   Usados por UM unico mesh (14) — candidatos a consolidar, mas checar visual:
+      WorldGridMaterial.WorldGridMaterial           (1 mesh)
+      MI_MK_Arbusto.MI_MK_Arbusto                   (1 mesh)
+      MI_MK_Arbusto_Comum.MI_MK_Arbusto_Comum       (1 mesh)
+      M_GradientGlow.M_GradientGlow                 (1 mesh)
+      M_SimpleGlow.M_SimpleGlow                     (1 mesh)
+      M_FlatCol.M_FlatCol                           (1 mesh)
+      MI_Stone_Boulder.MI_Stone_Boulder             (1 mesh)
+      PCG_DebugBlue.PCG_DebugBlue                   (1 mesh)
+      PCG_DebugGreen.PCG_DebugGreen                 (1 mesh)
+      PCG_DebugMaterialVertexColors.PCG_DebugMaterialVertexColors (1 mesh)
+      PCG_DebugOrange.PCG_DebugOrange               (1 mesh)
+      PCG_DebugRed.PCG_DebugRed                     (1 mesh)
+      PCG_DebugWhite.PCG_DebugWhite                 (1 mesh)
+      PCG_Rocks.PCG_Rocks                           (1 mesh)
+
+   Foliage ja usando instanciamento (ISMs):
+      SM_Fol_Grass_Clump_3               1287 instancias
+      SM_Fol_Grass_Clump_1               1275 instancias
+      SM_Fol_Grass_Clump_2               1256 instancias
+      SM_Fol_Flower_Clump_2              849 instancias
+      SM_Fol_Bush_1                      290 instancias
+      SM_Stone_3                         285 instancias
+      SM_Stone_1                         242 instancias
+      SM_Fol_Flower_Clump_1              235 instancias
+      SM_Stone_2                         216 instancias
+      SM_Stone_Boulder_1                 163 instancias
+      SM_Fol_Bush_2                      67 instancias
+      SM_Tree_Broadleaf_1                36 instancias
+
+   Foliage/props que NAO estao instanciados (1 componente por ator):
+      SM_Zen_Tronco                      19 atores separados
+      SM_Fol_Grass_Clump_5               12 atores separados
+      SM_Fol_Grass_Clump_4               11 atores separados
+      SM_Placeholder_PosteLanterna       6 atores separados
+      SM_Placeholder_Barril              4 atores separados
+      SM_Placeholder_Toco                4 atores separados
+      SM_Placeholder_BonecoTreino        3 atores separados
+   Componentes por tipo no L_Tutorial:
+      StaticMeshComponent                           226
+      GrassInstancedStaticMeshComponent             59
+      FoliageInstancedStaticMeshComponent           54
+      SplineMeshComponent                           12
+      WaterBodyInfoMeshComponent                    2
+      CameraProxyMeshComponent                      2
+      WaterBodyStaticMeshComponent                  1
+
+8. LINHA DE BASE DE DESEMPENHO (3 pontos de camera fixos, L_Tutorial)
+----------------------------------------------------------------------------------------------------
+   Medicoes tomadas SEM alterar nada. Screenshots: Saved/Screenshots/MacEditor/
+   (cada ponto tem screenshot proprio).
+
+   PONTO                   FPS     FRAME_MS   TRI_VISIVEIS     DRAWS_PRIM
+   P1_VistaGeral         26.92        37.15         188842            262
+   P2_Ponte              27.83        35.93         129438            191
+   P3_Treino             25.67        38.96         187782            272
+
+   CSV Profiler (media de 250 frames por ponto):
+   PONTO              FRAME_MS_MEDIA   FRAME_MS_MAX  FPS_CALCULADO
+   P1_VistaGeral               39.92          86.87           25.1
+   P2_Ponte                    42.45          69.55           23.6
+   P3_Treino                   53.67          720.0           18.6
+
+   Screenshots da baseline:
+      Saved/Screenshots/MacEditor/Fase1_Baseline_P1_VistaGeral.png
+      Saved/Screenshots/MacEditor/Fase1_Baseline_P2_Ponte.png
+      Saved/Screenshots/MacEditor/Fase1_Baseline_P3_Treino.png
+
+   Limitacoes desta baseline (para registrar):
+   a) TRIANGULOS: medidos como soma de 'Triangles' das primitivas VISIVEIS
+      na camera, via comando DumpDetailedPrimitives (CSV em Saved/Profiling/Primitives/).
+      E a contagem de geometria apresentada pela cena, nao o que a GPU processa
+      em rasterizacao Nanite. Serve como antes/depois comparavel.
+   b) DRAW CALLS: o CSV Profiler tem a coluna RHI/DrawCalls, mas ela grava 0
+      nesta build (exige r.EmitDrawEvents, que so liga via
+      'r.RHISetGPUCaptureOptions 1'). Por isso a coluna 'DRAWS_PRIM' acima vem do
+      mesmo dump de primitivas (NumDraws somado). Para a Fase 4 repetir
+      'r.RHISetGPUCaptureOptions 1' antes de medir, para fechar o numero real.
+   c) O HUD de 'stat rhi'/'stat unit' nao aparece nos screenshots desta build
+      (take_high_res_screenshot nao captura UI e 'Shot' so funciona em PIE).
+   d) FPS medido no EDITOR, com viewport ativo — numeros piores que em jogo
+      (25-35 ms). Serve para comparar antes/depois nos MESMOS pontos, nao como
+      previsao de FPS final.
+
+9. RESUMO DOS MAIORES PROBLEMAS E GANHO ESPERADO
+----------------------------------------------------------------------------------------------------
+   PROBLEMA 1 — Foliage/grama e rochas carregam a cena sem Nanite:
+      As 3 gramas (SM_Fol_Grass_Clump_1/2/3) somam ~3.800 instancias e ~343 mil
+      triangulos de custo; as rochas SM_Stone_* somam ~906 instancias e ~567 mil.
+      NENHUM deles tem Nanite. As rochas sao candidatas FORTES (opacas, densas,
+      muitas instancias). A grama/arbusto/folha usa material MASCARADO, entao
+      entra na lista 'AVALIAR caso a caso' — Nanite suporta mascara, mas o
+      escopo pede para conferir visual e desempenho antes de manter.
+      GANHO ESPERADO: maior do projeto, por concentrar a maior parte dos
+      triangulos em objetos pequenos e repetidos.
+
+   PROBLEMA 2 — Colisao complexa onde nao deveria:
+      37 meshes usam COMPLEX_AS_SIMPLE. Os piores: SM_Placeholder_Ponte10 (6368 tri),
+      SM_Placeholder_Portal (3360), SM_Placeholder_BonecoTreino (3008),
+      SM_Placeholder_PosteLanterna (1680) e SM_Placeholder_Barril (1536) — todos
+      com 0 primitivas simples. A ponte inteira usa a malha de render como colisao.
+      GANHO ESPERADO: fisica/movimento mais baratos e estaveis; necessario para o
+      passo de colisao simples da Fase 3.
+
+   PROBLEMA 3 — Placeholders ainda no nivel principal:
+      Ponte, postes, barris, tocos, boneco de treino e portal sao placeholders de
+      baixa qualidade COM colisao complexa. GANHO ESPERADO: duplo (visual e
+      desempenho) se substituidos, mas isso e decisao de conteudo — fora da Fase 1.
+
+   PROBLEMA 4 — 38 dos 127 meshes nao tem Nanite e 87 tem so 1 LOD
+      (nao ha reducao de detalhe em distancia). GANHO ESPERADO: com Nanite nos
+      densos + LODs/cull distance nos demais, cai o custo em cenas abertas como a
+      vista geral (P1) e a do treino (P3).
+
+   PROBLEMA 5 — r.Nanite.Foliage = False e foliage com mascara:
+      51 meshes de folha/grama usam material mascarado. GANHO ESPERADO: incerto;
+      exige avaliar caso a caso com screenshot, como manda o escopo.
+
+   CENARIOS DE REFERENCIA DA BASELINE (nao otimizar):
+      P1_VistaGeral      frame_ms=39.92  (antes)
+      P2_Ponte           frame_ms=42.45  (antes)
+      P3_Treino          frame_ms=53.67  (antes)
+
+   ESTIMATIVA HONESTA: nao ha como prometer numero antes da Fase 2/3.
+   O que se pode dizer: a maior parte do custo esta em foliage e rochas que nao
+   usam Nanite, e em colisao complexa em placeholders. Sao os dois primeiros
+   lotes previstos, e os que devem dar o maior ganho medivel nos 3 pontos.
+
+10. O QUE FOI FEITO / PROVA / PENDENTE
+----------------------------------------------------------------------------------------------------
+   FEITO: auditoria somente leitura nos 2 niveis, 127 meshes de ambiente,
+          44 materiais, colisao de cada um, baseline em 3 pontos com screenshots.
+   PROVA: Saved/auditoria_fase1_L_Tutorial.json,
+          Saved/auditoria_fase1_L_CharacterCreation.json,
+          Saved/baseline_fase1.json, Saved/baseline_fase1_draws.json,
+          Saved/Profiling/CSV/Profile(20261105_053*.csv) e ..._054242.csv,
+          Saved/Profiling/Primitives/PrimitivesDetailed-*.csv,
+          Saved/Screenshots/MacEditor/Fase1_Baseline_*.png
+   PENDENTE: NENHUMA alteracao foi feita (fase somente leitura, como pedido).
+   ENTENDIDO: proximo passo e a Fase 2 (Nanite + triangulos), que SO comeca
+          depois da sua autorizacao explicita.
+
+   Arquivos de apoio criados (scripts Python, somente leitura):
+      Tools/editor/auditoria_otimizacao_fase1.py
+      Tools/editor/baseline_fase1.py / baseline_driver.py / baseline_ler.py
+      Tools/editor/baseline_driver2.py / baseline_ler2.py
+====================================================================================================
+FIM DA FASE 1 — AGUARDANDO AUTORIZACAO PARA A FASE 2
+====================================================================================================

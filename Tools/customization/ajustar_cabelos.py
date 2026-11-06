@@ -16,6 +16,9 @@ args=ap.parse_args(sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else []
 HAIR_WORDS=['hair','allback','straight','spiky']
 # Arquivos que não seguem o molde comum (personagem inteiro, outra unidade ou duplicata).
 SKIP={'naruto','naruto__sasuke_low_poly__rig__texture','naruto_sage','naruto_shippuden-_naruto','zabusa (1)'}
+# A faixa destes modelos precisa subir para liberar os olhos da cabeça modular.
+RAISE_FRONT={'asura','boruto','hakui','inojin','itachi','jiraiya','kakashi','konohamaru',
+             'minato','naruto_young','pain','rin','sai','sasuke_headband','sasuke_young','yamato'}
 GAP=.0025      # folga entre a raiz do cabelo e o couro cabeludo (2,5 mm)
 CENTER=Vector((0,.005,1.64))
 # Direções (elevação, azimute; azimute 0 = frente = -Y) usadas para medir as duas cabeças.
@@ -26,9 +29,20 @@ for el in range(0,91,15):
   e,a=math.radians(el),math.radians(az);DIRS.append((el,az,Vector((math.cos(e)*math.sin(a),-math.cos(e)*math.cos(a),math.sin(e)))))
 
 def clear():bpy.ops.wm.read_factory_settings(use_empty=True)
-def hair_objects(path):
+def material_de_cabelo(material):
+ return any(word in material.name.lower() for word in HAIR_WORDS)
+
+def material_de_acessorio(material):
+ name=material.name.lower()
+ return any(word in name for word in ('_band_', '_part_', 'hachigane', 'umbrella_hat'))
+
+def hair_objects(path, accessories=False):
  before=set(bpy.data.objects);bpy.ops.import_scene.gltf(filepath=str(path));new=set(bpy.data.objects)-before
- hair=[o for o in new if o.type=='MESH' and any(any(s in m.name.lower() for s in HAIR_WORDS) for m in o.data.materials if m)]
+ hair=[o for o in bpy.context.scene.objects if o in new and o.type=='MESH'
+       and any(material_de_cabelo(m) for m in o.data.materials if m)]
+ parts=[o for o in bpy.context.scene.objects if o in new and o.type=='MESH' and o not in hair
+        and any(material_de_acessorio(m) for m in o.data.materials if m)] if accessories else []
+ hair+=parts
  for o in hair:
   w=o.matrix_world.copy();o.parent=None;o.matrix_world=w
   bpy.ops.object.select_all(action='DESELECT');o.select_set(True);bpy.context.view_layer.objects.active=o;bpy.ops.object.transform_apply(location=True,rotation=True,scale=True)
@@ -75,9 +89,20 @@ def load_base():
 # --- medições ---
 src_r,n_src=source_envelope()
 rig,body=load_base()
+# A malha visível no criador é a cabeça modular. O corpo continua como referência do rig.
+before=set(bpy.data.objects)
+bpy.ops.import_scene.fbx(filepath=str(ROOT/'SourceAssets/Customization/IndraModular/SK_Indra_Head.fbx'))
+head_objects=set(bpy.data.objects)-before
+head=next(o for o in head_objects if o.type=='MESH')
+world=head.matrix_world.copy()
+head.parent=None;head.matrix_world=world;head.modifiers.clear()
+for o in head_objects-{head}:bpy.data.objects.remove(o,do_unlink=True)
+bpy.ops.object.select_all(action='DESELECT');head.select_set(True);bpy.context.view_layer.objects.active=head
+bpy.ops.object.transform_apply(location=True,rotation=True,scale=True)
+body.hide_render=True
 names={g.index:g.name for g in body.vertex_groups}
 head_bone=next(b.name for b in rig.data.bones if 'head1_' in b.name);neck_bone=next(b.name for b in rig.data.bones if 'neck_' in b.name)
-bbvh=BVHTree.FromObject(body,bpy.context.evaluated_depsgraph_get())
+bbvh=BVHTree.FromObject(head,bpy.context.evaluated_depsgraph_get())
 dst_r=[(lambda h:(h[0]-CENTER).length)(bbvh.ray_cast(CENTER+d*.5,-d,1)) for _,_,d in DIRS]
 # Crânio = de 15° para cima (sem rosto nem orelhas) + nuca/lados na altura das sobrancelhas.
 use=[i for i,(el,az,_) in enumerate(DIRS) if el>=15 or (el==0 and 60<=az<=300)]
@@ -89,7 +114,7 @@ S=Vector((dst_ax.x/src_ax.x,dst_ax.y/src_ax.y,0))
 S.z=(S.x+S.y)/2
 src_top=src_c.z+src_ax.z;dst_top=dst_c.z+dst_ax.z
 medidas={'cabelos_medidos':n_src,'origem':{'centro':list(src_c),'semi_eixos_xyz':list(src_ax),'topo_z':src_c.z+src_ax.z},
- 'corpo_base':{'centro':list(dst_c),'semi_eixos_xyz':list(dst_ax),'topo_z':dst_c.z+dst_ax.z},'escala_xyz':list(S),'bandana_origem_z':1.646,'bandana_no_corpo_base_z':dst_top-(src_top-1.646)*S.z}
+ 'cabeca_modular':{'centro':list(dst_c),'semi_eixos_xyz':list(dst_ax),'topo_z':dst_c.z+dst_ax.z},'escala_xyz':list(S),'bandana_origem_z':1.646,'bandana_no_corpo_base_z':dst_top-(src_top-1.646)*S.z}
 print('MEDIDAS',json.dumps(medidas))
 (ROOT/'Tools/customization/cabecas_medidas.json').write_text(json.dumps(medidas,indent=1))
 
@@ -198,17 +223,21 @@ def export(obj,id):
  mod=obj.modifiers.new('Indra','ARMATURE');mod.object=rig
  bpy.ops.object.select_all(action='DESELECT');rig.select_set(True);obj.select_set(True);bpy.context.view_layer.objects.active=obj
  bpy.ops.export_scene.fbx(filepath=str(old),global_scale=0.01,use_selection=True,object_types={'ARMATURE','MESH'},add_leaf_bones=False,bake_anim=False,use_armature_deform_only=False,apply_unit_scale=True,axis_forward='-Z',axis_up='Y',path_mode='AUTO',mesh_smooth_type='FACE')
+ obj.parent=None;obj.matrix_world=Matrix.Identity(4);obj.modifiers.clear()
  for v in obj.data.vertices:v.co/=100
- obj.parent=None;obj.modifiers.clear()
 
 def photos(objs,folder,tag):
  folder=Path(folder);folder.mkdir(parents=True,exist_ok=True);sc=bpy.context.scene
  sc.render.engine='BLENDER_WORKBENCH';sc.display.shading.light='STUDIO';sc.display.shading.color_type='MATERIAL';sc.display.shading.show_cavity=True
  sc.render.resolution_x=sc.render.resolution_y=640;sc.render.film_transparent=False
  sc.world=sc.world or bpy.data.worlds.new('W');sc.display.shading.background_type='VIEWPORT'
- skin=bpy.data.materials.new('pele');skin.diffuse_color=(.85,.72,.62,1);body.data.materials.clear();body.data.materials.append(skin)
+ skin=bpy.data.materials.new('pele');skin.diffuse_color=(.85,.72,.62,1);head.data.materials.clear();head.data.materials.append(skin)
  hm=bpy.data.materials.new('cabelo');hm.diffuse_color=(.12,.13,.18,1)
- for o in objs:o.data.materials.clear();o.data.materials.append(hm)
+ for o in objs:
+  for mat in o.data.materials:
+   if mat.name.startswith('Acessorio_'):
+    mat.diffuse_color=(.45,.46,.49,1) if 'hachigane' in mat.name.lower() else (.20,.26,.34,1)
+   else:mat.diffuse_color=hm.diffuse_color
  cam=bpy.data.objects.new('cam',bpy.data.cameras.new('cam'));sc.collection.objects.link(cam);sc.camera=cam
  cam.data.type='ORTHO';cam.data.ortho_scale=.5;tgt=Vector((0,0,1.63))
  for name,d in [('frente',Vector((0,-1,0))),('lado',Vector((1,0,0))),('costas',Vector((0,1,0))),('cima',Vector((0,-.25,1)).normalized())]:
@@ -216,32 +245,68 @@ def photos(objs,folder,tag):
   sc.render.filepath=str(folder/f'{tag}_{name}.png');bpy.ops.render.render(write_still=True)
  bpy.data.objects.remove(cam)
 
+def save_accessories(obj, dest):
+ slots={}
+ for index,material in enumerate(obj.data.materials):
+  if not material_de_acessorio(material):continue
+  source_name=material.name.split('.')[0]
+  material.name=f'Acessorio_{dest.name}_{index}_{source_name}'
+  image=next((n.image for n in material.node_tree.nodes if n.type=='TEX_IMAGE' and n.image),None)
+  if image is None and 'hachigane' in material.name.lower():
+   image=konoha_plate
+  assert image is not None,material.name
+  dest.mkdir(parents=True,exist_ok=True)
+  name=material.name+'.png'
+  image.save(filepath=str(dest/name))
+  slots[material.name]=name
+ return slots
+
+# Três fontes reutilizam a mesma chapa Konoha sem embutir a imagem.
+new,_=hair_objects(SRC/'boruto.glb',accessories=True)
+konoha_plate=next(n.image for o in new if o.type=='MESH' for m in o.data.materials if m
+                  and 'hachigane' in m.name.lower() for n in m.node_tree.nodes if n.type=='TEX_IMAGE' and n.image)
+for o in new:bpy.data.objects.remove(o,do_unlink=True)
+
 ids=[s for s in args.ids.split(',') if s]
 report={}
 for p in sorted(SRC.glob('*.glb')):
  if p.stem in SKIP:continue
  base_id='Hair_'+re.sub('[^A-Za-z0-9_]','_',p.stem)
- if ids and not any(i==base_id or i.startswith(base_id+'_') for i in ids):continue
- new,hair=hair_objects(p)
+ if ids and base_id not in ids:continue
+ new,hair=hair_objects(p,accessories=True)
  for o in new:
   if o not in hair:bpy.data.objects.remove(o,do_unlink=True)
- if hair and max(abs(v.co.z) for o in hair for v in o.data.vertices)>10:
-  for o in hair:  # alguns GLBs estão em centímetros (ex.: akatsuki_hat)
+ if not hair:continue
+ if max(abs(v.co.z) for o in hair for v in o.data.vertices)>10:
+  for o in hair:
    for v in o.data.vertices:v.co*=.01
- if not hair or max(v.co.z for o in hair for v in o.data.vertices)<1.2:
-  report[base_id]={'pulado':'outra unidade/origem (sakura_young, wasabi): fica o FBX antigo, precisa de encaixe manual'}
-  for o in hair:bpy.data.objects.remove(o,do_unlink=True)
-  continue
- done=[]
- for j,obj in enumerate(hair):
-  id=base_id+(f'_{j}' if len(hair)>1 else '')
-  co,info=fit_hair(obj)
-  for v,c in zip(obj.data.vertices,co):v.co=c
-  weights(obj);done.append((id,obj,info))
- info={i:inf for i,_,inf in done};info['silhueta']=silhouette([o for _,o,_ in done]);report[base_id]=info
- print('CABELO',base_id,json.dumps(info))
- if args.fotos:photos([o for _,o,_ in done],args.fotos,f'{base_id}_{args.modo}')
+ if p.stem in ('sakura_young','wasabi'):
+  # Reaproveita os pontos calibrados no importador original, no referencial do GLB comum.
+  escala,topo=(.90,.635917) if p.stem=='sakura_young' else (.94,.491311)
+  for o in hair:
+   for v in o.data.vertices:
+    v.co=Vector((v.co.x*escala,(v.co.y-.018)*escala,(v.co.z-topo)*escala+src_top+.025))
+ obj=hair[0]
+ if len(hair)>1:
+  with bpy.context.temp_override(object=obj,active_object=obj,selected_editable_objects=hair):
+   bpy.ops.object.join()
+ co,info=fit_hair(obj)
+ if p.stem in RAISE_FRONT and args.modo=='novo':
+  # Eleva a faixa e a franja juntas, com transição suave até a nuca.
+  for v in co:
+   frente=min(1,max(0,(dst_c.y-v.y)/.075))
+   altura=min(1,max(0,(v.z-1.55)/.065))
+   v.z+=.021*frente*frente*(3-2*frente)*altura
+ for v,c in zip(obj.data.vertices,co):v.co=c
+ weights(obj)
+ dest=OUT/base_id
+ slots=save_accessories(obj,dest) if not args.sem_fbx and args.modo=='novo' else {}
  if not args.sem_fbx and args.modo=='novo':
-  for id,obj,_ in done:export(obj,id)
- for _,o,_ in done:bpy.data.objects.remove(o,do_unlink=True)
+  dest.mkdir(parents=True,exist_ok=True)
+  export(obj,base_id)
+  if slots:(dest/'acessorios.json').write_text(json.dumps(slots,indent=1))
+ report[base_id]={'encaixe':info,'acessorios':slots,'silhueta':silhouette([obj])}
+ print('CABELO',base_id,json.dumps(report[base_id]))
+ if args.fotos:photos([obj],args.fotos,base_id)
+ bpy.data.objects.remove(obj,do_unlink=True)
 print('RELATORIO',json.dumps(report))

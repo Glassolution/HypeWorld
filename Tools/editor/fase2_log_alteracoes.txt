@@ -1,0 +1,55 @@
+FASE 2 — LOG DE ALTERAÇÕES (Lote 1 — opacos densos)
+====================================================
+
+Regra: cada mudança registra asset, antes, depois e onde está o backup.
+Backup por cópia (sem commit): Saved/Backup_Fase2/Lote1_Opacos/*.uasset (11 arquivos)
+Estado atual do lote: REVERTIDO (original, sem Nanite).
+
+11 alvos (todos OPAQUE, sem máscara, sem Nanite no início):
+  /Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/
+    SM_Stone_Boulder_1 (1286 tri, 4 LOD, 163 inst)  nanite False -> True -> False
+    SM_Stone_3         (582 tri, 4 LOD, 285 inst)   nanite False -> True -> False
+    SM_Stone_2         (510 tri, 4 LOD, 216 inst)   nanite False -> True -> False
+    SM_Stone_1         (338 tri, 4 LOD, inst)       nanite False -> True -> False
+  /Game/Maps/Tutorial/Tutorial_Assets/Placeholders/
+    SM_Placeholder_Ponte10        (6368 tri, 1 LOD)  nanite False -> True -> False
+    SM_Placeholder_Portal         (3360 tri, 1 LOD)  nanite False -> True -> False
+    SM_Zen_Tronco                 (512 tri, 1 LOD)   nanite False -> True -> False
+    SM_Placeholder_PosteLanterna  (1680 tri, 1 LOD)  nanite False -> True -> False
+    SM_Placeholder_Barril         (1536 tri, 1 LOD)  nanite False -> True -> False
+    SM_Placeholder_BonecoTreino   (3008 tri, 1 LOD)  nanite False -> True -> False
+    SM_Placeholder_Toco           (1024 tri, 1 LOD)  nanite False -> True -> False
+
+Sequência executada (05/11, sessão do editor):
+1. set_editor_property(nanite_settings.enabled=True) + save ......... flag gravada
+   PROBLEMA: não dispara o build (tri_nanite continuava 0).
+2. StaticMeshEditorSubsystem.set_nanite_settings(..., bApplyChanges=True)
+   -> PostEditChange() -> UStaticMesh::Build() ........................ build Nanite feito
+   11/11 com tri_nanite > 0 (1286, 582, 510, 338, 6368, 3360, 512, 1680, 1536, 3008, 1024).
+3. Medição Fase2 (3 pontos, mesmo padrão da baseline) .................. triângulos -15% a -21%
+   P1 188842 -> 159446 | P2 129438 -> 101548 | P3 187782 -> 147968
+   Screenshots: sem quebra visual (diff 1,3%-4,9% = vento/TAA; nada sumiu).
+4. Frame time piorou muito (39,9/42,4/53,7 ms baseline -> 116/123/126 ms).
+5. TESTE CONTROLADO — reverter e medir de novo:
+   set_nanite_settings(enabled=False, True) + save ................... 11/11 revertidos
+   tri0 de volta aos valores originais; medição: 148/160/143 ms (PIOR que com Nanite).
+   => a piora de frame time NÃO vem do Nanite; é degradação do ambiente/sessão
+      (medições pioram monotonamente com o tempo: 40 ms -> 60 -> 116 -> 148 ms,
+      com load average 5,3 e um CrashReportClient preso a 93% CPU há 4h39).
+
+Arquivos de apoio:
+  Tools/editor/fase2_lote_atual.json .............. alvos do lote
+  Tools/editor/fase2_nanite_lote.py ............... flag + backup + save
+  Tools/editor/fase2_nanite_build.py .............. build Nanite (set_nanite_settings)
+  Tools/editor/fase2_nanite_reverter.py ........... reversão (flag off + build + save)
+  Tools/editor/fase2_driver.py / fase2_ler.py ..... medição 3 pontos (não-bloqueante)
+  Saved/fase2_lote_Lote1_Opacos.json .............. antes/depois + conferência
+  Saved/medicao_fase2_Lote1_Opacos.json ........... medição (última: estado revertido)
+
+Para desfazer qualquer coisa: copiar Saved/Backup_Fase2/Lote1_Opacos/*.uasset
+de volta para Content/... (ou rodar fase2_nanite_reverter.py, já executado).
+
+MEDIÇÃO LIMPA (05/11/2026, sessões alternadas A/B): sem ganho medível no Mac, que não roda Nanite (SM5).
+DECISÃO: Lote 1 SEM Nanite. Os 11 .uasset foram restaurados de Saved/Backup_Fase2/Lote1_Opacos e são iguais ao Git (11/11).
+Detalhes: Docs/Desempenho/Nanite_Lote1/README.md
+Cópias: Saved/Backup_Fase2/Lote1_NaniteConstruido (Nanite ligado), Saved/Backup_Fase2/Lote1_RevertidoOpenCode (revert antigo).

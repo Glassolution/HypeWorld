@@ -26,8 +26,11 @@ public:
     UPROPERTY(BlueprintReadOnly, Category="Perfil") FName Cla;
     UFUNCTION(BlueprintPure, Category="Perfil") bool HasCharacter() const { return (Appearance.bCustomized && Appearance.Name.Len() >= 2) || (!Vila.IsNone() && !Cla.IsNone()); }
     UPROPERTY(BlueprintReadOnly, Category="Perfil") FHypeAppearance Appearance;
-    bool CreateCharacter(FName Village, FName Clan, const FHypeAppearance& NewAppearance);
+    bool SaveCharacterAppearance(const FHypeAppearance& NewAppearance);
     bool SaveAffiliation(FName Village, FName Clan);
     // Só controla o fluxo desta sessão; não é estado de combate ou progressão em rede.
     bool bEntryShown = false;
+
+private:
+    bool WriteProfile(FName Village, FName Clan, const FHypeAppearance& NewAppearance);
 };

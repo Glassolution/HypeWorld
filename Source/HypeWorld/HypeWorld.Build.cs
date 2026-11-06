@@ -29,7 +29,7 @@ public class HypeWorld : ModuleRules
 		if (Target.bBuildEditor)
 		{
 			PrivateDependencyModuleNames.Add("UnrealEd");   // ferramentas de editor (NinjaEditorTools: Blocking Volume)
-			PrivateDependencyModuleNames.AddRange(new string[] { "AnimGraph", "BlueprintGraph", "AssetTools", "NiagaraEditor" });   // NinjaEditorTools: Anim Blueprint de retarget
+			PrivateDependencyModuleNames.AddRange(new string[] { "AnimGraph", "BlueprintGraph", "AssetTools", "NiagaraEditor", "ClothingSystemEditor", "ClothingSystemRuntimeCommon", "ClothingSystemRuntimeInterface", "ChaosCloth" });   // NinjaEditorTools: Anim Blueprint de retarget
 		}
 
 		PublicIncludePaths.AddRange(new string[] {

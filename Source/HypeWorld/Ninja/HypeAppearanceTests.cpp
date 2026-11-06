@@ -6,6 +6,9 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/SkeletalMesh.h"
 #include "Engine/GameInstance.h"
+#include "Engine/World.h"
+#include "GameFramework/Character.h"
+#include "Components/SkeletalMeshComponent.h"
 #include <limits>
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FHypeAppearanceSanitizeTest, "HypeWorld.Appearance.InvalidInput", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
@@ -91,15 +94,54 @@ IMPLEMENT_SIMPLE_AUTOMATION_TEST(FHypeUchihaOutfitTest,"HypeWorld.Appearance.Uch
 bool FHypeUchihaOutfitTest::RunTest(const FString& Parameters)
 {
     UHypeAppearanceComponent* C=NewObject<UHypeAppearanceComponent>();
-    TestTrue(TEXT("Cabelos importados"),C->HairOptions.Num()>=40);
-    TestEqual(TEXT("Quatro roupas"),C->OutfitOptions.Num(),4);
-    for (const FHypeCosmeticPart& P:C->OutfitOptions)
+    C->BaseBody=LoadObject<USkeletalMesh>(nullptr,TEXT("/Game/HypeWorld/Personagens/SilentStancePreview/SK_SilentStance_Preview.SK_SilentStance_Preview"));
+    if (!TestNotNull(TEXT("Base aprovada"),C->BaseBody.Get())) { return false; }
+    const TArray<FHypeCosmeticPart> Uchiha=C->GetOutfitsForClan(TEXT("Uchiha"));
+    TestEqual(TEXT("Três trajes Uchiha disponíveis"),Uchiha.Num(),3);
+    TestEqual(TEXT("Hyuga não recebe trajes Uchiha"),C->GetOutfitsForClan(TEXT("Hyuga")).Num(),0);
+    TestEqual(TEXT("Nara não recebe trajes Uchiha"),C->GetOutfitsForClan(TEXT("Nara")).Num(),0);
+    TestEqual(TEXT("Sem clã não recebe trajes Uchiha"),C->GetOutfitsForClan(NAME_None).Num(),0);
+    if (Uchiha.Num()==3)
+    {
+        TestEqual(TEXT("Primeiro traje preserva o ID salvo"),Uchiha[0].Id,FName(TEXT("Outfit_NinjaHeadTest")));
+        TestEqual(TEXT("Manto ocupa a segunda posição"),Uchiha[1].Id,FName(TEXT("Outfit_UchihaRobe")));
+        TestEqual(TEXT("Posição 1"),Uchiha[0].ClanOutfitSlot,1);
+        TestEqual(TEXT("Posição 2"),Uchiha[1].ClanOutfitSlot,2);
+        TestEqual(TEXT("Shinobi das Sombras ocupa a terceira posição"),Uchiha[2].Id,FName(TEXT("Outfit_ShadowShinobi")));
+        TestEqual(TEXT("Posição 3"),Uchiha[2].ClanOutfitSlot,3);
+    }
+    for (const FHypeCosmeticPart& P:Uchiha)
     {
         TestTrue(TEXT("Uchiha permitido"),P.AllowsClan(TEXT("Uchiha")));
         TestFalse(TEXT("Hyuga bloqueado"),P.AllowsClan(TEXT("Hyuga")));
         TestFalse(TEXT("Sem clã bloqueado"),P.AllowsClan(NAME_None));
-        TestNotNull(TEXT("Malha de roupa"),P.Mesh.Get());
     }
+    FHypeCosmeticPart Duplicate;Duplicate.Id=TEXT("Outfit_DuplicateSlot");Duplicate.Mesh=C->BaseBody;Duplicate.RequiredClan=TEXT("Uchiha");Duplicate.ClanOutfitSlot=2;C->OutfitOptions.Add(Duplicate);
+    FHypeCosmeticPart Invalid=Duplicate;Invalid.Id=TEXT("Outfit_InvalidSlot");Invalid.ClanOutfitSlot=4;C->OutfitOptions.Add(Invalid);
+    TestEqual(TEXT("Posição duplicada ou fora de 1 a 3 não cria traje extra"),C->GetOutfitsForClan(TEXT("Uchiha")).Num(),3);
+    FHypeCosmeticPart General;General.Id=TEXT("Outfit_GeneralTest");General.Mesh=C->BaseBody;C->OutfitOptions.Add(General);
+    TestEqual(TEXT("Roupa geral continua disponível para outro clã"),C->GetOutfitsForClan(TEXT("Hyuga")).Num(),1);
+    TestEqual(TEXT("Roupa geral não ocupa uma das três posições exclusivas"),C->GetOutfitsForClan(TEXT("Uchiha")).Num(),4);
     return true;
 }
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FHypeOutfitFirstCommitTest,"HypeWorld.Appearance.OutfitFirstCommitUsesApprovedCatalog",EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+bool FHypeOutfitFirstCommitTest::RunTest(const FString& Parameters)
+{
+    UWorld* World=UWorld::CreateWorld(EWorldType::Game,false,TEXT("OutfitFirstCommitTest"));
+    if (!TestNotNull(TEXT("Mundo temporário"),World)) { return false; }
+    ACharacter* Pawn=World->SpawnActor<ACharacter>();
+    if (!TestNotNull(TEXT("Personagem temporário"),Pawn)) { World->DestroyWorld(false);return false; }
+    Pawn->GetMesh()->SetSkeletalMesh(LoadObject<USkeletalMesh>(nullptr,TEXT("/Game/HypeWorld/Personagens/Indra/SK_Indra.SK_Indra")));
+    UHypeAppearanceComponent* Fresh=NewObject<UHypeAppearanceComponent>(Pawn);
+    Pawn->AddInstanceComponent(Fresh);Fresh->RegisterComponent();
+    FHypeAppearance Value;Value.bCustomized=true;Value.Name=TEXT("CatalogTest");Value.Clan=TEXT("Uchiha");Value.HairId=TEXT("Hair_sasuke_young");Value.OutfitId=TEXT("Outfit_ShadowShinobi");
+    Fresh->Commit(Value);
+    TestEqual(TEXT("Primeira confirmação conserva o terceiro traje antes do primeiro tick"),Fresh->Appearance.OutfitId,Value.OutfitId);
+    TestEqual(TEXT("Primeira confirmação conserva o cabelo aprovado"),Fresh->Appearance.HairId,Value.HairId);
+    TestEqual(TEXT("Catálogo inicializado com a base atual"),Fresh->BaseBody.Get(),LoadObject<USkeletalMesh>(nullptr,TEXT("/Game/HypeWorld/Personagens/SilentStancePreview/SK_SilentStance_Preview.SK_SilentStance_Preview")));
+    World->DestroyWorld(false);
+    return true;
+}
+
 #endif

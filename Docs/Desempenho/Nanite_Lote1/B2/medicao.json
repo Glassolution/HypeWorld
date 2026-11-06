@@ -1,0 +1,553 @@
+{
+ "rotulo": "B2",
+ "mapa": "/Game/Maps/Tutorial/L_Tutorial.L_Tutorial",
+ "rodadas": [
+  {
+   "rodada": 0,
+   "ponto": "P1_VistaGeral",
+   "ms_ticker": 40.91,
+   "csv": "Profile(20261105_112144).csv",
+   "valores": {
+    "FrameTime": {
+     "mediana": 39.9,
+     "p95": 45.82,
+     "quadros": 288
+    },
+    "GPUTime": {
+     "mediana": 39.24,
+     "p95": 43.65,
+     "quadros": 288
+    },
+    "GameThreadTime": {
+     "mediana": 5.51,
+     "p95": 6.91,
+     "quadros": 288
+    },
+    "RenderThreadTime": {
+     "mediana": 0.0,
+     "p95": 0.0,
+     "quadros": 288
+    },
+    "RHIThreadTime": {
+     "mediana": 25.8,
+     "p95": 29.6,
+     "quadros": 288
+    }
+   }
+  },
+  {
+   "rodada": 0,
+   "ponto": "P2_Ponte",
+   "ms_ticker": 37.88,
+   "csv": "Profile(20261105_112204).csv",
+   "valores": {
+    "FrameTime": {
+     "mediana": 37.52,
+     "p95": 41.85,
+     "quadros": 312
+    },
+    "GPUTime": {
+     "mediana": 36.54,
+     "p95": 38.17,
+     "quadros": 312
+    },
+    "GameThreadTime": {
+     "mediana": 5.67,
+     "p95": 6.97,
+     "quadros": 312
+    },
+    "RenderThreadTime": {
+     "mediana": 0.0,
+     "p95": 0.0,
+     "quadros": 312
+    },
+    "RHIThreadTime": {
+     "mediana": 22.15,
+     "p95": 26.82,
+     "quadros": 312
+    }
+   }
+  },
+  {
+   "rodada": 0,
+   "ponto": "P3_Treino",
+   "ms_ticker": 38.06,
+   "csv": "Profile(20261105_112224).csv",
+   "valores": {
+    "FrameTime": {
+     "mediana": 37.92,
+     "p95": 42.3,
+     "quadros": 310
+    },
+    "GPUTime": {
+     "mediana": 36.46,
+     "p95": 38.34,
+     "quadros": 310
+    },
+    "GameThreadTime": {
+     "mediana": 5.72,
+     "p95": 6.98,
+     "quadros": 310
+    },
+    "RenderThreadTime": {
+     "mediana": 0.0,
+     "p95": 0.0,
+     "quadros": 310
+    },
+    "RHIThreadTime": {
+     "mediana": 22.44,
+     "p95": 27.07,
+     "quadros": 310
+    }
+   }
+  },
+  {
+   "rodada": 1,
+   "ponto": "P1_VistaGeral",
+   "ms_ticker": 37.93,
+   "csv": "Profile(20261105_112244).csv",
+   "valores": {
+    "FrameTime": {
+     "mediana": 37.77,
+     "p95": 41.67,
+     "quadros": 311
+    },
+    "GPUTime": {
+     "mediana": 36.84,
+     "p95": 37.34,
+     "quadros": 311
+    },
+    "GameThreadTime": {
+     "mediana": 5.65,
+     "p95": 6.6,
+     "quadros": 311
+    },
+    "RenderThreadTime": {
+     "mediana": 0.0,
+     "p95": 0.0,
+     "quadros": 311
+    },
+    "RHIThreadTime": {
+     "mediana": 25.23,
+     "p95": 26.86,
+     "quadros": 311
+    }
+   }
+  },
+  {
+   "rodada": 1,
+   "ponto": "P2_Ponte",
+   "ms_ticker": 37.14,
+   "csv": "Profile(20261105_112304).csv",
+   "valores": {
+    "FrameTime": {
+     "mediana": 37.1,
+     "p95": 40.6,
+     "quadros": 318
+    },
+    "GPUTime": {
+     "mediana": 36.08,
+     "p95": 36.57,
+     "quadros": 318
+    },
+    "GameThreadTime": {
+     "mediana": 5.72,
+     "p95": 6.78,
+     "quadros": 318
+    },
+    "RenderThreadTime": {
+     "mediana": 0.0,
+     "p95": 0.0,
+     "quadros": 318
+    },
+    "RHIThreadTime": {
+     "mediana": 24.08,
+     "p95": 26.59,
+     "quadros": 318
+    }
+   }
+  },
+  {
+   "rodada": 1,
+   "ponto": "P3_Treino",
+   "ms_ticker": 38.34,
+   "csv": "Profile(20261105_112324).csv",
+   "valores": {
+    "FrameTime": {
+     "mediana": 38.15,
+     "p95": 42.6,
+     "quadros": 307
+    },
+    "GPUTime": {
+     "mediana": 36.99,
+     "p95": 38.89,
+     "quadros": 307
+    },
+    "GameThreadTime": {
+     "mediana": 5.71,
+     "p95": 6.94,
+     "quadros": 307
+    },
+    "RenderThreadTime": {
+     "mediana": 0.0,
+     "p95": 0.0,
+     "quadros": 307
+    },
+    "RHIThreadTime": {
+     "mediana": 23.09,
+     "p95": 27.1,
+     "quadros": 307
+    }
+   }
+  },
+  {
+   "rodada": 2,
+   "ponto": "P1_VistaGeral",
+   "ms_ticker": 37.87,
+   "csv": "Profile(20261105_112344).csv",
+   "valores": {
+    "FrameTime": {
+     "mediana": 37.7,
+     "p95": 41.99,
+     "quadros": 312
+    },
+    "GPUTime": {
+     "mediana": 36.81,
+     "p95": 37.5,
+     "quadros": 312
+    },
+    "GameThreadTime": {
+     "mediana": 5.66,
+     "p95": 6.68,
+     "quadros": 312
+    },
+    "RenderThreadTime": {
+     "mediana": 0.0,
+     "p95": 0.0,
+     "quadros": 312
+    },
+    "RHIThreadTime": {
+     "mediana": 25.26,
+     "p95": 26.89,
+     "quadros": 312
+    }
+   }
+  },
+  {
+   "rodada": 2,
+   "ponto": "P2_Ponte",
+   "ms_ticker": 37.05,
+   "csv": "Profile(20261105_112404).csv",
+   "valores": {
+    "FrameTime": {
+     "mediana": 37.02,
+     "p95": 40.47,
+     "quadros": 319
+    },
+    "GPUTime": {
+     "mediana": 36.01,
+     "p95": 36.62,
+     "quadros": 319
+    },
+    "GameThreadTime": {
+     "mediana": 5.72,
+     "p95": 6.83,
+     "quadros": 319
+    },
+    "RenderThreadTime": {
+     "mediana": 0.0,
+     "p95": 0.0,
+     "quadros": 319
+    },
+    "RHIThreadTime": {
+     "mediana": 24.49,
+     "p95": 26.61,
+     "quadros": 319
+    }
+   }
+  },
+  {
+   "rodada": 2,
+   "ponto": "P3_Treino",
+   "ms_ticker": 37.94,
+   "csv": "Profile(20261105_112424).csv",
+   "valores": {
+    "FrameTime": {
+     "mediana": 37.55,
+     "p95": 41.69,
+     "quadros": 312
+    },
+    "GPUTime": {
+     "mediana": 36.52,
+     "p95": 38.3,
+     "quadros": 312
+    },
+    "GameThreadTime": {
+     "mediana": 5.66,
+     "p95": 6.71,
+     "quadros": 312
+    },
+    "RenderThreadTime": {
+     "mediana": 0.0,
+     "p95": 0.0,
+     "quadros": 312
+    },
+    "RHIThreadTime": {
+     "mediana": 22.6,
+     "p95": 26.68,
+     "quadros": 312
+    }
+   }
+  },
+  {
+   "rodada": 3,
+   "ponto": "P1_VistaGeral",
+   "ms_ticker": 37.74,
+   "csv": "Profile(20261105_112444).csv",
+   "valores": {
+    "FrameTime": {
+     "mediana": 37.65,
+     "p95": 41.87,
+     "quadros": 313
+    },
+    "GPUTime": {
+     "mediana": 36.64,
+     "p95": 37.08,
+     "quadros": 313
+    },
+    "GameThreadTime": {
+     "mediana": 5.64,
+     "p95": 6.71,
+     "quadros": 313
+    },
+    "RenderThreadTime": {
+     "mediana": 0.0,
+     "p95": 0.0,
+     "quadros": 313
+    },
+    "RHIThreadTime": {
+     "mediana": 25.19,
+     "p95": 26.71,
+     "quadros": 313
+    }
+   }
+  },
+  {
+   "rodada": 3,
+   "ponto": "P2_Ponte",
+   "ms_ticker": 40.77,
+   "csv": "Profile(20261105_112523).csv",
+   "valores": {
+    "FrameTime": {
+     "mediana": 40.44,
+     "p95": 47.15,
+     "quadros": 289
+    },
+    "GPUTime": {
+     "mediana": 40.04,
+     "p95": 42.11,
+     "quadros": 289
+    },
+    "GameThreadTime": {
+     "mediana": 5.86,
+     "p95": 7.73,
+     "quadros": 289
+    },
+    "RenderThreadTime": {
+     "mediana": 0.0,
+     "p95": 0.0,
+     "quadros": 289
+    },
+    "RHIThreadTime": {
+     "mediana": 27.09,
+     "p95": 31.11,
+     "quadros": 289
+    }
+   }
+  },
+  {
+   "rodada": 3,
+   "ponto": "P3_Treino",
+   "ms_ticker": 40.05,
+   "csv": "Profile(20261105_112602).csv",
+   "valores": {
+    "FrameTime": {
+     "mediana": 39.88,
+     "p95": 46.15,
+     "quadros": 294
+    },
+    "GPUTime": {
+     "mediana": 38.69,
+     "p95": 42.6,
+     "quadros": 294
+    },
+    "GameThreadTime": {
+     "mediana": 5.85,
+     "p95": 7.53,
+     "quadros": 294
+    },
+    "RenderThreadTime": {
+     "mediana": 0.0,
+     "p95": 0.0,
+     "quadros": 294
+    },
+    "RHIThreadTime": {
+     "mediana": 26.8,
+     "p95": 30.81,
+     "quadros": 294
+    }
+   }
+  }
+ ],
+ "primitivas": {
+  "P1_VistaGeral": {
+   "primitivas": 529,
+   "triangulos": 142612,
+   "draws": 251
+  },
+  "P2_Ponte": {
+   "primitivas": 410,
+   "triangulos": 101548,
+   "draws": 191
+  },
+  "P3_Treino": {
+   "primitivas": 472,
+   "triangulos": 140420,
+   "draws": 271
+  }
+ },
+ "malhas": [
+  {
+   "malha": "SM_Stone_Boulder_1",
+   "nanite": true,
+   "tri_nanite": 1286,
+   "lods": 4,
+   "tri_por_lod": [
+    1088,
+    544,
+    272,
+    136
+   ]
+  },
+  {
+   "malha": "SM_Stone_3",
+   "nanite": true,
+   "tri_nanite": 582,
+   "lods": 4,
+   "tri_por_lod": [
+    516,
+    258,
+    128,
+    64
+   ]
+  },
+  {
+   "malha": "SM_Stone_2",
+   "nanite": true,
+   "tri_nanite": 510,
+   "lods": 4,
+   "tri_por_lod": [
+    458,
+    228,
+    114,
+    64
+   ]
+  },
+  {
+   "malha": "SM_Stone_1",
+   "nanite": true,
+   "tri_nanite": 338,
+   "lods": 4,
+   "tri_por_lod": [
+    314,
+    156,
+    78,
+    64
+   ]
+  },
+  {
+   "malha": "SM_Placeholder_Ponte10",
+   "nanite": true,
+   "tri_nanite": 6368,
+   "lods": 1,
+   "tri_por_lod": [
+    516
+   ]
+  },
+  {
+   "malha": "SM_Placeholder_Portal",
+   "nanite": true,
+   "tri_nanite": 3360,
+   "lods": 1,
+   "tri_por_lod": [
+    256
+   ]
+  },
+  {
+   "malha": "SM_Zen_Tronco",
+   "nanite": true,
+   "tri_nanite": 512,
+   "lods": 1,
+   "tri_por_lod": [
+    252
+   ]
+  },
+  {
+   "malha": "SM_Placeholder_PosteLanterna",
+   "nanite": true,
+   "tri_nanite": 1680,
+   "lods": 1,
+   "tri_por_lod": [
+    256
+   ]
+  },
+  {
+   "malha": "SM_Placeholder_Barril",
+   "nanite": true,
+   "tri_nanite": 1536,
+   "lods": 1,
+   "tri_por_lod": [
+    256
+   ]
+  },
+  {
+   "malha": "SM_Placeholder_BonecoTreino",
+   "nanite": true,
+   "tri_nanite": 3008,
+   "lods": 1,
+   "tri_por_lod": [
+    256
+   ]
+  },
+  {
+   "malha": "SM_Placeholder_Toco",
+   "nanite": true,
+   "tri_nanite": 1024,
+   "lods": 1,
+   "tri_por_lod": [
+    256
+   ]
+  }
+ ],
+ "sistema_inicio": {
+  "hora": "11:21:34",
+  "carga": [
+   2.96630859375,
+   3.0712890625,
+   3.27099609375
+  ],
+  "swap": "total = 3072.00M  used = 1638.81M  free = 1433.19M  (encrypted)",
+  "top": "%CPU    RSS COMM\n 63.1 427760 /Users/Shared/Epic Games/UE_5.8/Engine/Binaries/Mac/Unrea\n 15.5  24496 /System/Library/PrivateFrameworks/CloudKitDaemon.framewor\n 14.3  10864 /usr/libexec/syspolicyd\n  4.9  11024 /System/Library/Frameworks/Accounts.framework/Versions/A/\n  3.1   6592 /System/Library/PrivateFrameworks/TCC.framework/Support/t"
+ },
+ "sistema_fim": {
+  "hora": "11:26:35",
+  "carga": [
+   3.3017578125,
+   3.47314453125,
+   3.4130859375
+  ],
+  "swap": "total = 3072.00M  used = 2470.19M  free = 601.81M  (encrypted)",
+  "top": "%CPU    RSS COMM\n132.0 445392 /Users/Shared/Epic Games/UE_5.8/Engine/Binaries/Mac/Unrea\n  3.3  10192 /usr/sbin/coreaudiod\n  2.4   2080 /System/Library/DriverExtensions/com.apple.AppleUserHIDDr\n  1.1  18816 /System/Library/PrivateFrameworks/SkyLight.framework/Reso\n  0.6  13408 /System/Library/CoreServices/loginwindow.app/Contents/Mac"
+ },
+ "erros": []
+}

@@ -1,0 +1,17 @@
+{
+ "lote": "Lote1_Opacos",
+ "acao": "nanite_on",
+ "alvos": [
+  "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_Boulder_1",
+  "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_3",
+  "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_2",
+  "/Game/StyleHex_Studio/Free_Packs/FREE_Stylized_Forest_Sample/Meshes/Stones/SM_Stone_1",
+  "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Placeholder_Ponte10",
+  "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Placeholder_Portal",
+  "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Zen_Tronco",
+  "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Placeholder_PosteLanterna",
+  "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Placeholder_Barril",
+  "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Placeholder_BonecoTreino",
+  "/Game/Maps/Tutorial/Tutorial_Assets/Placeholders/SM_Placeholder_Toco"
+ ]
+}

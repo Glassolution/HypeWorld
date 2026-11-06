@@ -17,9 +17,11 @@ struct FHypeCosmeticPart
     UPROPERTY(EditAnywhere, BlueprintReadOnly) FName Id;
     UPROPERTY(EditAnywhere, BlueprintReadOnly) FText Label;
     UPROPERTY(EditAnywhere, BlueprintReadOnly) FName RequiredClan;
+    /** 0 para roupa geral; 1 a 3 para os trajes exclusivos de um clã. */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin="0", ClampMax="3")) int32 ClanOutfitSlot = 0;
     UPROPERTY(EditAnywhere, BlueprintReadOnly) FNinjaBodyMask BodyMask;
     bool AllowsClan(FName Clan) const { return RequiredClan.IsNone() || RequiredClan==Clan; }
-    /** Malha preparada no rig Indra, com bind pose original. */
+    /** Malha compatível com o rig e a bind pose do BaseBody. */
     UPROPERTY(EditAnywhere, BlueprintReadOnly) TObjectPtr<USkeletalMesh> Mesh;
 };
 
@@ -42,6 +44,8 @@ public:
     TArray<FName> GetCatalogParts(ENinjaCustomizationSlot Slot) const;
     const FNinjaCustomizationPart* FindCatalogPart(FName Id, ENinjaCustomizationSlot Slot) const;
     UPROPERTY(ReplicatedUsing=OnRep_Appearance, BlueprintReadOnly, Category="Aparencia") FHypeAppearance Appearance;
+    /** Mesmo filtro de clã e skeleton utilizado pelo criador. */
+    UFUNCTION(BlueprintPure, Category="Aparencia") TArray<FHypeCosmeticPart> GetOutfitsForClan(FName Clan) const;
     void Preview(const FHypeAppearance& Draft);
     void Restore();
     void Commit(const FHypeAppearance& Value);
@@ -53,6 +57,7 @@ private:
     UFUNCTION() void OnRep_Appearance();
     bool Apply(const FHypeAppearance& Value);
     void ValidateParts(FHypeAppearance& Value) const;
+    void RegisterSilentOutfits(USkeletalMesh* ReferenceBody);
     void ApplyPart(FName Id, const TArray<FHypeCosmeticPart>& Options, USkeletalMeshComponent*& Part, bool bHair, const FHypeAppearance& Value);
     /** Peça avulsa do catálogo num componente próprio (nullptr = esconde) */
     void ApplyCatalogPart(const FNinjaCustomizationPart* Selected, USkeletalMeshComponent*& Part);

@@ -16,6 +16,7 @@ class UMaterialInterface;
 class ALandscape;
 class UAnimBlueprint;
 class USkeletalMesh;
+class USkeletalMeshComponent;
 
 class UDataTable;
 class UNiagaraSystem;
@@ -29,9 +30,33 @@ class HYPEWORLD_API UNinjaEditorTools : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 public:
+	/** Bind an outfit fabric section to Chaos with its rig collision and travel profile. */
+	UFUNCTION(BlueprintCallable, Category="Ninja|Editor")
+	static bool BindRobeCloth(USkeletalMesh* Mesh, FName SectionMaterial);
+
+	/** Bind only the hair material section, leaving accessory geometry rigid. */
+	UFUNCTION(BlueprintCallable, Category="Ninja|Editor")
+	static bool BindHairCloth(USkeletalMesh* Mesh, FName MaterialSlot);
+
+	// Extend long-hair Chaos collision to the approved outfit envelope.
+	UFUNCTION(BlueprintCallable, Category = "Ninja|Editor")
+	static int32 FitHairClothToOutfits(USkeletalMesh* Mesh);
+
+	// Clear the simulation bindings before replacing the imported hair geometry.
+	UFUNCTION(BlueprintCallable, Category = "Ninja|Editor")
+	static bool ResetHairCloth(USkeletalMesh* Mesh);
+
+	/** Read the active Chaos particles in world space for an in-game diagnostic. */
+	UFUNCTION(BlueprintCallable, Category="Ninja|Editor")
+	static TArray<FVector> ReadClothParticles(USkeletalMeshComponent* Component, int32 ClothAssetIndex = -1);
+
 	/** Cria um ator no mundo do Play (o Python só cria atores no mapa do editor). Usado pelos testes. */
 	UFUNCTION(BlueprintCallable, Category="Ninja|Editor")
 	static AActor* SpawnActorInPlayWorld(AActor* AnyActorInWorld, TSubclassOf<AActor> ActorClass);
+
+	/** Define um ponto de anexação na própria malha, preservando o Skeleton compartilhado. */
+	UFUNCTION(BlueprintCallable, Category="Ninja|Editor")
+	static bool SetMeshSocket(USkeletalMesh* Mesh, FName SocketName, FName BoneName, FTransform LocalTransform);
 
 	/** Cria ou atualiza a linha de um traje modular no catálogo (slot Traje), sem mexer nas outras linhas */
 	UFUNCTION(BlueprintCallable, Category="Ninja|Editor")

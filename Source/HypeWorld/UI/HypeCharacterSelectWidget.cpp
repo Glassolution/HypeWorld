@@ -20,6 +20,8 @@
 #include "Components/VerticalBoxSlot.h"
 #include "Components/SizeBox.h"
 #include "HypeWorldCharacter.h"
+#include "Combat/NinjaChakraFeetComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Combat/NinjaJutsuData.h"
 #include "HypeWorldPlayerController.h"
 #include "Blueprint/WidgetTree.h"
@@ -496,8 +498,13 @@ void UHypeCharacterSelectWidget::BuildLayout()
             UTextBlock* JutsuText = MakeText(Jutsus.IsEmpty() ? NSLOCTEXT("HypeSelect", "NoJutsu", "Nenhum jutsu equipado") : FText::FromString(Jutsus), FontInfo(TEXT("SemiBold"), 12), White);
             JutsuText->SetWrapTextAt(360.f);
             Place(JutsuText, TopLeft, FVector2D(ColumnCenter, 660), FVector2D::ZeroVector, FVector2D(0.5f, 0));
-            Place(MakeImage(Rounded(BackFill, 6.f)), TopLeft, FVector2D(ColumnCenter, 905), FVector2D(240, 52), Center);
-            Action(NSLOCTEXT("HypeSelect", "Enter", "Entrar no jogo"), TopLeft, FVector2D(ColumnCenter, 905), FVector2D(240, 52), TEXT("EnterGame"), 13);
+            const FVector2D ActionSize(158.f, 52.f);
+            const FVector2D EditPosition(ColumnCenter - 86.f, 905.f);
+            const FVector2D PlayPosition(ColumnCenter + 86.f, 905.f);
+            Place(MakeImage(Rounded(BackFill, 6.f)), TopLeft, EditPosition, ActionSize, Center);
+            Place(MakeImage(Rounded(NextFill, 6.f)), TopLeft, PlayPosition, ActionSize, Center);
+            Action(NSLOCTEXT("HypeSelect", "EditAppearance", "Personalizar"), TopLeft, EditPosition, ActionSize, TEXT("StartCreation"), 13);
+            Action(NSLOCTEXT("HypeSelect", "Enter", "Entrar no jogo"), TopLeft, PlayPosition, ActionSize, TEXT("EnterGame"), 13);
         }
         return;
     }
@@ -722,7 +729,7 @@ void UHypeCharacterSelectWidget::BuildLayout()
             else { BackButton=Button; BackDashes=Dashes; }
         };
         Action(TEXT("Voltar"),FormLeft+79.f,TEXT("PreviousCreationStep"));
-        Action(CreationStep == 4 ? TEXT("Estou pronto") : TEXT("Próximo"),FormLeft+79.f+174.f,TEXT("NextCreationStep"));
+        Action(CreationStep == 4 ? (Profile && Profile->HasCharacter() ? TEXT("Salvar e jogar") : TEXT("Estou pronto")) : TEXT("Próximo"),FormLeft+79.f+174.f,TEXT("NextCreationStep"));
         CreationErrorLabel=Label(ProfileError.ToString(),FormLeft,942,9,SRGB(255,180,160));
 
         // --- Câmera fixa (canto de baixo à direita): trava o giro do personagem ---
@@ -960,11 +967,21 @@ void UHypeCharacterSelectWidget::NativeConstruct()
     }
     Refresh();
 	SetupPreviewCamera();
+    if (!FParse::Param(FCommandLine::Get(), TEXT("CreatorStudyBefore")))
+    {
+        if (APawn* Pawn = GetOwningPlayerPawn())
+        {
+            if (UNinjaChakraFeetComponent* Feet = Pawn->FindComponentByClass<UNinjaChakraFeetComponent>())
+            {
+                Feet->SetFeetActive(false);
+            }
+        }
+    }
     PreloadParts();
     UpdatePreviewVisibility();
     SetVisibility(ESlateVisibility::Visible);	// recebe arrastar/rolar nos espaços vazios
     bSwapShots = FParse::Param(FCommandLine::Get(), TEXT("TrocaTrajeShots"));
-    bShots = bSwapShots || FParse::Param(FCommandLine::Get(), TEXT("CreationShots"));
+    bShots = bSwapShots || FParse::Param(FCommandLine::Get(), TEXT("CreatorStudy")) || FParse::Param(FCommandLine::Get(), TEXT("CreationShots"));
 
     // Tela aberta fora do mapa do jogo (L_CharacterCreation): o jogo carrega em segundo plano enquanto o jogador cria
     const FString GamePackage = MapaDoJogo.ToSoftObjectPath().GetLongPackageName();
@@ -987,6 +1004,11 @@ void UHypeCharacterSelectWidget::NativeConstruct()
 	{
 		NinjaPC->SetHUDHidden(true);
 	}
+    if (FParse::Param(FCommandLine::Get(), TEXT("SilentStancePreview")) && !bShots)
+    {
+        const UHypeProfileSubsystem* Profile = GetGameInstance()->GetSubsystem<UHypeProfileSubsystem>();
+        if (!Profile || !Profile->HasCharacter()) { StartCreation(); }
+    }
 }
 
 void UHypeCharacterSelectWidget::NativeDestruct()
@@ -1000,6 +1022,13 @@ void UHypeCharacterSelectWidget::NativeDestruct()
 	if (APawn* Pawn = GetOwningPlayerPawn())
 	{
 		Pawn->SetActorHiddenInGame(bPawnWasHidden);
+        if (const AHypeWorldCharacter* Character = Cast<AHypeWorldCharacter>(Pawn))
+        {
+            if (UNinjaChakraFeetComponent* Feet = Pawn->FindComponentByClass<UNinjaChakraFeetComponent>())
+            {
+                Feet->SetFeetActive(Character->IsPassiveEnabled(ENinjaPassive::ChakraFeet));
+            }
+        }
 		if (PreviewCamera) { Pawn->SetActorRotation(PawnStartRotation); }
 	}
     if (bCreatingCharacter)
@@ -1044,6 +1073,11 @@ void UHypeCharacterSelectWidget::SetupPreviewCamera()
 		PreviewCamera->GetCameraComponent()->SetConstraintAspectRatio(false);
 		// Fundo desfocado como na referência: foco no personagem, lente bem aberta
 		FPostProcessSettings& Post = PreviewCamera->GetCameraComponent()->PostProcessSettings;
+        // Exposição neutra para preservar as cores do albedo no criador.
+        Post.bOverride_AutoExposureBias = true;
+        Post.AutoExposureBias = 0.f;
+        Post.bOverride_ColorSaturation = true;
+        Post.ColorSaturation = FVector4(1.f, 1.f, 1.f, 1.f);
 		Post.bOverride_DepthOfFieldFocalDistance = true;
 		Post.DepthOfFieldFocalDistance = CameraDistance;
 		Post.bOverride_DepthOfFieldFstop = true;
@@ -1104,14 +1138,20 @@ void UHypeCharacterSelectWidget::HandleClick()
 void UHypeCharacterSelectWidget::Confirm()
 {
     UHypeProfileSubsystem* Profile = GetGameInstance() ? GetGameInstance()->GetSubsystem<UHypeProfileSubsystem>() : nullptr;
-    if (!Profile || !Profile->CreateCharacter(NAME_None, NAME_None, DraftAppearance))
+    if (!Profile || !Profile->SaveCharacterAppearance(DraftAppearance))
     {
         ProfileError = NSLOCTEXT("HypeSelect", "SaveFailed", "Não foi possível salvar. Tente novamente.");
         Refresh();
         return;
     }
     UE_LOG(LogHypeCharacterSelect, Log, TEXT("Personagem salvo: vila %s, clã %s"), *Profile->Vila.ToString(), *Profile->Cla.ToString());
-    if (UHypeAppearanceComponent* Appearance = GetOwningPlayerPawn()->FindComponentByClass<UHypeAppearanceComponent>()) { Appearance->Commit(Profile->Appearance); }
+    if (APawn* Pawn = GetOwningPlayerPawn())
+    {
+        if (UHypeAppearanceComponent* Appearance = Pawn->FindComponentByClass<UHypeAppearanceComponent>())
+        {
+            Appearance->Commit(Profile->Appearance);
+        }
+    }
     bCreatingCharacter = false;
     ExitTime = 0.f; // criação concluída: entra direto, menu de retorno só na próxima abertura.
 }
@@ -1131,15 +1171,29 @@ void UHypeCharacterSelectWidget::StartCreation()
     if (ExitTime >= 0.f) { return; }
     CreationStep = 1;
     bChoosingAffiliation = false;
-    DraftAppearance = FHypeAppearance();
-    DraftAppearance.bCustomized = true;
-    // Começa vestido como na referência: primeiro cabelo e primeiro traje do clã
-    for (const FName Key : { FName(TEXT("Hair")), FName(TEXT("Outfit")) })
+    const UHypeProfileSubsystem* Profile = GetGameInstance() ? GetGameInstance()->GetSubsystem<UHypeProfileSubsystem>() : nullptr;
+    const bool bEditing = Profile && Profile->HasCharacter();
+    if (bEditing && Profile->Appearance.bCustomized)
     {
-        TArray<FName> Ids; TArray<FText> Names;
-        GetPartOptions(Key, Ids, Names);
-        if (Ids.Num() > 1) { DraftPart(Key) = Ids[1]; }
+        DraftAppearance = Profile->Appearance;
     }
+    else
+    {
+        DraftAppearance = FHypeAppearance();
+        DraftAppearance.HeightCm = 163.f;
+        // Inicializa o cabelo e a pele de um personagem novo.
+        TArray<FName> Ids;
+        TArray<FText> Names;
+        GetPartOptions(TEXT("Hair"), Ids, Names);
+        if (Ids.Num() > 1) { DraftAppearance.HairId = Ids[1]; }
+        if (!FParse::Param(FCommandLine::Get(), TEXT("CreatorStudyBefore")))
+        {
+            DraftAppearance.SkinTint = HypeSelect::SkinColors[1];
+        }
+    }
+    DraftAppearance.bCustomized = true;
+    // Uma ficha nova usa o clã atribuído pelo jogo. Ao editar, mantém o clã salvo.
+    DraftAppearance.Clan = HypeIdentity::ResolveClan(bEditing ? Profile->Cla : NAME_None);
     bCreatingCharacter = true;
     ProfileError = FText::GetEmpty();
     Refresh(true);
@@ -1368,20 +1422,60 @@ void UHypeCharacterSelectWidget::UpdateCreationCamera(float Dt)
     const bool bFace=bCreatingCharacter && CreationStep==2;
     FVector LookAt, Location;
     FRotator Rotation;
-    if (bFace)
+    if (!FParse::Param(FCommandLine::Get(), TEXT("CreatorStudy")))
+    {
+        if (bFace)
+        {
+            const USkeletalMeshComponent* Body=GetNinjaVisibleBody(Cast<ACharacter>(Pawn));
+            const FName HeadBone(TEXT("head"));
+            LookAt=(Body && Body->DoesSocketExist(HeadBone)) ? Body->GetSocketLocation(HeadBone)+FVector(0,0,3) : StageOrigin+FVector(0,0,75);
+            Location=LookAt+StageForward*FaceDistance*Zoom+StageRight*CameraSide*0.25f;
+            Rotation=(LookAt-Location).Rotation();
+        }
+        else
+        {
+            Location=StageOrigin+StageForward*CameraDistance*Zoom+StageRight*CameraSide+FVector::UpVector*CameraHeight;
+            LookAt=StageOrigin+FVector::UpVector*CameraHeight;
+            Rotation=(-StageForward).Rotation();
+            Rotation.Pitch=CameraPitch;
+        }
+    }
+    else if (bFace)
     {
         const USkeletalMeshComponent* Body=GetNinjaVisibleBody(Cast<ACharacter>(Pawn));
-        const FName HeadBone(TEXT("head"));
-        LookAt=(Body && Body->DoesSocketExist(HeadBone)) ? Body->GetSocketLocation(HeadBone)+FVector(0,0,3) : StageOrigin+FVector(0,0,75);
-        Location=LookAt+StageForward*FaceDistance*Zoom+StageRight*CameraSide*0.25f;
-        Rotation=(LookAt-Location).Rotation();
+        const FName HeadBone = Body && Body->DoesSocketExist(TEXT("head"))
+            ? FName(TEXT("head")) : FName(TEXT("9ind00t0-head1_0243_150"));
+        const float HeightRatio = DraftAppearance.HeightCm / 190.782f;
+        LookAt = Body && Body->DoesSocketExist(HeadBone)
+            ? Body->GetSocketLocation(HeadBone) + FVector::UpVector * (8.f * HeightRatio)
+            : StageOrigin + FVector::UpVector * (75.f * HeightRatio);
+        const float StudyDistance = ShotStep >= 9 ? 75.f : 116.f;
+        Location = LookAt + StageForward * StudyDistance;
+        Rotation = (-StageForward).Rotation();
     }
     else
     {
-        Location=StageOrigin+StageForward*CameraDistance*Zoom+StageRight*CameraSide+FVector::UpVector*CameraHeight;
-        LookAt=StageOrigin+FVector::UpVector*CameraHeight;
-        Rotation=(-StageForward).Rotation();
-        Rotation.Pitch=CameraPitch;
+        float FocusHeight = CameraHeight;
+        if (bCreatingCharacter)
+        {
+            if (const ACharacter* Character = Cast<ACharacter>(Pawn))
+            {
+                FocusHeight = DraftAppearance.HeightCm * .52f - Character->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+            }
+        }
+        LookAt = StageOrigin + FVector::UpVector * FocusHeight;
+        Location = LookAt + StageForward * CameraDistance * Zoom + StageRight * CameraSide;
+        Rotation = (-StageForward).Rotation();
+        Rotation.Pitch = bCreatingCharacter ? 0.f : CameraPitch;
+    }
+    if (FParse::Param(FCommandLine::Get(), TEXT("CreatorStudy")) && ShotStep >= 10 && ShotClock > 23.f)
+    {
+        PreviewCamera->GetCameraComponent()->SetProjectionMode(ECameraProjectionMode::Orthographic);
+        PreviewCamera->GetCameraComponent()->SetOrthoWidth(42.f);
+        const FVector Target = LookAt - StageForward * 4.f;
+        PreviewCamera->SetActorLocationAndRotation(Target + FVector::UpVector * 95.f,
+            FRotator(-90.f, StageForward.Rotation().Yaw, 0.f));
+        return;
     }
     // ~99% do caminho em CameraMoveTime, independente do FPS
     const float Alpha=1.f-FMath::Exp(-4.6f*Dt/FMath::Max(CameraMoveTime,0.05f));
@@ -1484,9 +1578,23 @@ void UHypeCharacterSelectWidget::GetPartOptions(FName Key, TArray<FName>& Ids, T
     if (Key == TEXT("Hair") || Key == TEXT("Outfit"))
     {
         const FName Clan = DraftAppearance.Clan.IsNone() ? HypeIdentity::ResolveClan(NAME_None) : DraftAppearance.Clan;
-        for (const FHypeCosmeticPart& Part : Key == TEXT("Hair") ? Appearance->HairOptions : Appearance->OutfitOptions)
+        if (Key == TEXT("Outfit"))
         {
-            if (Part.AllowsClan(Clan)) { Ids.Add(Part.Id); Names.Add(Part.Label); }
+            for (const FHypeCosmeticPart& Part:Appearance->GetOutfitsForClan(Clan))
+            {
+                Ids.Add(Part.Id);Names.Add(Part.Label);
+            }
+            return;
+        }
+        for (const FHypeCosmeticPart& Part : Appearance->HairOptions)
+        {
+            if (Key == TEXT("Outfit") && Part.Id == TEXT("Outfit_SilentNinja")) { continue; }
+            if (Part.AllowsClan(Clan) && Part.Mesh && Appearance->BaseBody
+                && Part.Mesh->GetSkeleton() == Appearance->BaseBody->GetSkeleton())
+            {
+                Ids.Add(Part.Id);
+                Names.Add(Part.Label);
+            }
         }
         return;
     }
@@ -1754,6 +1862,53 @@ void UHypeCharacterSelectWidget::TickShots(float Dt)
         UE_LOG(LogHypeCharacterSelect, Log, TEXT("Foto %s"), Name);
     };
     auto Step = [this](FName Key, int32 Delta) { if (const TObjectPtr<UHypeOptionCardWidget>* Card = Cards.Find(Key)) { HandleCardStep(Card->Get(), Delta); } };
+    if (FParse::Param(FCommandLine::Get(), TEXT("CreatorStudy")))
+    {
+        const bool bNewHead = FParse::Param(FCommandLine::Get(), TEXT("CreatorAnimeHead"));
+        const bool bWithHair = FParse::Param(FCommandLine::Get(), TEXT("CreatorStudyHair"));
+        const TCHAR* Prefix = !bNewHead ? TEXT("Cabeca_Original_")
+            : bWithHair ? TEXT("Cabeca_ComCabelo_") : TEXT("Cabeca_Nova_");
+        const auto Capture = [&](const TCHAR* Angle)
+        {
+            const FString Name = FString(Prefix) + Angle;
+            FScreenshotRequest::RequestScreenshot(Name, false, false);
+            UE_LOG(LogHypeCharacterSelect, Log, TEXT("Foto %s"), *Name);
+        };
+        const auto Turn = [&](float Degrees)
+        {
+            if (APawn* Pawn = GetOwningPlayerPawn())
+            {
+                Pawn->SetActorRotation(PawnStartRotation + FRotator(0.f, Degrees, 0.f));
+            }
+        };
+        const TArray<FStep> StudySteps = {
+            {2.f, [this]() { if (!bCreatingCharacter) { StartCreation(); } }},
+            {3.f, [&]() {
+                HandleNameChanged(FText::FromString(TEXT("Estudo")));
+                DraftAppearance.HairId = bNewHead && bWithHair ? FName(TEXT("Hair_Anime_Camadas")) : NAME_None;
+                DraftAppearance.OutfitId = TEXT("Outfit_ItachiAnbu");
+                HandleHeightChanged(0.075f);
+                ShowAppearanceCategory();
+            }},
+            {5.f, [&]() { Turn(0.f); }},
+            {6.f, [&]() { Capture(TEXT("Frente")); }},
+            {7.f, [&]() { Turn(45.f); }},
+            {8.f, [&]() { Capture(TEXT("TresQuartos")); }},
+            {9.f, [&]() { Turn(90.f); }},
+            {10.f, [&]() { Capture(TEXT("Perfil")); }},
+            {11.f, [&]() { Turn(0.f); }},
+            {12.f, [&]() { Capture(TEXT("Close")); }},
+            {14.f, [&]() { Capture(TEXT("Topo")); }},
+            {16.f, [this]() {
+                if (APlayerController* PC = GetOwningPlayer()) { PC->ConsoleCommand(TEXT("quit")); }
+            }},
+        };
+        if (StudySteps.IsValidIndex(ShotStep) && ShotClock >= StudySteps[ShotStep].At + (ShotStep >= 2 ? 10.f : 0.f))
+        {
+            StudySteps[ShotStep++].Run();
+        }
+        return;
+    }
     if (bSwapShots)
     {
         // Mesmo caminho da seta do card: HandleCardStep -> prévia no personagem. O menu lista o que está disponível.
