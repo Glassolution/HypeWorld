@@ -160,6 +160,31 @@ public:
 	bool bInBackflip = false;
 	/** Embalo no ar (depois do dash no ar): sem frenagem até pousar */
 	bool bAirMomentum = false;
+
+	// ---------- Física dos pulos e cambalhotas (pulo, pulo duplo, pulo de parede, mortal; NÃO o super pulo carregado) ----------
+
+	/** No voo de um pulo/cambalhota (do impulso até pousar) */
+	bool bInJumpFlight = false;
+	/** Física de verdade nos pulos: embalo conservado no ar (sem freio artificial), pouco controle de direção no ar,
+	 *  resistência do ar e impulso do pulo duplo somando ao embalo vertical */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Física do pulo")
+	bool bRealisticJumpPhysics = true;
+	/** Controle de direção no ar durante pulos (0 = nenhum, como na vida real; 1 = total). O AirControl normal vale fora dos pulos */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Física do pulo", meta=(ClampMin=0, ClampMax=1))
+	float JumpAirControl = 0.3f;
+	/** Resistência do ar (1/cm): desaceleração = coeficiente × velocidade². 0,00006 ≈ pessoa no ar (quase nada) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Física do pulo")
+	float JumpAirDrag = 0.00006f;
+	/** Pulo duplo: quanto da velocidade de queda o impulso precisa vencer (1 = impulso real: caindo rápido sobe menos) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Física do pulo", meta=(ClampMin=0, ClampMax=1))
+	float DoubleJumpFallCarry = 0.5f;
+	/** Pulo duplo: mínimo de subida (× JumpZVelocity), por mais rápido que esteja caindo */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Física do pulo", meta=(ClampMin=0, ClampMax=1))
+	float DoubleJumpMinFraction = 0.5f;
+	/** A física de pulo vale agora? (no voo de um pulo, fora do super pulo carregado, do arremesso e da suspensão do combo aéreo) */
+	bool UsesJumpPhysics() const;
+	virtual FVector GetAirControl(float DeltaTime, float TickAirControl, const FVector& FallAcceleration) override;
+
 	/** Estado legado dos saltos especiais. Os parâmetros antigos não alteram mais a gravidade nem limitam a queda. */
 	void StartFloatJump(float RiseScale, float FallScale, float MaxFallSpeed);
 	bool bFloatJump = false;

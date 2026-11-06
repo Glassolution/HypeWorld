@@ -8,6 +8,8 @@
 #include "Engine/SkeletalMesh.h"
 #include "TwoBoneIK.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Animation/AnimClassInterface.h"
+#include "AnimNodes/AnimNode_Slot.h"
 
 namespace
 {
@@ -23,10 +25,71 @@ struct FSilentStanceAnimInstanceProxy final : FAnimInstanceProxy
     float IzunaStanceAlpha = 0.f;
     float IzunaIdleFeetAlpha = 0.f;
     bool bIzunaOutfit = false;
+    // Jutsu em movimento: selos/sopro só do tronco para cima; pernas e quadril seguem a locomoção (o que entra no slot)
+    FAnimNode_Slot* JutsuSlot = nullptr;
+    bool bSearchedJutsuSlot = false;
+    float UpperBodyCastAlpha = 0.f;
+
+    void UpdateUpperBodyCast(UAnimInstance* Instance, float DeltaSeconds)
+    {
+        if (!bSearchedJutsuSlot)
+        {
+            bSearchedJutsuSlot = true;
+            if (const IAnimClassInterface* AnimClass = IAnimClassInterface::GetFromClass(Instance->GetClass()))
+            {
+                for (const FStructProperty* Property : AnimClass->GetAnimNodeProperties())
+                {
+                    if (Property && Property->Struct && Property->Struct->GetFName() == TEXT("AnimNode_Slot"))
+                    {
+                        FAnimNode_Slot* Slot = Property->ContainerPtrToValuePtr<FAnimNode_Slot>(Instance);
+                        if (Slot && Slot->SlotName == FName(TEXT("DefaultSlot")))
+                        {
+                            Slot->bAlwaysUpdateSourcePose = true;   // a locomoção precisa estar atualizada embaixo da montagem
+                            JutsuSlot = Slot;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        float Goal = 0.f;
+        const AHypeWorldCharacter* Ninja = Cast<AHypeWorldCharacter>(Instance->TryGetPawnOwner());
+        if (JutsuSlot && Ninja && Ninja->IsPresentingJutsu() && Instance->IsAnyMontagePlaying())
+        {
+            const UCharacterMovementComponent* Move = Ninja->GetCharacterMovement();
+            Goal = Move && Move->IsFalling() ? 1.f
+                : FMath::GetMappedRangeValueClamped(FVector2D(30., 150.), FVector2D(0., 1.), Ninja->GetVelocity().Size2D());
+        }
+        UpperBodyCastAlpha = FMath::FInterpTo(UpperBodyCastAlpha, Goal, DeltaSeconds, 10.f);
+    }
+
+    void ApplyUpperBodyCast(FPoseContext& Output)
+    {
+        if (UpperBodyCastAlpha < KINDA_SMALL_NUMBER || !JutsuSlot) { return; }
+        const FBoneContainer& Bones = Output.Pose.GetBoneContainer();
+        FBoneReference SpineRef(TEXT("spine_01"));
+        SpineRef.Initialize(Bones);
+        const FCompactPoseBoneIndex Spine = SpineRef.GetCompactPoseIndex(Bones);
+        if (!Spine.IsValid()) { return; }
+        FPoseContext Locomotion(Output);
+        JutsuSlot->Source.Evaluate(Locomotion);
+        TArray<bool, TInlineAllocator<256>> Upper;
+        Upper.SetNumZeroed(Output.Pose.GetNumBones());
+        for (const FCompactPoseBoneIndex Bone : Output.Pose.ForEachBoneIndex())
+        {
+            const FCompactPoseBoneIndex Parent = Output.Pose.GetParentBoneIndex(Bone);
+            Upper[Bone.GetInt()] = Bone == Spine || (Parent.IsValid() && Upper[Parent.GetInt()]);
+            if (!Upper[Bone.GetInt()])
+            {
+                Output.Pose[Bone].BlendWith(Locomotion.Pose[Bone], UpperBodyCastAlpha);   // raiz, quadril e pernas
+            }
+        }
+    }
 
     virtual void PreUpdate(UAnimInstance* Instance, float DeltaSeconds) override
     {
         FAnimInstanceProxy::PreUpdate(Instance, DeltaSeconds);
+        UpdateUpperBodyCast(Instance, DeltaSeconds);
         bLevelLocomotionGaze = !Instance->IsAnyMontagePlaying();
         if (const ACharacter* Character = Cast<ACharacter>(Instance->TryGetPawnOwner()))
         {
@@ -353,6 +416,7 @@ struct FSilentStanceAnimInstanceProxy final : FAnimInstanceProxy
     {
         EvaluateAnimationNode_WithRoot(Output, InRootNode);
         if (InRootNode != GetRootNode()) { return true; }
+        ApplyUpperBodyCast(Output);
         NarrowIzunaStance(Output);
         RelaxHands(Output);
         UpdateHandCorrectives(Output);

@@ -292,8 +292,9 @@ void AHypeWorldCharacter::DoMove(float Right, float Forward)
 		}
 		RawMoveTime = GetWorld()->GetTimeSeconds();
 
-		// Carregando chakra / super pulo, fazendo jutsu ou atordoado: não anda. Atacando: só ajusta um pouco a direção (o golpe já empurra para a frente)
-		if (bChargingChakra || bChargingSuperJump || IsStunned() || IsCastingJutsu())
+		// Carregando chakra / super pulo ou atordoado: não anda (fazendo jutsu anda e corre normalmente; só o tronco faz os selos).
+		// Atacando: só ajusta um pouco a direção (o golpe já empurra para a frente)
+		if (bChargingChakra || bChargingSuperJump || IsStunned())
 		{
 			return;
 		}
@@ -704,9 +705,30 @@ void AHypeWorldCharacter::PlayJumpMontage(UAnimMontage* Montage, float UpSpeed)
 {
 	if (!Montage) return;
 	const float Gravity = FMath::Max(1.f, FMath::Abs(GetCharacterMovement()->GetGravityZ()));
-	const float ApexTime = FMath::Max(0.45f, UpSpeed / Gravity);
-	// Completa a acrobacia perto do ápice, antes de entregar a pose à queda.
-	const float Rate = FMath::Clamp(Montage->GetPlayLength() / (ApexTime + 0.15f), 0.65f, 2.2f);
+	float Rate;
+	if (Montage == SuperJumpLaunchMontage)
+	{
+		// Super pulo carregado: como antes (completa perto do ápice)
+		const float ApexTime = FMath::Max(0.45f, UpSpeed / Gravity);
+		Rate = FMath::Clamp(Montage->GetPlayLength() / (ApexTime + 0.15f), 0.65f, 2.2f);
+	}
+	else
+	{
+		// Cambalhota com física: o giro sai do impulso e dura o voo de verdade. Tempo de voo até o chão de baixo
+		// (lançamento oblíquo: t = (v + raiz(v² + 2gh)) / g); a parte acrobática (80% da montagem, depois é a pose
+		// de queda) termina a 85% do voo, preparando o pouso, como um ginasta abrindo o corpo antes de tocar o chão.
+		float Height = 0.f;
+		const FVector Down = GetCharacterMovement()->GetGravityDirection();
+		const float HalfHeight = GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+		FHitResult Ground;
+		FCollisionQueryParams Params(SCENE_QUERY_STAT(NinjaFlipGround), false, this);
+		const FVector Feet = GetActorLocation() + Down * HalfHeight;
+		Height = GetWorld()->LineTraceSingleByChannel(Ground, Feet, Feet + Down * 3000.f, ECC_Visibility, Params)
+			? Ground.Distance : 3000.f;
+		const float V = FMath::Max(UpSpeed, 0.f);
+		const float FlightTime = FMath::Max(0.35f, (V + FMath::Sqrt(V * V + 2.f * Gravity * Height)) / Gravity);
+		Rate = FMath::Clamp(Montage->GetPlayLength() * 0.8f / (FlightTime * 0.85f), 0.6f, 2.2f);
+	}
 	GetMesh()->GlobalAnimRateScale = 1.f;
 	PlayAnimMontage(Montage, Rate);
 }
@@ -1949,7 +1971,7 @@ bool AHypeWorldCharacter::CanChargeChakra() const
 bool AHypeWorldCharacter::TryUseJutsuSlot(int32 Slot)
 {
 	const UNinjaJutsuData* Jutsu = GetJutsuInSlot(Slot);
-	if (!Jutsu || !AbilitySystem || !CanStartJutsu())
+	if (!Jutsu || !AbilitySystem || !CanStartJutsu(Jutsu))
 	{
 		return false;
 	}
@@ -1992,10 +2014,10 @@ float AHypeWorldCharacter::GetJutsuCooldownRemaining(int32 Slot, float& OutDurat
 	return Remaining;
 }
 
-bool AHypeWorldCharacter::CanStartJutsu() const
+bool AHypeWorldCharacter::CanStartJutsu(const UNinjaJutsuData* Jutsu) const
 {
 	return CanAct() && !IsCastingJutsu() && !IsAttacking() && !bChargingChakra && !bChargingSuperJump
-		&& GetCharacterMovement() && !GetCharacterMovement()->IsFalling();
+		&& GetCharacterMovement() && ((Jutsu && Jutsu->bAllowAirCast) || !GetCharacterMovement()->IsFalling());
 }
 
 USkeletalMeshComponent* AHypeWorldCharacter::GetJutsuBody() const
@@ -2026,9 +2048,9 @@ UAnimSequenceBase* AHypeWorldCharacter::GetJutsuBodyAnimation(UAnimSequenceBase*
 void AHypeWorldCharacter::BeginJutsu(const UNinjaJutsuData* Jutsu)
 {
 	CurrentJutsu = Jutsu;
-	GetCharacterMovement()->StopMovementImmediately();
-	// Vira para onde a câmera olha (o jutsu sai nessa direção)
-	if (Controller)
+	// Não para mais: dá para fazer o jutsu andando ou correndo (o embalo continua; no ar, segue o voo).
+	// Parado, vira na hora para onde a câmera olha; em movimento o corpo gira suave para a câmera (NinjaMovementComponent)
+	if (Controller && GetVelocity().SizeSquared2D() < FMath::Square(50.f))
 	{
 		SetActorRotation(FRotator(0.f, Controller->GetControlRotation().Yaw, 0.f));
 	}
@@ -2281,7 +2303,7 @@ void AHypeWorldCharacter::OnJutsuRelease()
 	const FVector Dir = ((bAimHit ? AimHit.ImpactPoint : AimEnd) - Mouth).GetSafeNormal();
 	Aim = Dir.Rotation();
 
-	if (GetNetMode() != NM_DedicatedServer && Defaults->MuzzleSystem && Body)
+	if (GetNetMode() != NM_DedicatedServer && Defaults->MuzzleSystem && Body && !Jutsu->GoukakyuuMaterial)
 	{
 		// Faíscas e chama pequena saindo da boca, presas ao socket e apontadas para onde a bola vai
 		UNiagaraComponent* Muzzle = UNiagaraFunctionLibrary::SpawnSystemAttached(Defaults->MuzzleSystem, Body,
@@ -2310,7 +2332,7 @@ void AHypeWorldCharacter::OnJutsuRelease()
 		if (ANinjaJutsuProjectile* Projectile = GetWorld()->SpawnActorDeferred<ANinjaJutsuProjectile>(Jutsu->ProjectileClass, SpawnAt, this, this,
 			ESpawnActorCollisionHandlingMethod::AlwaysSpawn))
 		{
-			Projectile->InitLaunch(Jutsu, Mouth + Dir * 20.f, Dir);
+			Projectile->InitLaunch(Jutsu, Jutsu->GoukakyuuMaterial ? Mouth : Mouth + Dir * 20.f, Dir);
 			Projectile->FinishSpawning(SpawnAt);
 		}
 	}
@@ -2994,7 +3016,9 @@ void AHypeWorldCharacter::DoBackflipJump()
 	GetNinjaMovement()->bInSuperJump = true;   // sem frenagem no ar (senão o embalo para trás some)
 	GetNinjaMovement()->bInBackflip = true;
 	GetNinjaMovement()->StartFloatJump(BackflipGravity.X, BackflipGravity.Y, BackflipGravity.Z);
-	LaunchCharacter(LaunchVelocity, true, true);
+	GetNinjaMovement()->bInJumpFlight = true;
+	// Física: o impulso para trás SOMA ao embalo que ele já tinha no chão (não substitui); o vertical é o do salto
+	LaunchCharacter(LaunchVelocity, false, true);
 	if (!HasAuthority())
 	{
 		ServerBackflipJump(LaunchVelocity);
@@ -3014,7 +3038,8 @@ void AHypeWorldCharacter::ServerBackflipJump_Implementation(FVector_NetQuantize1
 	GetNinjaMovement()->bInSuperJump = true;
 	GetNinjaMovement()->bInBackflip = true;
 	GetNinjaMovement()->StartFloatJump(BackflipGravity.X, BackflipGravity.Y, BackflipGravity.Z);
-	LaunchCharacter(LaunchVelocity.GetClampedToMaxSize(FVector2D(BackflipBackSpeed, BackflipUpSpeed).Size() * 1.05f), true, true);
+	GetNinjaMovement()->bInJumpFlight = true;
+	LaunchCharacter(LaunchVelocity.GetClampedToMaxSize(FVector2D(BackflipBackSpeed, BackflipUpSpeed).Size() * 1.05f), false, true);
 	MulticastBackflip();
 }
 

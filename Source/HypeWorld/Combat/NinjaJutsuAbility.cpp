@@ -57,7 +57,8 @@ bool UGA_NinjaJutsu::CanActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, FGameplayTagContainer* OptionalRelevantTags) const
 {
 	const AHypeWorldCharacter* Ninja = ActorInfo ? Cast<AHypeWorldCharacter>(ActorInfo->AvatarActor.Get()) : nullptr;
-	if (!Ninja || !GetJutsuData(Handle, ActorInfo) || !Ninja->CanStartJutsu())
+	const UNinjaJutsuData* Data = GetJutsuData(Handle, ActorInfo);
+	if (!Ninja || !Data || !Ninja->CanStartJutsu(Data))
 	{
 		return false;
 	}

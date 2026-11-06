@@ -253,6 +253,12 @@ protected:
 private:
 
 	void SetupVisuals();
+	void SetupGoukakyuuVisuals();
+	void UpdateGoukakyuuVisuals(float Age, float Radius);
+	void SetGoukakyuuLayer(UStaticMeshComponent* Layer, const FVector& Offset, const FVector& HalfExtent,
+		float Emission, float Opacity, float Age);
+	UPROPERTY() TObjectPtr<UNiagaraComponent> GoukakyuuImpact;
+	bool bGoukakyuuVisual = false;
 	/** Centro e raio da bola no instante T */
 	void Evaluate(float T, FVector& OutCenter, float& OutRadius, bool& bOutReachedRange) const;
 	void ApplyBallVisual(const FVector& Center, float Radius, float T);

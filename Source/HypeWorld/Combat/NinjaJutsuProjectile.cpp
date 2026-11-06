@@ -190,7 +190,7 @@ void ANinjaJutsuProjectile::Prewarm(AActor* Context, const UNinjaJutsuData* Juts
 		Copy->Launch.Start = Start;
 		Copy->Launch.Direction = FVector::ForwardVector;
 		Copy->FinishSpawning(At);
-		if (Copy->MuzzleSystem)
+		if (Copy->MuzzleSystem && !Jutsu->GoukakyuuMaterial)
 		{
 			UNiagaraFunctionLibrary::SpawnSystemAtLocation(Copy, Copy->MuzzleSystem, Start, FRotator::ZeroRotator, FVector(1.f), true, true, ENCPoolMethod::AutoRelease);
 		}
@@ -207,12 +207,12 @@ TArray<USceneComponent*> ANinjaJutsuProjectile::SpawnAnticipation(USceneComponen
 	}
 	if (!Body->DoesSocketExist(Socket)) { Socket = NAME_None; }
 	AActor* Owner = Body->GetOwner();
-	if (Defaults->AnticipationSystem)
+	if (!Jutsu->GoukakyuuMaterial && Defaults->AnticipationSystem)
 	{
 		Spawned.Add(UNiagaraFunctionLibrary::SpawnSystemAttached(Defaults->AnticipationSystem, Body, Socket, FVector::ZeroVector,
 			FRotator::ZeroRotator, EAttachLocation::SnapToTarget, true, true, ENCPoolMethod::None));
 	}
-	if (Defaults->GlowMesh && Defaults->AnticipationMaterial)
+	if (!Jutsu->GoukakyuuMaterial && Defaults->GlowMesh && Defaults->AnticipationMaterial)
 	{
 		UStaticMeshComponent* Glow = NewObject<UStaticMeshComponent>(Owner);
 		Glow->SetStaticMesh(Defaults->GlowMesh);
@@ -270,11 +270,79 @@ AHypeWorldCharacter* ANinjaJutsuProjectile::GetCaster() const
 void ANinjaJutsuProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	SetupVisuals();
 	if (HasAuthority() || bPrewarm)
 	{
 		OnRep_Launch();
 	}
+}
+
+void ANinjaJutsuProjectile::SetupGoukakyuuVisuals()
+{
+	UStaticMesh* Sphere = LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Sphere.Sphere"));
+	for (UStaticMeshComponent* Layer : {Core.Get(), Flames.Get()})
+	{
+		Layer->SetStaticMesh(Sphere);
+		Layer->SetVisibility(false);
+		UMaterialInstanceDynamic* Material = Layer->CreateDynamicMaterialInstance(0, Launch.Jutsu->GoukakyuuMaterial);
+		if (Material)
+		{
+			Material->SetScalarParameterValue(TEXT("Seed"), float(Launch.VisualSeed % 997) / 97.f);
+		}
+	}
+	Light->SetLightColor(FLinearColor(1.f, 0.32f, 0.045f));
+}
+
+void ANinjaJutsuProjectile::SetGoukakyuuLayer(UStaticMeshComponent* Layer, const FVector& Offset,
+	const FVector& HalfExtent, float Emission, float Opacity, float Age)
+{
+	Layer->SetVisibility(Opacity > 0.025f);
+	if (UMaterialInstanceDynamic* Material = Cast<UMaterialInstanceDynamic>(Layer->GetMaterial(0)))
+	{
+		Layer->SetRelativeLocation(Offset);
+		Layer->SetRelativeScale3D(HalfExtent / 50.f);
+		Material->SetScalarParameterValue(TEXT("Heat"), Emission * Opacity);
+		Material->SetScalarParameterValue(TEXT("Age"), Age);
+	}
+}
+
+void ANinjaJutsuProjectile::UpdateGoukakyuuVisuals(float Age, float Radius)
+{
+	if (GetNetMode() == NM_DedicatedServer) { return; }
+
+	if (bExploded)
+	{
+		const float Flash = FMath::Exp(-Age * 13.f);
+		const float Spread = EaseOutCubic(Age / 0.33f);
+		const float Fade = 1.f - FMath::SmoothStep(0.15f, 0.78f, Age);
+		const float Width = Radius * FMath::Lerp(0.48f, 1.32f, Spread);
+		const FVector Origin(0.f, 0.f, Radius * FMath::Lerp(0.16f, 0.38f, Spread));
+		SetGoukakyuuLayer(Core, Origin, FVector(Width, Width, Width * 0.58f),
+			0.95f + 1.7f * Flash, Fade, Age + 2.f);
+		Light->SetIntensity(3100.f * Flash + 240.f * Fade);
+		Light->SetAttenuationRadius(Width * 6.f);
+		if (GoukakyuuImpact && Age >= 0.48f)
+		{
+			GoukakyuuImpact->Deactivate();
+			GoukakyuuImpact = nullptr;
+		}
+		return;
+	}
+
+	// O sopro se alonga no eixo da mira. A ponta traseira começa junto da boca.
+	const float Open = FMath::SmoothStep(0.f, 0.09f, Age);
+	const float Flash = Open * FMath::Exp(-FMath::Max(0.f, Age - 0.08f) * 8.f);
+	const float Width = FMath::Max(Radius * 1.13f, FullRadius * 0.62f * Flash);
+	const float Length = Width * FMath::Lerp(1.10f, 1.68f, Open);
+	const FVector Front(Length * (1.f - Open), 0.f, 0.f);
+	SetGoukakyuuLayer(Core, Front, FVector(Length, Width, Width * 0.93f),
+		1.08f + 1.65f * Flash, FMath::Lerp(0.25f, 1.f, Open), Age);
+
+	const float TailFade = Open * (1.f - FMath::SmoothStep(0.12f, 0.51f, Age));
+	const float TailLength = FMath::Clamp(FVector::Dist(Launch.Start, GetActorLocation()) * 0.5f, 10.f, Width * 2.2f);
+	SetGoukakyuuLayer(Flames, FVector(-TailLength, 0.f, 0.f),
+		FVector(TailLength, Width * 0.46f, Width * 0.44f), 1.25f + Flash, TailFade, Age + 0.63f);
+	Light->SetIntensity(650.f + 4100.f * Flash);
+	Light->SetAttenuationRadius(Width * (5.f + 3.f * Flash));
 }
 
 void ANinjaJutsuProjectile::SetupVisuals()
@@ -541,6 +609,15 @@ void ANinjaJutsuProjectile::OnRep_Launch()
 		return;
 	}
 	bLaunched = true;
+	bGoukakyuuVisual = Launch.Jutsu->GoukakyuuMaterial != nullptr;
+	if (bGoukakyuuVisual)
+	{
+		if (GetNetMode() != NM_DedicatedServer) { SetupGoukakyuuVisuals(); }
+	}
+	else
+	{
+		SetupVisuals();
+	}
 	// Velocidade/alcance do Data Asset (mesmo valor em todas as máquinas: o Jutsu vem na saída replicada)
 	if (Launch.Jutsu->ProjectileSpeed > 0.f) { Speed = Launch.Jutsu->ProjectileSpeed; }
 	if (Launch.Jutsu->ProjectileRange > 0.f) { Range = Launch.Jutsu->ProjectileRange; }
@@ -580,7 +657,7 @@ void ANinjaJutsuProjectile::Evaluate(float T, FVector& OutCenter, float& OutRadi
 	bOutReachedRange = Distance >= Range;
 	Distance = FMath::Min(Distance, Range);
 	OutRadius = FMath::Lerp(StartRadius, FullRadius, Grow);
-	OutCenter = FVector(Launch.Start) + Dir * Distance + FVector(0.f, 0.f, GrowLift * Grow);
+	OutCenter = FVector(Launch.Start) + Dir * Distance + FVector(0.f, 0.f, bGoukakyuuVisual ? 0.f : GrowLift * Grow);
 	if (LaunchBend > 0.f)
 	{
 		// Sai da órbita fazendo uma curva: desvia para o lado e volta para a linha da mira
@@ -906,7 +983,15 @@ void ANinjaJutsuProjectile::Tick(float DeltaSeconds)
 		float Radius;
 		bool bReachedRange;
 		Evaluate(FMath::Max(T, 0.f), Center, Radius, bReachedRange);
-		ApplyBallVisual(Center, Radius, T);
+		if (bGoukakyuuVisual)
+		{
+			SetActorLocation(Center);
+			UpdateGoukakyuuVisuals(T, Radius);
+		}
+		else
+		{
+			ApplyBallVisual(Center, Radius, T);
+		}
 		if (bPrewarm)
 		{
 			// Cópia de pré-carregamento: só visual, explode sozinha logo depois de sair
@@ -931,6 +1016,11 @@ void ANinjaJutsuProjectile::Tick(float DeltaSeconds)
 
 	// Depois da explosão: onda de fogo crescendo e se desfazendo, luz do clarão caindo
 	const float E = float(GetWorld()->GetTimeSeconds() - ExplodeTime);
+	if (bGoukakyuuVisual)
+	{
+		UpdateGoukakyuuVisuals(E, FullRadius);
+		return;
+	}
 	if (StylizedExplosionClass)
 	{
 		// A explosão estilizada cuida de todo o visual; aqui fica só o clarão da luz
@@ -1012,7 +1102,7 @@ void ANinjaJutsuProjectile::Explode(const FVector& Location)
 
 void ANinjaJutsuProjectile::MulticastExplode_Implementation(FVector_NetQuantize10 Location)
 {
-	if (!bExploded)
+	if (bLaunched && !bExploded)
 	{
 		PlayExplosion(Location);
 	}
@@ -1026,7 +1116,7 @@ void ANinjaJutsuProjectile::PlayExplosion(const FVector& Location)
 	SetActorLocation(Location);
 	SetActorRotation(FRotator::ZeroRotator);
 	LastGroundTrace = -100.;
-	UpdateSceneIntegration(Location, FullRadius, 0.f, true);
+	if (!bGoukakyuuVisual) { UpdateSceneIntegration(Location, FullRadius, 0.f, true); }
 	Trail->Deactivate();
 	Ignition->SetVisibility(false);
 	FireBody->SetVisibility(false);
@@ -1045,7 +1135,18 @@ void ANinjaJutsuProjectile::PlayExplosion(const FVector& Location)
 
 	FVector FloorPoint, FloorNormal;
 	const bool bFloor = FindFloorBelow(this, Location, FullRadius * 3.f, FloorPoint, FloorNormal);
-	if (StylizedExplosionClass)
+	if (bGoukakyuuVisual)
+	{
+		Flames->SetVisibility(false);
+		FirePostProcess->bEnabled = false;
+		const FVector Surface = bFloor && FVector::DistSquared(Location, FloorPoint) < FMath::Square(180.f)
+			? FloorPoint : Location;
+		SetActorLocation(Surface);
+		GoukakyuuImpact = UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, Launch.Jutsu->GoukakyuuImpactSystem,
+			Surface + FVector(0.f, 0.f, 8.f), FRotator::ZeroRotator, FVector(2.4f), true, true);
+		UpdateGoukakyuuVisuals(0.f, FullRadius);
+	}
+	else if (StylizedExplosionClass)
 	{
 		const FTransform At(Location);
 		if (ANinjaFireExplosion* Fx = GetWorld()->SpawnActorDeferred<ANinjaFireExplosion>(StylizedExplosionClass, At, this))
@@ -1058,14 +1159,14 @@ void ANinjaJutsuProjectile::PlayExplosion(const FVector& Location)
 	{
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ExplosionSystem, Location, FRotator::ZeroRotator, FVector(1.f), true, true, ENCPoolMethod::AutoRelease);
 	}
-	if (GroundFireSystem && bFloor && !StylizedExplosionClass)
+	if (!bGoukakyuuVisual && GroundFireSystem && bFloor && !StylizedExplosionClass)
 	{
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, GroundFireSystem, FloorPoint + FloorNormal * 15.f,
 			FRotator::ZeroRotator, FVector(1.f), true, true, ENCPoolMethod::AutoRelease);
 	}
 
 	// Queimado no chão: só se a explosão foi perto do chão
-	if (ScorchDecal)
+	if (!bGoukakyuuVisual && ScorchDecal)
 	{
 		if (bFloor)
 		{

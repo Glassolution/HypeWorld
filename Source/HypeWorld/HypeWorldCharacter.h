@@ -718,6 +718,8 @@ public:
 
 	UFUNCTION(BlueprintPure, Category="Ninja|Jutsus")
 	bool IsCastingJutsu() const { return CurrentJutsu != nullptr; }
+	/** Selos/sopro de um jutsu na tela (vale também nos outros jogadores, onde a habilidade não roda) */
+	bool IsPresentingJutsu() const { return PresentedJutsu != nullptr; }
 
 	/** Chamas em órbita ativas deste personagem (todas as máquinas; o HUD e o clique esquerdo usam) */
 	class ANinjaFlameOrbit* GetActiveFlameOrbit() const;
@@ -725,7 +727,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Ninja|Jutsus")
 	bool FireFlameOrbitAtCrosshair() { return TryFireFlameOrbit(); }
 	void SetActiveFlameOrbit(class ANinjaFlameOrbit* Orbit);
-	bool CanStartJutsu() const;
+	bool CanStartJutsu(const UNinjaJutsuData* Jutsu) const;
 
 	/** Chamados pela habilidade (no jogador e no servidor) */
 	void BeginJutsu(const UNinjaJutsuData* Jutsu);

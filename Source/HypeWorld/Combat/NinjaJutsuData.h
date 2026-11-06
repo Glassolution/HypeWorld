@@ -13,6 +13,8 @@
 class UAnimSequenceBase;
 class UAnimMontage;
 class UTexture2D;
+class UMaterialInterface;
+class UNiagaraSystem;
 class ANinjaJutsuProjectile;
 class ANinjaFlameOrbit;
 
@@ -104,6 +106,17 @@ public:
 	/** Tag do cooldown (uma por jutsu; está em Config/DefaultGameplayTags.ini, ramo Ninja.Cooldown.Jutsu) */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Custo")
 	FGameplayTag CooldownTag;
+
+	/** Permite começar os selos durante um salto. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Animação")
+	bool bAllowAirCast = false;
+
+	/** Camadas emissivas do Gōkakyū. Quando definido, usa o visual de sopro oval. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Visual")
+	TObjectPtr<UMaterialInterface> GoukakyuuMaterial = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Visual")
+	TObjectPtr<UNiagaraSystem> GoukakyuuImpactSystem = nullptr;
 
 	/** Projétil (o efeito, o movimento e a explosão moram nele) */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Projétil")

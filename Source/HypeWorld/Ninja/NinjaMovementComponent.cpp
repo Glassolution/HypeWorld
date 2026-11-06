@@ -120,6 +120,11 @@ FRotator UNinjaMovementComponent::ComputeOrientToMovementRotation(const FRotator
 	{
 		return FRotator(0.f, Ninja->GetAttackFacingYaw(), 0.f);
 	}
+	// Fazendo jutsu (também andando/correndo): o corpo gira para onde a câmera olha — é para lá que o jutsu sai
+	if (const AHypeWorldCharacter* Ninja = Cast<AHypeWorldCharacter>(CharacterOwner); Ninja && Ninja->IsCastingJutsu())
+	{
+		return FRotator(0.f, CharacterOwner->GetControlRotation().Yaw, 0.f);
+	}
 	// Mortal para trás: o corpo continua olhando para onde a câmera olha (de costas para ela)
 	if (bInBackflip && CharacterOwner)
 	{
@@ -154,6 +159,7 @@ bool UNinjaMovementComponent::DoJump(bool bReplayingMoves, float DeltaTime)
 		Velocity.Z = FMath::Max(Velocity.Z, SurfaceJumpOffSpeed * 0.6f);
 		SurfaceAttachBlock = 0.35f;
 		SetMovementMode(MOVE_Falling);
+		bInJumpFlight = true;
 		return true;
 	}
 	if (IsWallRunning() && CharacterOwner && CharacterOwner->CanJump())
@@ -165,9 +171,35 @@ bool UNinjaMovementComponent::DoJump(bool bReplayingMoves, float DeltaTime)
 		Velocity.Z = JumpZVelocity;
 		EndWallRun();
 		SetMovementMode(MOVE_Falling);
+		bInJumpFlight = true;
 		return true;
 	}
-	return Super::DoJump(bReplayingMoves, DeltaTime);
+	// Pulo duplo com física: o impulso soma ao embalo vertical — caindo rápido, parte dele vai só para frear a queda.
+	// Subindo, fica igual ao da engine (vale a maior: a velocidade atual ou a de um pulo do chão).
+	if (bRealisticJumpPhysics && IsFalling() && !HasCustomGravity() && CharacterOwner && CharacterOwner->CanJump()
+		&& CharacterOwner->JumpCurrentCountPreJump > 0)
+	{
+		const float Carried = JumpZVelocity + FMath::Min<float>(Velocity.Z, 0.f) * DoubleJumpFallCarry;
+		Velocity.Z = FMath::Max<FVector::FReal>(Velocity.Z, FMath::Max(Carried, JumpZVelocity * DoubleJumpMinFraction));
+		SetMovementMode(MOVE_Falling);
+		bInJumpFlight = true;
+		return true;
+	}
+	const bool bJumped = Super::DoJump(bReplayingMoves, DeltaTime);
+	bInJumpFlight |= bJumped;
+	return bJumped;
+}
+
+bool UNinjaMovementComponent::UsesJumpPhysics() const
+{
+	return bRealisticJumpPhysics && bInJumpFlight && IsFalling() && !HasCustomGravity() && !IsAirSuspended()
+		&& !(bInSuperJump && !bInBackflip);   // super pulo carregado e arremesso por golpe ficam como estão
+}
+
+FVector UNinjaMovementComponent::GetAirControl(float DeltaTime, float TickAirControl, const FVector& FallAcceleration)
+{
+	// Depois de sair do chão a pessoa quase não muda de direção: o embalo da decolagem manda
+	return Super::GetAirControl(DeltaTime, UsesJumpPhysics() ? FMath::Min(TickAirControl, JumpAirControl) : TickAirControl, FallAcceleration);
 }
 
 void UNinjaMovementComponent::UpdateFromCompressedFlags(uint8 Flags)
@@ -253,6 +285,7 @@ void UNinjaMovementComponent::OnMovementModeChanged(EMovementMode PreviousMoveme
 		bAirDashUsed = false;
 		bInSuperJump = false;
 		bInBackflip = false;
+		bInJumpFlight = false;
 		bFloatJump = false;
 		AirSuspendUntil = -1.f;
 	}
@@ -875,6 +908,16 @@ bool UNinjaMovementComponent::TryAttachToSurface(const FHitResult& Hit)
 
 void UNinjaMovementComponent::ApplyVelocityBraking(float DeltaTime, float Friction, float BrakingDeceleration)
 {
+	// Pulo/cambalhota com física: no ar ninguém freia sozinho — só a resistência do ar (desaceleração = k × v²)
+	if (UsesJumpPhysics())
+	{
+		const float Speed = Velocity.Size();
+		if (Speed > UE_KINDA_SMALL_NUMBER && JumpAirDrag > 0.f)
+		{
+			Velocity *= 1.f / (1.f + JumpAirDrag * Speed * DeltaTime);
+		}
+		return;
+	}
 	// No ar não freia: no voo do super pulo, no embalo do dash, ou segurando uma direção (o embalo do pulo/corrida continua)
 	if (IsFalling() && (bInSuperJump || bAirMomentum || !Acceleration.IsNearlyZero()))
 	{
