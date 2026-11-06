@@ -208,35 +208,27 @@ void UNinjaHUDWidget::BuildLayout()
 	JutsuSlots.Reset();
 	JutsuSlotBase.Reset();
 	JutsuSlotWidgets.Reset();
-	// Arte de cada slot: recortes do PNG do Felipe (Tools/editor/montar_slots_jutsu.py liga no WBP). Sem dados = slots vazios
+	// Arte de cada slot: recortes do PNG do Felipe (Tools/editor/montar_slots_jutsu.py liga no WBP) ou a arte do jutsu do
+	// JutsuLoadout. Sem dados = slots vazios. Estilo da referência de 06/11/2026: círculos grandes, pouco espaço entre eles
 	const TArray<FNinjaJutsuSlotData>& SlotData = JutsuSlotData;
-	// Linha centrada embaixo, como na imagem: Size = diâmetro do círculo da arte; a moldura e a etiqueta passam dele
-	// (etiqueta até ~0,93 x Size abaixo do centro do círculo; moldura até ~0,72 x Size em volta)
+	// Size = diâmetro do slot com o aro; a pílula do custo desce até ~0,6 x Size abaixo do centro
 	const int32 Count = FMath::Max(1, JutsuSlotCount);
 	const float Size = JutsuSlotSize;
 	const float StartX = -(Count - 1) * (Size + JutsuSlotGap) * 0.5f;
-	const float CenterY = -(JutsuBottomMargin * 1080.f + Size * 0.93f);
+	const float CenterY = -(JutsuBottomMargin * 1080.f + Size * 0.6f);
 	for (int32 i = 0; i < Count; ++i)
 	{
 		const FVector2D Pos(StartX + i * (Size + JutsuSlotGap), CenterY);
 		UNinjaJutsuSlotWidget* SlotWidget = CreateWidget<UNinjaJutsuSlotWidget>(this, UNinjaJutsuSlotWidget::StaticClass());
 		SlotWidget->Setup(SlotData.IsValidIndex(i) ? SlotData[i] : FNinjaJutsuSlotData(), Size,
-			HudFontInfo(TEXT("ExtraBold"), Size * 0.38f), HudFontInfo(TEXT("ExtraBold"), Size * 0.46f));
+			HudFontInfo(TEXT("ExtraBold"), Size * 0.19f), HudFontInfo(TEXT("ExtraBold"), Size * 0.29f));
 		SlotWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		JutsuSlotWidgets.Add(SlotWidget);
 		JutsuSlots.Add(Place(SlotWidget, BottomCenter, Pos, UNinjaJutsuSlotWidget::BoxSizeFor(Size), UNinjaJutsuSlotWidget::DiscAlignment()));
 		JutsuSlotBase.Add(Pos);
 	}
-	// Cargas da substituição (Q apanhando): duas pílulas em cima da barra, sobem junto com ela
+	// As duas pílulas brancas das cargas da substituição (os "tracinhos" em cima da barra) saíram com o visual novo
 	SubstitutionPips.Reset();
-	for (int32 k = 0; k < 2; ++k)
-	{
-		const FVector2D Pos(-12.f + k * 24.f, CenterY - Size * 0.72f - 12.f);   // acima da moldura
-		UImage* Pip = MakeImage(Rounded(White, 0.f, FLinearColor::Transparent, 0.f, true));
-		SubstitutionPips.Add(Pip);
-		JutsuSlots.Add(Place(Pip, BottomCenter, Pos, FVector2D(18.f, 6.f), Center));
-		JutsuSlotBase.Add(Pos);
-	}
 	JutsuOffset = JutsuHiddenOffset;
 
 	// =========================== Barrinha do super pulo (só carregando) e contador de golpes ===========================

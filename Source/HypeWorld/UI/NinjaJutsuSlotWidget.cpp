@@ -2,7 +2,9 @@
 #include "Blueprint/WidgetTree.h"
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
+#include "Components/Border.h"
 #include "Components/Image.h"
+#include "Components/SizeBox.h"
 #include "Components/TextBlock.h"
 #include "Engine/Texture2D.h"
 #include "Materials/MaterialInstanceDynamic.h"
@@ -13,12 +15,17 @@ namespace NinjaJutsuSlot
 	const float SelectTime = 0.12f;			// transição do selecionado (ease-out)
 	const float UsedPulseTime = 0.18f;		// pulso ao usar
 	const float ReadyPulseTime = 0.4f;		// pulso de brilho quando o cooldown termina
-	// Medidas do recorte (Tools/hud/slots_jutsu_layout.json): caixa quadrada de 460 px da imagem original, círculo da arte
-	// com raio 121 e centro em (230, 200), centro do número na etiqueta em (~230, 378)
-	const FVector2D DiscCenter(0.5f, 200.f / 460.f);
-	const float DiscRadius = 121.f / 460.f;
-	const FVector2D NumberCenter(0.5f, 378.f / 460.f);
-	const TCHAR* EmptyArt = TEXT("/Game/Ninja/UI/HUD/Jutsu/Slots/T_JS_Slot1.T_JS_Slot1");	// moldura usada no slot vazio (fica cinza)
+	const float SelectedScale = 1.1f;		// selecionado fica um pouco maior (como na referência)
+	// Caixa do widget = BoxScale x diâmetro do slot (folga para o brilho e para a pílula do custo); círculo no meio
+	const float BoxScale = 1.6f;
+	const float GlowScale = 1.45f;			// imagem do brilho: o aro cobre r < 0,69 dela, o brilho é o anel de fora
+	// Pílula do custo: centro abaixo do centro do círculo (fração do diâmetro), altura = largura mínima
+	const float PillCenterY = 0.46f;
+	const float PillHeight = 0.28f;
+	const FLinearColor SelectBlue(0.05f, 0.3f, 1.f);	// brilho de seleção azul (o material clareia a cor)
+	// Círculo da arte dentro do recorte dos slots (Tools/hud/slots_jutsu_layout.json): caixa de 460 px, raio 121, centro (230, 200)
+	const FVector2D ArtCenter(0.5f, 200.f / 460.f);
+	const float ArtRadius = 121.f / 460.f;
 }
 
 void UNinjaJutsuSlotWidget::Setup(const FNinjaJutsuSlotData& InData, float InSize, const FSlateFontInfo& InNumberFont, const FSlateFontInfo& InCooldownFont)
@@ -31,12 +38,12 @@ void UNinjaJutsuSlotWidget::Setup(const FNinjaJutsuSlotData& InData, float InSiz
 
 FVector2D UNinjaJutsuSlotWidget::BoxSizeFor(float DiscSize)
 {
-	return FVector2D(DiscSize / (2.f * NinjaJutsuSlot::DiscRadius));
+	return FVector2D(DiscSize * NinjaJutsuSlot::BoxScale);
 }
 
 FVector2D UNinjaJutsuSlotWidget::DiscAlignment()
 {
-	return NinjaJutsuSlot::DiscCenter;
+	return FVector2D(0.5f, 0.5f);
 }
 
 TSharedRef<SWidget> UNinjaJutsuSlotWidget::RebuildWidget()
@@ -70,57 +77,76 @@ void UNinjaJutsuSlotWidget::Build()
 		return PanelSlot;
 	};
 	const FVector2D Box = BoxSizeFor(Size);
-	const FVector2D Disc = Box * DiscCenter;
+	const FVector2D Disc = Box * 0.5f;
 	const bool bEmpty = Data.Icon == nullptr;
 
-	// 1) Brilho na cor do jutsu, atrás da moldura (o material mostra o anel de fora, sumindo suave)
+	// 1) Brilho azul de seleção, atrás do aro (só aparece selecionado / ao ficar pronto)
 	Glow = WidgetTree->ConstructWidget<UImage>();
 	if (UMaterialInterface* GlowMat = LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Ninja/UI/HUD/Jutsu/M_UI_JutsuGlow.M_UI_JutsuGlow")))
 	{
 		GlowMID = UMaterialInstanceDynamic::Create(GlowMat, this);
-		GlowMID->SetVectorParameterValue(TEXT("Color"), Data.ThemeColor);
+		GlowMID->SetVectorParameterValue(TEXT("Color"), SelectBlue);
 		Glow->SetBrushFromMaterial(GlowMID);
 	}
-	GlowSlot = Put(Glow, Disc, FVector2D(Size * 2.f));
+	GlowSlot = Put(Glow, Disc, FVector2D(Size * GlowScale));
+	Glow->SetVisibility(ESlateVisibility::Collapsed);
 
-	// 2) Arte do slot (moldura + arte + etiqueta), estados só dentro do círculo
+	// 2) Aro escuro de pincel + arte do jutsu (estados aplicados na arte)
 	Art = WidgetTree->ConstructWidget<UImage>();
-	if (UMaterialInterface* ArtMat = LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Ninja/UI/HUD/Jutsu/M_UI_JutsuSlotArt.M_UI_JutsuSlotArt")))
+	if (UMaterialInterface* ArtMat = LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Ninja/UI/HUD/Jutsu/M_UI_JutsuSlotRing.M_UI_JutsuSlotRing")))
 	{
 		ArtMID = UMaterialInstanceDynamic::Create(ArtMat, this);
-		UTexture2D* Texture = bEmpty ? LoadObject<UTexture2D>(nullptr, EmptyArt) : Data.Icon.Get();
-		if (Texture)
+		if (!bEmpty)
 		{
-			ArtMID->SetTextureParameterValue(TEXT("Slot"), Texture);
+			ArtMID->SetTextureParameterValue(TEXT("Slot"), Data.Icon.Get());
 		}
-		ArtMID->SetVectorParameterValue(TEXT("DiscCenter"), FLinearColor(DiscCenter.X, DiscCenter.Y, 0.f, 0.f));
-		ArtMID->SetScalarParameterValue(TEXT("DiscRadius"), DiscRadius);
+		ArtMID->SetVectorParameterValue(TEXT("ArtCenter"), FLinearColor(ArtCenter.X, ArtCenter.Y, 0.f, 0.f));
+		ArtMID->SetScalarParameterValue(TEXT("ArtRadius"), ArtRadius);
 		ArtMID->SetScalarParameterValue(TEXT("Empty"), bEmpty ? 1.f : 0.f);
 		Art->SetBrushFromMaterial(ArtMID);
 	}
-	Put(Art, Box * 0.5f, Box);
+	Put(Art, Disc, FVector2D(Size));
 
-	// 3) Número na etiqueta preta embaixo
+	// 3) Segundos do cooldown no meio do círculo ("27.1s"), branco e negrito com contorno escuro
+	CooldownText = WidgetTree->ConstructWidget<UTextBlock>();
+	FSlateFontInfo CdFont = CooldownFont;
+	CdFont.OutlineSettings.OutlineSize = 2;
+	CdFont.OutlineSettings.OutlineColor = FLinearColor(0.f, 0.f, 0.f, 0.7f);
+	CooldownText->SetFont(CdFont);
+	CooldownText->SetColorAndOpacity(FSlateColor(FLinearColor::White));
+	CooldownText->SetShadowOffset(FVector2D(0.f, 1.5f));
+	CooldownText->SetShadowColorAndOpacity(FLinearColor(0.f, 0.f, 0.f, 0.6f));
+	CooldownText->SetJustification(ETextJustify::Center);
+	Put(CooldownText, Disc, FVector2D::ZeroVector);
+	CooldownText->SetVisibility(ESlateVisibility::Collapsed);
+
+	// 4) Custo de chakra numa pílula preta por cima da borda de baixo do aro (1 dígito = círculo, mais dígitos = pílula)
+	const float PillH = Size * PillHeight;
+	UBorder* Pill = WidgetTree->ConstructWidget<UBorder>();
+	FSlateBrush PillBrush;
+	PillBrush.DrawAs = ESlateBrushDrawType::RoundedBox;
+	PillBrush.TintColor = FSlateColor(FLinearColor(0.f, 0.f, 0.f, 0.96f));
+	PillBrush.OutlineSettings = FSlateBrushOutlineSettings(0.f, FSlateColor(FLinearColor(0.f, 0.f, 0.f, 0.f)), 0.f);
+	PillBrush.OutlineSettings.RoundingType = ESlateBrushRoundingType::HalfHeightRadius;
+	Pill->SetBrush(PillBrush);
+	Pill->SetPadding(FMargin(PillH * 0.32f, 0.f));
+	Pill->SetHorizontalAlignment(HAlign_Center);
+	Pill->SetVerticalAlignment(VAlign_Center);
 	NumberText = WidgetTree->ConstructWidget<UTextBlock>();
 	NumberText->SetFont(NumberFont);
 	NumberText->SetColorAndOpacity(FSlateColor(FLinearColor::White));
 	NumberText->SetJustification(ETextJustify::Center);
 	NumberText->SetText(FText::AsNumber(Data.Number));
-	Put(NumberText, Box * NumberCenter, FVector2D::ZeroVector);
-	NumberText->SetVisibility(bEmpty ? ESlateVisibility::Collapsed : ESlateVisibility::HitTestInvisible);
+	Pill->SetContent(NumberText);
+	USizeBox* PillBox = WidgetTree->ConstructWidget<USizeBox>();
+	PillBox->SetHeightOverride(PillH);
+	PillBox->SetMinDesiredWidth(PillH);
+	PillBox->SetContent(Pill);
+	CostPill = PillBox;
+	Put(PillBox, Disc + FVector2D(0.f, Size * PillCenterY), FVector2D::ZeroVector);
+	CostPill->SetVisibility(bEmpty ? ESlateVisibility::Collapsed : ESlateVisibility::HitTestInvisible);
 
-	// 4) Segundos do cooldown no meio do círculo (só durante o cooldown)
-	CooldownText = WidgetTree->ConstructWidget<UTextBlock>();
-	FSlateFontInfo CdFont = CooldownFont;
-	CdFont.OutlineSettings.OutlineSize = 2;
-	CdFont.OutlineSettings.OutlineColor = FLinearColor(0.f, 0.f, 0.f, 0.85f);
-	CooldownText->SetFont(CdFont);
-	CooldownText->SetColorAndOpacity(FSlateColor(FLinearColor::White));
-	CooldownText->SetJustification(ETextJustify::Center);
-	Put(CooldownText, Disc, FVector2D::ZeroVector);
-	CooldownText->SetVisibility(ESlateVisibility::Collapsed);
-
-	SetRenderTransformPivot(DiscCenter);
+	SetRenderTransformPivot(FVector2D(0.5f, 0.5f));
 }
 
 void UNinjaJutsuSlotWidget::SetCooldown(float Remaining, float Duration)
@@ -140,25 +166,23 @@ void UNinjaJutsuSlotWidget::SetNumber(int32 Number)
 
 void UNinjaJutsuSlotWidget::SetData(const FNinjaJutsuSlotData& InData)
 {
-	using namespace NinjaJutsuSlot;
 	Data = InData;
 	const bool bEmpty = Data.Icon == nullptr;
 	if (ArtMID)
 	{
-		if (UTexture2D* Texture = bEmpty ? LoadObject<UTexture2D>(nullptr, EmptyArt) : Data.Icon.Get())
+		if (!bEmpty)
 		{
-			ArtMID->SetTextureParameterValue(TEXT("Slot"), Texture);
+			ArtMID->SetTextureParameterValue(TEXT("Slot"), Data.Icon.Get());
 		}
 		ArtMID->SetScalarParameterValue(TEXT("Empty"), bEmpty ? 1.f : 0.f);
-	}
-	if (GlowMID)
-	{
-		GlowMID->SetVectorParameterValue(TEXT("Color"), Data.ThemeColor);
 	}
 	if (NumberText)
 	{
 		NumberText->SetText(FText::AsNumber(Data.Number));
-		NumberText->SetVisibility(bEmpty ? ESlateVisibility::Collapsed : ESlateVisibility::HitTestInvisible);
+	}
+	if (CostPill)
+	{
+		CostPill->SetVisibility(bEmpty ? ESlateVisibility::Collapsed : ESlateVisibility::HitTestInvisible);
 	}
 }
 
@@ -169,9 +193,9 @@ void UNinjaJutsuSlotWidget::TickSlot(float DeltaTime)
 	HoverAlpha = FMath::FInterpConstantTo(HoverAlpha, IsHovered() ? 1.f : 0.f, DeltaTime, 1.f / SelectTime);
 	const float Sel = 1.f - FMath::Square(1.f - SelectAlpha);   // ease-out
 	const float Hov = 1.f - FMath::Square(1.f - HoverAlpha);
-	float Scale = (1.f + 0.08f * Sel) * (1.f + 0.05f * Hov * (1.f - Sel));
+	float Scale = FMath::Lerp(1.f, SelectedScale, Sel) * (1.f + 0.04f * Hov * (1.f - Sel));
 
-	// Usou: pulso 1 -> 1,15 -> 1 e flash branco
+	// Usou: pulso 1 -> 1,12 -> 1 e flash branco
 	float Flash = 0.f;
 	if (UsedTime >= 0.f)
 	{
@@ -183,12 +207,12 @@ void UNinjaJutsuSlotWidget::TickSlot(float DeltaTime)
 		}
 		else
 		{
-			Scale *= 1.f + 0.15f * FMath::Sin(PI * P);
+			Scale *= 1.f + 0.12f * FMath::Sin(PI * P);
 			Flash = 1.f - P;
 		}
 	}
 
-	// Cooldown: ao terminar, pulso de brilho na cor do jutsu
+	// Cooldown: ao terminar, pulso de brilho azul
 	if (CooldownLeft > 0.f)
 	{
 		CooldownLeft -= DeltaTime;
@@ -211,24 +235,24 @@ void UNinjaJutsuSlotWidget::TickSlot(float DeltaTime)
 		else
 		{
 			Ready = FMath::Sin(PI * Q);
-			Scale *= 1.f + 0.05f * Ready;
+			Scale *= 1.f + 0.04f * Ready;
 		}
 	}
 
+	// Brilho azul só no selecionado (e no pulso de "pronto"), como na referência
 	const bool bEmpty = Data.Icon == nullptr;
-	const bool bDimmed = bEmpty || CooldownFrac > 0.f || !bHasChakra;
-	const float GlowIntensity = bDimmed ? 0.f : FMath::Lerp(0.45f, 0.85f, Sel) + 0.1f * Hov + 0.6f * Ready;
+	const float GlowIntensity = bEmpty ? 0.f : 0.5f * Sel + 0.4f * Ready;
 	if (GlowMID)
 	{
 		GlowMID->SetScalarParameterValue(TEXT("Intensity"), GlowIntensity);
 	}
 	if (Glow)
 	{
-		Glow->SetVisibility(GlowIntensity > 0.f ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Collapsed);
+		Glow->SetVisibility(GlowIntensity > 0.01f ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Collapsed);
 	}
 	if (GlowSlot)
 	{
-		GlowSlot->SetSize(FVector2D(Size * (FMath::Lerp(2.f, 2.2f, Sel) + 0.2f * Ready)));
+		GlowSlot->SetSize(FVector2D(Size * (GlowScale + 0.1f * Ready)));
 	}
 	if (ArtMID)
 	{
@@ -237,12 +261,13 @@ void UNinjaJutsuSlotWidget::TickSlot(float DeltaTime)
 		ArtMID->SetScalarParameterValue(TEXT("NoChakra"), bHasChakra || bEmpty ? 0.f : 1.f);
 		ArtMID->SetScalarParameterValue(TEXT("Flash"), Flash);
 	}
-	const int32 Seconds = CooldownLeft > 0.f ? FMath::CeilToInt(CooldownLeft) : 0;
-	if (CooldownText && Seconds != ShownCooldownSeconds)
+	// Segundos com uma casa decimal ("27.1s"); atualiza o texto só quando o décimo muda
+	const int32 Tenths = CooldownLeft > 0.f ? FMath::CeilToInt(CooldownLeft * 10.f) : 0;
+	if (CooldownText && Tenths != ShownCooldownTenths)
 	{
-		ShownCooldownSeconds = Seconds;
-		CooldownText->SetText(FText::AsNumber(Seconds));
-		CooldownText->SetVisibility(Seconds > 0 ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Collapsed);
+		ShownCooldownTenths = Tenths;
+		CooldownText->SetText(FText::FromString(FString::Printf(TEXT("%d.%ds"), Tenths / 10, Tenths % 10)));
+		CooldownText->SetVisibility(Tenths > 0 ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Collapsed);
 	}
 	SetRenderScale(FVector2D(Scale, Scale));
 }

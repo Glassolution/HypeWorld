@@ -6,3 +6,4 @@
 
 Tools/editor/criar_tela_carregamento.py
 Tools/editor/criar_tela_selecao.py
+Tools/editor/criar_material_slot_anel.py

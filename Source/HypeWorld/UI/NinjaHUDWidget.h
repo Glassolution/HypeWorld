@@ -92,15 +92,14 @@ public:
 	UPROPERTY(EditAnywhere, Category="HUD|Jutsus")
 	TArray<FNinjaJutsuSlotData> JutsuSlotData;
 
-	/** Diâmetro do círculo da arte do slot (px em 1080p; a escala de DPI da interface ajusta outras resoluções; a moldura
-	 *  e a etiqueta passam dele), espaço a mais entre os centros (centro a centro = Size + Gap) e margem de baixo (fração da
-	 *  altura da tela, até a ponta da etiqueta) */
+	/** Diâmetro do slot com o aro (px em 1080p; a escala de DPI da interface ajusta outras resoluções), espaço entre os
+	 *  slots (centro a centro = Size + Gap) e margem de baixo (fração da altura da tela, até a pílula do custo) */
 	UPROPERTY(EditAnywhere, Category="HUD|Jutsus")
-	float JutsuSlotSize = 50.f;
+	float JutsuSlotSize = 84.f;
 	UPROPERTY(EditAnywhere, Category="HUD|Jutsus")
-	float JutsuSlotGap = 24.f;
+	float JutsuSlotGap = 12.f;
 	UPROPERTY(EditAnywhere, Category="HUD|Jutsus")
-	float JutsuBottomMargin = 0.04f;
+	float JutsuBottomMargin = 0.03f;
 
 	/** Estados dos slots (ligar quando os jutsus existirem) */
 	UFUNCTION(BlueprintCallable, Category="HUD|Jutsus") void SetSelectedJutsu(int32 Index);
@@ -111,7 +110,7 @@ public:
 
 	/** Quanto os slots descem fora do modo de batalha (px; sobra só a pontinha) */
 	UPROPERTY(EditAnywhere, Category="HUD|Jutsus")
-	float JutsuHiddenOffset = 110.f;
+	float JutsuHiddenOffset = 112.f;
 
 	/** Barrinha vertical do super pulo (referência do Felipe): tamanho (px) e posição em relação à cabeça do personagem
 	 *  na tela (px; + = direita / baixo) */

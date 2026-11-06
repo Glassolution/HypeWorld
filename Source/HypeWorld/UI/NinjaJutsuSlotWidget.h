@@ -1,11 +1,10 @@
-// Slot de jutsu do HUD com a arte do Felipe (25/10/2026, Referencias/HUD/Slots_Jutsu_PNG): cada slot é o PNG recortado
-// (moldura de pincel + arte do jutsu + etiqueta preta sem número), tudo numa caixa quadrada com o círculo da arte no
-// mesmo ponto (NinjaJutsuSlot::DiscCenter/DiscRadius, medidos por Tools/hud/recortar_slots_jutsu.py).
-// De trás para a frente: brilho na cor do jutsu (M_UI_JutsuGlow) -> arte com os estados aplicados só dentro do círculo
-// (M_UI_JutsuSlotArt) -> número da etiqueta (texto Montserrat, muda no jogo) -> segundos do cooldown no meio.
-// Estados: selecionado (brilho forte, arte mais clara, escala 1,08 em 0,12 s), hover (1,05), usado (pulso
-// 1 -> 1,15 -> 1 em 0,18 s + flash branco), cooldown (dessaturado + varredura horária + segundos; pulso ao terminar),
-// sem chakra (avermelhado, sem brilho), vazio (círculo escuro, moldura cinza, sem número).
+// Slot de jutsu do HUD no estilo da referência do Felipe (06/11/2026, barra "Pied de l'Aube"): círculo grande com aro
+// escuro de pincel e a arte do jutsu por dentro (M_UI_JutsuSlotRing, Tools/editor/criar_material_slot_anel.py). A arte
+// vem do recorte dos slots (o material usa só o círculo da arte; moldura e etiqueta antigas ficam de fora).
+// De trás para a frente: brilho azul de seleção (M_UI_JutsuGlow) -> aro + arte -> segundos do cooldown no meio
+// ("27.1s", branco, negrito, contorno escuro) -> pílula preta do custo de chakra sobre a borda de baixo do aro.
+// Estados: selecionado (maior, escala 1,1 em 0,12 s, brilho azul), hover (1,04), usado (pulso 1 -> 1,12 -> 1 em 0,18 s +
+// flash branco), cooldown (arte escura + segundos), sem chakra (avermelhado), vazio (miolo escuro, sem pílula).
 
 #pragma once
 
@@ -40,10 +39,10 @@ class HYPEWORLD_API UNinjaJutsuSlotWidget : public UUserWidget
 
 public:
 
-	/** Antes de entrar na tela: dados, diâmetro do círculo da arte (px em 1080p) e fonte (número e segundos do cooldown) */
+	/** Antes de entrar na tela: dados, diâmetro do slot com o aro (px em 1080p) e fonte (custo e segundos do cooldown) */
 	void Setup(const FNinjaJutsuSlotData& InData, float InSize, const FSlateFontInfo& InNumberFont, const FSlateFontInfo& InCooldownFont);
 
-	/** Tamanho do widget (caixa da arte) e onde fica o centro do círculo nela (0..1), para o HUD posicionar */
+	/** Tamanho do widget (caixa com folga para o brilho e a pílula) e onde fica o centro do círculo nela (0..1) */
 	static FVector2D BoxSizeFor(float DiscSize);
 	static FVector2D DiscAlignment();
 
@@ -72,6 +71,7 @@ private:
 	UPROPERTY() TObjectPtr<UImage> Art;
 	UPROPERTY() TObjectPtr<UTextBlock> NumberText;
 	UPROPERTY() TObjectPtr<UTextBlock> CooldownText;
+	UPROPERTY() TObjectPtr<UWidget> CostPill;
 	UPROPERTY() TObjectPtr<UCanvasPanelSlot> GlowSlot;
 	UPROPERTY() TObjectPtr<UMaterialInstanceDynamic> GlowMID;
 	UPROPERTY() TObjectPtr<UMaterialInstanceDynamic> ArtMID;
@@ -80,7 +80,7 @@ private:
 	FSlateFontInfo NumberFont;
 	FSlateFontInfo CooldownFont;
 	float Size = 50.f;
-	int32 ShownCooldownSeconds = -1;
+	int32 ShownCooldownTenths = -1;
 	bool bSelected = false;
 	bool bHasChakra = true;
 	float CooldownLeft = 0.f;
