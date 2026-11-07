@@ -1598,10 +1598,10 @@ void UHypeCharacterSelectWidget::GetPartOptions(FName Key, TArray<FName>& Ids, T
         }
         return;
     }
-    const ENinjaCustomizationSlot Slot = HypeSelect::CatalogSlot(Key);
-    for (const FName& Id : Appearance->GetCatalogParts(Slot))
+    const ENinjaCustomizationSlot PartSlot = HypeSelect::CatalogSlot(Key);
+    for (const FName& Id : Appearance->GetCatalogParts(PartSlot))
     {
-        const FNinjaCustomizationPart* Part = Appearance->FindCatalogPart(Id, Slot);
+        const FNinjaCustomizationPart* Part = Appearance->FindCatalogPart(Id, PartSlot);
         Ids.Add(Id);
         Names.Add(Part && !Part->DisplayName.IsEmpty() ? Part->DisplayName : FText::FromName(Id));
     }
@@ -1672,11 +1672,11 @@ void UHypeCharacterSelectWidget::PreloadParts()
     {
         return;
     }
-    for (const ENinjaCustomizationSlot Slot : { ENinjaCustomizationSlot::Eyes, ENinjaCustomizationSlot::Top, ENinjaCustomizationSlot::Bottom, ENinjaCustomizationSlot::Shoes })
+    for (const ENinjaCustomizationSlot PartSlot : { ENinjaCustomizationSlot::Eyes, ENinjaCustomizationSlot::Top, ENinjaCustomizationSlot::Bottom, ENinjaCustomizationSlot::Shoes })
     {
-        for (const FName& Id : Appearance->GetCatalogParts(Slot))
+        for (const FName& Id : Appearance->GetCatalogParts(PartSlot))
         {
-            if (const FNinjaCustomizationPart* Part = Appearance->FindCatalogPart(Id, Slot))
+            if (const FNinjaCustomizationPart* Part = Appearance->FindCatalogPart(Id, PartSlot))
             {
                 Part->Material.LoadSynchronous();
                 Part->EyeTexture.LoadSynchronous();

@@ -118,6 +118,26 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Visual")
 	TObjectPtr<UNiagaraSystem> GoukakyuuImpactSystem = nullptr;
 
+	/** Saída do Gōkakyū: nasce parada na boca, virada para a mira (X local = mira). Com ela, as esferas somem. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Visual")
+	TObjectPtr<UNiagaraSystem> GoukakyuuExitSystem = nullptr;
+
+	/** Voo do Gōkakyū: preso à bola até o impacto. Com ele, as esferas somem. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Visual")
+	TObjectPtr<UNiagaraSystem> GoukakyuuFlightSystem = nullptr;
+
+	/** Rastro do Gōkakyū: 2º sistema preso à bola (casca vermelha + rastro de chamas e fumaça levado pelo vento) */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Visual")
+	TObjectPtr<UNiagaraSystem> GoukakyuuTrailSystem = nullptr;
+
+	/** Gōkakyū anime (07/11): núcleo em malha com M_FireToon. Com ele, a bola vira núcleo + cascas de chamas girando */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Visual")
+	TObjectPtr<UMaterialInterface> GokakyuCoreMaterial = nullptr;
+
+	/** Cascas de chamas em volta do núcleo (M_FireToon modo casca) */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Visual")
+	TObjectPtr<UMaterialInterface> GokakyuShellMaterial = nullptr;
+
 	/** Projétil (o efeito, o movimento e a explosão moram nele) */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Projétil")
 	TSubclassOf<ANinjaJutsuProjectile> ProjectileClass;

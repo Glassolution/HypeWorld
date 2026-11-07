@@ -290,6 +290,137 @@ void ANinjaJutsuProjectile::SetupGoukakyuuVisuals()
 		}
 	}
 	Light->SetLightColor(FLinearColor(1.f, 0.32f, 0.045f));
+
+	// Niagara do Gōkakyū (Perfect Fire): a saída fica parada na boca, virada para a mira; o voo segue a bola
+	bGoukakyuuNiagara = Launch.Jutsu->GoukakyuuExitSystem || Launch.Jutsu->GoukakyuuFlightSystem || Launch.Jutsu->GoukakyuuTrailSystem;
+	if (bGoukakyuuNiagara)
+	{
+		// O emissor de luz do pack não define raio (fica minúsculo): a luz do projétil faz o brilho no chão
+		Light->SetLightColor(FLinearColor(1.f, 0.12f, 0.02f));   // mais vermelha: na grama a mais amarela virava amarelo-verde
+	}
+	if (Launch.Jutsu->GoukakyuuExitSystem)
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, Launch.Jutsu->GoukakyuuExitSystem, Launch.Start,
+			FVector(Launch.Direction).Rotation(), FVector(1.f), true, true, ENCPoolMethod::AutoRelease);
+
+		// Clarão da saída (06/11, Felipe: "o brilho quando jogo a bola está fraco e dura muito pouco"):
+		// luz grande parada na frente da boca, que fica ~1 s mesmo com a bola indo embora
+		GoukakyuuExitLight = NewObject<UPointLightComponent>(this);
+		GoukakyuuExitLight->SetCastShadows(false);
+		GoukakyuuExitLight->SetIntensityUnits(ELightUnits::Candelas);
+		GoukakyuuExitLight->SetIntensity(0.f);
+		GoukakyuuExitLight->SetIndirectLightingIntensity(0.f);
+		GoukakyuuExitLight->SetVolumetricScatteringIntensity(0.f);
+		GoukakyuuExitLight->bUseInverseSquaredFalloff = false;
+		GoukakyuuExitLight->SetLightFalloffExponent(3.f);
+		GoukakyuuExitLight->SetLightColor(GoukakyuuExitLightColor);
+		GoukakyuuExitLight->SetAttenuationRadius(GoukakyuuExitLightRadius);
+		GoukakyuuExitLight->SetUsingAbsoluteLocation(true);
+		GoukakyuuExitLight->SetupAttachment(Root);
+		GoukakyuuExitLight->RegisterComponent();
+		GoukakyuuExitLight->SetWorldLocation(FVector(Launch.Start) + FVector(Launch.Direction).GetSafeNormal() * 200.f);
+
+		// Exposição do mapa (volume sem limite de maior prioridade): o clarão soma em cima dela
+		float BestPriority = -FLT_MAX;
+		for (IInterface_PostProcessVolume* Volume : GetWorld()->PostProcessVolumes)
+		{
+			const FPostProcessVolumeProperties Props = Volume ? Volume->GetProperties() : FPostProcessVolumeProperties();
+			if (Volume && Props.bIsEnabled && Props.bIsUnbound && Props.Settings && Props.Settings->bOverride_AutoExposureBias
+				&& Props.Priority > BestPriority && Props.Settings != &FirePostProcess->Settings)
+			{
+				BestPriority = Props.Priority;
+				BaseExposure = Props.Settings->AutoExposureBias;
+			}
+		}
+	}
+	if (Launch.Jutsu->GoukakyuuFlightSystem)
+	{
+		GoukakyuuFlight = UNiagaraFunctionLibrary::SpawnSystemAttached(Launch.Jutsu->GoukakyuuFlightSystem, Root, NAME_None,
+			FVector::ZeroVector, FRotator::ZeroRotator, EAttachLocation::KeepRelativeOffset, false, true, ENCPoolMethod::None);
+	}
+	if (Launch.Jutsu->GoukakyuuTrailSystem)
+	{
+		GoukakyuuTrail = UNiagaraFunctionLibrary::SpawnSystemAttached(Launch.Jutsu->GoukakyuuTrailSystem, Root, NAME_None,
+			FVector::ZeroVector, FRotator::ZeroRotator, EAttachLocation::KeepRelativeOffset, false, true, ENCPoolMethod::None);
+	}
+
+	// Gōkakyū anime (07/11): núcleo + cascas de chamas em malha com M_FireToon (contorno nítido, menos overdraw que sprites)
+	bGokakyuToon = Launch.Jutsu->GokakyuCoreMaterial != nullptr;
+	if (bGokakyuToon && GokakyuShowMeshes && GetNetMode() != NM_DedicatedServer)
+	{
+		auto MakeLayer = [&](UMaterialInterface* Material, int32 Index)
+		{
+			UStaticMeshComponent* Layer = NewObject<UStaticMeshComponent>(this);
+			Layer->SetStaticMesh(Sphere);
+			Layer->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			Layer->SetGenerateOverlapEvents(false);
+			Layer->SetCastShadow(false);
+			Layer->SetupAttachment(Root);
+			Layer->RegisterComponent();
+			if (UMaterialInstanceDynamic* MID = Layer->CreateDynamicMaterialInstance(0, Material))
+			{
+				MID->SetScalarParameterValue(TEXT("Seed"), float((Launch.VisualSeed + Index * 131) % 997) / 97.f);
+				MID->SetVectorParameterValue(TEXT("Tint"), GokakyuTint);
+				float Brightness = 0.f;
+				if (MID->GetScalarParameterValue(FHashedMaterialParameterInfo(FName(TEXT("Brilho"))), Brightness))
+				{
+					MID->SetScalarParameterValue(TEXT("Brilho"), Brightness * GokakyuIntensity);
+				}
+			}
+			Layer->SetVisibility(false);
+			return Layer;
+		};
+		GokakyuCore = MakeLayer(Launch.Jutsu->GokakyuCoreMaterial, 0);
+		if (Launch.Jutsu->GokakyuShellMaterial)
+		{
+			for (int32 i = 0; i < GokakyuShellScales.Num(); ++i)
+			{
+				GokakyuShells.Add(MakeLayer(Launch.Jutsu->GokakyuShellMaterial, i + 1));
+			}
+		}
+	}
+}
+
+void ANinjaJutsuProjectile::UpdateGokakyuMeshes(float Age, float Radius)
+{
+	const float R = Radius * GokakyuSize;
+	// Luz laranja forte acompanhando a cabeça, tremulando suave (ruído lento + um pouco de ruído 2,3x mais rápido;
+	// antes 11/s piscava) e com pico no lançamento
+	const float Seed = static_cast<float>(Launch.VisualSeed % 17);
+	const float Flicker = 1.f + GokakyuLightFlicker * (0.75f * FMath::PerlinNoise1D(Age * GokakyuLightFlickerRate + Seed)
+		+ 0.25f * FMath::PerlinNoise1D(Age * GokakyuLightFlickerRate * 2.3f + Seed * 3.1f));
+	const float LaunchFlash = FMath::SmoothStep(0.f, 0.06f, Age) * FMath::Exp(-FMath::Max(0.f, Age - 0.08f) * 4.f);
+	Light->SetLightColor(GokakyuLightColor);
+	Light->SetIntensity(GokakyuLightIntensity * Flicker * (1.f + GokakyuLightLaunchPeak * LaunchFlash));
+	Light->SetAttenuationRadius(R * GokakyuLightRadius * (1.f + 0.4f * LaunchFlash));
+	if (!GokakyuCore) { return; }
+	const float Phase = Age * UE_TWO_PI;
+	const float Pulse = 1.f + GokakyuPulse * FMath::Sin(Phase * GokakyuPulseRate);
+	// Oscilação leve para os lados e para cima (no espaço da bola: X = voo)
+	const FVector Wobble(0.f, GokakyuWobble * FMath::Sin(Phase * GokakyuWobbleRate),
+		GokakyuWobble * 0.6f * FMath::Sin(Phase * GokakyuWobbleRate * 1.37f + 1.f));
+	GokakyuCore->SetVisibility(true);
+	GokakyuCore->SetRelativeLocation(Wobble);
+	GokakyuCore->SetRelativeRotation(FRotator(0.f, 0.f, Age * 90.f));
+	GokakyuCore->SetRelativeScale3D(FVector(R * GokakyuCoreScale * Pulse / 50.f));   // esfera da engine: raio 50
+	const FVector Forward = GetActorForwardVector();
+	for (int32 i = 0; i < GokakyuShells.Num(); ++i)
+	{
+		UStaticMeshComponent* Shell = GokakyuShells[i];
+		const float S = R * GokakyuShellScales[i] * (1.f + 0.5f * GokakyuPulse * FMath::Sin(Phase * GokakyuPulseRate + i * 1.9f));
+		const float Spin = GokakyuShellSpins.IsValidIndex(i) ? GokakyuShellSpins[i] : 150.f;
+		// Comprida para trás (cometa): o centro recua metade do que esticou
+		Shell->SetVisibility(true);
+		Shell->SetRelativeLocation(Wobble - FVector(S * (GokakyuShellStretch - 1.f) * 0.6f, 0.f, 0.f));
+		Shell->SetRelativeRotation(FRotator(6.f * FMath::Sin(Phase * 0.7f + i), 0.f, Age * Spin + i * 70.f));
+		Shell->SetRelativeScale3D(FVector(S * GokakyuShellStretch, S, S) / 50.f);
+		if (UMaterialInstanceDynamic* MID = Cast<UMaterialInstanceDynamic>(Shell->GetMaterial(0)))
+		{
+			MID->SetScalarParameterValue(TEXT("Raio"), S);
+			MID->SetScalarParameterValue(TEXT("Deslocar"), GokakyuTongue * S);
+			MID->SetVectorParameterValue(TEXT("Frente"), FLinearColor(Forward));
+		}
+	}
 }
 
 void ANinjaJutsuProjectile::SetGoukakyuuLayer(UStaticMeshComponent* Layer, const FVector& Offset,
@@ -305,9 +436,33 @@ void ANinjaJutsuProjectile::SetGoukakyuuLayer(UStaticMeshComponent* Layer, const
 	}
 }
 
+void ANinjaJutsuProjectile::UpdateGoukakyuuExitGlow()
+{
+	if (!GoukakyuuExitLight) { return; }
+	// Acende em 0,05 s, fica forte até HoldTime e apaga devagar até FadeTime
+	// (teste 12: luz 6000 + bloom 2,2 + 0,5 EV estourou a tela inteira em amarelo-branco)
+	const float T = GetFlightTime();
+	const float Env = FMath::SmoothStep(0.f, 0.05f, T)
+		* (1.f - FMath::SmoothStep(GoukakyuuExitHoldTime, FMath::Max(GoukakyuuExitFadeTime, GoukakyuuExitHoldTime + 0.01f), T));
+	GoukakyuuExitLight->SetIntensity(GoukakyuuExitLightIntensity * Env);
+	GoukakyuuExitLight->SetVisibility(Env > 0.001f);
+	if (!bExploded)
+	{
+		// Tela inteira: bloom mais forte e limiar baixo (o fogo "estoura"), +0,5 EV no pico
+		FirePostProcess->bEnabled = Env > 0.001f;
+		FirePostProcess->bUnbound = true;
+		FirePostProcess->Settings.bOverride_AutoExposureBias = true;
+		FirePostProcess->Settings.AutoExposureBias = BaseExposure + GoukakyuuExitExposure * Env;
+		FirePostProcess->Settings.bOverride_SceneColorTint = false;
+		FirePostProcess->Settings.BloomIntensity = FMath::Lerp(0.55f, GoukakyuuExitBloom, Env);
+		FirePostProcess->Settings.BloomThreshold = FMath::Lerp(2.f, GoukakyuuExitBloomThreshold, Env);
+	}
+}
+
 void ANinjaJutsuProjectile::UpdateGoukakyuuVisuals(float Age, float Radius)
 {
 	if (GetNetMode() == NM_DedicatedServer) { return; }
+	UpdateGoukakyuuExitGlow();
 
 	if (bExploded)
 	{
@@ -316,10 +471,29 @@ void ANinjaJutsuProjectile::UpdateGoukakyuuVisuals(float Age, float Radius)
 		const float Fade = 1.f - FMath::SmoothStep(0.15f, 0.78f, Age);
 		const float Width = Radius * FMath::Lerp(0.48f, 1.32f, Spread);
 		const FVector Origin(0.f, 0.f, Radius * FMath::Lerp(0.16f, 0.38f, Spread));
-		SetGoukakyuuLayer(Core, Origin, FVector(Width, Width, Width * 0.58f),
-			0.95f + 1.7f * Flash, Fade, Age + 2.f);
-		Light->SetIntensity(3100.f * Flash + 240.f * Fade);
-		Light->SetAttenuationRadius(Width * 6.f);
+		if (bGoukakyuuNiagara)
+		{
+			Core->SetVisibility(false);   // fogo é gasoso: nada de esfera sólida, nem no impacto
+		}
+		else
+		{
+			SetGoukakyuuLayer(Core, Origin, FVector(Width, Width, Width * 0.58f),
+				0.95f + 1.7f * Flash, Fade, Age + 2.f);
+		}
+		if (bGokakyuToon)
+		{
+			// Flash forte do impacto e depois o brilho do fogo que fica no chão (~2 s), tremulando devagar
+			const float Ground = 1.f - FMath::SmoothStep(0.4f, 2.2f, Age);
+			const float Flicker = 1.f + GokakyuLightFlicker * FMath::PerlinNoise1D(Age * GokakyuLightFlickerRate + 5.f);
+			Light->SetLightColor(GokakyuLightColor);
+			Light->SetIntensity(GokakyuImpactLight * FMath::Exp(-Age * 6.f) + GokakyuLightIntensity * 0.5f * Ground * Flicker);
+			Light->SetAttenuationRadius(FMath::Lerp(GokakyuImpactLightRadius * 0.6f, GokakyuImpactLightRadius, FMath::Exp(-Age * 4.f)));
+		}
+		else
+		{
+			Light->SetIntensity(bGoukakyuuNiagara ? 1200.f * Flash + 120.f * Fade : 3100.f * Flash + 240.f * Fade);
+			Light->SetAttenuationRadius(Width * (bGoukakyuuNiagara ? 4.f : 6.f));
+		}
 		if (GoukakyuuImpact && Age >= 0.48f)
 		{
 			GoukakyuuImpact->Deactivate();
@@ -333,16 +507,34 @@ void ANinjaJutsuProjectile::UpdateGoukakyuuVisuals(float Age, float Radius)
 	const float Flash = Open * FMath::Exp(-FMath::Max(0.f, Age - 0.08f) * 8.f);
 	const float Width = FMath::Max(Radius * 1.13f, FullRadius * 0.62f * Flash);
 	const float Length = Width * FMath::Lerp(1.10f, 1.68f, Open);
-	const FVector Front(Length * (1.f - Open), 0.f, 0.f);
-	SetGoukakyuuLayer(Core, Front, FVector(Length, Width, Width * 0.93f),
-		1.08f + 1.65f * Flash, FMath::Lerp(0.25f, 1.f, Open), Age);
+	if (!bGoukakyuuNiagara)
+	{
+		const FVector Front(Length * (1.f - Open), 0.f, 0.f);
+		SetGoukakyuuLayer(Core, Front, FVector(Length, Width, Width * 0.93f),
+			1.08f + 1.65f * Flash, FMath::Lerp(0.25f, 1.f, Open), Age);
 
-	const float TailFade = Open * (1.f - FMath::SmoothStep(0.12f, 0.51f, Age));
-	const float TailLength = FMath::Clamp(FVector::Dist(Launch.Start, GetActorLocation()) * 0.5f, 10.f, Width * 2.2f);
-	SetGoukakyuuLayer(Flames, FVector(-TailLength, 0.f, 0.f),
-		FVector(TailLength, Width * 0.46f, Width * 0.44f), 1.25f + Flash, TailFade, Age + 0.63f);
-	Light->SetIntensity(650.f + 4100.f * Flash);
-	Light->SetAttenuationRadius(Width * (5.f + 3.f * Flash));
+		const float TailFade = Open * (1.f - FMath::SmoothStep(0.12f, 0.51f, Age));
+		const float TailLength = FMath::Clamp(FVector::Dist(Launch.Start, GetActorLocation()) * 0.5f, 10.f, Width * 2.2f);
+		SetGoukakyuuLayer(Flames, FVector(-TailLength, 0.f, 0.f),
+			FVector(TailLength, Width * 0.46f, Width * 0.44f), 1.25f + Flash, TailFade, Age + 0.63f);
+	}
+	if (bGoukakyuuNiagara)
+	{
+		// Pico forte na explosão da saída (o fogo "encontra o oxigênio"), depois uma luz menor acompanhando a bola
+		// teste 12: o pico apagava em ~0,1 s -> mais forte e caindo mais devagar
+		const float BallFlash = Open * FMath::Exp(-FMath::Max(0.f, Age - 0.08f) * 3.f);
+		Light->SetIntensity(400.f + 2600.f * BallFlash);
+		Light->SetAttenuationRadius(Width * (3.5f + 3.f * BallFlash));
+		if (bGokakyuToon)
+		{
+			UpdateGokakyuMeshes(Age, Radius);   // também cuida da luz (tremulando)
+		}
+	}
+	else
+	{
+		Light->SetIntensity(650.f + 4100.f * Flash);
+		Light->SetAttenuationRadius(Width * (5.f + 3.f * Flash));
+	}
 }
 
 void ANinjaJutsuProjectile::SetupVisuals()
@@ -1137,6 +1329,22 @@ void ANinjaJutsuProjectile::PlayExplosion(const FVector& Location)
 	const bool bFloor = FindFloorBelow(this, Location, FullRadius * 3.f, FloorPoint, FloorNormal);
 	if (bGoukakyuuVisual)
 	{
+		if (GoukakyuuFlight)
+		{
+			GoukakyuuFlight->Deactivate();   // para de nascer; as chamas que já existem terminam a vida delas
+		}
+		if (GoukakyuuTrail)
+		{
+			GoukakyuuTrail->Deactivate();
+		}
+		if (GokakyuCore)
+		{
+			GokakyuCore->SetVisibility(false);   // etapa 2 (impacto) ainda não feita: some e fica o impacto atual
+		}
+		for (UStaticMeshComponent* Shell : GokakyuShells)
+		{
+			Shell->SetVisibility(false);
+		}
 		Flames->SetVisibility(false);
 		FirePostProcess->bEnabled = false;
 		const FVector Surface = bFloor && FVector::DistSquared(Location, FloorPoint) < FMath::Square(180.f)
@@ -1165,8 +1373,8 @@ void ANinjaJutsuProjectile::PlayExplosion(const FVector& Location)
 			FRotator::ZeroRotator, FVector(1.f), true, true, ENCPoolMethod::AutoRelease);
 	}
 
-	// Queimado no chão: só se a explosão foi perto do chão
-	if (!bGoukakyuuVisual && ScorchDecal)
+	// Queimado no chão: só se a explosão foi perto do chão (o Gōkakyū novo também deixa a marca)
+	if ((!bGoukakyuuVisual || bGokakyuToon) && ScorchDecal)
 	{
 		if (bFloor)
 		{

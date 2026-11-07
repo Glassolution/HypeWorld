@@ -156,7 +156,50 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") float IgnitionExposure = 0.6f;
 	/** Bloom no pico da ignição (o normal do projétil é 0,55) */
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") float IgnitionBloom = 1.6f;
-	/** Rajada na boca (tiros pequenos, no lugar de IgniteGlows/IgniteFlames): línguas (TongueMaterial, as primeiras
+	/** Gōkakyū com Niagara: clarão da saída = luz parada na boca + bloom/exposição na tela */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Goukakyuu") float GoukakyuuExitLightIntensity = 2600.f;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Goukakyuu") float GoukakyuuExitLightRadius = 1000.f;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Goukakyuu") FLinearColor GoukakyuuExitLightColor = FLinearColor(1.f, 0.1f, 0.015f);
+	/** Fica forte até HoldTime e apaga até FadeTime (s desde o lançamento) */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Goukakyuu") float GoukakyuuExitHoldTime = 0.1f;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Goukakyuu") float GoukakyuuExitFadeTime = 0.4f;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Goukakyuu") float GoukakyuuExitBloom = 1.4f;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Goukakyuu") float GoukakyuuExitBloomThreshold = 1.f;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Goukakyuu") float GoukakyuuExitExposure = 0.25f;
+
+	/** Gōkakyū anime (07/11) — ajustes sem mexer no sistema. Tamanho multiplica a bola inteira (núcleo + cascas) */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuSize = 1.f;
+	/** Núcleo: raio em relação ao raio da bola, e pulsar leve (fração do raio, ciclos/s) */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuCoreScale = 0.85f;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuPulse = 0.05f;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuPulseRate = 5.f;
+	/** Cascas de chamas: raio de cada uma (em relação ao raio da bola) e giro em graus/s (sinal = sentido) */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") TArray<float> GokakyuShellScales = {1.05f, 1.22f, 1.4f};
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") TArray<float> GokakyuShellSpins = {220.f, -160.f, 120.f};
+	/** Cascas esticadas para trás (cometa): 1 = esfera, 1.3 = 30% mais compridas no eixo do voo */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuShellStretch = 1.25f;
+	/** Tamanho das línguas das cascas (deslocamento pelo ruído, fração do raio) */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuTongue = 0.35f;
+	/** Oscilação leve da bola no voo (cm) e frequência (ciclos/s) */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuWobble = 14.f;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuWobbleRate = 3.f;
+	/** Cor e intensidade (multiplicam o material de todas as camadas de malha) */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") FLinearColor GokakyuTint = FLinearColor::White;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuIntensity = 1.f;
+	/** Luz que acompanha a bola: intensidade, raio (× raio da bola) e quanto tremula (0-1) */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuLightIntensity = 900.f;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuLightRadius = 7.f;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuLightFlicker = 0.25f;
+	/** Cor da luz da bola (#FF8A2A) e velocidade da tremulação (ciclos/s; baixo = ondula sem piscar) */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") FLinearColor GokakyuLightColor = FLinearColor(1.f, 0.254f, 0.023f);
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuLightFlickerRate = 3.f;
+	/** Jato contínuo (07/11): false = sem esferas de malha (o fogo é só o Niagara), a luz continua seguindo a cabeça */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") bool GokakyuShowMeshes = true;
+	/** Pico da luz no lançamento (somado: 1,5 = 2,5x a intensidade normal no primeiro décimo de segundo) */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuLightLaunchPeak = 1.5f;
+	/** Flash de luz no impacto (candelas no pico) e raio (cm); depois fica um brilho do fogo no chão por ~2 s */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuImpactLight = 6000.f;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuImpactLightRadius = 2200.f;	/** Rajada na boca (tiros pequenos, no lugar de IgniteGlows/IgniteFlames): línguas (TongueMaterial, as primeiras
 	 *  InnerTongueMaterial) e lóbulos (LobeMaterial) presos ao mundo na boca, saindo para a frente num cone e caindo em
 	 *  MouthBurstTime (s). Tamanho de cada chama e alcance para a frente (cm). 0 línguas = desligada */
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") int32 MouthBurstTongues = 0;
@@ -258,7 +301,22 @@ private:
 	void SetGoukakyuuLayer(UStaticMeshComponent* Layer, const FVector& Offset, const FVector& HalfExtent,
 		float Emission, float Opacity, float Age);
 	UPROPERTY() TObjectPtr<UNiagaraComponent> GoukakyuuImpact;
+	/** Voo do Gōkakyū (Niagara preso à bola) */
+	UPROPERTY() TObjectPtr<UNiagaraComponent> GoukakyuuFlight;
+	/** Rastro do Gōkakyū (Niagara preso à bola) */
+	UPROPERTY() TObjectPtr<UNiagaraComponent> GoukakyuuTrail;
+	/** Clarão da saída do Gōkakyū: luz PARADA na boca (a luz do projétil vai embora com a bola) */
+	UPROPERTY() TObjectPtr<UPointLightComponent> GoukakyuuExitLight;
+	/** Clarão da saída: luz da boca + bloom/exposição na tela, ~1 s */
+	void UpdateGoukakyuuExitGlow();
+	/** Gōkakyū anime: núcleo + cascas em malha (M_FireToon) */
+	UPROPERTY() TObjectPtr<UStaticMeshComponent> GokakyuCore;
+	UPROPERTY() TArray<TObjectPtr<UStaticMeshComponent>> GokakyuShells;
+	void UpdateGokakyuMeshes(float Age, float Radius);
+	bool bGokakyuToon = false;
 	bool bGoukakyuuVisual = false;
+	/** O Data Asset tem os sistemas Niagara do Gōkakyū: as esferas do protótipo ficam escondidas no voo */
+	bool bGoukakyuuNiagara = false;
 	/** Centro e raio da bola no instante T */
 	void Evaluate(float T, FVector& OutCenter, float& OutRadius, bool& bOutReachedRange) const;
 	void ApplyBallVisual(const FVector& Center, float Radius, float T);

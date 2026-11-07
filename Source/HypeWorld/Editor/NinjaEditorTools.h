@@ -64,6 +64,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Ninja|Editor")
 	static bool AddNiagaraUpdateModule(UNiagaraSystem* System, const FString& EmitterName, const FString& ScriptPath, int32 Index);
+	/** Igual ao AddNiagaraUpdateModule, mas em qualquer etapa: Stage = "EmitterSpawn", "EmitterUpdate", "ParticleSpawn"
+	 *  ou "ParticleUpdate". Index -1 = no fim da etapa. Não duplica se o módulo já estiver nessa etapa. */
+	UFUNCTION(BlueprintCallable, Category="Ninja|Editor")
+	static bool AddNiagaraModule(UNiagaraSystem* System, const FString& EmitterName, const FString& ScriptPath, const FString& Stage, int32 Index);
 	UFUNCTION(BlueprintCallable, Category="Ninja|Editor")
 	static bool LinkNiagaraFloatInput(UNiagaraSystem* System, const FString& EmitterName, const FString& ModuleName, const FString& InputName, const FString& ParameterName);
 	UFUNCTION(BlueprintCallable, Category="Ninja|Editor")

@@ -881,6 +881,40 @@ bool UNinjaEditorTools::AddNiagaraUpdateModule(UNiagaraSystem* System, const FSt
 	return false;
 }
 
+bool UNinjaEditorTools::AddNiagaraModule(UNiagaraSystem* System, const FString& EmitterName, const FString& ScriptPath, const FString& Stage, int32 Index)
+{
+#if WITH_EDITOR
+	ENiagaraScriptUsage Usage = ENiagaraScriptUsage::ParticleUpdateScript;
+	if (Stage == TEXT("EmitterSpawn")) { Usage = ENiagaraScriptUsage::EmitterSpawnScript; }
+	else if (Stage == TEXT("EmitterUpdate")) { Usage = ENiagaraScriptUsage::EmitterUpdateScript; }
+	else if (Stage == TEXT("ParticleSpawn")) { Usage = ENiagaraScriptUsage::ParticleSpawnScript; }
+	else if (Stage != TEXT("ParticleUpdate")) { return false; }
+	FNiagaraEmitterHandle* Handle = FindEmitterHandle(System, EmitterName);
+	FVersionedNiagaraEmitterData* Data = Handle ? Handle->GetEmitterData() : nullptr;
+	UNiagaraScriptSource* Source = Data ? Cast<UNiagaraScriptSource>(Data->GraphSource) : nullptr;
+	UNiagaraScript* Module = LoadObject<UNiagaraScript>(nullptr, *ScriptPath);
+	if (!Source || !Source->NodeGraph || !Module) { return false; }
+	for (UEdGraphNode* Node : Source->NodeGraph->Nodes)
+	{
+		UNiagaraNodeFunctionCall* Function = Cast<UNiagaraNodeFunctionCall>(Node);
+		if (Function && Function->FunctionScript == Module && FNiagaraStackGraphUtilities::GetOutputNodeUsage(*Function) == Usage)
+		{
+			return true;
+		}
+	}
+	for (UEdGraphNode* Node : Source->NodeGraph->Nodes)
+	{
+		UNiagaraNodeOutput* Output = Cast<UNiagaraNodeOutput>(Node);
+		if (!Output || Output->GetUsage() != Usage) { continue; }
+		const bool bAdded = FNiagaraStackGraphUtilities::AddScriptModuleToStack(Module, *Output, Index) != nullptr;
+		Source->NodeGraph->NotifyGraphChanged();
+		System->MarkPackageDirty();
+		return bAdded;
+	}
+#endif
+	return false;
+}
+
 UTexture2D* UNinjaEditorTools::CreateFireColorAtlas(const FString& PackagePath)
 {
 #if WITH_EDITOR
