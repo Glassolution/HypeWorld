@@ -65,14 +65,15 @@ if not voltar:
     # (sem piscar) e pico maior no lançamento. Valores originais do C++: voo 900 / raio 7 / tremor 0,25; saída 2600 / 1000
     print("luz antes: voo", cdo.get_editor_property("gokakyu_light_intensity"),
           "saída", cdo.get_editor_property("goukakyuu_exit_light_intensity"))
-    laranja = unreal.LinearColor(1.0, 0.254, 0.023, 1.0)   # #FF8A2A
+    # #FF8A2A puro (1, 0,254, 0,023) na grama verde virava amarelo-esverdeado: menos verde na luz = laranja no chão
+    laranja = unreal.LinearColor(1.0, 0.16, 0.022, 1.0)
     # medido de cima: 1000-1400 (e até 150) estouravam o chão em creme-branco; 60 com raio 12x tinge de laranja largo
-    cdo.set_editor_property("gokakyu_light_intensity", 60.0)
+    cdo.set_editor_property("gokakyu_light_intensity", 70.0)
     cdo.set_editor_property("gokakyu_light_radius", 12.0)
     cdo.set_editor_property("gokakyu_light_flicker", 0.18)
     cdo.set_editor_property("gokakyu_light_flicker_rate", 3.0)
     cdo.set_editor_property("gokakyu_light_color", laranja)
-    cdo.set_editor_property("goukakyuu_exit_light_intensity", 90.0)
+    cdo.set_editor_property("goukakyuu_exit_light_intensity", 40.0)   # 90 estourava a árvore perto da boca em amarelo
     cdo.set_editor_property("goukakyuu_exit_light_radius", 1300.0)
     cdo.set_editor_property("goukakyuu_exit_light_color", laranja)    # antes (1, 0,1, 0,015) = vermelho
     cdo.set_editor_property("gokakyu_show_meshes", MODO != "Jato")

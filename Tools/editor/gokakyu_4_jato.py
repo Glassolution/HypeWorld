@@ -21,8 +21,9 @@ EAL = unreal.EditorAssetLibrary
 NT = unreal.NinjaEditorTools
 tools = unreal.AssetToolsHelpers.get_asset_tools()
 FOLDER = "/Game/HypeWorld/Jutsus/Katon/VFX/Gokakyu"
-NOISE_A = "/Game/Vefects/Free_Fire/Shared/Textures/T_VFX_Noise_01"
-NOISE_B = "/Game/Vefects/Free_Fire/Shared/Textures/T_VFX_Noise_08"
+# ruídos próprios de 1024 px (gokakyu_5_ruido.py); os do pack (T_VFX_Noise_01/08) tinham 256 px
+NOISE_A = "/Game/HypeWorld/Jutsus/Katon/VFX/Gokakyu/Texturas/T_Gokakyu_Ruido_A"
+NOISE_B = "/Game/HypeWorld/Jutsus/Katon/VFX/Gokakyu/Texturas/T_Gokakyu_Ruido_B"
 T = "/Niagara/DefaultAssets/Templates/Emitters/"
 PACK = "/Game/Vefects/Free_Fire/Shared/Particles/"
 MOD = "/Niagara/Modules/"
@@ -76,67 +77,70 @@ uv = node(unreal.MaterialExpressionTextureCoordinate)
 time_n = node(unreal.MaterialExpressionTime)
 age = node(unreal.MaterialExpressionParticleRelativeTime)
 rnd = node(unreal.MaterialExpressionParticleRandom)
-inputs = [("UV", uv), ("Time", time_n), ("Age", age), ("Rnd", rnd),
+# soft particles: some antes de encostar no chão/paredes (sem corte reto)
+depth_fade = node(unreal.MaterialExpressionDepthFade)
+depth_fade.set_editor_property("fade_distance_default", 90.0)
+inputs = [("UV", uv), ("Time", time_n), ("Age", age), ("Rnd", rnd), ("DF", depth_fade),
           ("RA", texobj("RuidoA", NOISE_A)), ("RB", texobj("RuidoB", NOISE_B)),
           ("Modo", scalar("Modo", 0.0)), ("Bri", scalar("Brilho", 1.0)), ("Esc", scalar("RuidoEscala", 1.0)),
           ("Vel", scalar("RuidoVelocidade", 1.0)), ("Dist", scalar("Distorcao", 0.22)),
-          ("Cresce", scalar("CresceDe", 0.4)), ("FMax", scalar("CalorMax", 1.0)), ("Risco", scalar("RiscoAlfa", 0.45)),
+          ("Cresce", scalar("CresceDe", 0.4)), ("FMax", scalar("CalorMax", 1.0)), ("Risco", scalar("RiscoAlfa", 0.3)),
           ("Velha", scalar("VelhaIdade", 1.0)), ("Tint", vector("Tint", (1, 1, 1, 1))),
-          # "mais gasoso" (07/11): borda esfumada, degraus de cor macios, ruído esticado no sentido do fluxo
-          ("Suav", scalar("Suavidade", 0.3)), ("Deg", scalar("Degrau", 0.06)), ("CalorB", scalar("CalorBase", 0.0)),
-          ("Estica", scalar("Estica", 2.2)),
-          # chamas coladas na câmera (cauda passando pelo jogador) viravam lâminas gigantes: somem perto da câmera
+          ("Suav", scalar("Suavidade", 0.4)), ("CalorB", scalar("CalorBase", 0.0)),
           ("PD", node(unreal.MaterialExpressionPixelDepth)), ("Perto", scalar("SomePerto", 450.0)),
-          # cores do Felipe (hex sRGB -> linear)
-          ("C0", vector("Cor0_Branco", (1.0, 0.922, 0.630, 1))),     # #FFF6D0
-          ("C1", vector("Cor1_Amarelo", (1.0, 0.658, 0.063, 1))),    # #FFD447
-          ("C2", vector("Cor2_Laranja", (1.0, 0.323, 0.023, 1))),    # #FF9A2A
-          ("C3", vector("Cor3_LaranjaEsc", (1.0, 0.144, 0.008, 1))), # #FF6A16
-          ("C4", vector("Cor4_Vermelho", (0.745, 0.030, 0.012, 1))), # #E0301C
-          ("C5", vector("Cor5_VermelhoEsc", (0.10, 0.004, 0.003, 1)))]
+          # degradê do Felipe (3ª especificação, hex sRGB -> linear): sem marrom, sem contorno escuro
+          ("C0", vector("Cor0_Miolo", (1.0, 0.939, 0.745, 1))),      # #FFF8E0
+          ("C1", vector("Cor1_MioloQuente", (1.0, 0.745, 0.254, 1))),# #FFE08A
+          ("C2", vector("Cor2_Corpo", (1.0, 0.434, 0.039, 1))),      # #FFB038
+          ("C3", vector("Cor3_CorpoQuente", (1.0, 0.195, 0.013, 1))),# #FF7A1E
+          ("C4", vector("Cor4_Borda", (1.0, 0.068, 0.010, 1)))]       # #FF4A1A
 CODE = r"""
 float age = saturate(Age / max(Velha, 0.05));
+// 3 variações por partícula (escala do ruído e proporção da chama): nada se repete como carimbo
+float var = floor(frac(Rnd * 7.31) * 3.0);
+float esc = Esc * (0.75 + var * 0.3);
 float t = Time * Vel;
-// ruído esticado em V (V = sentido da velocidade nos sprites alinhados): vira fiapos/rastros, não bolhas
-float2 p = float2(UV.x * Estica, UV.y / Estica) * Esc + Rnd * 17.3;
-// ruído subindo (V para cima) com distorção de UV: as línguas se mexem devagar, sem tremer
-float2 d2 = Texture2DSample(RB, RBSampler, p * 0.7 + float2(t * 0.05, t * 0.35)).rg - 0.5;
-float n1 = Texture2DSample(RA, RASampler, p + d2 * Dist + float2(-t * 0.04, t * 0.55)).r;
-float n2 = Texture2DSample(RB, RBSampler, p * 1.8 - d2 * Dist * 0.5 + float2(t * 0.13, t * 0.8)).r;
-float n = n1 * 0.65 + n2 * 0.35;
+float2 p = UV * esc + Rnd * 17.3;
+// ruídos próprios de 1024 px (T_Gokakyu_Ruido_A/B) rolando para cima com distorção de UV
+float2 d2 = Texture2DSample(RB, RBSampler, p * 0.5 + float2(t * 0.04, t * 0.3)).rg - 0.5;
+float n1 = Texture2DSample(RA, RASampler, p + d2 * Dist + float2(-t * 0.03, t * 0.5)).r;
+float n2 = Texture2DSample(RA, RASampler, p * 2.1 - d2 * Dist * 0.6 + float2(t * 0.11, t * 0.75)).r;
+float n = n1 * 0.62 + n2 * 0.38;
+float2 q = (UV - 0.5) * 2.0;
+float rq = length(q);
 float v;
 if (Modo < 0.5) {
-    // chama: nasce pequena (CresceDe do quadrado) e cresce rápido até o quadrado inteiro
+    // chama: nasce pequena e cresce; proporção varia (redonda / alta / larga)
     float g = lerp(Cresce, 1.0, 1.0 - pow(1.0 - saturate(age / 0.45), 2.0));
-    float2 c = (UV - 0.5) * 2.0 / g;
+    float2 c = q / g;
+    c.x *= 0.85 + var * 0.15;
     float r = length(c);
-    // miolo macio (gás) + fiapos do ruído só na borda; 1º jato era (1-r)*1,25 + ruído forte = bolhas de explosão
-    v = pow(saturate(1.0 - r), 0.8) * 1.2 + (n - 0.5) * 0.75 * saturate(r + 0.25);
+    v = pow(saturate(1.0 - r), 0.75) * 1.2 + (n - 0.5) * 0.8 * saturate(r + 0.2);
 } else {
     // risco de calor: fino na largura (U), longo no comprimento (V), some nas pontas
     float across = saturate(1.0 - abs(UV.x - 0.5) * 2.0);
     float along = sin(saturate(UV.y) * 3.14159);
-    v = pow(across, 14.0) * along * (0.55 + 0.9 * n);   // pow 3 virava uma faixa larga
+    v = pow(across, 14.0) * along * (0.55 + 0.9 * n);
+    rq = abs(UV.y - 0.5) * 2.0 * 0.9;
 }
-// dissolve com a idade (limiar sobe), borda de dentro suave
-float thr = lerp(0.04, 0.62, pow(age, 1.4));
-float a = smoothstep(thr - Suav * 0.15, thr + Suav, v);
-// calor = juventude + miolo; rampa POSTERIZADA em degraus (transição curta, sem contorno)
-// (1º teste: 1,08 - idade*1,25 deixava a boca toda branca) branco só no miolo das chamas bem novas
-float h = min(saturate(0.98 + CalorB - age * 1.3 + (v - thr) * 0.5), FMax);
-float3 col = C5.rgb; float gain = 0.5;
-// degraus ainda definidos, mas com transição Degrau (0,02 = recortado; 0,06 = macio)
-float s1 = smoothstep(0.16 - Deg, 0.16 + Deg, h), s2 = smoothstep(0.32 - Deg, 0.32 + Deg, h), s3 = smoothstep(0.48 - Deg, 0.48 + Deg, h);
-float s4 = smoothstep(0.65 - Deg, 0.65 + Deg, h), s5 = smoothstep(0.82 - Deg, 0.82 + Deg, h);
-col = lerp(col, C4.rgb, s1); gain = lerp(gain, 1.8, s1);
-col = lerp(col, C3.rgb, s2); gain = lerp(gain, 3.0, s2);
-col = lerp(col, C2.rgb, s3); gain = lerp(gain, 4.5, s3);
-col = lerp(col, C1.rgb, s4); gain = lerp(gain, 7.0, s4);
-col = lerp(col, C0.rgb, s5); gain = lerp(gain, 14.0, s5);
-// velha = vermelho-escuro transparente sumindo
-a *= lerp(0.5, 1.0, s1) * (1.0 - smoothstep(0.75, 1.0, age));
+// erosão com transição LARGA (borda de gás, nada recortado)
+float thr = lerp(0.02, 0.6, pow(age, 1.3));
+float a = smoothstep(thr - 0.06, thr + Suav, v);
+// máscara radial do quadrado: chega a 0 ANTES da borda do sprite (sem retângulos)
+a *= 1.0 - smoothstep(0.6, 0.95, rq);
+// soft particles (chão/paredes) e chamas coladas na câmera
+a *= DF * saturate((PD - 120.0) / max(Perto, 1.0));
+// calor = juventude + miolo; degradê CONTÍNUO e saturado, laranja predominante
+// (1º acabamento 0,95 + ganho 2,4-14: o tonemapper clareava o corpo até branco-creme) laranja predominante
+float h = min(saturate(0.8 + CalorB - age * 1.25 + (v - thr) * 0.5), FMax);
+float3 col = lerp(C4.rgb, C3.rgb, smoothstep(0.05, 0.38, h));
+col = lerp(col, C2.rgb, smoothstep(0.32, 0.62, h));
+col = lerp(col, C1.rgb, smoothstep(0.6, 0.82, h));
+col = lerp(col, C0.rgb, smoothstep(0.8, 0.97, h));
+float gain = lerp(1.6, 12.0, pow(h, 3.0));   // corpo ~2-4 (laranja saturado), miolo estoura; borda some pela transparência
+// envelhecendo: laranja -> vermelho-alaranjado ficando transparente
+a *= 1.0 - smoothstep(0.6, 1.0, age);
 if (Modo > 0.5) { a *= Risco; }
-a *= saturate((PD - 120.0) / max(Perto, 1.0));
 return float4(col * gain * Bri * Tint.rgb, a);
 """
 c = MEL.create_material_expression(mat, unreal.MaterialExpressionCustom, -350, 0)
@@ -181,13 +185,62 @@ def mi(name, scalars):
 
 MI_CHAMA = mi("MI_FireJato_Chama", {"Modo": 0, "RuidoEscala": 1.0, "RuidoVelocidade": 0.8})
 # cabeça = parte mais densa e brilhante (miolo amarelo-branco); cauda = laranja/vermelho esfriando
-MI_CABECA = mi("MI_FireJato_Cabeca", {"Modo": 0, "RuidoEscala": 1.0, "RuidoVelocidade": 1.0, "CalorBase": 0.12,
-                                      "Brilho": 1.5, "Suavidade": 0.32})
-MI_CAUDA = mi("MI_FireJato_Cauda", {"Modo": 0, "RuidoEscala": 0.9, "RuidoVelocidade": 0.7, "CalorBase": -0.1,
-                                    "Brilho": 0.85, "Suavidade": 0.36})
+MI_CABECA = mi("MI_FireJato_Cabeca", {"Modo": 0, "RuidoEscala": 1.0, "RuidoVelocidade": 1.0, "CalorBase": 0.06,
+                                      "Brilho": 1.3, "Suavidade": 0.4})
+MI_CAUDA = mi("MI_FireJato_Cauda", {"Modo": 0, "RuidoEscala": 0.9, "RuidoVelocidade": 0.7, "CalorBase": -0.08,
+                                    "Brilho": 0.9, "Suavidade": 0.45})
 MI_CHAO = mi("MI_FireJato_Chao", {"Modo": 0, "RuidoEscala": 1.1, "RuidoVelocidade": 0.6, "CalorMax": 0.6})
 MI_RISCO = mi("MI_FireJato_Risco", {"Modo": 1, "RuidoEscala": 0.8, "RuidoVelocidade": 1.0, "CalorMax": 0.55,
                                     "RiscoAlfa": 0.3})
+
+
+# ---------------------------------------------------------------- halo: aura laranja grande, aditiva e suave
+hpath = f"{FOLDER}/M_FireHalo"
+halo = unreal.load_asset(hpath)
+if halo:
+    MEL.delete_all_material_expressions(halo)
+else:
+    halo = tools.create_asset("M_FireHalo", FOLDER, unreal.Material, unreal.MaterialFactoryNew())
+halo.set_editor_property("blend_mode", unreal.BlendMode.BLEND_ADDITIVE)
+halo.set_editor_property("shading_model", unreal.MaterialShadingModel.MSM_UNLIT)
+halo.set_editor_property("used_with_niagara_sprites", True)
+hc = MEL.create_material_expression(halo, unreal.MaterialExpressionCustom, -350, 0)
+hc.set_editor_property("code", r"""
+float r = length((UV - 0.5) * 2.0);
+float m = exp(-r * r * 3.2) * (1.0 - smoothstep(0.7, 1.0, r));   // gaussiana que chega a 0 antes da borda
+float vida = sin(saturate(Age) * 3.14159);                        // aparece e some suave
+return Cor.rgb * Bri * m * vida * DF;
+""")
+hc.set_editor_property("output_type", unreal.CustomMaterialOutputType.CMOT_FLOAT3)
+h_df = MEL.create_material_expression(halo, unreal.MaterialExpressionDepthFade, -800, 140)
+h_df.set_editor_property("fade_distance_default", 150.0)
+hb = MEL.create_material_expression(halo, unreal.MaterialExpressionScalarParameter, -800, 210)
+hb.set_editor_property("parameter_name", "Brilho")
+hb.set_editor_property("default_value", 0.45)
+hcor = MEL.create_material_expression(halo, unreal.MaterialExpressionVectorParameter, -800, 280)
+hcor.set_editor_property("parameter_name", "Cor")
+hcor.set_editor_property("default_value", unreal.LinearColor(1.0, 0.254, 0.023, 1))   # #FF8A2A
+hins = [("UV", MEL.create_material_expression(halo, unreal.MaterialExpressionTextureCoordinate, -800, 0)),
+        ("Age", MEL.create_material_expression(halo, unreal.MaterialExpressionParticleRelativeTime, -800, 70)),
+        ("DF", h_df), ("Bri", hb), ("Cor", hcor)]
+pins = []
+for name, _ in hins:
+    ci = unreal.CustomInput()
+    ci.set_editor_property("input_name", name)
+    pins.append(ci)
+hc.set_editor_property("inputs", pins)
+for name, n in hins:
+    assert MEL.connect_material_expressions(n, "", hc, name), name
+MEL.connect_material_property(hc, "", unreal.MaterialProperty.MP_EMISSIVE_COLOR)
+MEL.recompile_material(halo)
+EAL.save_loaded_asset(halo, False)
+hmi = f"{FOLDER}/MI_FireHalo"
+inst = unreal.load_asset(hmi) or tools.create_asset("MI_FireHalo", FOLDER, unreal.MaterialInstanceConstant,
+                                                    unreal.MaterialInstanceConstantFactoryNew())
+MEL.set_material_instance_parent(inst, halo)
+MEL.update_material_instance(inst)
+EAL.save_loaded_asset(inst, False)
+MI_HALO = hmi + ".MI_FireHalo"
 
 
 # ================================================================================================ Niagara
@@ -229,9 +282,9 @@ def once(s, em, dur):
 
 
 def chamas(s, em, *, life, size, speed, cone, axis, radius, rise, drag, material=MI_CHAMA, rate=None,
-           spacing=None, inherit=None, curl=None, sort=0, surface=False, flat=None, stretch=None):
-    """Emissor Fountain virado chama: mundo, tamanho/vida/velocidade, vento (gravidade) e opcionais."""
-    emitter(s, em, "bLocalSpace", "False")
+           spacing=None, inherit=None, curl=None, sort=0, surface=False, flat=None, stretch=None, local=False):
+    """Emissor Fountain virado chama: mundo (ou local), tamanho/vida/velocidade, vento (gravidade) e opcionais."""
+    emitter(s, em, "bLocalSpace", "True" if local else "False")
     if spacing:
         module(s, em, SPAWN_PER_UNIT, "EmitterUpdate")
     if inherit is not None:
@@ -271,8 +324,9 @@ def chamas_valores(s, em, cfg):
     else:
         const(s, em, "InitializeParticle.Uniform Sprite Size Min", cfg["size"][0])
         const(s, em, "InitializeParticle.Uniform Sprite Size Max", cfg["size"][1])
-        const(s, em, "InitializeParticle.Sprite Rotation Angle Min", -12)   # chama "em pé" (ruído sobe)
-        const(s, em, "InitializeParticle.Sprite Rotation Angle Max", 12)
+        # rotação aleatória SÓ no nascimento (não há módulo girando por quadro)
+        const(s, em, "InitializeParticle.Sprite Rotation Angle Min", -40)
+        const(s, em, "InitializeParticle.Sprite Rotation Angle Max", 40)
     const(s, em, "RandomRangeFloat.Minimum", cfg["speed"][0])
     const(s, em, "RandomRangeFloat.Maximum", cfg["speed"][1])
     const(s, em, "AddVelocity.Cone Axis", cfg["axis"])
@@ -336,16 +390,24 @@ def voo_extra(s, etapa):
 
 voo = montar("NS_Katon_Gokakyu_Jato",
              [(T + "Fountain", "Cabeca"), (T + "Fountain", "Jato"), (T + "Fountain", "Riscos"),
-              (PACK + "NE_Sparkles", "Brasas")],
+              (PACK + "NE_Sparkles", "Brasas"), (T + "Fountain", "HaloCabeca"), (T + "Fountain", "HaloCauda")],
              {
                  # cabeça: chamas novas e densas na frente, nascendo na superfície e escorrendo para trás pelos lados
-                 "Cabeca": dict(life=(0.2, 0.34), size=(230, 330), speed=(450, 900), cone=70, axis=(-1, 0, 0),
-                                radius=85, rise=VENTO, drag=3.0, spacing=12, rate=40, inherit=0.75,
-                                curl=(200, 5), sort=2, surface=True, material=MI_CABECA, stretch=(0.8, 1.6)),
+                 # (o stretch por velocidade das chamas grandes fazia retângulos: tirado; tamanhos variados)
+                 "Cabeca": dict(life=(0.2, 0.34), size=(180, 360), speed=(450, 900), cone=70, axis=(-1, 0, 0),
+                                radius=85, rise=VENTO, drag=3.0, spacing=17, rate=30, inherit=0.75,   # 12 = +2 ms de transparência
+                                curl=(200, 5), sort=2, surface=True, material=MI_CABECA),
                  # jato/cauda: vive mais, herda pouca velocidade (fica no ar atrás), cresce, sobe e curva com o vento
-                 "Jato": dict(life=(0.55, 1.0), size=(190, 300), speed=(80, 260), cone=55, axis=(-1, 0, 0.2),
-                              radius=70, rise=VENTO, drag=1.8, spacing=16, rate=20, inherit=0.3,
-                              curl=(450, 3), sort=1, material=MI_CAUDA, stretch=(0.6, 1.8)),   # curl forte e lento = S
+                 "Jato": dict(life=(0.55, 1.0), size=(140, 280), speed=(80, 260), cone=55, axis=(-1, 0, 0.2),
+                              radius=70, rise=VENTO, drag=1.8, spacing=22, rate=15, inherit=0.3,
+                              curl=(450, 3), sort=1, material=MI_CAUDA),   # curl forte e lento = S
+                 # halo: aura laranja aditiva grande e fraca, presa à cabeça (local) e um pouco na cauda (mundo)
+                 "HaloCabeca": dict(life=(0.3, 0.4), size=(750, 900), speed=(0, 1), cone=0, axis=(1, 0, 0),
+                                    radius=10, rise=(0, 0, 0), drag=0.0, rate=8, sort=-1, material=MI_HALO,
+                                    local=True),
+                 "HaloCauda": dict(life=(0.45, 0.6), size=(500, 650), speed=(0, 1), cone=0, axis=(1, 0, 0),
+                                   radius=20, rise=(0, 0, 40), drag=1.0, spacing=140, rate=0, inherit=0.25,
+                                   sort=-1, material=MI_HALO),
              }, extra=voo_extra)
 
 # ---------------------------------------------------------------- saída: estouro na boca
