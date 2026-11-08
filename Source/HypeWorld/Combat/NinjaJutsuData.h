@@ -134,6 +134,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Visual")
 	TObjectPtr<UMaterialInterface> GokakyuCoreMaterial = nullptr;
 
+	/** Gōkakyū (07/11, 5ª especificação): carga antes do disparo (ignição, chamas em volta do corpo, aura, feixe, coluna).
+	 *  Nasce presa à boca no início dos selos, virada para a frente do personagem; as fases do sistema são cronometradas
+	 *  até o notify NinjaJutsuRelease (gokakyu_6_carga.py lê esse tempo da animação). Some no disparo/cancelamento. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Visual")
+	TObjectPtr<UNiagaraSystem> GokakyuChargeSystem = nullptr;
+
 	/** Cascas de chamas em volta do núcleo (M_FireToon modo casca) */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jutsu|Visual")
 	TObjectPtr<UMaterialInterface> GokakyuShellMaterial = nullptr;

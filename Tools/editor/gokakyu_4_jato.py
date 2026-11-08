@@ -8,7 +8,8 @@ da bola e é levada por curl noise lento (vento). A sobreposição forma o volum
 Material M_FireJato (Translúcido, Unlit; Modo 0 = chama, Modo 1 = risco de calor) + instâncias.
 Sistemas (pasta Gokakyu; o NS_Katon_Gokakyu da bola fica como backup):
   NS_Katon_Gokakyu_Jato        Cabeca (chamas novas, densas, envolvendo a frente), Jato (cauda longa que fica no ar),
-                               Riscos (2-4 riscos alaranjados paralelos), Brasas (faíscas do pack)
+                               Riscos (2-4 riscos alaranjados paralelos), Brasas (próprias: pontinhos; as faíscas do pack
+                               eram raios amarelos de clip-art), Miolo (centro branco por cima de tudo), Halo
   NS_Katon_Gokakyu_Jato_Saida  estouro na boca
   NS_Katon_Gokakyu_Jato_Impacto onda de fogo para cima e para os lados + fogo no chão ~2 s + brasas
 Pode rodar de novo (a versão anterior de cada sistema vai para /Game/_ToDelete). Editor aberto, fora do Play.
@@ -192,6 +193,12 @@ MI_CAUDA = mi("MI_FireJato_Cauda", {"Modo": 0, "RuidoEscala": 0.9, "RuidoVelocid
 MI_CHAO = mi("MI_FireJato_Chao", {"Modo": 0, "RuidoEscala": 1.1, "RuidoVelocidade": 0.6, "CalorMax": 0.6})
 MI_RISCO = mi("MI_FireJato_Risco", {"Modo": 1, "RuidoEscala": 0.8, "RuidoVelocidade": 1.0, "CalorMax": 0.55,
                                     "RiscoAlfa": 0.3})
+# miolo: camada branco-amarela desenhada na frente das chamas (nunca "anel oco" pela câmera do jogo)
+MI_MIOLO = mi("MI_FireJato_Miolo", {"Modo": 0, "RuidoEscala": 1.0, "RuidoVelocidade": 1.2, "CalorBase": 0.35,
+                                    "Brilho": 1.6, "Suavidade": 0.35, "SomePerto": 1.0})
+# brasas: pontinhos muito brilhantes, sem esticar (substituem as faíscas do pack)
+MI_BRASA = mi("MI_FireJato_Brasa", {"Modo": 0, "RuidoEscala": 0.6, "CalorBase": 0.3, "Brilho": 3.0, "CresceDe": 1.0,
+                                    "Suavidade": 0.3, "SomePerto": 1.0})
 
 
 # ---------------------------------------------------------------- halo: aura laranja grande, aditiva e suave
@@ -206,10 +213,12 @@ halo.set_editor_property("shading_model", unreal.MaterialShadingModel.MSM_UNLIT)
 halo.set_editor_property("used_with_niagara_sprites", True)
 hc = MEL.create_material_expression(halo, unreal.MaterialExpressionCustom, -350, 0)
 hc.set_editor_property("code", r"""
-float r = length((UV - 0.5) * 2.0);
-float m = exp(-r * r * 3.2) * (1.0 - smoothstep(0.7, 1.0, r));   // gaussiana que chega a 0 antes da borda
+float r0 = length((UV - 0.5) * 2.0);
+float r = r0 / lerp(Cresce, 1.0, saturate(Age * 1.6));             // Cresce < 1 = começa pequena e cresce
+float m = exp(-r * r * 3.2) * (1.0 - smoothstep(0.7, 1.0, r0));  // gaussiana que chega a 0 antes da borda
 float vida = sin(saturate(Age) * 3.14159);                        // aparece e some suave
-return Cor.rgb * Bri * m * vida * DF;
+float3 cor = lerp(Cor.rgb, CorMiolo.rgb, exp(-r * r * 14.0));      // centro branco-amarelo (aura da carga)
+return cor * Bri * m * vida * DF;
 """)
 hc.set_editor_property("output_type", unreal.CustomMaterialOutputType.CMOT_FLOAT3)
 h_df = MEL.create_material_expression(halo, unreal.MaterialExpressionDepthFade, -800, 140)
@@ -223,6 +232,13 @@ hcor.set_editor_property("default_value", unreal.LinearColor(1.0, 0.254, 0.023, 
 hins = [("UV", MEL.create_material_expression(halo, unreal.MaterialExpressionTextureCoordinate, -800, 0)),
         ("Age", MEL.create_material_expression(halo, unreal.MaterialExpressionParticleRelativeTime, -800, 70)),
         ("DF", h_df), ("Bri", hb), ("Cor", hcor)]
+h_cm = MEL.create_material_expression(halo, unreal.MaterialExpressionVectorParameter, -800, 350)
+h_cm.set_editor_property("parameter_name", "CorMiolo")
+h_cm.set_editor_property("default_value", unreal.LinearColor(1.0, 0.254, 0.023, 1))   # = Cor (halo do jato)
+h_cr = MEL.create_material_expression(halo, unreal.MaterialExpressionScalarParameter, -800, 420)
+h_cr.set_editor_property("parameter_name", "Cresce")
+h_cr.set_editor_property("default_value", 1.0)
+hins += [("CorMiolo", h_cm), ("Cresce", h_cr)]
 pins = []
 for name, _ in hins:
     ci = unreal.CustomInput()
@@ -364,7 +380,6 @@ VENTO = (60, 160, 230)   # vento de lado + calor subindo (cm/s²): a cauda curva
 def voo_extra(s, etapa):
     if etapa == "estrutura":
         emitter(s, "Riscos", "bLocalSpace", "False")
-        emitter(s, "Brasas", "bLocalSpace", "False")
         return
     # riscos de calor: poucos, longos, alinhados à velocidade, paralelos ao jato
     const(s, "Riscos", "SpawnRate.SpawnRate", 7)
@@ -384,13 +399,12 @@ def voo_extra(s, etapa):
     rend(s, "Riscos", "Material", MI_RISCO)
     rend(s, "Riscos", "Alignment", "VelocityAligned")
     rend(s, "Riscos", "SortOrderHint", "0")
-    # brasas do pack: pequenas e muito brilhantes, da cabeça e da cauda
-    const(s, "Brasas", "SpawnRate.SpawnRate", 45, required=False)
 
 
 voo = montar("NS_Katon_Gokakyu_Jato",
              [(T + "Fountain", "Cabeca"), (T + "Fountain", "Jato"), (T + "Fountain", "Riscos"),
-              (PACK + "NE_Sparkles", "Brasas"), (T + "Fountain", "HaloCabeca"), (T + "Fountain", "HaloCauda")],
+              (T + "Fountain", "Brasas"), (T + "Fountain", "HaloCabeca"), (T + "Fountain", "HaloCauda"),
+              (T + "Fountain", "Miolo")],
              {
                  # cabeça: chamas novas e densas na frente, nascendo na superfície e escorrendo para trás pelos lados
                  # (o stretch por velocidade das chamas grandes fazia retângulos: tirado; tamanhos variados)
@@ -408,22 +422,28 @@ voo = montar("NS_Katon_Gokakyu_Jato",
                  "HaloCauda": dict(life=(0.45, 0.6), size=(500, 650), speed=(0, 1), cone=0, axis=(1, 0, 0),
                                    radius=20, rise=(0, 0, 40), drag=1.0, spacing=140, rate=0, inherit=0.25,
                                    sort=-1, material=MI_HALO),
+                 # brasas: pontinhos quentes saindo da cabeça e da cauda, subindo
+                 "Brasas": dict(life=(0.5, 0.9), size=(6, 14), speed=(150, 400), cone=80, axis=(-1, 0, 0.4),
+                                radius=90, rise=(0, 0, 220), drag=1.5, spacing=40, rate=10, inherit=0.4,
+                                material=MI_BRASA, sort=3),
+                 # miolo: centro branco-amarelo preso à cabeça, desenhado por último (por cima das chamas laranja)
+                 "Miolo": dict(life=(0.12, 0.2), size=(110, 190), speed=(0, 1), cone=0, axis=(1, 0, 0), radius=20,
+                               rise=(0, 0, 0), drag=0.0, rate=45, material=MI_MIOLO, sort=4, local=True),
              }, extra=voo_extra)
 
 # ---------------------------------------------------------------- saída: estouro na boca
 def saida_extra(s, etapa):
     if etapa == "estrutura":
         once(s, "Estouro", 0.08)
-        emitter(s, "Faiscas", "bLocalSpace", "False")
-        once(s, "Faiscas", 0.15)
+        once(s, "Faiscas", 0.08)
         return
-    const(s, "Faiscas", "RandomRangeInt.Minimum", 20, required=False)
-    const(s, "Faiscas", "RandomRangeInt.Maximum", 28, required=False)
 
 
-montar("NS_Katon_Gokakyu_Jato_Saida", [(T + "Fountain", "Estouro"), (PACK + "NE_Sparkles", "Faiscas")],
+montar("NS_Katon_Gokakyu_Jato_Saida", [(T + "Fountain", "Estouro"), (T + "Fountain", "Faiscas")],
        {"Estouro": dict(life=(0.25, 0.45), size=(160, 260), speed=(600, 1400), cone=60, axis=(1, 0, 0.1),
-                        radius=50, rise=(0, 0, 300), drag=4.0, rate=200)},
+                        radius=50, rise=(0, 0, 300), drag=4.0, rate=200),
+        "Faiscas": dict(life=(0.3, 0.55), size=(6, 14), speed=(300, 800), cone=60, axis=(1, 0, 0.2), radius=30,
+                        rise=(0, 0, 250), drag=2.0, rate=250, material=MI_BRASA, sort=3)},
        extra=saida_extra, fixed=unreal.Vector(1500, 1500, 1500))
 
 # ---------------------------------------------------------------- impacto: onda de fogo + fogo no chão
@@ -431,19 +451,18 @@ def impacto_extra(s, etapa):
     if etapa == "estrutura":
         once(s, "Onda", 0.1)
         once(s, "Chao", 0.15)
-        emitter(s, "Brasas", "bLocalSpace", "False")
-        once(s, "Brasas", 0.2)
+        once(s, "Brasas", 0.1)
         return
-    const(s, "Brasas", "RandomRangeInt.Minimum", 35, required=False)
-    const(s, "Brasas", "RandomRangeInt.Maximum", 50, required=False)
 
 
 # (o C++ cria o impacto com escala 2,4: posições da forma crescem 2,4x, tamanhos e velocidades não)
 montar("NS_Katon_Gokakyu_Jato_Impacto",
-       [(T + "Fountain", "Onda"), (T + "Fountain", "Chao"), (PACK + "NE_Sparkles", "Brasas")],
+       [(T + "Fountain", "Onda"), (T + "Fountain", "Chao"), (T + "Fountain", "Brasas")],
        {"Onda": dict(life=(0.6, 1.1), size=(380, 600), speed=(600, 1300), cone=80, axis=(0, 0, 1), radius=40,
                      rise=(0, 0, 350), drag=3.5, rate=800, curl=(200, 6), sort=1),
         "Chao": dict(life=(1.6, 2.3), size=(140, 220), speed=(30, 120), cone=30, axis=(0, 0, 1), radius=90,
-                     rise=(0, 0, 120), drag=2.0, rate=200, material=MI_CHAO, flat=(1, 1, 0.08), sort=0)},
+                     rise=(0, 0, 120), drag=2.0, rate=200, material=MI_CHAO, flat=(1, 1, 0.08), sort=0),
+        "Brasas": dict(life=(0.5, 1.0), size=(8, 16), speed=(300, 900), cone=80, axis=(0, 0, 1), radius=40,
+                       rise=(0, 0, 150), drag=1.5, rate=400, material=MI_BRASA, sort=3)},
        extra=impacto_extra, fixed=unreal.Vector(2500, 2500, 2000))
 print("GOKAKYU_JATO_OK")

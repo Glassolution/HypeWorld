@@ -924,6 +924,9 @@ protected:
 	/** Antecipação do jutsu na boca durante os selos (só visual); some no lançamento ou no cancelamento */
 	UPROPERTY() TArray<TObjectPtr<USceneComponent>> JutsuAnticipation;
 	void ClearJutsuAnticipation();
+	/** Carga do Gōkakyū: tempo desde o início dos selos e instante previsto do disparo (selos + notify NinjaJutsuRelease) */
+	float JutsuAnticipationElapsed = 0.f;
+	float JutsuReleaseTime = 0.9f;
 
 	// Tremida de câmera
 	void UpdateCameraShake(float DeltaSeconds);

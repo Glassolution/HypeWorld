@@ -225,7 +225,50 @@ TArray<USceneComponent*> ANinjaJutsuProjectile::SpawnAnticipation(USceneComponen
 		Glow->RegisterComponent();
 		Spawned.Add(Glow);
 	}
-	if (Defaults->AnticipationLight > 0.f)
+	if (Jutsu->GokakyuChargeSystem)
+	{
+		// Carga do Gōkakyū: presa à boca, mas virada para onde o personagem olha (X = frente, Z = cima)
+		if (UNiagaraComponent* Charge = UNiagaraFunctionLibrary::SpawnSystemAttached(Jutsu->GokakyuChargeSystem, Body, Socket,
+			FVector::ZeroVector, FRotator::ZeroRotator, EAttachLocation::SnapToTarget, true, true, ENCPoolMethod::None))
+		{
+			Charge->SetUsingAbsoluteRotation(true);
+			Charge->SetWorldRotation(FRotator(0.f, Owner ? Owner->GetActorRotation().Yaw : 0.f, 0.f));
+			Spawned.Add(Charge);
+		}
+		// Luz da carga: começa apagada; UpdateAnticipation sobe na ignição, estoura no pico e pisca no feixe
+		UPointLightComponent* Light = NewObject<UPointLightComponent>(Owner);
+		Light->ComponentTags.Add(TEXT("GokakyuCargaLuz"));
+		Light->SetCastShadows(false);
+		Light->SetIntensityUnits(ELightUnits::Candelas);
+		Light->bUseInverseSquaredFalloff = false;
+		Light->SetLightFalloffExponent(3.f);
+		Light->SetIntensity(0.f);
+		Light->SetIndirectLightingIntensity(0.f);
+		Light->SetVolumetricScatteringIntensity(0.f);
+		Light->SetLightColor(Defaults->GokakyuLightColor);
+		Light->SetAttenuationRadius(400.f);
+		Light->SetupAttachment(Body, Socket);
+		Light->RegisterComponent();
+		Spawned.Add(Light);
+		// Vinheta quente só na tela de quem está lançando
+		const APawn* Pawn = Cast<APawn>(Owner);
+		if (Defaults->GokakyuChargeVignette && Pawn && Pawn->IsLocallyControlled())
+		{
+			UPostProcessComponent* Vignette = NewObject<UPostProcessComponent>(Owner);
+			Vignette->ComponentTags.Add(TEXT("GokakyuCargaVinheta"));
+			Vignette->bUnbound = true;
+			Vignette->Priority = 50.f;
+			Vignette->SetupAttachment(Body);
+			if (UMaterialInstanceDynamic* MID = UMaterialInstanceDynamic::Create(Defaults->GokakyuChargeVignette, Vignette))
+			{
+				MID->SetScalarParameterValue(TEXT("Intensidade"), 0.f);
+				Vignette->Settings.WeightedBlendables.Array.Add(FWeightedBlendable(1.f, MID));
+			}
+			Vignette->RegisterComponent();
+			Spawned.Add(Vignette);
+		}
+	}
+	else if (Defaults->AnticipationLight > 0.f)
 	{
 		UPointLightComponent* Glow = NewObject<UPointLightComponent>(Owner);
 		Glow->SetCastShadows(false);
@@ -241,6 +284,37 @@ TArray<USceneComponent*> ANinjaJutsuProjectile::SpawnAnticipation(USceneComponen
 	}
 	Spawned.Remove(nullptr);
 	return Spawned;
+}
+
+void ANinjaJutsuProjectile::UpdateAnticipation(const TArray<TObjectPtr<USceneComponent>>& Pieces, float Elapsed, float ReleaseTime,
+	const UNinjaJutsuData* Jutsu)
+{
+	const ANinjaJutsuProjectile* Defaults = Jutsu && Jutsu->ProjectileClass ? Jutsu->ProjectileClass->GetDefaultObject<ANinjaJutsuProjectile>() : nullptr;
+	if (!Defaults || !Jutsu->GokakyuChargeSystem) { return; }
+	// Fases em fração do tempo até o disparo: ignição 0-0,2 (luz até a metade), carga 0,2-0,75 (pico),
+	// feixe ~0,7 (flash), coluna 0,75-1 (fica no pico)
+	const float F = Elapsed / FMath::Max(ReleaseTime, 0.1f);
+	const float Ramp = 0.5f * FMath::SmoothStep(0.f, 0.2f, F) + 0.5f * FMath::SmoothStep(0.2f, 0.75f, F);
+	const float Flash = Defaults->GokakyuChargeFlash * FMath::Exp(-FMath::Square((F - 0.7f) / 0.06f));
+	const float Flicker = 1.f + 0.12f * FMath::PerlinNoise1D(Elapsed * 3.f + 2.f);
+	for (USceneComponent* Piece : Pieces)
+	{
+		if (UPointLightComponent* Light = Cast<UPointLightComponent>(Piece); Light && Light->ComponentHasTag(TEXT("GokakyuCargaLuz")))
+		{
+			Light->SetIntensity(Defaults->GokakyuChargeLight * (Ramp + Flash) * Flicker);
+			Light->SetAttenuationRadius(FMath::Lerp(400.f, Defaults->GokakyuChargeLightRadius, FMath::SmoothStep(0.f, 0.75f, F)));
+		}
+		else if (UPostProcessComponent* Vignette = Cast<UPostProcessComponent>(Piece))
+		{
+			for (FWeightedBlendable& Blend : Vignette->Settings.WeightedBlendables.Array)
+			{
+				if (UMaterialInstanceDynamic* MID = Cast<UMaterialInstanceDynamic>(Blend.Object))
+				{
+					MID->SetScalarParameterValue(TEXT("Intensidade"), Defaults->GokakyuChargeVignetteMax * FMath::SmoothStep(0.2f, 0.75f, F));
+				}
+			}
+		}
+	}
 }
 
 void ANinjaJutsuProjectile::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -351,7 +425,8 @@ void ANinjaJutsuProjectile::SetupGoukakyuuVisuals()
 		auto MakeLayer = [&](UMaterialInterface* Material, int32 Index)
 		{
 			UStaticMeshComponent* Layer = NewObject<UStaticMeshComponent>(this);
-			Layer->SetStaticMesh(Sphere);
+			UStaticMesh* LayerMesh = Index == 0 ? GokakyuCoreMesh.Get() : GokakyuShellMesh.Get();
+			Layer->SetStaticMesh(LayerMesh ? LayerMesh : Sphere);
 			Layer->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 			Layer->SetGenerateOverlapEvents(false);
 			Layer->SetCastShadow(false);
@@ -843,12 +918,18 @@ void ANinjaJutsuProjectile::Evaluate(float T, FVector& OutCenter, float& OutRadi
 	// a distância é a integral exata dessa velocidade
 	const float Accel = FMath::Max(AccelTime, 0.01f);
 	const float A = FMath::Clamp(LaunchSpeedScale, 0.f, 1.f);
-	const float U = FMath::Clamp(T / Accel, 0.f, 1.f);
+	// Sopro: o voo só começa depois de GokakyuHoldTime; até lá a bola cresce presa à frente da boca
+	const float TMove = FMath::Max(T - GokakyuHoldTime, 0.f);
+	const float U = FMath::Clamp(TMove / Accel, 0.f, 1.f);
+	OutRadius = FMath::Lerp(StartRadius, FullRadius, Grow);
 	float Distance = Speed * Accel * (A * U + (1.f - A) * (FMath::Cube(U) - 0.5f * FMath::Square(FMath::Square(U))))
-		+ Speed * FMath::Max(T - Accel, 0.f);
+		+ Speed * FMath::Max(TMove - Accel, 0.f);
+	if (GokakyuHoldTime > 0.f)
+	{
+		Distance += OutRadius * GokakyuHoldForward;   // centro à frente: o personagem fica na borda de trás
+	}
 	bOutReachedRange = Distance >= Range;
 	Distance = FMath::Min(Distance, Range);
-	OutRadius = FMath::Lerp(StartRadius, FullRadius, Grow);
 	OutCenter = FVector(Launch.Start) + Dir * Distance + FVector(0.f, 0.f, bGoukakyuuVisual ? 0.f : GrowLift * Grow);
 	if (LaunchBend > 0.f)
 	{
@@ -1193,9 +1274,9 @@ void ANinjaJutsuProjectile::Tick(float DeltaSeconds)
 				SetLifeSpan(LingerTime + 0.5f);
 			}
 		}
-		else if (HasAuthority())
+		else if (HasAuthority() && T >= GokakyuHoldTime)   // sopro preso à boca: sem colisão nem dano
 		{
-			ServerCheckHit(LastCenter, Center, Radius, T);
+			ServerCheckHit(T - DeltaSeconds < GokakyuHoldTime ? Center : LastCenter, Center, Radius, T);
 			if (!bExploded && bReachedRange)
 			{
 				Explode(Center);

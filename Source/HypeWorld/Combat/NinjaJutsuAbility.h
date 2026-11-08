@@ -78,3 +78,14 @@ public:
 	virtual void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference) override;
 	virtual FString GetNotifyName_Implementation() const override { return TEXT("NinjaJutsuRelease"); }
 };
+
+/** Gōkakyū (07/11): o "cuspe" (a cabeça projeta para a frente). Numa animação com este notify, é ELE que solta o jutsu
+ *  (efeito, luz e projétil nascem aqui) e o NinjaJutsuRelease da mesma animação é ignorado. Interrompido antes = nada. */
+UCLASS(meta=(DisplayName="Katon Spit"))
+class HYPEWORLD_API UAnimNotify_KatonSpit : public UAnimNotify
+{
+	GENERATED_BODY()
+public:
+	virtual void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference) override;
+	virtual FString GetNotifyName_Implementation() const override { return TEXT("Katon_Spit"); }
+};

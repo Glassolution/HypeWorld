@@ -185,6 +185,23 @@ void UGA_NinjaJutsu::EndAbility(const FGameplayAbilitySpecHandle Handle, const F
 void UAnimNotify_NinjaJutsuRelease::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference)
 {
 	Super::Notify(MeshComp, Animation, EventReference);
+	// Animação com Katon_Spit: quem solta o jutsu é o cuspe
+	if (Animation)
+	{
+		for (const FAnimNotifyEvent& Event : Animation->Notifies)
+		{
+			if (Event.Notify && Event.Notify->IsA<UAnimNotify_KatonSpit>()) { return; }
+		}
+	}
+	if (AHypeWorldCharacter* Ninja = MeshComp ? Cast<AHypeWorldCharacter>(MeshComp->GetOwner()) : nullptr)
+	{
+		Ninja->OnJutsuRelease();
+	}
+}
+
+void UAnimNotify_KatonSpit::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference)
+{
+	Super::Notify(MeshComp, Animation, EventReference);
 	if (AHypeWorldCharacter* Ninja = MeshComp ? Cast<AHypeWorldCharacter>(MeshComp->GetOwner()) : nullptr)
 	{
 		Ninja->OnJutsuRelease();

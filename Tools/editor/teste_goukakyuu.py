@@ -2,7 +2,8 @@
 Câmera do jogo (padrão) ou alta atrás do personagem (unreal._teste_gk_camera = "cima"), câmera lenta durante o jutsu e fotos (comando Shot) em
 instantes fixos contados a partir de quando o projétil nasce. Fotos em Saved/Screenshots/WindowsEditor.
 Rodar com o jogo em Play. Registro em unreal._teste_gk['log'].
-Ajustes antes de rodar (opcionais): unreal._teste_gk_slomo (0,3), unreal._teste_gk_tempos (lista em s de jogo).
+Ajustes antes de rodar (opcionais): unreal._teste_gk_slomo (0,3), unreal._teste_gk_tempos (lista em s de jogo),
+unreal._teste_gk_base = "jutsu" (tempos contados do início do jutsu, para ver a carga; padrão = nascimento do projétil).
 """
 import unreal
 
@@ -10,6 +11,7 @@ SLOMO = getattr(unreal, "_teste_gk_slomo", 0.3)
 TEMPOS = getattr(unreal, "_teste_gk_tempos", [0.0, 0.03, 0.06, 0.1, 0.15, 0.2, 0.3, 0.4, 0.5, 0.6, 0.75, 0.9, 1.1])
 # "jogador" (padrão, 06/11: o Felipe avalia pela câmera do jogo, atrás do personagem) ou "cima" (câmera alta)
 CAMERA = getattr(unreal, "_teste_gk_camera", "jogador")
+BASE = getattr(unreal, "_teste_gk_base", "projetil")
 w = unreal.get_editor_subsystem(unreal.UnrealEditorSubsystem).get_game_world()
 pc = unreal.GameplayStatics.get_player_controller(w, 0)
 c = pc.get_controlled_pawn()
@@ -55,6 +57,8 @@ def cast():
     i = slot_index()
     unreal.SystemLibrary.execute_console_command(w, "slomo %s" % SLOMO)
     log("slot %d -> %s (mira yaw %.0f)" % (i, c.try_use_jutsu_slot(i), rot.yaw))
+    if BASE == "jutsu":
+        st["t0"] = unreal.GameplayStatics.get_time_seconds(w)
 
 
 def projectile():

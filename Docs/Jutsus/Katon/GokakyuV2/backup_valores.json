@@ -1,0 +1,57 @@
+{
+ "DA": {
+  "gokakyu_core_material": "/Game/HypeWorld/Jutsus/Katon/VFX/Gokakyu/MI_FireSoft_Nucleo.MI_FireSoft_Nucleo",
+  "gokakyu_shell_material": null,
+  "gokakyu_charge_system": null,
+  "goukakyuu_exit_system": "/Game/HypeWorld/Jutsus/Katon/VFX/Gokakyu/NS_Katon_Gokakyu_Sopro.NS_Katon_Gokakyu_Sopro",
+  "goukakyuu_flight_system": "/Game/HypeWorld/Jutsus/Katon/VFX/Gokakyu/NS_Katon_Gokakyu_Jato.NS_Katon_Gokakyu_Jato",
+  "goukakyuu_trail_system": null,
+  "goukakyuu_impact_system": "/Game/HypeWorld/Jutsus/Katon/VFX/Gokakyu/NS_Katon_Gokakyu_Jato_Impacto.NS_Katon_Gokakyu_Jato_Impacto",
+  "goukakyuu_material": "/Game/HypeWorld/Jutsus/Katon/M_Goukakyuu_FogoEmissivo.M_Goukakyuu_FogoEmissivo",
+  "projectile_speed": 0.0,
+  "projectile_range": 0.0,
+  "cast_shake": 0.6000000238418579,
+  "explosion_shake": 1.600000023841858
+ },
+ "BP": {
+  "grow_time": 0.20000000298023224,
+  "start_radius": 9.0,
+  "full_radius": 155.0,
+  "speed": 3000.0,
+  "range": 2200.0,
+  "accel_time": 0.30000001192092896,
+  "launch_speed_scale": 0.3499999940395355,
+  "gokakyu_size": 1.0,
+  "gokakyu_core_scale": 0.8500000238418579,
+  "gokakyu_pulse": 0.05000000074505806,
+  "gokakyu_pulse_rate": 5.0,
+  "gokakyu_shell_scales": [
+   1.1200000047683716,
+   1.3200000524520874
+  ],
+  "gokakyu_shell_spins": [
+   200.0,
+   -150.0
+  ],
+  "gokakyu_shell_stretch": 1.25,
+  "gokakyu_tongue": 0.20000000298023224,
+  "gokakyu_wobble": 14.0,
+  "gokakyu_wobble_rate": 3.0,
+  "gokakyu_tint": "<Struct 'LinearColor' (0x000002B5D317D860) {r: 1.000000, g: 1.000000, b: 1.000000, a: 1.000000}>",
+  "gokakyu_intensity": 1.0,
+  "gokakyu_light_intensity": 70.0,
+  "gokakyu_light_radius": 12.0,
+  "gokakyu_light_flicker": 0.18000000715255737,
+  "gokakyu_light_color": "<Struct 'LinearColor' (0x000002B5D317D880) {r: 1.000000, g: 0.160000, b: 0.022000, a: 1.000000}>",
+  "gokakyu_light_flicker_rate": 3.0,
+  "gokakyu_show_meshes": false,
+  "gokakyu_light_launch_peak": 0.699999988079071,
+  "gokakyu_hold_time": 0.3499999940395355,
+  "gokakyu_hold_forward": 1.0,
+  "gokakyu_impact_light": 400.0,
+  "gokakyu_impact_light_radius": 2200.0,
+  "goukakyuu_exit_light_intensity": 35.0,
+  "goukakyuu_exit_light_radius": 1300.0,
+  "anticipation_light": 0.0
+ }
+}

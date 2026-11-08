@@ -2084,6 +2084,19 @@ void AHypeWorldCharacter::PlayJutsuSeals(const UNinjaJutsuData* Jutsu)
 		{
 			JutsuAnticipation.Add(Piece);
 		}
+		// Instante do disparo = selos + notify NinjaJutsuRelease do sopro (tocado a CastRecoveryRate): a carga se cronometra nele
+		JutsuAnticipationElapsed = 0.f;
+		JutsuReleaseTime = 0.f;
+		for (const FNinjaJutsuSeal& Seal : Jutsu->Seals) { JutsuReleaseTime += Seal.Duration; }
+		float NotifyTime = 0.375f;
+		if (const UAnimSequenceBase* CastAnim = Jutsu->BodyCastAnimation.Get())
+		{
+			for (const FAnimNotifyEvent& Event : CastAnim->Notifies)
+			{
+				if (Event.NotifyName == TEXT("NinjaJutsuRelease")) { NotifyTime = Event.GetTriggerTime(); break; }
+			}
+		}
+		JutsuReleaseTime += NotifyTime / FMath::Max(Jutsu->CastRecoveryRate, 0.05f);
 	}
 	if (Jutsu && Jutsu->BodyCastAnimation)
 	{
@@ -2166,6 +2179,12 @@ void AHypeWorldCharacter::StartSeal(int32 Index)
 
 void AHypeWorldCharacter::UpdateJutsuSeals(float DeltaSeconds)
 {
+	if (JutsuAnticipation.Num() > 0)
+	{
+		JutsuAnticipationElapsed += DeltaSeconds;
+		ANinjaJutsuProjectile::UpdateAnticipation(JutsuAnticipation, JutsuAnticipationElapsed, JutsuReleaseTime,
+			PresentedJutsu ? PresentedJutsu.Get() : CurrentJutsu.Get());
+	}
 	if (SealIndex == INDEX_NONE || !PresentedJutsu || !PresentedJutsu->Seals.IsValidIndex(SealIndex))
 	{
 		return;

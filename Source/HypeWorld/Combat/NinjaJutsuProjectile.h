@@ -67,6 +67,10 @@ public:
 	/** Antecipação nos selos (só visual, máquina local): brasas, brilho e luz presos a Socket de Body. Devolve os
 	 *  componentes criados para quem chamou destruir no lançamento */
 	static TArray<USceneComponent*> SpawnAnticipation(USceneComponent* Body, FName Socket, const UNinjaJutsuData* Jutsu);
+	/** Carga do Gōkakyū: luz (ignição -> pico -> flash do feixe) e vinheta quente pelo tempo desde o início dos selos
+	 *  (Elapsed) até o disparo (ReleaseTime). Chamado todo quadro por quem guarda os componentes da antecipação */
+	static void UpdateAnticipation(const TArray<TObjectPtr<USceneComponent>>& Pieces, float Elapsed, float ReleaseTime,
+		const UNinjaJutsuData* Jutsu);
 
 	// ---------- Trajetória ----------
 
@@ -195,8 +199,17 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuLightFlickerRate = 3.f;
 	/** Jato contínuo (07/11): false = sem esferas de malha (o fogo é só o Niagara), a luz continua seguindo a cabeça */
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") bool GokakyuShowMeshes = true;
+	/** Malhas do núcleo e das cascas (v2, 08/11: feitas no Blender). Vazio = esfera da engine. Devem ter raio 50 cm,
+	 *  como a esfera da engine, porque a escala é calculada a partir desse raio */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") TObjectPtr<UStaticMesh> GokakyuCoreMesh = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") TObjectPtr<UStaticMesh> GokakyuShellMesh = nullptr;
 	/** Pico da luz no lançamento (somado: 1,5 = 2,5x a intensidade normal no primeiro décimo de segundo) */
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuLightLaunchPeak = 1.5f;
+	/** Sopro (07/11): a bola se forma presa à boca por HoldTime (s) depois do cuspe e só então dispara como cometa.
+	 *  Durante o sopro não há colisão nem dano. HoldForward = quanto o centro fica à frente da boca (× raio): com ~1 o
+	 *  personagem fica na borda de trás da bola, nunca dentro. 0 = sai voando direto (como antes) */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuHoldTime = 0.f;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuHoldForward = 1.f;
 	/** Flash de luz no impacto (candelas no pico) e raio (cm); depois fica um brilho do fogo no chão por ~2 s */
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuImpactLight = 6000.f;
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuImpactLightRadius = 2200.f;	/** Rajada na boca (tiros pequenos, no lugar de IgniteGlows/IgniteFlames): línguas (TongueMaterial, as primeiras
@@ -220,6 +233,13 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") TObjectPtr<UNiagaraSystem> AnticipationSystem;
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") TObjectPtr<UMaterialInterface> AnticipationMaterial;
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") float AnticipationLight = 14.f;
+	/** Carga do Gōkakyū (com GokakyuChargeSystem no DA): luz na boca no pico da carga (mesma escala da luz da bola,
+	 *  sem queda física), raio no pico (cm), flash extra no feixe (fração do pico) e vinheta quente na tela do jogador */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuChargeLight = 90.f;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuChargeLightRadius = 1400.f;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuChargeFlash = 0.6f;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") TObjectPtr<UMaterialInterface> GokakyuChargeVignette = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuChargeVignetteMax = 0.6f;
 	/** Escala de cada casca em relação ao raio */
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") FVector ShellScales = FVector(1.f, 1.18f, 1.42f);
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Visual") float HeatScale = 1.7f;

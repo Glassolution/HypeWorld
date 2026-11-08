@@ -36,7 +36,9 @@ elif MODO == "Jato":
     # o material do núcleo só liga o modo novo (luz da cabeça); as esferas não aparecem (GokakyuShowMeshes = false)
     da.set_editor_property("gokakyu_core_material", unreal.load_asset(NOVO + f"MI_Fire{ESTILO}_Nucleo"))
     da.set_editor_property("gokakyu_shell_material", None)
-    da.set_editor_property("goukakyuu_exit_system", unreal.load_asset(NOVO + "NS_Katon_Gokakyu_Jato_Saida"))
+    # saída = sopro na boca (gokakyu_7_sopro.py) quando existir; senão o estouro antigo do jato
+    sopro = unreal.load_asset(NOVO + "NS_Katon_Gokakyu_Sopro")
+    da.set_editor_property("goukakyuu_exit_system", sopro or unreal.load_asset(NOVO + "NS_Katon_Gokakyu_Jato_Saida"))
     da.set_editor_property("goukakyuu_flight_system", unreal.load_asset(NOVO + "NS_Katon_Gokakyu_Jato"))
     da.set_editor_property("goukakyuu_trail_system", None)
     da.set_editor_property("goukakyuu_impact_system", unreal.load_asset(NOVO + "NS_Katon_Gokakyu_Jato_Impacto"))
