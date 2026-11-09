@@ -922,8 +922,16 @@ void ANinjaJutsuProjectile::Evaluate(float T, FVector& OutCenter, float& OutRadi
 	const float TMove = FMath::Max(T - GokakyuHoldTime, 0.f);
 	const float U = FMath::Clamp(TMove / Accel, 0.f, 1.f);
 	OutRadius = FMath::Lerp(StartRadius, FullRadius, Grow);
+	if (GokakyuFlightGrow > 0.f && TMove > 0.f)
+	{
+		OutRadius *= 1.f + GokakyuFlightGrow * FMath::SmoothStep(0.f, FMath::Max(GokakyuFlightGrowTime, 0.01f), TMove);
+	}
+	// Depois do tranco: velocidade Speed caindo por exp(-Drag t) (sem drag = constante); distância = integral exata
+	const float Cruise = FMath::Max(TMove - Accel, 0.f);
+	const float CruiseDistance = GokakyuDrag > KINDA_SMALL_NUMBER
+		? Speed * (1.f - FMath::Exp(-GokakyuDrag * Cruise)) / GokakyuDrag : Speed * Cruise;
 	float Distance = Speed * Accel * (A * U + (1.f - A) * (FMath::Cube(U) - 0.5f * FMath::Square(FMath::Square(U))))
-		+ Speed * FMath::Max(TMove - Accel, 0.f);
+		+ CruiseDistance;
 	if (GokakyuHoldTime > 0.f)
 	{
 		Distance += OutRadius * GokakyuHoldForward;   // centro à frente: o personagem fica na borda de trás
@@ -931,11 +939,20 @@ void ANinjaJutsuProjectile::Evaluate(float T, FVector& OutCenter, float& OutRadi
 	bOutReachedRange = Distance >= Range;
 	Distance = FMath::Min(Distance, Range);
 	OutCenter = FVector(Launch.Start) + Dir * Distance + FVector(0.f, 0.f, bGoukakyuuVisual ? 0.f : GrowLift * Grow);
+	const FVector Side = FVector::CrossProduct(Dir, FVector::UpVector).GetSafeNormal() * ((Launch.VisualSeed & 1) ? 1.f : -1.f);
 	if (LaunchBend > 0.f)
 	{
 		// Sai da órbita fazendo uma curva: desvia para o lado e volta para a linha da mira
-		const FVector Side = FVector::CrossProduct(Dir, FVector::UpVector).GetSafeNormal() * ((Launch.VisualSeed & 1) ? 1.f : -1.f);
-		OutCenter += (Side + FVector(0.f, 0.f, 0.35f)) * LaunchBend * FMath::Sin(UE_PI * FMath::Clamp(T / FMath::Max(BendTime, 0.01f), 0.f, 1.f));
+		// (com sopro, a curva conta de quando a bola se solta: presa na boca ela não desvia)
+		const float BendT = GokakyuHoldTime > 0.f ? TMove : T;
+		OutCenter += (Side + FVector(0.f, 0.f, 0.35f)) * LaunchBend * FMath::Sin(UE_PI * FMath::Clamp(BendT / FMath::Max(BendTime, 0.01f), 0.f, 1.f));
+	}
+	if (GokakyuWander > 0.f && TMove > 0.f)
+	{
+		// Desvio orgânico de baixa frequência (fase pela semente: cada bola faz um caminho, igual em todas as máquinas)
+		const float Phase = UE_TWO_PI * GokakyuWanderRate * TMove + float(Launch.VisualSeed % 97) * 0.37f;
+		const float Fade = FMath::SmoothStep(0.f, 0.35f, TMove);
+		OutCenter += (Side * FMath::Sin(Phase) + FVector(0.f, 0.f, 0.5f * FMath::Sin(Phase * 0.63f + 1.3f))) * GokakyuWander * Fade;
 	}
 }
 

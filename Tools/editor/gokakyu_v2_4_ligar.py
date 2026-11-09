@@ -29,27 +29,56 @@ if getattr(unreal, "_gokakyu_v2_voltar", False):
         cdo.set_editor_property(k, v["BP"][k])
     cdo.set_editor_property("gokakyu_core_mesh", None)
     cdo.set_editor_property("gokakyu_shell_mesh", None)
+    for k in ("gokakyu_drag", "gokakyu_flight_grow", "gokakyu_wander", "launch_bend"):
+        cdo.set_editor_property(k, 0.0)
+    for k in ("full_radius", "gokakyu_core_scale", "gokakyu_light_radius", "bend_time"):
+        if k in v["BP"]:
+            cdo.set_editor_property(k, v["BP"][k])
     print("VOLTOU PARA O V1")
 else:
+    # valores do v2 aprovado (cores/luz) antes do passe "fogo vivo" de 08/11, para comparar/voltar à mão
+    proj = unreal.Paths.convert_relative_path_to_full(unreal.Paths.project_dir())
+    out2 = os.path.join(proj, "Docs/Jutsus/Katon/GokakyuV2/backup_valores_v2.json")
+    if not os.path.exists(out2):
+        keys = ("full_radius", "gokakyu_core_scale", "gokakyu_shell_scales", "gokakyu_shell_spins",
+                "gokakyu_shell_stretch", "accel_time", "launch_speed_scale", "gokakyu_light_radius", "launch_bend",
+                "bend_time", "collision_radius_scale")
+        with open(out2, "w", encoding="utf-8") as f:
+            json.dump({k: (list(v) if isinstance(v, unreal.Array) else v) for k, v in
+                       ((k, cdo.get_editor_property(k)) for k in keys)}, f, indent=1)
     da.set_editor_property("gokakyu_core_material", unreal.load_asset(V2 + "Materiais/MI_Katon_Nucleo"))
-    da.set_editor_property("gokakyu_shell_material", unreal.load_asset(V2 + "Materiais/MI_Katon_Casca"))
+    # 08/11 "fogo vivo": as cascas do C++ viram LÍNGUAS DE FOGO em malha (SM_Katon_Linguas, apontando para trás)
+    da.set_editor_property("gokakyu_shell_material", unreal.load_asset(V2 + "Materiais/MI_Katon_LinguaMalha"))
     da.set_editor_property("gokakyu_charge_system", None)          # nada nos selos: tudo nasce no cuspe
     da.set_editor_property("goukakyuu_exit_system", unreal.load_asset(V2 + "Niagara/NS_Katon_Gokakyu_v2_Carga"))
-    da.set_editor_property("goukakyuu_flight_system", unreal.load_asset(V2 + "Niagara/NS_Katon_Gokakyu_v2"))
+    da.set_editor_property("goukakyuu_flight_system", unreal.load_asset(V2 + "Niagara/NS_Katon_Gokakyu_v2_Voo"))
     da.set_editor_property("goukakyuu_trail_system", None)
     da.set_editor_property("goukakyuu_impact_system", unreal.load_asset(V2 + "Niagara/NS_Katon_Gokakyu_v2_Impacto"))
     cdo.set_editor_property("gokakyu_core_mesh", unreal.load_asset(V2 + "Meshes/SM_Katon_Core"))
-    cdo.set_editor_property("gokakyu_shell_mesh", unreal.load_asset(V2 + "Meshes/SM_Katon_Shell"))
+    cdo.set_editor_property("gokakyu_shell_mesh", unreal.load_asset(V2 + "Meshes/SM_Katon_Linguas"))
     cdo.set_editor_property("gokakyu_show_meshes", True)
     cdo.set_editor_property("grow_time", 0.3)
-    cdo.set_editor_property("gokakyu_hold_time", 0.32)
-    cdo.set_editor_property("accel_time", 0.15)
-    cdo.set_editor_property("launch_speed_scale", 0.25)
-    # tamanho VISUAL = 60% do raio de colisão (155 cm): as cascas de 2 m engoliam o personagem
+    cdo.set_editor_property("gokakyu_hold_time", 0.32)    # timing da carga (aprovado): solta em 0,32 s
+    # 08/11 trava: saía a 25% da velocidade e levava 0,15 s acelerando (+23 cm no 1º quadro) -> tranco forte
+    cdo.set_editor_property("accel_time", 0.1)
+    cdo.set_editor_property("launch_speed_scale", 0.7)
+    # física do voo (C++ 08/11): perde ~30% da velocidade em 1 s, cresce 10% no voo, arco suave + desvio lento
+    cdo.set_editor_property("gokakyu_drag", 0.35)
+    cdo.set_editor_property("gokakyu_flight_grow", 0.1)
+    cdo.set_editor_property("gokakyu_flight_grow_time", 1.0)
+    cdo.set_editor_property("gokakyu_wander", 35.0)
+    cdo.set_editor_property("gokakyu_wander_rate", 0.6)
+    cdo.set_editor_property("launch_bend", 70.0)
+    cdo.set_editor_property("bend_time", 1.6)
+    # tamanho: fogo com ~2,5-3x a altura do personagem; colisão/dano acompanham o raio (155 -> 210)
+    cdo.set_editor_property("full_radius", 210.0)
     cdo.set_editor_property("gokakyu_size", 0.6)
-    cdo.set_editor_property("gokakyu_shell_scales", [1.08, 1.22])
-    cdo.set_editor_property("gokakyu_shell_spins", [200.0, -150.0])   # graus/s: 0,55 e 0,42 volta/s, sentidos opostos
-    cdo.set_editor_property("gokakyu_shell_stretch", 1.15)
+    cdo.set_editor_property("gokakyu_core_scale", 0.55)   # núcleo menor, escondido dentro do fogo (as labaredas fazem a silhueta)
+    # luz igual à aprovada: o raio da luz é proporcional ao raio da bola (155/210)
+    cdo.set_editor_property("gokakyu_light_radius", 12.0 * 155.0 / 210.0)
+    cdo.set_editor_property("gokakyu_shell_scales", [0.9, 1.0])
+    cdo.set_editor_property("gokakyu_shell_spins", [70.0, -55.0])     # graus/s: línguas girando devagar, sentidos opostos
+    cdo.set_editor_property("gokakyu_shell_stretch", 1.0)
     cdo.set_editor_property("gokakyu_tongue", 0.0)
     cdo.set_editor_property("gokakyu_pulse", 0.03)
     cdo.set_editor_property("gokakyu_wobble", 8.0)
@@ -59,7 +88,11 @@ EAL.save_loaded_asset(da, False)
 # O BP só copia para o ator, no spawn, as propriedades que estavam DIFERENTES do padrão do C++ na última compilação
 # (lista otimizada do Blueprint). Sem compilar, um valor novo num campo que antes era igual ao padrão (ex.:
 # GokakyuSize 1 -> 0,6) é ignorado no jogo. Compila e confere se a compilação manteve os valores.
-antes = {k: cdo.get_editor_property(k) for k in ("gokakyu_size", "gokakyu_hold_time", "grow_time", "gokakyu_core_mesh",
+antes = {k: cdo.get_editor_property(k) for k in ("gokakyu_drag", "gokakyu_flight_grow", "gokakyu_flight_grow_time",
+                                                   "gokakyu_wander", "gokakyu_wander_rate", "launch_bend", "bend_time",
+                                                   "full_radius", "gokakyu_core_scale", "gokakyu_light_radius",
+                                                   "gokakyu_shell_spins", "gokakyu_shell_stretch",
+                                                   "gokakyu_size", "gokakyu_hold_time", "grow_time", "gokakyu_core_mesh",
                                                    "gokakyu_shell_mesh", "gokakyu_shell_scales", "gokakyu_show_meshes",
                                                    "accel_time", "launch_speed_scale", "gokakyu_tongue")}
 unreal.BlueprintEditorLibrary.compile_blueprint(bp)

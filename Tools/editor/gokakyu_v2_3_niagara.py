@@ -29,10 +29,11 @@ SPAWN_PER_UNIT = MOD + "Emitter/SpawnPerUnit.SpawnPerUnit"
 INHERIT = MOD + "Update/Velocity/InheritVelocity.InheritVelocity"
 CURL = MOD + "Update/Forces/V2/CurlNoiseForce.CurlNoiseForce"
 SUBUV = MOD + "Update/SubUV/V2/SubUVAnimation.SubUVAnimation"
+SPAWN_RATE = MOD + "Emitter/SpawnRate.SpawnRate"
 SELF, ONCE = "NewEnumerator1", "NewEnumerator2"
 FOUNTAIN, MESHT, RIBBON = T + "Fountain", T + "UpwardMeshBurst", T + "LocationBasedRibbon"
-R = 155.0          # FullRadius do BP (cm): a bola na boca fica com o centro R à frente
-V = 93.0           # raio VISUAL da bola = FullRadius x GokakyuSize (0,6); colisão/dano continuam com R
+R = 210.0          # FullRadius do BP (cm): a bola na boca fica com o centro R à frente (08/11: 155 -> 210)
+V = 126.0          # raio VISUAL de referência = FullRadius x GokakyuSize (0,6)
 
 
 def mat(name):
@@ -104,7 +105,7 @@ class Sprite:
 
     def __init__(self, s, em, *, life, size, speed, cone, axis, radius, material, rise=(0, 0, 0), drag=0.0,
                  rate=0, spacing=None, inherit=None, curl=None, sort=0, surface=False, stretch=None, local=False,
-                 offset=None, flipbook=False, burst=None, from_point=False, rot=40):
+                 offset=None, flipbook=False, burst=None, from_point=False, rot=40, wind_local=False, start=None):
         self.__dict__.update(locals())
         del self.__dict__["self"]
         emitter(s, em, "bLocalSpace", "True" if local else "False")
@@ -127,6 +128,10 @@ class Sprite:
             pin(s, em, "AddVelocity", "Velocity Mode", "NewEnumerator1")
         if burst:
             once(s, em, burst[0], burst[1])
+        if start is not None:
+            once(s, em, 100.0, start)   # liga em 'start' e fica ligado (100 s)
+        if wind_local:
+            pin(s, em, "GravityForce", "Coordinate Space", "Local")
 
     def values(self):
         s, em = self.s, self.em
@@ -175,17 +180,25 @@ class Sprite:
             const(s, em, "EmitterState.Loop Duration", self.burst[0])
             if self.burst[1] > 0:
                 const(s, em, "EmitterState.Loop Delay", self.burst[1])
+        if self.start is not None:
+            const(s, em, "EmitterState.Loop Duration", 100.0)
+            const(s, em, "EmitterState.Loop Delay", self.start)
 
 
 class Mesh:
     """UpwardMeshBurst virado camada de malha: parada (sem velocidade/gravidade), cor branca, girando no eixo X."""
 
     def __init__(self, s, em, *, meshes, material, life, scale, count=1, at=0.0, dur=0.6, offset=None,
-                 spin=0.0, rotation=None, sort=0, kill=False):
+                 spin=0.0, rotation=None, sort=0, kill=False, rate=0.0, start=None):
         self.__dict__.update(locals())
         del self.__dict__["self"]
         emitter(s, em, "bLocalSpace", "True")
-        once(s, em, dur)
+        if start is not None:
+            once(s, em, 100.0, start)
+        else:
+            once(s, em, dur)
+        if rate:
+            module(s, em, SPAWN_RATE, "EmitterUpdate")
         pin(s, em, "InitializeParticle", "AdjustHue", "false", required=False)
         pin(s, em, "SpawnBurst_Instantaneous", "UseLoopCountLimit", "true", required=False)
         if offset:
@@ -198,8 +211,12 @@ class Mesh:
 
     def values(self):
         s, em = self.s, self.em
-        const(s, em, "EmitterState.Loop Duration", self.dur)
-        const(s, em, "SpawnBurst_Instantaneous.Spawn Count", self.count)
+        const(s, em, "EmitterState.Loop Duration", 100.0 if self.start is not None else self.dur)
+        if self.start is not None:
+            const(s, em, "EmitterState.Loop Delay", self.start)
+        if self.rate:
+            const(s, em, "SpawnRate.SpawnRate", self.rate)
+        const(s, em, "SpawnBurst_Instantaneous.Spawn Count", 0 if self.rate else self.count)
         const(s, em, "SpawnBurst_Instantaneous.Spawn Time", self.at)
         const(s, em, "SpawnBurst_Instantaneous.Loop Count Limit", 1, required=False)
         const(s, em, "InitializeParticle.Lifetime Min", self.life)
@@ -273,83 +290,101 @@ def rb(**kw):
 
 
 C = (R, 0, 0)   # centro da bola na boca (X = mira)
+K = V / 93.0    # fator de tamanho em relação à 1ª versão aprovada (raio visual 93 cm)
 
 # ================================================================================================ carga (saída)
+# 08/11 (trava): nada que fica parado na boca sobrevive à soltura (0,32 s): esfera da carga morre em 0,33,
+# flash do pico curto e a fita da liberação some em 0,1 s
 montar("NS_Katon_Gokakyu_v2_Carga", [
     # 0-0,1 s: ponto branco-amarelo forte na boca + clarão
     (FOUNTAIN, "Ignicao", sp(life=(0.12, 0.16), size=(70, 110), speed=(0, 1), cone=0, axis=(1, 0, 0), radius=4,
                              material="MI_Katon_Ignicao", rate=75, local=True, offset=(25, 0, 0), sort=6,
                              burst=(0.04, 0.0))),
-    (FOUNTAIN, "ClaraoBoca", sp(life=(0.3, 0.35), size=(300, 360), speed=(0, 1), cone=0, axis=(1, 0, 0), radius=4,
-                                material="MI_Katon_HaloFlash", rate=60, local=True, offset=(60, 0, 0), sort=-1,
-                                burst=(0.03, 0.0), rot=0)),
+    (FOUNTAIN, "ClaraoBoca", sp(life=(0.3, 0.35), size=(300 * K, 360 * K), speed=(0, 1), cone=0, axis=(1, 0, 0),
+                                radius=4, material="MI_Katon_HaloFlash", rate=60, local=True, offset=(60, 0, 0),
+                                sort=-1, burst=(0.03, 0.0), rot=0)),
     # 0,05-0,27 s: brasas sugadas para o centro da bola (velocidade a partir do centro, negativa)
-    (FOUNTAIN, "Sugadas", sp(life=(0.22, 0.28), size=(7, 13), speed=(-900, -700), cone=0, axis=(1, 0, 0),
-                             radius=230, material="MI_Katon_Brasa", rate=180, local=True, offset=C, surface=True,
-                             from_point=True, stretch=(1.0, 4.0), sort=4, burst=(0.2, 0.05))),
-    # 0-0,42 s: esfera de fresnel crescendo na frente da boca, overshoot ~15% no pico (~0,3 s)
-    (MESHT, "EsferaCarga", me(meshes=["SM_Katon_Shell"], material="MI_Katon_CargaEsfera", life=0.42, scale=1.9,
-                              offset=C, spin=0.3, sort=2)),
+    (FOUNTAIN, "Sugadas", sp(life=(0.22, 0.28), size=(7, 13), speed=(-1150, -900), cone=0, axis=(1, 0, 0),
+                             radius=230 * K, material="MI_Katon_Brasa", rate=180, local=True, offset=C,
+                             surface=True, from_point=True, stretch=(1.0, 4.0), sort=4, burst=(0.2, 0.05))),
+    # 0-0,33 s: esfera de fresnel crescendo na frente da boca, overshoot ~15% no pico (~0,3 s); some na soltura
+    (MESHT, "EsferaCarga", me(meshes=["SM_Katon_Shell"], material="MI_Katon_CargaEsfera", life=0.33,
+                              scale=V * 1.05 / 52, offset=C, spin=0.3, sort=2)),
     # 0,06-0,32 s: anel encolhendo para o centro (de frente para a mira)
-    (MESHT, "Anel", me(meshes=["SM_Katon_Shockwave"], material="MI_Katon_Anel", life=0.26, scale=1.1, at=0.06,
-                       offset=C, rotation=(0, 0.25, 0), spin=0.5, sort=1)),
-    # 0,29 s: flash do pico
-    (FOUNTAIN, "FlashPico", sp(life=(0.3, 0.32), size=(600, 700), speed=(0, 1), cone=0, axis=(1, 0, 0), radius=4,
-                               material="MI_Katon_HaloFlash", rate=60, local=True, offset=C, sort=-1,
+    (MESHT, "Anel", me(meshes=["SM_Katon_Shockwave"], material="MI_Katon_Anel", life=0.26, scale=V * 1.2 / 100,
+                       at=0.06, offset=C, rotation=(0, 0.25, 0), spin=0.5, sort=1)),
+    # 0,29 s: flash do pico (curto: não pode parecer bola parada depois da soltura)
+    (FOUNTAIN, "FlashPico", sp(life=(0.1, 0.12), size=(600 * K, 700 * K), speed=(0, 1), cone=0, axis=(1, 0, 0),
+                               radius=4, material="MI_Katon_HaloFlash", rate=60, local=True, offset=C, sort=-1,
                                burst=(0.03, 0.29), rot=0)),
-    # 0,32 s: liberação, 1ª fase = línguas disparando para a frente e perdendo força rápido
-    (FOUNTAIN, "Liberacao", sp(life=(0.16, 0.28), size=(120, 200), speed=(900, 1700), cone=28, axis=(1, 0, 0),
-                               radius=60, material="MI_Katon_Lingua", rate=300, drag=7.0, local=True,
-                               offset=C, flipbook=True, sort=3, burst=(0.06, 0.32))),
+    # 0,32 s: liberação, 1ª fase = línguas disparando para a frente junto com a bola
+    (FOUNTAIN, "Liberacao", sp(life=(0.16, 0.28), size=(120 * K, 200 * K), speed=(1500, 2600), cone=28,
+                               axis=(1, 0, 0), radius=60 * K, material="MI_Katon_Lingua", rate=300, drag=5.0,
+                               local=True, offset=C, flipbook=True, sort=3, burst=(0.06, 0.32))),
     # 0,32 s: liberação, 2ª fase = fita que surge grande e encolhe rápido (dá peso)
-    (MESHT, "FitaLiberacao", me(meshes=["SM_Katon_Ribbon_02"], material="MI_Katon_FitaLiberacao", life=0.16,
-                                scale=2.1, at=0.32, offset=(R + 30, 0, 0), spin=2.0, sort=3)),
-], unreal.Vector(1500, 1500, 1500))
+    (MESHT, "FitaLiberacao", me(meshes=["SM_Katon_Ribbon_02"], material="MI_Katon_FitaLiberacao", life=0.1,
+                                scale=2.1 * K, at=0.32, offset=(R + 30, 0, 0), spin=2.0, sort=3)),
+], unreal.Vector(1800, 1800, 1800))
 
 # ================================================================================================ bola (voo)
-# vida 2 s (o voo dura ~1 s): as curvas de cor/tamanho do modelo são por idade normalizada; com 60 s as fitas
-# ficavam presas no começo da curva (invisíveis). No impacto o C++ desativa e elas morrem na hora (kill)
-# orientação inicial FIXA (o modelo sorteia uma rotação qualquer e a fita tombava em vez de envolver a bola);
-# escala 1,0: a curva de tamanho do modelo ainda aumenta a malha com a idade
-FITA = dict(material="MI_Katon_Fita", life=2.0, scale=1.0, at=0.3, dur=2.5, kill=True, sort=2, rotation=(0, 0, 0))
-montar("NS_Katon_Gokakyu_v2", [
-    # fitas: 0,5-1,5 volta/s, sentidos diferentes (Rotation Rate em voltas/s)
+# Fogo vivo (08/11): a silhueta é quebrada o tempo todo por labaredas que nascem na superfície, saem para fora,
+# ficam para trás (herdam só parte da velocidade da bola + vento contrário ao voo, no espaço da bola) e somem.
+# Tudo do corpo começa na soltura (0,3 s): presa na boca, o vento empurraria fogo para cima do personagem.
+VOO = dict(start=0.3)
+# fitas: renascem o tempo todo (~2,8 por segundo por emissor), abraçam a bola e crescem enquanto se dissolvem
+# (curvas de cor/tamanho do modelo por idade); orientação inicial fixa; no impacto morrem na hora (kill)
+FITA = dict(material="MI_Katon_Fita", life=0.7, scale=V / 60.0, rate=2.8, kill=True, sort=2, rotation=(0, 0, 0),
+            start=0.3)
+VENTO = (-700, 0, 120)   # cm/s², no espaço da bola (X = voo): empurra para trás e um pouco para cima
+# 08/11: nome novo. O asset NS_Katon_Gokakyu_v2 (mesmo conteúdo) nascia desativado no jogo depois das reconstruções
+# no mesmo caminho, enquanto uma cópia idêntica com outro nome funciona; ele fica no projeto, sem uso
+montar("NS_Katon_Gokakyu_v2_Voo", [
     (MESHT, "Fita01", me(meshes=["SM_Katon_Ribbon_01"], spin=0.8, **FITA)),
     (MESHT, "Fita02", me(meshes=["SM_Katon_Ribbon_02"], spin=-1.2, **FITA)),
     (MESHT, "Fita03", me(meshes=["SM_Katon_Ribbon_03"], spin=1.5, **FITA)),
     (MESHT, "Fita04", me(meshes=["SM_Katon_Ribbon_04"], spin=-0.6, **FITA)),
-    # línguas: soltas por distância, indo para trás (forma o rastro); Shape esfera = largura
-    (FOUNTAIN, "Linguas", sp(life=(0.25, 0.4), size=(110, 180), speed=(150, 400), cone=35, axis=(-1, 0, 0),
-                             radius=V * 0.8, material="MI_Katon_Lingua", spacing=28, rate=0, inherit=0.3,
-                             surface=True, flipbook=True, rise=(0, 0, 120), drag=2.5, sort=1)),
-    # cauda: sprites soltos por distância no mundo (a fita do modelo LocationBasedRibbon anda sozinha em curva
-    # e virava uma faixa retangular), mais transparentes, esfriando com a idade, quase sem velocidade
-    (FOUNTAIN, "Cauda", sp(life=(0.45, 0.6), size=(150, 230), speed=(20, 80), cone=30, axis=(-1, 0, 0),
-                           radius=V * 0.5, material="MI_Katon_Cauda", spacing=40, rate=0, inherit=0.1,
-                           rise=(0, 0, 90), drag=1.5, flipbook=True, sort=0)),
+    # labaredas na superfície (todas as direções), grandes, sobrepostas, vida curta, renovando sempre
+    (FOUNTAIN, "Labaredas", sp(life=(0.3, 0.45), size=(V * 1.5, V * 2.2), speed=(150, 350), cone=0,
+                               axis=(1, 0, 0), radius=V * 0.85, material="MI_Katon_Labareda", rate=40, inherit=0.85,
+                               surface=True, from_point=True, flipbook=True, rise=VENTO,
+                               wind_local=True, drag=1.0, sort=2, **VOO)),
+    # labaredas de trás: mais densas e longas (a cauda nasce aqui)
+    (FOUNTAIN, "LabaredasTras", sp(life=(0.45, 0.6), size=(V * 1.8, V * 2.7), speed=(100, 250), cone=0,
+                                   axis=(1, 0, 0), radius=V * 0.75, material="MI_Katon_Labareda", rate=30,
+                                   inherit=0.7, surface=True, from_point=True, flipbook=True,
+                                   offset=(-V * 0.45, 0, 0), rise=VENTO, wind_local=True, drag=1.0, sort=1, **VOO)),
+    # cauda: línguas soltas por distância que herdam pouca velocidade e ficam no ar, curvando com o vento lento
+    (FOUNTAIN, "Linguas", sp(life=(0.5, 0.8), size=(150 * K, 240 * K), speed=(150, 400), cone=35,
+                             axis=(-1, 0, 0), radius=V * 0.8, material="MI_Katon_Lingua", rate=45,
+                             inherit=0.2, surface=True, flipbook=True, rise=(0, 0, 160), drag=2.5,
+                             curl=(300, 0.35), sort=1, **VOO)),   # taxa fixa: só por distância não nascia
+    (FOUNTAIN, "Cauda", sp(life=(0.7, 1.0), size=(190 * K, 290 * K), speed=(20, 80), cone=30, axis=(-1, 0, 0),
+                           radius=V * 0.5, material="MI_Katon_Cauda", rate=35, inherit=0.08,
+                           rise=(0, 0, 140), drag=1.5, curl=(350, 0.3), flipbook=True, sort=0, **VOO)),
     # Spark Trail: tamanho aleatório não uniforme, curl noise, sem escala por idade
     (FOUNTAIN, "SparkTrail", sp(life=(0.5, 0.9), size=(6, 14), speed=(150, 400), cone=70, axis=(-1, 0, 0.3),
-                                radius=V * 0.9, material="MI_Katon_Brasa", spacing=45, rate=0, inherit=0.3,
+                                radius=V * 0.9, material="MI_Katon_Brasa", spacing=55, rate=0, inherit=0.3,
                                 curl=(220, 1.0), stretch=(1.0, 2.5), rise=(0, 0, 150), drag=1.5, sort=4)),
     # Front Sparks: vida bem mais curta, curl mais forte
     (FOUNTAIN, "FrontSparks", sp(life=(0.15, 0.25), size=(6, 12), speed=(300, 700), cone=60, axis=(1, 0, 0),
-                                 radius=V * 0.9, material="MI_Katon_Brasa", spacing=60, rate=0, inherit=0.6,
+                                 radius=V * 0.9, material="MI_Katon_Brasa", spacing=70, rate=0, inherit=0.6,
                                  curl=(600, 2.0), surface=True, drag=2.0, sort=4)),
     # halo: 1 sprite aditivo grande e suave preso à bola
-    (FOUNTAIN, "Halo", sp(life=(0.35, 0.45), size=(300, 360), speed=(0, 1), cone=0, axis=(1, 0, 0), radius=5,
-                          material="MI_Katon_Halo", rate=10, local=True, sort=-1, rot=0)),
-], unreal.Vector(2200, 1200, 1200))
+    (FOUNTAIN, "Halo", sp(life=(0.35, 0.45), size=(240 * K, 290 * K), speed=(0, 1), cone=0, axis=(1, 0, 0),
+                          radius=5, material="MI_Katon_Halo", rate=10, local=True, sort=-1, rot=0)),
+], unreal.Vector(2600, 1600, 1600))
 
 # ================================================================================================ impacto
+# (o C++ cria o impacto com escala 2,4). As fitas não podem se soltar como arcos: pequenas, abraçando o estouro
 montar("NS_Katon_Gokakyu_v2_Impacto", [
     (MESHT, "Onda", me(meshes=["SM_Katon_Shockwave"], material="MI_Katon_Onda", life=0.5, scale=1.0, sort=1)),
     (MESHT, "Estouro", me(meshes=["SM_Katon_Shell"], material="MI_Katon_Estouro", life=0.3, scale=1.2,
                           offset=(0, 0, 40), spin=0.5, sort=2)),
     (MESHT, "FitasAbrindo", me(meshes=["SM_Katon_Ribbon_01", "SM_Katon_Ribbon_03"], material="MI_Katon_FitaImpacto",
-                               life=0.4, scale=0.7, count=3, offset=(0, 0, 40), spin=1.2, rotation=(0, -0.25, 0),
+                               life=0.3, scale=0.45, count=3, offset=(0, 0, 40), spin=1.2, rotation=(0, -0.25, 0),
                                sort=2)),
-    (FOUNTAIN, "Chamas", sp(life=(0.4, 0.7), size=(200, 360), speed=(500, 1100), cone=70, axis=(0, 0, 1), radius=40,
-                            material="MI_Katon_Lingua", rate=600, rise=(0, 0, 300), drag=4.0, local=True,
+    (FOUNTAIN, "Chamas", sp(life=(0.4, 0.7), size=(240, 420), speed=(500, 1100), cone=70, axis=(0, 0, 1), radius=50,
+                            material="MI_Katon_Lingua", rate=800, rise=(0, 0, 300), drag=4.0, local=True,
                             flipbook=True, sort=3, burst=(0.08, 0.0))),
     (FOUNTAIN, "Brasas", sp(life=(0.5, 1.0), size=(8, 16), speed=(400, 1000), cone=80, axis=(0, 0, 1), radius=40,
                             material="MI_Katon_Brasa", rate=300, rise=(0, 0, 150), drag=1.5, local=True,

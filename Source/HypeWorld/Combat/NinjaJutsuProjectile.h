@@ -210,6 +210,16 @@ public:
 	 *  personagem fica na borda de trás da bola, nunca dentro. 0 = sai voando direto (como antes) */
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuHoldTime = 0.f;
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuHoldForward = 1.f;
+	/** Física do voo (08/11, v2). Tudo conta do momento em que a bola se solta (fim do HoldTime) e é uma fórmula fixa
+	 *  do tempo, igual no servidor e nos clientes. 0 = desligado (como antes).
+	 *  Drag: depois do tranco a velocidade cai devagar (1/s: 0,35 = ~70% da velocidade depois de 1 s).
+	 *  FlightGrow: o raio (visual e colisão) cresce essa fração em FlightGrowTime s de voo.
+	 *  Wander: desvio lento de lado/cima (cm) a WanderRate voltas/s, nunca tremido; some no começo do voo. */
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuDrag = 0.f;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuFlightGrow = 0.f;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuFlightGrowTime = 1.f;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuWander = 0.f;
+	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuWanderRate = 0.6f;
 	/** Flash de luz no impacto (candelas no pico) e raio (cm); depois fica um brilho do fogo no chão por ~2 s */
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuImpactLight = 6000.f;
 	UPROPERTY(EditDefaultsOnly, Category="Jutsu|Gokakyu") float GokakyuImpactLightRadius = 2200.f;	/** Rajada na boca (tiros pequenos, no lugar de IgniteGlows/IgniteFlames): línguas (TongueMaterial, as primeiras

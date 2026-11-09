@@ -101,7 +101,7 @@ def tick(dt):
                 st["shots"] += 1
                 while st["shots"] < len(TEMPOS) and age >= TEMPOS[st["shots"]]:
                     st["shots"] += 1   # instante já passou neste quadro: pula
-        if st["shots"] >= len(TEMPOS) or st["t"] > 20.0:
+        if st["shots"] >= len(TEMPOS) or st["t"] > 40.0:
             unreal.SystemLibrary.execute_console_command(w, "slomo 1")
             log("fim")
             unreal.unregister_slate_post_tick_callback(st["h"])

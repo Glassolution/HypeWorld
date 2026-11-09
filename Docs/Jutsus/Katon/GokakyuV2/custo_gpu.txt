@@ -1,13 +1,16 @@
-Gōkakyū v2 — custo de GPU (08/11/2026)
-Máquina: NVIDIA GeForce GTX 1650 (o alvo). Play no editor, mapa L_Tutorial, câmera do jogo, viewport 1290x776, TSR.
-Medido com ProfileGPU (Tools/editor/teste_gokakyu_v2_custo.py), passada "Translucency(AfterDOF)":
+Gōkakyū v2 — custo de GPU
+Máquina: NVIDIA GeForce GTX 1650 (o alvo). Play no editor, mapa L_Tutorial, câmera do jogo, viewport ~1290x776, TSR.
+Medido com ProfileGPU (Tools/editor/teste_gokakyu_v2_custo.py), passada "Translucency":
 
-  sem o jutsu (base)           0,11 ms
-  carga na boca (0,25 s)       0,55 ms   <- pico
-  liberação (0,35 s)           0,55 ms
-  voo (0,60 s)                 0,44 ms
+09/11/2026 — passe "fogo vivo" (labaredas, línguas em malha, fitas que se dissolvem, cauda, bola 210 cm):
+  sem o jutsu (base)           0,10 ms
+  carga na boca (0,25 s)       0,35 ms
+  soltura (0,35 s)             0,70 ms   <- pico
+  voo (0,60 s)                 0,50 ms
+  voo (0,90 s)                 0,46 ms
+  Simulação Niagara (CPU->GPU) < 0,1 ms. Pico do efeito: ~+0,6 ms (limite ~2 ms).
 
-Custo do efeito no pico: ~0,45 ms de translúcido (limite: ~2 ms). A luz pontual do projétil não projeta sombra
-(passada Lights 0,13-0,16 ms com ou sem o jutsu). O quadro inteiro variou 32-35 ms no editor (PIE + editor aberto;
-um quadro de 46 ms no voo veio de outra vista do editor, não da cena).
-Não medido nesta etapa: Shader Complexity / Quad Overdraw.
+08/11/2026 — 1ª versão v2: base 0,11 / carga 0,55 / voo 0,44 ms.
+
+O quadro inteiro ficou em 30-32 ms no editor (PIE com o editor aberto), com ou sem o jutsu.
+Não medido: Shader Complexity / Quad Overdraw.

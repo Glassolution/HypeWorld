@@ -1,0 +1,19 @@
+{
+ "full_radius": 155.0,
+ "gokakyu_core_scale": 0.8500000238418579,
+ "gokakyu_shell_scales": [
+  1.0800000429153442,
+  1.2200000286102295
+ ],
+ "gokakyu_shell_spins": [
+  200.0,
+  -150.0
+ ],
+ "gokakyu_shell_stretch": 1.149999976158142,
+ "accel_time": 0.15000000596046448,
+ "launch_speed_scale": 0.25,
+ "gokakyu_light_radius": 12.0,
+ "launch_bend": 0.0,
+ "bend_time": 0.25,
+ "collision_radius_scale": 0.5
+}

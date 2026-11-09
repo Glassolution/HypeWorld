@@ -29,12 +29,14 @@ for prop in ("goukakyuu_exit_system", "goukakyuu_flight_system", "goukakyuu_trai
     a = da.get_editor_property(prop)
     if a:
         fontes.add(a.get_path_name().split(".")[0])
-for src in sorted(fontes):
-    dst = BACKUP + "/" + src.split("/")[-1] + "_v1"
-    if not EAL.does_asset_exist(dst):
-        assert EAL.duplicate_asset(src, dst), src
-        print("backup:", src, "->", dst)
-EAL.save_directory(BACKUP, only_if_is_dirty=False, recursive=True)   # a cópia nasce só na memória
+# o backup do v1 é feito UMA vez: rodando de novo (o DA já aponta para o v2) ele copiaria o v2 com nome "_v1"
+if not EAL.does_asset_exist(BACKUP + "/DA_Katon_Goukakyuu_v1"):
+    for src in sorted(fontes):
+        dst = BACKUP + "/" + src.split("/")[-1] + "_v1"
+        if not EAL.does_asset_exist(dst):
+            assert EAL.duplicate_asset(src, dst), src
+            print("backup:", src, "->", dst)
+    EAL.save_directory(BACKUP, only_if_is_dirty=True, recursive=True)   # a cópia nasce só na memória
 
 
 def val(v):
@@ -96,7 +98,7 @@ for t in tasks:
     print("importado:", list(t.get_editor_property("imported_object_paths")))
 
 for name in ["SM_Katon_Core", "SM_Katon_Shell", "SM_Katon_Ribbon_01", "SM_Katon_Ribbon_02", "SM_Katon_Ribbon_03",
-             "SM_Katon_Ribbon_04", "SM_Katon_Shockwave"]:
+             "SM_Katon_Ribbon_04", "SM_Katon_Shockwave", "SM_Katon_Linguas"]:
     m = unreal.load_asset(MESHES + "/" + name)
     assert m, name
     # sem colisão (só visual) e sem material importado: o material vem do Niagara/C++

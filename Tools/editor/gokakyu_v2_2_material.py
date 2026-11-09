@@ -169,12 +169,15 @@ MEL.connect_material_property(c, "", unreal.MaterialProperty.MP_EMISSIVE_COLOR)
 
 # WPO: crescer a partir do centro da partícula (idade normalizada, com overshoot) + respirar
 wins = [("WP", node(unreal.MaterialExpressionWorldPosition, -800)),
+        ("UV", node(unreal.MaterialExpressionTextureCoordinate, -800)),
+        ("Rui", texobj("RuidoWPO", RUIDO_B)), ("Seed", scalar("SeedWPO", 0.0)),
         ("PP", node(unreal.MaterialExpressionParticlePositionWS, -800)),
         ("AGE", node(unreal.MaterialExpressionParticleRelativeTime, -800)),
         ("N", node(unreal.MaterialExpressionVertexNormalWS, -800)),
         ("T", node(unreal.MaterialExpressionTime, -800))]
 wins += [(n, scalar(n, v)) for n, v in (("CrescerLiga", 0.0), ("Cresce0", 1.0), ("Cresce1", 1.0),
-                                        ("CresceTempo", 1.0), ("CresceOvershoot", 0.0), ("Respirar", 0.0))]
+                                        ("CresceTempo", 1.0), ("CresceOvershoot", 0.0), ("Respirar", 0.0),
+                                        ("Deformar", 0.0), ("Ondular", 0.0))]
 WCODE = r"""
 float x = saturate(AGE / max(CresceTempo, 0.01)) - 1.0;
 float k = CresceOvershoot;
@@ -182,6 +185,19 @@ float e = 1.0 + (k + 1.0) * x * x * x + k * x * x;      // ease out back (k = 0:
 float g = lerp(Cresce0, Cresce1, e);
 float3 off = (WP - PP) * (g - 1.0) * CrescerLiga;
 off += N * Respirar * sin(T * 2.2 + dot(WP, float3(0.031, 0.027, 0.023)));
+// deformação forte por ruído (cm): o núcleo nunca fica redondo; o padrão rola com o tempo
+if (Deformar > 0.0) {
+    float2 nuv = float2(dot(N, float3(0.71, 0.0, 0.70)), dot(N, float3(0.0, 0.8, 0.6))) * 0.45 + Seed * 0.13;
+    float n1 = Texture2DSampleLevel(Rui, RuiSampler, nuv + float2(T * 0.07, T * 0.11), 0).r;
+    float n2 = Texture2DSampleLevel(Rui, RuiSampler, nuv * 2.3 - float2(T * 0.13, T * 0.05), 0).g;
+    off += N * Deformar * ((n1 - 0.5) * 1.6 + (n2 - 0.5) * 0.8);
+}
+// ondular (línguas em malha): onda senoidal + ruído, amplitude crescendo da base (V=0) até a ponta (V=1)
+if (Ondular > 0.0) {
+    float wv = sin(T * 5.0 + UV.y * 6.0 + Seed * 3.0) + 0.5 * sin(T * 8.3 - UV.y * 9.0 + Seed);
+    float nz = Texture2DSampleLevel(Rui, RuiSampler, float2(UV.y * 0.7 + Seed * 0.31, T * 0.21), 0).r - 0.5;
+    off += N * Ondular * UV.y * (wv + nz * 1.5);
+}
 return off;
 """
 w = custom(WCODE, wins, unreal.CustomMaterialOutputType.CMOT_FLOAT3, -350, 500)
@@ -205,25 +221,37 @@ def mi(name, scalars, parent=None):
 
 # núcleo (malha do C++): fresnel FORTE, sem erosão, manchas quentes rolando devagar, respira
 mi("MI_Katon_Nucleo", {"FresnelForca": 1.0, "FresnelExp": 2.0, "ErosaoRuido": 0.0, "Limiar": -1.0, "Calor": 0.6,
-                       "Escala": 1.6, "PanU": 0.05, "PanV": 0.18, "Distorcao": 0.18, "Brilho": 3.0, "Respirar": 1.5})
+                       "Escala": 1.6, "PanU": 0.05, "PanV": 0.18, "Distorcao": 0.18, "Brilho": 3.0, "Respirar": 1.5,
+                       "Deformar": 22.0})
 # cascas (malhas do C++): fresnel sutil, erosão forte (vazada), rolando mais rápido
 mi("MI_Katon_Casca", {"FresnelForca": 0.3, "FresnelSome": 0.8, "ErosaoRuido": 0.7, "Limiar": 0.35,
                       "ErosaoSuave": 0.18, "Calor": 0.45, "Escala": 2.0, "PanV": 0.7, "Brilho": 1.2})
 # fitas (malhas do Niagara, U ao longo da fita): textura correndo ao longo, borda pela cor de vértice
-mi("MI_Katon_Fita", {"FresnelForca": 0.15, "ErosaoRuido": 0.55, "Limiar": 0.15, "Calor": 0.7, "Escala": 2.0,
+mi("MI_Katon_Fita", {"FresnelForca": 0.15, "ErosaoRuido": 0.7, "Limiar": 0.22, "Calor": 0.5, "Escala": 2.0,
                      "EscalaV": 0.5, "PanU": -1.0, "PanV": 0.0, "Brilho": 3.5})
 mi("MI_Katon_FitaImpacto", {"FresnelForca": 0.15, "ErosaoRuido": 0.6, "Limiar": 0.12, "Calor": 0.85, "Escala": 2.0,
                             "EscalaV": 0.5, "PanU": -1.6, "PanV": 0.0, "Brilho": 3.5, "CrescerLiga": 1.0,
-                            "Cresce0": 1.0, "Cresce1": 1.8, "CresceTempo": 0.8})
+                            "Cresce0": 1.0, "Cresce1": 1.35, "CresceTempo": 0.8})
 mi("MI_Katon_FitaLiberacao", {"FresnelForca": 0.15, "ErosaoRuido": 0.5, "Limiar": 0.1, "Calor": 1.0, "Escala": 2.0,
                               "EscalaV": 0.5, "PanU": -2.0, "PanV": 0.0, "Brilho": 4.0, "CrescerLiga": 1.0,
                               "Cresce0": 1.35, "Cresce1": 0.55, "CresceTempo": 1.0})
+# línguas de fogo em MALHA (SM_Katon_Linguas, cascas do C++): chama rolando da base para a ponta, borda pela cor de
+# vértice, ondulando (WPO) e deformada
+mi("MI_Katon_LinguaMalha", {"UsarVC": 1.0, "PanU": 0.0, "PanV": -1.2, "Escala": 1.5, "EscalaV": 0.6, "ErosaoRuido": 0.65,
+                            "Limiar": 0.12, "Calor": 0.5, "Brilho": 2.0, "FresnelForca": 0.2, "FresnelSome": 0.6,
+                            "Ondular": 35.0, "Deformar": 8.0})
 # línguas (sprites com o flipbook nosso 8x8)
+# labaredas da superfície da bola: muitas sobrepostas -> um pouco menos intensas cada uma (somadas ficavam creme);
+# mesma paleta, mais erosão para a borda quebrar
+mi("MI_Katon_Labareda", {"UsarFB": 1.0, "MascaraRadial": 1.0, "UsarVC": 0.0, "ErosaoRuido": 0.45, "Limiar": 0.1,
+                         "Calor": 0.45, "Brilho": 1.8, "SomePerto": 200.0, "PanV": 0.2})
 mi("MI_Katon_Lingua", {"UsarFB": 1.0, "MascaraRadial": 1.0, "UsarVC": 0.0, "ErosaoRuido": 0.35, "Limiar": 0.08,
                        "Calor": 0.7, "Brilho": 3.5, "SomePerto": 200.0, "PanV": 0.2})
 # cauda (fita do Niagara): borda da largura some, esfria com a idade
-mi("MI_Katon_Cauda", {"UsarVC": 0.0, "UsarFB": 1.0, "MascaraRadial": 1.0, "FadeBordaV": 0.0, "ErosaoRuido": 0.6, "Limiar": 0.1, "Calor": 0.7,
-                      "Esfriar": 0.6, "PanU": -1.5, "PanV": 0.0, "Escala": 1.0, "Brilho": 2.5})
+# 08/11: cauda com forma procedural (os últimos quadros do flipbook já são quase transparentes e a cauda sumia a ~3 m)
+mi("MI_Katon_Cauda", {"UsarVC": 0.0, "UsarFB": 0.0, "FormaRadial": 1.0, "MascaraRadial": 1.0, "FadeBordaV": 0.0,
+                      "ErosaoRuido": 0.5, "Limiar": 0.0, "Calor": 0.65, "Esfriar": 0.25, "PanU": 0.0, "PanV": 0.4,
+                      "Escala": 1.2, "Brilho": 5.0})
 # brasas e ignição: pontinhos redondos muito brilhantes
 mi("MI_Katon_Brasa", {"FormaRadial": 1.0, "MascaraRadial": 1.0, "ErosaoRuido": 0.0, "Limiar": -1.0, "Calor": 1.3,
                       "UsarVC": 0.0, "Brilho": 14.0, "Distorcao": 0.0})
