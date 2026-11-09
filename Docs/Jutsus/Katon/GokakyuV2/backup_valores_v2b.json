@@ -1,0 +1,25 @@
+{
+ "full_radius": 210.0,
+ "gokakyu_core_scale": 0.550000011920929,
+ "gokakyu_shell_scales": [
+  0.8999999761581421,
+  1.0
+ ],
+ "gokakyu_shell_spins": [
+  70.0,
+  -55.0
+ ],
+ "gokakyu_shell_stretch": 1.0,
+ "accel_time": 0.10000000149011612,
+ "launch_speed_scale": 0.699999988079071,
+ "gokakyu_light_radius": 8.857142448425293,
+ "gokakyu_light_launch_peak": 0.699999988079071,
+ "launch_bend": 70.0,
+ "bend_time": 1.600000023841858,
+ "gokakyu_drag": 0.3499999940395355,
+ "gokakyu_flight_grow": 0.10000000149011612,
+ "gokakyu_wander": 35.0,
+ "speed": 3000.0,
+ "gokakyu_hold_time": 0.3199999928474426,
+ "grow_time": 0.30000001192092896
+}

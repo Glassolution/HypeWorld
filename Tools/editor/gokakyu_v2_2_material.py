@@ -85,8 +85,21 @@ def custom(code, inputs, out_type, x=-350, y=0):
 fb = node(unreal.MaterialExpressionTextureSampleParameterSubUV)
 fb.set_editor_property("parameter_name", "Flipbook")
 fb.set_editor_property("texture", unreal.load_asset(FLIPBOOK))
+# 09/11: o bake do fluido tem células duras ("pipoca") de perto; LOD bias 2 = atlas 512 (quadro 64 px): borda macia
+_tfb = unreal.load_asset(FLIPBOOK)
+if _tfb.get_editor_property("lod_bias") != 2:
+    _tfb.set_editor_property("lod_bias", 2)
+    unreal.EditorAssetLibrary.save_loaded_asset(_tfb)
 fb.set_editor_property("sampler_type", unreal.MaterialSamplerType.SAMPLERTYPE_LINEAR_COLOR)
 fb.set_editor_property("blend", True)
+# a simulação gravada tem grade de fluido baixa (~32 células por quadro): lida 2 mips acima, a borda fica macia em vez
+# de "pipoca" em degraus nos closes
+fb.set_editor_property("mip_value_mode", unreal.TextureMipValueMode.TMVM_MIP_BIAS)
+_mip = node(unreal.MaterialExpressionConstant)
+_mip.set_editor_property("r", 2.0)
+if not MEL.connect_material_expressions(_mip, "", fb, "MipValue"):
+    if not MEL.connect_material_expressions(_mip, "", fb, "Mip Value"):
+        print("AVISO: viés de mip não ligado")
 fb_rgba = node(unreal.MaterialExpressionAppendVector)
 MEL.connect_material_expressions(fb, "RGB", fb_rgba, "A")
 MEL.connect_material_expressions(fb, "A", fb_rgba, "B")
@@ -127,6 +140,9 @@ inputs += [(k, vector(n, v)) for k, n, v in CORES]
 inputs += [(n, scalar(n, v)) for n, v in ESCALARES]
 
 CODE = r"""
+// com flipbook (SubImageSize 8x8 no renderer) a UV que chega é a do QUADRO dentro do atlas (0-0,125): sem isto
+// a máscara radial achava tudo fora do círculo e a partícula sumia. Volta para a UV do sprite (0-1)
+if (UsarFB > 0.5) { UV = frac(UV * 8.0); }
 float t = T;
 float2 uv = UV * float2(Escala, Escala * EscalaV) + Seed * float2(0.371, 0.913) + RND * 3.17;
 // distorção: ruído rolando desloca a UV da textura principal
@@ -136,7 +152,7 @@ float2 q = (UV - 0.5) * 2.0;
 float r = length(q);
 base = lerp(base, saturate(1.0 - r) * (0.7 + 0.6 * base), FormaRadial);
 float calorFB = 0.0;
-if (UsarFB > 0.5) { base = saturate(FB.a * 1.25) * (0.75 + 0.5 * base); calorFB = saturate(FB.r * 0.3); }
+if (UsarFB > 0.5) { base = smoothstep(0.02, 0.65, FB.a) * (0.9 + 0.2 * base); calorFB = saturate(FB.r * 0.15); }
 // erosão (Rayane): textura menos ruído; o limiar sobe quando o alfa da partícula cai
 float dn = Texture2DSample(Rui, RuiSampler, uv * 1.37 + 0.37 + float2(-t * 0.07, t * PanV * 1.3)).r;
 float s = saturate(base * (1.0 + ErosaoRuido) - dn * ErosaoRuido);
@@ -207,13 +223,15 @@ EAL.save_loaded_asset(mat, False)
 print("OK", path)
 
 
-def mi(name, scalars, parent=None):
+def mi(name, scalars, parent=None, vectors=None):
     p = f"{FOLDER}/{name}"
     inst = unreal.load_asset(p) or tools.create_asset(name, FOLDER, unreal.MaterialInstanceConstant,
                                                       unreal.MaterialInstanceConstantFactoryNew())
     MEL.set_material_instance_parent(inst, parent or mat)
     for k, v in scalars.items():
         MEL.set_material_instance_scalar_parameter_value(inst, k, v)
+    for k, v in (vectors or {}).items():
+        MEL.set_material_instance_vector_parameter_value(inst, k, unreal.LinearColor(*v))
     MEL.update_material_instance(inst)
     EAL.save_loaded_asset(inst, False)
     print("OK", p)
@@ -243,8 +261,10 @@ mi("MI_Katon_LinguaMalha", {"UsarVC": 1.0, "PanU": 0.0, "PanV": -1.2, "Escala": 
 # línguas (sprites com o flipbook nosso 8x8)
 # labaredas da superfície da bola: muitas sobrepostas -> um pouco menos intensas cada uma (somadas ficavam creme);
 # mesma paleta, mais erosão para a borda quebrar
-mi("MI_Katon_Labareda", {"UsarFB": 1.0, "MascaraRadial": 1.0, "UsarVC": 0.0, "ErosaoRuido": 0.45, "Limiar": 0.1,
-                         "Calor": 0.45, "Brilho": 1.8, "SomePerto": 200.0, "PanV": 0.2})
+# 09/11: limiar alto + borda dura: só o miolo denso de cada chama fica (o gás macio do flipbook somava um borrão)
+mi("MI_Katon_Labareda", {"UsarFB": 1.0, "MascaraRadial": 1.0, "UsarVC": 0.0, "ErosaoRuido": 0.15, "Limiar": 0.18,
+                         "ErosaoSuave": 0.3,
+                         "Calor": 0.35, "Brilho": 1.4, "SomePerto": 200.0, "PanV": 0.2})
 mi("MI_Katon_Lingua", {"UsarFB": 1.0, "MascaraRadial": 1.0, "UsarVC": 0.0, "ErosaoRuido": 0.35, "Limiar": 0.08,
                        "Calor": 0.7, "Brilho": 3.5, "SomePerto": 200.0, "PanV": 0.2})
 # cauda (fita do Niagara): borda da largura some, esfria com a idade
@@ -274,6 +294,27 @@ mi("MI_Katon_Estouro", {"FresnelForca": 1.0, "FresnelExp": 2.0, "CrescerLiga": 1
 # quadrado; o M_FireHalo antigo mostrava a borda reta do sprite)
 HALO = {"FormaRadial": 1.0, "MascaraRadial": 1.0, "ErosaoRuido": 0.0, "Limiar": -1.0, "UsarVC": 0.0,
         "Distorcao": 0.0, "SomePerto": 300.0}
-mi("MI_Katon_Halo", dict(HALO, Calor=0.45, Brilho=0.3))
+mi("MI_Katon_Halo", dict(HALO, Calor=0.45, Brilho=0.15))   # 09/11: metade (o disco macio virava "bola de energia")
 mi("MI_Katon_HaloFlash", dict(HALO, Calor=0.95, Brilho=3.0))
+# ============================================================== 09/11: elementos do Zenkai
+# contorno VERMELHO: camada externa de labaredas #E0281C -> #8A1A10 (a rampa inteira vira vermelho; pontas somem pela
+# erosão e pela máscara radial). O miolo/corpo continuam com a paleta aprovada nas outras camadas
+VERMELHO = (0.745, 0.021, 0.011, 1)      # #E0281C
+VERMELHO_ESCURO = (0.254, 0.010, 0.005, 1)  # #8A1A10
+mi("MI_Katon_BordaVermelha", {"UsarFB": 1.0, "MascaraRadial": 1.0, "UsarVC": 0.0, "ErosaoRuido": 0.15, "Limiar": 0.18,
+                              "ErosaoSuave": 0.3,
+                              "Calor": 0.6, "Brilho": 1.8, "SomePerto": 200.0, "PanV": 0.2},
+   vectors={"Cor_Miolo": VERMELHO, "Cor_MioloQuente": VERMELHO, "Cor_Corpo": VERMELHO, "Cor_CorpoQuente": VERMELHO,
+            "Cor_CorpoBorda": VERMELHO_ESCURO, "Cor_Borda": VERMELHO_ESCURO})
+# cauda contínua: chamas grandes do flipbook que ESFRIAM com a idade (amarelo -> laranja -> vermelho) e somem
+mi("MI_Katon_CaudaFogo", {"UsarFB": 1.0, "MascaraRadial": 1.0, "UsarVC": 0.0, "ErosaoRuido": 0.15, "Limiar": 0.12,
+                          "ErosaoSuave": 0.3,
+                          "Calor": 0.75, "Esfriar": 1.1, "Brilho": 1.8, "SomePerto": 250.0, "PanV": 0.25})
+# clarão de saída: branco-amarelo grande e curto
+mi("MI_Katon_FlashSaida", dict(HALO, Calor=1.0, Brilho=6.0))
+# fumaça: cópia (instância) do material de fumaça do pack Free_Fire, translúcida, escura-avermelhada; o original
+# não é tocado
+_pai_fumaca = unreal.load_asset("/Game/Vefects/Free_Fire/Shared/Materials/MI_VFX_Smoke_02")
+mi("MI_Katon_Fumaca", {"Emissive_Intensity": 0.0, "Noises_OpacityBoost": 0.8}, parent=_pai_fumaca,
+   vectors={"Color": (0.09, 0.045, 0.04, 1)})
 print("GOKAKYU_V2_MATERIAL_OK")

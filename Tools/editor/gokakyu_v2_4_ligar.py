@@ -34,6 +34,7 @@ if getattr(unreal, "_gokakyu_v2_voltar", False):
     for k in ("full_radius", "gokakyu_core_scale", "gokakyu_light_radius", "bend_time"):
         if k in v["BP"]:
             cdo.set_editor_property(k, v["BP"][k])
+    cdo.set_editor_property("tail_time", v["BP"].get("tail_time", 0.45))
     print("VOLTOU PARA O V1")
 else:
     # valores do v2 aprovado (cores/luz) antes do passe "fogo vivo" de 08/11, para comparar/voltar à mão
@@ -59,9 +60,11 @@ else:
     cdo.set_editor_property("gokakyu_show_meshes", True)
     cdo.set_editor_property("grow_time", 0.3)
     cdo.set_editor_property("gokakyu_hold_time", 0.32)    # timing da carga (aprovado): solta em 0,32 s
-    # 08/11 trava: saía a 25% da velocidade e levava 0,15 s acelerando (+23 cm no 1º quadro) -> tranco forte
-    cdo.set_editor_property("accel_time", 0.1)
-    cdo.set_editor_property("launch_speed_scale", 0.7)
+    # 09/11 trava: no quadro da soltura a bola já sai com a velocidade máxima (Speed 3000), sem rampa
+    cdo.set_editor_property("accel_time", 0.01)
+    cdo.set_editor_property("launch_speed_scale", 1.0)
+    # pico de luz no instante da soltura (C++ 09/11: curto, ~0,1 s; antes o pico era no cuspe)
+    cdo.set_editor_property("gokakyu_light_launch_peak", 1.5)
     # física do voo (C++ 08/11): perde ~30% da velocidade em 1 s, cresce 10% no voo, arco suave + desvio lento
     cdo.set_editor_property("gokakyu_drag", 0.35)
     cdo.set_editor_property("gokakyu_flight_grow", 0.1)
@@ -76,12 +79,16 @@ else:
     cdo.set_editor_property("gokakyu_core_scale", 0.55)   # núcleo menor, escondido dentro do fogo (as labaredas fazem a silhueta)
     # luz igual à aprovada: o raio da luz é proporcional ao raio da bola (155/210)
     cdo.set_editor_property("gokakyu_light_radius", 12.0 * 155.0 / 210.0)
-    cdo.set_editor_property("gokakyu_shell_scales", [0.9, 1.0])
+    # 09/11: SEM as línguas rígidas de malha (pareciam coroa/ouriço): a silhueta fica com as labaredas em flipbook,
+    # que mudam de forma, se soltam e apagam como no Zenkai. Lista vazia = o C++ não cria cascas
+    cdo.set_editor_property("gokakyu_shell_scales", [])
     cdo.set_editor_property("gokakyu_shell_spins", [70.0, -55.0])     # graus/s: línguas girando devagar, sentidos opostos
     cdo.set_editor_property("gokakyu_shell_stretch", 1.0)
     cdo.set_editor_property("gokakyu_tongue", 0.0)
     cdo.set_editor_property("gokakyu_pulse", 0.03)
     cdo.set_editor_property("gokakyu_wobble", 8.0)
+    # 09/11: sem o cone antigo boca -> bola (na câmera do jogo virava um risco fino da boca até a bola até 0,45 s)
+    cdo.set_editor_property("tail_time", 0.0)
     print("V2 LIGADO")
 da.modify(True)
 EAL.save_loaded_asset(da, False)
@@ -94,7 +101,7 @@ antes = {k: cdo.get_editor_property(k) for k in ("gokakyu_drag", "gokakyu_flight
                                                    "gokakyu_shell_spins", "gokakyu_shell_stretch",
                                                    "gokakyu_size", "gokakyu_hold_time", "grow_time", "gokakyu_core_mesh",
                                                    "gokakyu_shell_mesh", "gokakyu_shell_scales", "gokakyu_show_meshes",
-                                                   "accel_time", "launch_speed_scale", "gokakyu_tongue")}
+                                                   "accel_time", "launch_speed_scale", "gokakyu_tongue", "gokakyu_light_launch_peak", "tail_time")}
 unreal.BlueprintEditorLibrary.compile_blueprint(bp)
 cdo = unreal.get_default_object(bp.generated_class())
 for k, v in antes.items():

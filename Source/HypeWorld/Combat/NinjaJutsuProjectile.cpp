@@ -464,7 +464,11 @@ void ANinjaJutsuProjectile::UpdateGokakyuMeshes(float Age, float Radius)
 	const float Seed = static_cast<float>(Launch.VisualSeed % 17);
 	const float Flicker = 1.f + GokakyuLightFlicker * (0.75f * FMath::PerlinNoise1D(Age * GokakyuLightFlickerRate + Seed)
 		+ 0.25f * FMath::PerlinNoise1D(Age * GokakyuLightFlickerRate * 2.3f + Seed * 3.1f));
-	const float LaunchFlash = FMath::SmoothStep(0.f, 0.06f, Age) * FMath::Exp(-FMath::Max(0.f, Age - 0.08f) * 4.f);
+	// Com sopro (HoldTime), o pico é no instante da SOLTURA e curto (~0,1 s: o clarão de saída); sem sopro, como antes
+	const float FlashAge = GokakyuHoldTime > 0.f ? Age - GokakyuHoldTime : Age;
+	const float LaunchFlash = FlashAge < 0.f ? 0.f : GokakyuHoldTime > 0.f
+		? FMath::SmoothStep(0.f, 0.02f, FlashAge) * FMath::Exp(-FMath::Max(0.f, FlashAge - 0.03f) * 14.f)
+		: FMath::SmoothStep(0.f, 0.06f, FlashAge) * FMath::Exp(-FMath::Max(0.f, FlashAge - 0.08f) * 4.f);
 	Light->SetLightColor(GokakyuLightColor);
 	Light->SetIntensity(GokakyuLightIntensity * Flicker * (1.f + GokakyuLightLaunchPeak * LaunchFlash));
 	Light->SetAttenuationRadius(R * GokakyuLightRadius * (1.f + 0.4f * LaunchFlash));

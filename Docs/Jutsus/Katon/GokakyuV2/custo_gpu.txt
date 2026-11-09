@@ -2,6 +2,18 @@ Gōkakyū v2 — custo de GPU
 Máquina: NVIDIA GeForce GTX 1650 (o alvo). Play no editor, mapa L_Tutorial, câmera do jogo, viewport ~1290x776, TSR.
 Medido com ProfileGPU (Tools/editor/teste_gokakyu_v2_custo.py), passada "Translucency":
 
+09/11/2026 — passe "trava + Zenkai" (soltura na velocidade máxima, clarão/anel/rajada de saída, borda vermelha,
+cauda contínua, labaredas em flipbook, fumaça, fogo no chão; sem garras e sem fitas):
+  sem o jutsu (base)           0,11 ms
+  carga na boca (0,25 s)       0,34 ms
+  soltura (0,35 s)             0,78 ms   <- pico do voo
+  voo (0,60 s)                 0,66 ms
+  voo (0,90 s)                 0,50 ms
+  impacto PERTO da câmera (mira -25°, explosão a poucos metros): 2,11 ms (pior caso; antes de cortar as chamas
+  do estouro dava ~2,4). Impacto longe custa bem menos.
+  Atenção: até 09/11 o teste de custo não nivelava a mira; a bola podia bater no chão cedo e o quadro de 0,6 s
+  media a explosão (agora a mira é nivelada, pitch -4, ou _teste_custo_pitch).
+
 09/11/2026 — passe "fogo vivo" (labaredas, línguas em malha, fitas que se dissolvem, cauda, bola 210 cm):
   sem o jutsu (base)           0,10 ms
   carga na boca (0,25 s)       0,35 ms

@@ -8,6 +8,8 @@ w = unreal.get_editor_subsystem(unreal.UnrealEditorSubsystem).get_game_world()
 pc = unreal.GameplayStatics.get_player_controller(w, 0)
 c = pc.get_controlled_pawn()
 TEMPOS = getattr(unreal, "_teste_custo_tempos", [0.25, 0.35, 0.6, 1.15])
+# inclinação da mira: -4 = voo nivelado; ~-20 = bola bate no chão perto (mede o impacto)
+PITCH = getattr(unreal, "_teste_custo_pitch", -4)
 st = {"t": 0.0, "log": [], "done": set(), "t0": None, "i": 0}
 unreal._teste_gk = st
 
@@ -28,6 +30,11 @@ def tick(dt):
         if "base" not in st["done"] and st["t"] > 0.3:
             st["done"].add("base")
             prof("base")
+        if "mira" not in st["done"] and st["t"] > 0.8:
+            # 09/11: mira nivelada antes (igual aos outros testes); com a câmera inclinada a bola batia no chão cedo
+            # e o quadro de 0,6 s media a explosão, não o voo
+            st["done"].add("mira")
+            pc.set_control_rotation(unreal.Rotator(roll=0, pitch=PITCH, yaw=pc.get_control_rotation().yaw))
         if "cast" not in st["done"] and st["t"] > 1.2:
             st["done"].add("cast")
             log("cast %s" % c.try_use_jutsu_slot(0))

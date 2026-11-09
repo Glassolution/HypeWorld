@@ -25,3 +25,8 @@ O padrão histórico do Indra permanece válido para o próprio Indra e para man
 - No fluxo legado, preparar em cópia, vincular ao rig do Indra e conferir compatibilidade real; não simular conversão trocando apenas a propriedade Skeleton.
 - `indra_character_standard.apply_mesh(mesh)` e o menu Tools > Hype World referem-se ao fluxo legado. Não usá-los para substituir o rig aprovado do Silent Stance.
 - Instruções históricas: `Docs/PadraoPersonagem/README.md`, `Indra_Referencia.fbx`.
+
+## Jutsu Gōkakyū (VFX v2)
+
+Antes de mexer no Gōkakyū (bola de fogo Katon: Niagara, `M_FireMaster`, `NinjaJutsuProjectile`), seguir
+`Docs/Jutsus/Katon/GokakyuV2/TUTORIAL_CODEX_MAC.md` (estado atual, pendências, scripts, testes e armadilhas).
