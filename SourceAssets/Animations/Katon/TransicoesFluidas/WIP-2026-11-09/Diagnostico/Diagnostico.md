@@ -1,0 +1,12 @@
+# Diagnóstico antes de editar
+
+Extração dos 12 clipes usados na ficha, avaliação RAW da Unreal e amostragem do encadeamento a 60 fps. Arquivos: Antes Unreal.json, Clipes atuais.json e Metricas antes.json. Captura real completa: ../Play/Antes/Resultado.json, 200 imagens, frente e três quartos; projétil registrado em 1,9131 s na amostragem desta captura.
+
+- A entrada da Serpente percorre até 11,12 cm por amostra de 1/60 s no cotovelo direito. Macaco→Javali alcança 6,01 cm no esquerdo; Javali→Cavalo 4,57 cm. São deslocamentos entre amostras, não prova de descontinuidade matemática.
+- Os dois clipes novos de transição de 1 s são tocados a 7,14x dentro de 0,14 s; os de 0,5 s, a 3,57x. As janelas internas de espera/giro comprimem ainda mais o movimento útil. Punhos chegam a 8,24 cm por amostra em Cavalo→Tigre.
+- Ombros e clavículas já estão estáveis entre os selos. A hipótese de recalcular toda a postura dos ombros a cada selo foi rejeitada; na entrada eles se movem ao sair da postura normal.
+- Os alvos do cotovelo foram calculados por selo e depois interpolados, com separação ampla dos punhos. Javali sustenta os cotovelos ~11–13 cm mais altos que Tigre/Macaco. Durante as trocas o solver muda o plano para perseguir simultaneamente esses alvos e os punhos.
+- Não houve inversão instantânea >90 graus do plano do cotovelo entre as amostras. Maior mudança de plano ~23,5 graus na entrada; ~17,2 graus em Macaco→Javali.
+- Não é mistura exclusivamente linear: há slerp, smoothstep cúbico e deslocamento de afastamento. Porém braços/punhos/dedos usam o mesmo progresso, sem antecipação/acomodação independente; quase todo o esforço termina em poucos quadros. O smoothstep cúbico zera velocidade nos extremos mas não aceleração, e a pequena quantidade de chaves dos clipes antigos deixa a aproximação mais grosseira ao acelerar.
+
+Plano: uma direção consistente de cotovelo ancorada à postura do Tigre; normalizar só o necessário dos braços, mantendo mãos/silhuetas dos selos; trajetórias em arco e poses de passagem com folga; dedos giram/encaixam em tempos distintos; suavização quintic e retorno ao lançamento numa cópia exclusiva do Goukakyuu. Nenhuma alteração de malha/pesos planejada. Duracões propostas aprovadas pelo usuário: entrada 0,24; cinco trocas 0,18/0,20/0,20/0,20/0,18; quatro sustentações 0,10; Tigre 0,26. Soma 1,86, notify previsto 2,235 s; voo do VFX atual previsto ~0,32 s depois. Medir no Play, sem tomar previsão como prova.

@@ -1,0 +1,443 @@
+{
+  "sample_fps": 60,
+  "segments": [
+    {
+      "name": "Serpente",
+      "duration": 0.18000000715255737,
+      "length": 0.5,
+      "play_rate": 2.7777776673988104,
+      "upperarm_r": {
+        "max_step_cm_60fps": 3.0794220179341822,
+        "at_s": 0.08333333333333333,
+        "max_rotation_deg_60fps": 23.833181806087758
+      },
+      "upperarm_l": {
+        "max_step_cm_60fps": 6.2802733149486025,
+        "at_s": 0.06666666666666667,
+        "max_rotation_deg_60fps": 16.221764676891294
+      },
+      "lowerarm_r": {
+        "max_step_cm_60fps": 11.122714176464367,
+        "at_s": 0.06666666666666667,
+        "max_rotation_deg_60fps": 28.130281993078924
+      },
+      "lowerarm_l": {
+        "max_step_cm_60fps": 3.9134606057401866,
+        "at_s": 0.05,
+        "max_rotation_deg_60fps": 13.398383467619698
+      },
+      "hand_r": {
+        "max_step_cm_60fps": 13.201376493001746,
+        "at_s": 0.06666666666666667,
+        "max_rotation_deg_60fps": 23.29987852602568
+      },
+      "hand_l": {
+        "max_step_cm_60fps": 5.79831464294232,
+        "at_s": 0.08333333333333333,
+        "max_rotation_deg_60fps": 20.239347960580538
+      }
+    },
+    {
+      "name": "Serpente_Carneiro",
+      "duration": 0.14000000059604645,
+      "length": 1.0,
+      "play_rate": 7.14285711244661,
+      "upperarm_r": {
+        "max_step_cm_60fps": 9.823476360031997e-06,
+        "at_s": 0.18333333333333332,
+        "max_rotation_deg_60fps": 2.0899982014828025
+      },
+      "upperarm_l": {
+        "max_step_cm_60fps": 1.4118672276393247e-05,
+        "at_s": 0.18333333333333332,
+        "max_rotation_deg_60fps": 5.1948559790555535
+      },
+      "lowerarm_r": {
+        "max_step_cm_60fps": 0.8424058605258571,
+        "at_s": 0.2,
+        "max_rotation_deg_60fps": 13.848321842349911
+      },
+      "lowerarm_l": {
+        "max_step_cm_60fps": 2.0934357630949627,
+        "at_s": 0.31666666666666665,
+        "max_rotation_deg_60fps": 8.6949128137536
+      },
+      "hand_r": {
+        "max_step_cm_60fps": 4.7821990155762,
+        "at_s": 0.31666666666666665,
+        "max_rotation_deg_60fps": 6.782470444969447
+      },
+      "hand_l": {
+        "max_step_cm_60fps": 3.254903749443095,
+        "at_s": 0.2,
+        "max_rotation_deg_60fps": 2.250285077220509
+      }
+    },
+    {
+      "name": "Carneiro_Fixo",
+      "duration": 0.10000000149011612,
+      "length": 0.03333333507180214,
+      "play_rate": 0.33333334575096746,
+      "upperarm_r": {
+        "max_step_cm_60fps": 0.0,
+        "at_s": 0.4166666666666667,
+        "max_rotation_deg_60fps": 0.2041959518746081
+      },
+      "upperarm_l": {
+        "max_step_cm_60fps": 0.0,
+        "at_s": 0.4166666666666667,
+        "max_rotation_deg_60fps": 0.3245201289764169
+      },
+      "lowerarm_r": {
+        "max_step_cm_60fps": 0.08230869936050794,
+        "at_s": 0.3333333333333333,
+        "max_rotation_deg_60fps": 0.7640239216841919
+      },
+      "lowerarm_l": {
+        "max_step_cm_60fps": 0.13082001646486277,
+        "at_s": 0.3333333333333333,
+        "max_rotation_deg_60fps": 0.4321028493479898
+      },
+      "hand_r": {
+        "max_step_cm_60fps": 0.2744649299130018,
+        "at_s": 0.3333333333333333,
+        "max_rotation_deg_60fps": 0.0004690070137627382
+      },
+      "hand_l": {
+        "max_step_cm_60fps": 0.1869843456123916,
+        "at_s": 0.3333333333333333,
+        "max_rotation_deg_60fps": 0.00028771031802268614
+      }
+    },
+    {
+      "name": "Carneiro_Macaco",
+      "duration": 0.14000000059604645,
+      "length": 1.0,
+      "play_rate": 7.14285711244661,
+      "upperarm_r": {
+        "max_step_cm_60fps": 0.0,
+        "at_s": 0.55,
+        "max_rotation_deg_60fps": 3.4521367209562683
+      },
+      "upperarm_l": {
+        "max_step_cm_60fps": 0.0,
+        "at_s": 0.55,
+        "max_rotation_deg_60fps": 5.79205843110638
+      },
+      "lowerarm_r": {
+        "max_step_cm_60fps": 1.3913049614196826,
+        "at_s": 0.55,
+        "max_rotation_deg_60fps": 17.01935059830775
+      },
+      "lowerarm_l": {
+        "max_step_cm_60fps": 2.3338775941560903,
+        "at_s": 0.45,
+        "max_rotation_deg_60fps": 10.90386148374131
+      },
+      "hand_r": {
+        "max_step_cm_60fps": 5.804383668080485,
+        "at_s": 0.55,
+        "max_rotation_deg_60fps": 31.580981545758306
+      },
+      "hand_l": {
+        "max_step_cm_60fps": 3.9855968147869434,
+        "at_s": 0.45,
+        "max_rotation_deg_60fps": 30.90321777403916
+      }
+    },
+    {
+      "name": "Macaco_Fixo",
+      "duration": 0.10000000149011612,
+      "length": 0.03333333507180214,
+      "play_rate": 0.33333334575096746,
+      "upperarm_r": {
+        "max_step_cm_60fps": 0.0,
+        "at_s": 0.65,
+        "max_rotation_deg_60fps": 0.25095041223585873
+      },
+      "upperarm_l": {
+        "max_step_cm_60fps": 0.0,
+        "at_s": 0.65,
+        "max_rotation_deg_60fps": 0.9957968268042179
+      },
+      "lowerarm_r": {
+        "max_step_cm_60fps": 0.10115504264149054,
+        "at_s": 0.5666666666666667,
+        "max_rotation_deg_60fps": 4.566914069009294
+      },
+      "lowerarm_l": {
+        "max_step_cm_60fps": 0.4014214829295197,
+        "at_s": 0.5666666666666667,
+        "max_rotation_deg_60fps": 2.905608800456878
+      },
+      "hand_r": {
+        "max_step_cm_60fps": 1.6145802668954048,
+        "at_s": 0.5666666666666667,
+        "max_rotation_deg_60fps": 0.0017490152775450384
+      },
+      "hand_l": {
+        "max_step_cm_60fps": 1.0982847922700376,
+        "at_s": 0.5666666666666667,
+        "max_rotation_deg_60fps": 0.0015087279516860768
+      }
+    },
+    {
+      "name": "Macaco_Javali",
+      "duration": 0.14000000059604645,
+      "length": 0.5,
+      "play_rate": 3.571428556223305,
+      "upperarm_r": {
+        "max_step_cm_60fps": 0.0,
+        "at_s": 0.8,
+        "max_rotation_deg_60fps": 12.014837249337821
+      },
+      "upperarm_l": {
+        "max_step_cm_60fps": 0.0,
+        "at_s": 0.8,
+        "max_rotation_deg_60fps": 17.51866053371499
+      },
+      "lowerarm_r": {
+        "max_step_cm_60fps": 4.1938529075253435,
+        "at_s": 0.75,
+        "max_rotation_deg_60fps": 22.719096487517344
+      },
+      "lowerarm_l": {
+        "max_step_cm_60fps": 6.006132364275446,
+        "at_s": 0.7333333333333333,
+        "max_rotation_deg_60fps": 13.1196863767312
+      },
+      "hand_r": {
+        "max_step_cm_60fps": 7.739053289356636,
+        "at_s": 0.7833333333333333,
+        "max_rotation_deg_60fps": 23.432863136946878
+      },
+      "hand_l": {
+        "max_step_cm_60fps": 5.0987999741487595,
+        "at_s": 0.7833333333333333,
+        "max_rotation_deg_60fps": 24.26132462906525
+      }
+    },
+    {
+      "name": "Javali_Fixo",
+      "duration": 0.10000000149011612,
+      "length": 0.03333333507180214,
+      "play_rate": 0.33333334575096746,
+      "upperarm_r": {
+        "max_step_cm_60fps": 0.0,
+        "at_s": 0.9,
+        "max_rotation_deg_60fps": 0.0
+      },
+      "upperarm_l": {
+        "max_step_cm_60fps": 0.0,
+        "at_s": 0.9,
+        "max_rotation_deg_60fps": 0.0
+      },
+      "lowerarm_r": {
+        "max_step_cm_60fps": 0.0,
+        "at_s": 0.9,
+        "max_rotation_deg_60fps": 0.0
+      },
+      "lowerarm_l": {
+        "max_step_cm_60fps": 0.0,
+        "at_s": 0.9,
+        "max_rotation_deg_60fps": 0.0
+      },
+      "hand_r": {
+        "max_step_cm_60fps": 0.0,
+        "at_s": 0.9,
+        "max_rotation_deg_60fps": 0.0
+      },
+      "hand_l": {
+        "max_step_cm_60fps": 0.0,
+        "at_s": 0.9,
+        "max_rotation_deg_60fps": 0.0
+      }
+    },
+    {
+      "name": "Javali_Cavalo",
+      "duration": 0.14000000059604645,
+      "length": 0.5,
+      "play_rate": 3.571428556223305,
+      "upperarm_r": {
+        "max_step_cm_60fps": 0.0,
+        "at_s": 1.0333333333333334,
+        "max_rotation_deg_60fps": 9.857584481053465
+      },
+      "upperarm_l": {
+        "max_step_cm_60fps": 0.0,
+        "at_s": 1.0333333333333334,
+        "max_rotation_deg_60fps": 14.197494356838716
+      },
+      "lowerarm_r": {
+        "max_step_cm_60fps": 3.314912624292978,
+        "at_s": 1.0166666666666666,
+        "max_rotation_deg_60fps": 22.938760775114297
+      },
+      "lowerarm_l": {
+        "max_step_cm_60fps": 4.565643543197188,
+        "at_s": 0.9666666666666667,
+        "max_rotation_deg_60fps": 11.606721483994464
+      },
+      "hand_r": {
+        "max_step_cm_60fps": 7.934517012158842,
+        "at_s": 0.9333333333333333,
+        "max_rotation_deg_60fps": 25.007734866335984
+      },
+      "hand_l": {
+        "max_step_cm_60fps": 5.1276814327916,
+        "at_s": 0.9333333333333333,
+        "max_rotation_deg_60fps": 24.99614256193835
+      }
+    },
+    {
+      "name": "Cavalo_Fixo",
+      "duration": 0.10000000149011612,
+      "length": 0.03333333507180214,
+      "play_rate": 0.33333334575096746,
+      "upperarm_r": {
+        "max_step_cm_60fps": 0.0,
+        "at_s": 1.1333333333333333,
+        "max_rotation_deg_60fps": 0.12670290565233613
+      },
+      "upperarm_l": {
+        "max_step_cm_60fps": 0.0,
+        "at_s": 1.1333333333333333,
+        "max_rotation_deg_60fps": 1.4783140280449312
+      },
+      "lowerarm_r": {
+        "max_step_cm_60fps": 0.0510730411663189,
+        "at_s": 1.05,
+        "max_rotation_deg_60fps": 3.7582893085252076
+      },
+      "lowerarm_l": {
+        "max_step_cm_60fps": 0.5959216364099619,
+        "at_s": 1.05,
+        "max_rotation_deg_60fps": 2.0526439761340285
+      },
+      "hand_r": {
+        "max_step_cm_60fps": 1.3296287961266426,
+        "at_s": 1.05,
+        "max_rotation_deg_60fps": 0.0011853773134774615
+      },
+      "hand_l": {
+        "max_step_cm_60fps": 0.8162360431735298,
+        "at_s": 1.05,
+        "max_rotation_deg_60fps": 0.0049395568484565475
+      }
+    },
+    {
+      "name": "Cavalo_Tigre",
+      "duration": 0.14000000059604645,
+      "length": 0.5,
+      "play_rate": 3.571428556223305,
+      "upperarm_r": {
+        "max_step_cm_60fps": 0.0,
+        "at_s": 1.2666666666666666,
+        "max_rotation_deg_60fps": 6.4217595705038795
+      },
+      "upperarm_l": {
+        "max_step_cm_60fps": 0.0,
+        "at_s": 1.2666666666666666,
+        "max_rotation_deg_60fps": 9.362608031259747
+      },
+      "lowerarm_r": {
+        "max_step_cm_60fps": 2.5862851570805985,
+        "at_s": 1.1833333333333333,
+        "max_rotation_deg_60fps": 23.69358084752196
+      },
+      "lowerarm_l": {
+        "max_step_cm_60fps": 3.77002435745094,
+        "at_s": 1.2666666666666666,
+        "max_rotation_deg_60fps": 13.366589767068808
+      },
+      "hand_r": {
+        "max_step_cm_60fps": 8.240178153677656,
+        "at_s": 1.2666666666666666,
+        "max_rotation_deg_60fps": 26.099701137773437
+      },
+      "hand_l": {
+        "max_step_cm_60fps": 5.11413916703345,
+        "at_s": 1.2666666666666666,
+        "max_rotation_deg_60fps": 26.095846996096178
+      }
+    },
+    {
+      "name": "Tigre_Fixo",
+      "duration": 0.23999999463558197,
+      "length": 0.03333333507180214,
+      "play_rate": 0.13888889923691772,
+      "upperarm_r": {
+        "max_step_cm_60fps": 0.0,
+        "at_s": 1.5166666666666666,
+        "max_rotation_deg_60fps": 2.0318862360013243
+      },
+      "upperarm_l": {
+        "max_step_cm_60fps": 0.0,
+        "at_s": 1.5166666666666666,
+        "max_rotation_deg_60fps": 4.591020918719616
+      },
+      "lowerarm_r": {
+        "max_step_cm_60fps": 0.818986632646062,
+        "at_s": 1.2833333333333334,
+        "max_rotation_deg_60fps": 10.638626327290188
+      },
+      "lowerarm_l": {
+        "max_step_cm_60fps": 1.8502403290954959,
+        "at_s": 1.2833333333333334,
+        "max_rotation_deg_60fps": 4.877330369825956
+      },
+      "hand_r": {
+        "max_step_cm_60fps": 3.682186021440063,
+        "at_s": 1.2833333333333334,
+        "max_rotation_deg_60fps": 0.033422854914592896
+      },
+      "hand_l": {
+        "max_step_cm_60fps": 2.2675083480605345,
+        "at_s": 1.2833333333333334,
+        "max_rotation_deg_60fps": 0.042692115479431775
+      }
+    },
+    {
+      "name": "Sopro",
+      "duration": 1.5,
+      "length": 1.5,
+      "play_rate": 1.0,
+      "upperarm_r": {
+        "max_step_cm_60fps": 0.8689197468448665,
+        "at_s": 1.8333333333333333,
+        "max_rotation_deg_60fps": 7.261585164421723
+      },
+      "upperarm_l": {
+        "max_step_cm_60fps": 1.532210185463023,
+        "at_s": 2.683333333333333,
+        "max_rotation_deg_60fps": 6.677622292446403
+      },
+      "lowerarm_r": {
+        "max_step_cm_60fps": 3.4324252163314686,
+        "at_s": 2.7333333333333334,
+        "max_rotation_deg_60fps": 8.706705387918527
+      },
+      "lowerarm_l": {
+        "max_step_cm_60fps": 2.677113401844815,
+        "at_s": 2.1666666666666665,
+        "max_rotation_deg_60fps": 7.110024365696094
+      },
+      "hand_r": {
+        "max_step_cm_60fps": 2.9894204404566387,
+        "at_s": 1.6333333333333333,
+        "max_rotation_deg_60fps": 11.47409051250015
+      },
+      "hand_l": {
+        "max_step_cm_60fps": 3.7120081876757847,
+        "at_s": 2.6666666666666665,
+        "max_rotation_deg_60fps": 6.844684644864619
+      }
+    }
+  ],
+  "max_elbow_step": [
+    11.122714176464367,
+    "lowerarm_r",
+    0.06666666666666667,
+    "Serpente"
+  ]
+}

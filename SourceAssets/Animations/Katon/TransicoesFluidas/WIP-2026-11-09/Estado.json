@@ -1,0 +1,60 @@
+{
+  "status": "rascunho-blender-em-revisao-nao-integrado",
+  "baseline_metrics": "Diagnostico/Metricas antes.json",
+  "unreal_changed": false,
+  "blender_changed": true,
+  "duration_preference": "Usuário aprovou ritmo mais fluido",
+  "next": "Corrigir entrada e retorno: pose neutra antiga difere da postura real de idle. Continuar revisão visual, twists e colisões; ainda não importar nem salvar clipes na Unreal.",
+  "schedule": [
+    [
+      "Serpente",
+      0.24
+    ],
+    [
+      "Serpente_Carneiro",
+      0.18
+    ],
+    [
+      "Carneiro_Fixo",
+      0.1
+    ],
+    [
+      "Carneiro_Macaco",
+      0.2
+    ],
+    [
+      "Macaco_Fixo",
+      0.1
+    ],
+    [
+      "Macaco_Javali",
+      0.2
+    ],
+    [
+      "Javali_Fixo",
+      0.1
+    ],
+    [
+      "Javali_Cavalo",
+      0.2
+    ],
+    [
+      "Cavalo_Fixo",
+      0.1
+    ],
+    [
+      "Cavalo_Tigre",
+      0.18
+    ],
+    [
+      "Tigre_Fixo",
+      0.26
+    ]
+  ],
+  "predicted_notify_s": 2.235,
+  "predicted_vfx_flight_s": 2.555,
+  "working_blend": "Blender/Goukakyuu - transicoes fluidas.blend",
+  "candidate_clips": "Blender/Clipes candidatos.json",
+  "candidate_metrics": "Blender/Metricas candidatas.json",
+  "diagnostic_addendum": "Na entrada e no retorno, o clipe neutro antigo muda bastante a posição do tronco/ombros e é assimétrico; exemplo shoulder_l raw inicial (1.4,23.9,111.2) vs idle real (17.7,-0.8,139.3). Não basta corrigir os cinco encaixes."
+}
