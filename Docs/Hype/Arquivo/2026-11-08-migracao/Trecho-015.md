@@ -1,0 +1,20 @@
+---
+status: arquivado
+atualizado: 2026-11-08
+---
+# PLANO POR FASES — trecho preservado
+
+> Conteúdo original preservado nesta migração; não é instrução vigente.
+> Origem e ordem exatas constam em Originais.json; não ler por padrão.
+
+<!-- HW-INICIO-ORIGINAL -->
+~~~~~~~~~~markdown
+- **Tela de seleção do personagem (25/10/2026, referência do Felipe `Referencias/UI/Selecao/` — tela do "Zenkai" com a logo trocada):** vem depois da tela de carregamento: `WBP_LoadingScreen.TelaAoEntrar` → `UHypeLoadingSubsystem::TravelToPreloadedMap(..., ScreenAfter)` cria a tela assim que o jogador local tem personagem (embaixo do fade do preto). `Source/HypeWorld/UI/HypeCharacterSelectWidget` (C++; WBP `/Game/HypeWorld/UI/CharacterSelect/WBP_CharacterSelect` por `Tools/editor/criar_tela_selecao.py`; sem o WBP usa a classe C++). Esquerda (coluna centrada em x 384, px de 1080p medidos na referência ×1,45): logo T_Logo_HypeWorld, frase, vilas (Konoha; Suna sem clãs = trancada), clãs da vila (Akimichi/Hyuga/Nara/Senju/Uchiha), Voltar/Próximo (tracejado com o mouse em cima); "Olhar fixo" embaixo à direita (só visual). Caixas de pincel, tracejado, olho e escurecido da esquerda = texturas geradas no C++ (sem asset). Ícones de vila/clã: `Villages[].Icon`/`Clans[].Icon` vazios → letra inicial colorida (falta arte). Câmera: `ACameraActor` temporário à frente do personagem (`CameraDistance` 320, `CameraSide` 15, `CameraHeight` 30, FOV 70); input só da UI, HUD escondido (`AHypeWorldPlayerController::SetHUDHidden`). Próximo: grava vila/clã em `UHypeProfileSubsystem` (memória, sem save/rede ainda), menu some e a câmera volta às costas em 0,9 s. Voltar não faz nada (primeira etapa).
+- **Cabelos da personalização reajustados (30/10/2026):** causa do "capacete": o `fit_indra_cosmetics.py` usava escala única 1,10 e tomava o topo da bandana (z 1,697) como topo da cabeça de origem (1,766) → todos subiam ~9 cm. Novo `Tools/customization/ajustar_cabelos.py` (Blender -b): mede o molde de cabeça comum dos GLBs pela parte de dentro dos cabelos (crânio 17,7×20,6 cm) contra o SK_Base_Body (20,0×23,6), escala 1,13/1,14/1,14 com topos alinhados, encaixe radial suave (raízes a 2,5 mm do couro; >2,5 cm = volume de propósito; >1,5 cm para dentro = parte escondida, ignorada), tira de dentro da cabeça, pesos head + nuca→neck; FBX antigo em `Fitted/<id>/antes/`; medidas em `Tools/customization/cabecas_medidas.json`. Reimportar: `Tools/editor/reimportar_cabelos.py` (IDS vazio = todos). Couro cabeludo: `gerar_mascara_couro.py` (máscara UV) + `Tools/editor/criar_couro_cabeludo.py` (M_Character_Master: `ScalpMask` Linear Grayscale, `Scalp Color`, `Scalp Strength` 0) + `HypeAppearanceComponent::ScalpStrength` 0,85 quando há cabelo. Teste no Play: `Tools/editor/teste_cabelo.py`. Ainda ruins: sakura_young e wasabi (outra unidade/origem, FBX antigo), akatsuki_hat (sem o chapéu = topo careca), e os que tinham bandana (vão da faixa vazio): boruto, inojin, sasuke_headband, zabusa, kakashi, yamato, hinata, hinata_young, himawari, rin. **Cabelo cinza (corrigido 30/10/2026):** 2 causas, ambas viravam o material padrão da Unreal: (1) o M_CreatorHair não compilava no Metal porque o importador ligava Desaturation e Clamp pelo pino "Input" (o pino deles não tem nome: usar `''`); (2) a reimportação criou um 2º espaço de material vazio ("cabelo_015") nos SK_Hair_*, e é ele que a malha usa. `Tools/editor/corrigir_material_cabelo.py` conserta os dois (todos os espaços recebem o MI_<id>); o `reimportar_cabelos` já preenche todos os espaços. Couro cabeludo = 40% da cor do cabelo, sem pele. Foto: `Referencias/Personalizacao/cabelos_cor_corrigida.png`. O topo do cabelo preto fica meio marrom com a luz do céu (é luz, não o material).
+- Mapa de testes: `/Game/Ninja/Maps/Lvl_Treino` (mapa inicial do editor e do jogo). Criado por `Tools/editor/criar_mapa_treino.py`.
+- Movimento: `Source/HypeWorld/Ninja/NinjaMovementComponent` (corrida ninja, dash, corrida na parede, com predição de rede). Pulo duplo = `JumpMaxCount = 2` no personagem.
+
+~~~~~~~~~~
+<!-- HW-FIM-ORIGINAL -->
+
+Relacionada: [[Indice]].

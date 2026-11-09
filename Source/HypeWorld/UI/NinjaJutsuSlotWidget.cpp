@@ -21,8 +21,8 @@ namespace NinjaJutsuSlot
 	const float GlowScale = 1.45f;			// imagem do brilho: o aro cobre r < 0,69 dela, o brilho é o anel de fora
 	// Pílula do custo: centro abaixo do centro do círculo (fração do diâmetro), altura = largura mínima
 	const float PillCenterY = 0.46f;
-	const float PillHeight = 0.28f;
-	const FLinearColor SelectBlue(0.05f, 0.3f, 1.f);	// brilho de seleção azul (o material clareia a cor)
+	const float PillHeight = 0.31f;
+	const FLinearColor SelectBlue(0.18f, 0.54f, 1.f);	// brilho de seleção azul (o material clareia a cor)
 	// Círculo da arte dentro do recorte dos slots (Tools/hud/slots_jutsu_layout.json): caixa de 460 px, raio 121, centro (230, 200)
 	const FVector2D ArtCenter(0.5f, 200.f / 460.f);
 	const float ArtRadius = 121.f / 460.f;
@@ -96,13 +96,7 @@ void UNinjaJutsuSlotWidget::Build()
 	if (UMaterialInterface* ArtMat = LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Ninja/UI/HUD/Jutsu/M_UI_JutsuSlotRing.M_UI_JutsuSlotRing")))
 	{
 		ArtMID = UMaterialInstanceDynamic::Create(ArtMat, this);
-		if (!bEmpty)
-		{
-			ArtMID->SetTextureParameterValue(TEXT("Slot"), Data.Icon.Get());
-		}
-		ArtMID->SetVectorParameterValue(TEXT("ArtCenter"), FLinearColor(ArtCenter.X, ArtCenter.Y, 0.f, 0.f));
-		ArtMID->SetScalarParameterValue(TEXT("ArtRadius"), ArtRadius);
-		ArtMID->SetScalarParameterValue(TEXT("Empty"), bEmpty ? 1.f : 0.f);
+		ApplyArt();
 		Art->SetBrushFromMaterial(ArtMID);
 	}
 	Put(Art, Disc, FVector2D(Size));
@@ -110,7 +104,7 @@ void UNinjaJutsuSlotWidget::Build()
 	// 3) Segundos do cooldown no meio do círculo ("27.1s"), branco e negrito com contorno escuro
 	CooldownText = WidgetTree->ConstructWidget<UTextBlock>();
 	FSlateFontInfo CdFont = CooldownFont;
-	CdFont.OutlineSettings.OutlineSize = 2;
+	CdFont.OutlineSettings.OutlineSize = 1;
 	CdFont.OutlineSettings.OutlineColor = FLinearColor(0.f, 0.f, 0.f, 0.7f);
 	CooldownText->SetFont(CdFont);
 	CooldownText->SetColorAndOpacity(FSlateColor(FLinearColor::White));
@@ -126,10 +120,10 @@ void UNinjaJutsuSlotWidget::Build()
 	FSlateBrush PillBrush;
 	PillBrush.DrawAs = ESlateBrushDrawType::RoundedBox;
 	PillBrush.TintColor = FSlateColor(FLinearColor(0.f, 0.f, 0.f, 0.96f));
-	PillBrush.OutlineSettings = FSlateBrushOutlineSettings(0.f, FSlateColor(FLinearColor(0.f, 0.f, 0.f, 0.f)), 0.f);
+	PillBrush.OutlineSettings = FSlateBrushOutlineSettings(0.f, FSlateColor(FLinearColor(0.011f, 0.021f, 0.020f, 1.f)), 1.f);
 	PillBrush.OutlineSettings.RoundingType = ESlateBrushRoundingType::HalfHeightRadius;
 	Pill->SetBrush(PillBrush);
-	Pill->SetPadding(FMargin(PillH * 0.32f, 0.f));
+	Pill->SetPadding(FMargin(PillH * 0.24f, 0.f));
 	Pill->SetHorizontalAlignment(HAlign_Center);
 	Pill->SetVerticalAlignment(VAlign_Center);
 	NumberText = WidgetTree->ConstructWidget<UTextBlock>();
@@ -164,18 +158,27 @@ void UNinjaJutsuSlotWidget::SetNumber(int32 Number)
 	}
 }
 
+void UNinjaJutsuSlotWidget::ApplyArt()
+{
+	if (!ArtMID)
+	{
+		return;
+	}
+	if (Data.Icon)
+	{
+		ArtMID->SetTextureParameterValue(TEXT("Slot"), Data.Icon.Get());
+	}
+	const FVector2D Center = Data.bStandaloneArt ? FVector2D(0.5f, 0.5f) : NinjaJutsuSlot::ArtCenter;
+	ArtMID->SetVectorParameterValue(TEXT("ArtCenter"), FLinearColor(Center.X, Center.Y, 0.f, 0.f));
+	ArtMID->SetScalarParameterValue(TEXT("ArtRadius"), Data.bStandaloneArt ? 0.5f : NinjaJutsuSlot::ArtRadius);
+	ArtMID->SetScalarParameterValue(TEXT("Empty"), Data.Icon ? 0.f : 1.f);
+}
+
 void UNinjaJutsuSlotWidget::SetData(const FNinjaJutsuSlotData& InData)
 {
 	Data = InData;
 	const bool bEmpty = Data.Icon == nullptr;
-	if (ArtMID)
-	{
-		if (!bEmpty)
-		{
-			ArtMID->SetTextureParameterValue(TEXT("Slot"), Data.Icon.Get());
-		}
-		ArtMID->SetScalarParameterValue(TEXT("Empty"), bEmpty ? 1.f : 0.f);
-	}
+	ApplyArt();
 	if (NumberText)
 	{
 		NumberText->SetText(FText::AsNumber(Data.Number));
@@ -241,7 +244,7 @@ void UNinjaJutsuSlotWidget::TickSlot(float DeltaTime)
 
 	// Brilho azul só no selecionado (e no pulso de "pronto"), como na referência
 	const bool bEmpty = Data.Icon == nullptr;
-	const float GlowIntensity = bEmpty ? 0.f : 0.5f * Sel + 0.4f * Ready;
+	const float GlowIntensity = bEmpty ? 0.f : 0.75f * Sel + 0.4f * Ready;
 	if (GlowMID)
 	{
 		GlowMID->SetScalarParameterValue(TEXT("Intensity"), GlowIntensity);

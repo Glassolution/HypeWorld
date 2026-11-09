@@ -1,0 +1,971 @@
+{
+  "status": "arquivado",
+  "date": "2026-11-08",
+  "encoding": "utf-8",
+  "payload_prefix": "<!-- HW-INICIO-ORIGINAL -->\n~~~~~~~~~~markdown\n",
+  "payload_suffix": "\n~~~~~~~~~~\n<!-- HW-FIM-ORIGINAL -->",
+  "sources": [
+    {
+      "id": "WS/CLAUDE.md",
+      "path": "/Users/luisfelipexavier/Desktop/Hype World/CLAUDE.md",
+      "backup": "/Users/luisfelipexavier/Desktop/Hype World/Backups/Biblioteca/2026-11-08/WS/CLAUDE.md",
+      "sha256": "94731a0145b73bcbbfbfc847edf782da034e9d304632d2e3e2f349fc63dcbf3e",
+      "lines": 192,
+      "chars": 72428,
+      "tokens_est": 18107.0,
+      "mtime_ns": 1793506343996477475,
+      "pieces": [
+        {
+          "file": "Trecho-001.md",
+          "start_char": 0,
+          "end_char": 52,
+          "sha256": "d03b931e24ce0f406aee11ee95352367e077b162907a1b5f47bc923fd422ea62"
+        },
+        {
+          "file": "Trecho-002.md",
+          "start_char": 52,
+          "end_char": 455,
+          "sha256": "fa0f769df33fa8ef77458b399613d38ecc2649e2daf50aa741d9dc268b5ec13b"
+        },
+        {
+          "file": "Trecho-003.md",
+          "start_char": 455,
+          "end_char": 1193,
+          "sha256": "a658d70623283d0d56b53271a6bcc51502be58a065975adf55e08881e176af92"
+        },
+        {
+          "file": "Trecho-004.md",
+          "start_char": 1193,
+          "end_char": 3949,
+          "sha256": "3cf0bab034760d35f210213ce0c701de7a5c1785435bce61aca130449d2bada9"
+        },
+        {
+          "file": "Trecho-005.md",
+          "start_char": 3949,
+          "end_char": 5759,
+          "sha256": "9c3b250fd697087eec1064760ab8d6689e860bdcefec894d17eaa078da7fcf52"
+        },
+        {
+          "file": "Trecho-006.md",
+          "start_char": 5759,
+          "end_char": 6938,
+          "sha256": "528dac7a7d19176f912789a325f9b18ab9a018ee41632dbcd9239e6d718c4a61"
+        },
+        {
+          "file": "Trecho-007.md",
+          "start_char": 6938,
+          "end_char": 11017,
+          "sha256": "e8d857e1976eff1263e7d1acf77c85d4246a4ff511c7575f58c2ed0606e0f767"
+        },
+        {
+          "file": "Trecho-008.md",
+          "start_char": 11017,
+          "end_char": 12164,
+          "sha256": "2412af0ac15b70b45f717dc6847b07e43a25fa463905893f6eb90e8fb8abf7e3"
+        },
+        {
+          "file": "Trecho-009.md",
+          "start_char": 12164,
+          "end_char": 14092,
+          "sha256": "204e499fc2de72d1ec67c244bd2828743ad2beb50a15b78261aae3dbff5a11b5"
+        },
+        {
+          "file": "Trecho-010.md",
+          "start_char": 14092,
+          "end_char": 15390,
+          "sha256": "43e6a1d32b3eaade5f1de3dd2c22c03a6812c48cedbe2785bc6f0fddddcc5f19"
+        },
+        {
+          "file": "Trecho-011.md",
+          "start_char": 15390,
+          "end_char": 19493,
+          "sha256": "9d2bb50f898caa0fa5d445615e0f830e0cddcbf9aad16c356e2381949c39f317"
+        },
+        {
+          "file": "Trecho-012.md",
+          "start_char": 19493,
+          "end_char": 23569,
+          "sha256": "0b59eb09834921ecfcc9a8f8f013733e9f5b41be8d2ced0963c7692ac373e19a"
+        },
+        {
+          "file": "Trecho-013.md",
+          "start_char": 23569,
+          "end_char": 26616,
+          "sha256": "43f7ec18431955657e13cf6f01e5eabdf5ab489479888026691de27d6e80072a"
+        },
+        {
+          "file": "Trecho-014.md",
+          "start_char": 26616,
+          "end_char": 30364,
+          "sha256": "b013235487741948e66526e66a134692305d6eaaf9a9ac16d6f6f2f1f502a6e8"
+        },
+        {
+          "file": "Trecho-015.md",
+          "start_char": 30364,
+          "end_char": 34108,
+          "sha256": "382a6bc4f0a14e6694ba9575cc232d509f1b4cb64014e4f09a6ece794c3735a6"
+        },
+        {
+          "file": "Trecho-016.md",
+          "start_char": 34108,
+          "end_char": 38173,
+          "sha256": "3e3413e46a9190d8a55471a710657fa07db2a2e8154cb2d364071349e5448dc3"
+        },
+        {
+          "file": "Trecho-017.md",
+          "start_char": 38173,
+          "end_char": 41939,
+          "sha256": "c31674f18164e005a8c96fd22d6abbfc69b5b89c6362a878606d35a1360a8037"
+        },
+        {
+          "file": "Trecho-018.md",
+          "start_char": 41939,
+          "end_char": 45377,
+          "sha256": "6ae4dcbb026cc0d8b24a23d4167e9162e19f677dd7309f01b1bec731f11c6b59"
+        },
+        {
+          "file": "Trecho-019.md",
+          "start_char": 45377,
+          "end_char": 48915,
+          "sha256": "6024e83f8af3619efcff3086246b5901714ec67c36736cfec92604d47554ab46"
+        },
+        {
+          "file": "Trecho-020.md",
+          "start_char": 48915,
+          "end_char": 52618,
+          "sha256": "b5ed1cb0a939edec7a20e5b202d3a1d61f0436dc0fbcd56fb8203751506399de"
+        },
+        {
+          "file": "Trecho-021.md",
+          "start_char": 52618,
+          "end_char": 56703,
+          "sha256": "bdd2cb3fb33f6cd81f4b21ad944b50d3939323531e07b3293a2f94603a613ceb"
+        },
+        {
+          "file": "Trecho-022.md",
+          "start_char": 56703,
+          "end_char": 59231,
+          "sha256": "3821e738eca187fdd37ca2006d9ad0f505708bc6f1de2c0e41ff5ab8327675db"
+        },
+        {
+          "file": "Trecho-023.md",
+          "start_char": 59231,
+          "end_char": 61361,
+          "sha256": "2fe7903ab9ecb7bffec2d73b922421966bf304200484befabbeee894532a3c54"
+        },
+        {
+          "file": "Trecho-024.md",
+          "start_char": 61361,
+          "end_char": 65441,
+          "sha256": "bfb6dbd5200469be71faaf8de37b8e8a56c86292e0b7db9487f841713f176226"
+        },
+        {
+          "file": "Trecho-025.md",
+          "start_char": 65441,
+          "end_char": 69443,
+          "sha256": "2f9977c568e5275f031f77a26c4c0dba9963975986f72415d2d503cc80af8fa2"
+        },
+        {
+          "file": "Trecho-026.md",
+          "start_char": 69443,
+          "end_char": 70737,
+          "sha256": "59fb7201e436ed8632b07746582e7f5c1296575d640796cc77a1d6c72ee2ee77"
+        },
+        {
+          "file": "Trecho-027.md",
+          "start_char": 70737,
+          "end_char": 71496,
+          "sha256": "d00ab6acbcf81196792de50f3880c9fcf7b61a3aa7e2a87594dafa76099975af"
+        },
+        {
+          "file": "Trecho-028.md",
+          "start_char": 71496,
+          "end_char": 71994,
+          "sha256": "627da5d64b11edac1bcaf3aa76436a31d458cf222abdb2bac4a1abca24005bd8"
+        },
+        {
+          "file": "Trecho-029.md",
+          "start_char": 71994,
+          "end_char": 72205,
+          "sha256": "4c284b0d782f84f9bdc70ced242f1bd757992f33e48b769538e9356b85013e64"
+        },
+        {
+          "file": "Trecho-030.md",
+          "start_char": 72205,
+          "end_char": 72428,
+          "sha256": "c7b5626983c108eefd649c0b96c6b951441e9ca8f93310041066164144346722"
+        }
+      ]
+    },
+    {
+      "id": "WS/AGENTS.md",
+      "path": "/Users/luisfelipexavier/Desktop/Hype World/AGENTS.md",
+      "backup": "/Users/luisfelipexavier/Desktop/Hype World/Backups/Biblioteca/2026-11-08/WS/AGENTS.md",
+      "sha256": "97873a8ef5e3d893a20020a68a5f06beaa88e3b5006c7d3ac3247da2f7b38732",
+      "lines": 17,
+      "chars": 1954,
+      "tokens_est": 488.5,
+      "mtime_ns": 1793914418618710974,
+      "pieces": [
+        {
+          "file": "Trecho-031.md",
+          "start_char": 0,
+          "end_char": 1954,
+          "sha256": "97873a8ef5e3d893a20020a68a5f06beaa88e3b5006c7d3ac3247da2f7b38732"
+        }
+      ]
+    },
+    {
+      "id": "UE/CLAUDE.md",
+      "path": "/Users/luisfelipexavier/Documents/Unreal Projects/HypeWorld/CLAUDE.md",
+      "backup": "/Users/luisfelipexavier/Desktop/Hype World/Backups/Biblioteca/2026-11-08/UE/CLAUDE.md",
+      "sha256": "99494fb47e1f0f6d29cb789b90625e8b07eaae801fbf4f2a6595573ca062aec7",
+      "lines": 199,
+      "chars": 73895,
+      "tokens_est": 18473.75,
+      "mtime_ns": 1793713405321889662,
+      "pieces": [
+        {
+          "file": "Trecho-001.md",
+          "start_char": 0,
+          "end_char": 52,
+          "sha256": "d03b931e24ce0f406aee11ee95352367e077b162907a1b5f47bc923fd422ea62"
+        },
+        {
+          "file": "Trecho-002.md",
+          "start_char": 52,
+          "end_char": 455,
+          "sha256": "fa0f769df33fa8ef77458b399613d38ecc2649e2daf50aa741d9dc268b5ec13b"
+        },
+        {
+          "file": "Trecho-003.md",
+          "start_char": 455,
+          "end_char": 1193,
+          "sha256": "a658d70623283d0d56b53271a6bcc51502be58a065975adf55e08881e176af92"
+        },
+        {
+          "file": "Trecho-004.md",
+          "start_char": 1193,
+          "end_char": 3949,
+          "sha256": "3cf0bab034760d35f210213ce0c701de7a5c1785435bce61aca130449d2bada9"
+        },
+        {
+          "file": "Trecho-005.md",
+          "start_char": 3949,
+          "end_char": 5759,
+          "sha256": "9c3b250fd697087eec1064760ab8d6689e860bdcefec894d17eaa078da7fcf52"
+        },
+        {
+          "file": "Trecho-032.md",
+          "start_char": 5759,
+          "end_char": 7226,
+          "sha256": "eb9d35d5274d88a1690aa72f7d4d02519c11a76af980b863862ca70d4dc4578f"
+        },
+        {
+          "file": "Trecho-006.md",
+          "start_char": 7226,
+          "end_char": 8405,
+          "sha256": "528dac7a7d19176f912789a325f9b18ab9a018ee41632dbcd9239e6d718c4a61"
+        },
+        {
+          "file": "Trecho-007.md",
+          "start_char": 8405,
+          "end_char": 12484,
+          "sha256": "e8d857e1976eff1263e7d1acf77c85d4246a4ff511c7575f58c2ed0606e0f767"
+        },
+        {
+          "file": "Trecho-008.md",
+          "start_char": 12484,
+          "end_char": 13631,
+          "sha256": "2412af0ac15b70b45f717dc6847b07e43a25fa463905893f6eb90e8fb8abf7e3"
+        },
+        {
+          "file": "Trecho-009.md",
+          "start_char": 13631,
+          "end_char": 15559,
+          "sha256": "204e499fc2de72d1ec67c244bd2828743ad2beb50a15b78261aae3dbff5a11b5"
+        },
+        {
+          "file": "Trecho-010.md",
+          "start_char": 15559,
+          "end_char": 16857,
+          "sha256": "43e6a1d32b3eaade5f1de3dd2c22c03a6812c48cedbe2785bc6f0fddddcc5f19"
+        },
+        {
+          "file": "Trecho-011.md",
+          "start_char": 16857,
+          "end_char": 20960,
+          "sha256": "9d2bb50f898caa0fa5d445615e0f830e0cddcbf9aad16c356e2381949c39f317"
+        },
+        {
+          "file": "Trecho-012.md",
+          "start_char": 20960,
+          "end_char": 25036,
+          "sha256": "0b59eb09834921ecfcc9a8f8f013733e9f5b41be8d2ced0963c7692ac373e19a"
+        },
+        {
+          "file": "Trecho-013.md",
+          "start_char": 25036,
+          "end_char": 28083,
+          "sha256": "43f7ec18431955657e13cf6f01e5eabdf5ab489479888026691de27d6e80072a"
+        },
+        {
+          "file": "Trecho-014.md",
+          "start_char": 28083,
+          "end_char": 31831,
+          "sha256": "b013235487741948e66526e66a134692305d6eaaf9a9ac16d6f6f2f1f502a6e8"
+        },
+        {
+          "file": "Trecho-015.md",
+          "start_char": 31831,
+          "end_char": 35575,
+          "sha256": "382a6bc4f0a14e6694ba9575cc232d509f1b4cb64014e4f09a6ece794c3735a6"
+        },
+        {
+          "file": "Trecho-016.md",
+          "start_char": 35575,
+          "end_char": 39640,
+          "sha256": "3e3413e46a9190d8a55471a710657fa07db2a2e8154cb2d364071349e5448dc3"
+        },
+        {
+          "file": "Trecho-017.md",
+          "start_char": 39640,
+          "end_char": 43406,
+          "sha256": "c31674f18164e005a8c96fd22d6abbfc69b5b89c6362a878606d35a1360a8037"
+        },
+        {
+          "file": "Trecho-018.md",
+          "start_char": 43406,
+          "end_char": 46844,
+          "sha256": "6ae4dcbb026cc0d8b24a23d4167e9162e19f677dd7309f01b1bec731f11c6b59"
+        },
+        {
+          "file": "Trecho-019.md",
+          "start_char": 46844,
+          "end_char": 50382,
+          "sha256": "6024e83f8af3619efcff3086246b5901714ec67c36736cfec92604d47554ab46"
+        },
+        {
+          "file": "Trecho-020.md",
+          "start_char": 50382,
+          "end_char": 54085,
+          "sha256": "b5ed1cb0a939edec7a20e5b202d3a1d61f0436dc0fbcd56fb8203751506399de"
+        },
+        {
+          "file": "Trecho-021.md",
+          "start_char": 54085,
+          "end_char": 58170,
+          "sha256": "bdd2cb3fb33f6cd81f4b21ad944b50d3939323531e07b3293a2f94603a613ceb"
+        },
+        {
+          "file": "Trecho-022.md",
+          "start_char": 58170,
+          "end_char": 60698,
+          "sha256": "3821e738eca187fdd37ca2006d9ad0f505708bc6f1de2c0e41ff5ab8327675db"
+        },
+        {
+          "file": "Trecho-023.md",
+          "start_char": 60698,
+          "end_char": 62828,
+          "sha256": "2fe7903ab9ecb7bffec2d73b922421966bf304200484befabbeee894532a3c54"
+        },
+        {
+          "file": "Trecho-024.md",
+          "start_char": 62828,
+          "end_char": 66908,
+          "sha256": "bfb6dbd5200469be71faaf8de37b8e8a56c86292e0b7db9487f841713f176226"
+        },
+        {
+          "file": "Trecho-025.md",
+          "start_char": 66908,
+          "end_char": 70910,
+          "sha256": "2f9977c568e5275f031f77a26c4c0dba9963975986f72415d2d503cc80af8fa2"
+        },
+        {
+          "file": "Trecho-026.md",
+          "start_char": 70910,
+          "end_char": 72204,
+          "sha256": "59fb7201e436ed8632b07746582e7f5c1296575d640796cc77a1d6c72ee2ee77"
+        },
+        {
+          "file": "Trecho-027.md",
+          "start_char": 72204,
+          "end_char": 72963,
+          "sha256": "d00ab6acbcf81196792de50f3880c9fcf7b61a3aa7e2a87594dafa76099975af"
+        },
+        {
+          "file": "Trecho-028.md",
+          "start_char": 72963,
+          "end_char": 73461,
+          "sha256": "627da5d64b11edac1bcaf3aa76436a31d458cf222abdb2bac4a1abca24005bd8"
+        },
+        {
+          "file": "Trecho-029.md",
+          "start_char": 73461,
+          "end_char": 73672,
+          "sha256": "4c284b0d782f84f9bdc70ced242f1bd757992f33e48b769538e9356b85013e64"
+        },
+        {
+          "file": "Trecho-030.md",
+          "start_char": 73672,
+          "end_char": 73895,
+          "sha256": "c7b5626983c108eefd649c0b96c6b951441e9ca8f93310041066164144346722"
+        }
+      ]
+    },
+    {
+      "id": "UE/AGENTS.md",
+      "path": "/Users/luisfelipexavier/Documents/Unreal Projects/HypeWorld/AGENTS.md",
+      "backup": "/Users/luisfelipexavier/Desktop/Hype World/Backups/Biblioteca/2026-11-08/UE/AGENTS.md",
+      "sha256": "96ee63e88d5d047630f93c9b1b76db146ef4af405687772ed512240d1bf1ebe3",
+      "lines": 27,
+      "chars": 2551,
+      "tokens_est": 637.75,
+      "mtime_ns": 1793848316460817192,
+      "pieces": [
+        {
+          "file": "Trecho-033.md",
+          "start_char": 0,
+          "end_char": 38,
+          "sha256": "ac56621ba4e1d2728925576748e450df2feb40fdd7f9aee8bd73810df9fe479d"
+        },
+        {
+          "file": "Trecho-034.md",
+          "start_char": 38,
+          "end_char": 1670,
+          "sha256": "fbeec7999af92bfca2b70c6c927bc380979056aeeec8b8305c3b04837040019d"
+        },
+        {
+          "file": "Trecho-035.md",
+          "start_char": 1670,
+          "end_char": 2551,
+          "sha256": "c8e6784f6601f37db429b4487dfe21221a5982f5058cd15bbf8e8ba9de5473f1"
+        }
+      ]
+    },
+    {
+      "id": "WS/CONTEXTO_ANIMACOES.md",
+      "path": "/Users/luisfelipexavier/Desktop/Hype World/CONTEXTO_ANIMACOES.md",
+      "backup": "/Users/luisfelipexavier/Desktop/Hype World/Backups/Biblioteca/2026-11-08/WS/CONTEXTO_ANIMACOES.md",
+      "sha256": "39220a1b53d09f00bfdb5760159f90116ba962dcc80f6b33f5c8bcd67c69d1db",
+      "lines": 61,
+      "chars": 9404,
+      "tokens_est": 2351.0,
+      "mtime_ns": 1792816946468573025,
+      "pieces": [
+        {
+          "file": "Trecho-036.md",
+          "start_char": 0,
+          "end_char": 302,
+          "sha256": "a889d1c0cad8b7181439e8756b45cefdc3e8499af86782a87c7dc6504e122d7f"
+        },
+        {
+          "file": "Trecho-037.md",
+          "start_char": 302,
+          "end_char": 1121,
+          "sha256": "1262abf41094d3f97e87f707dc39e778fc456882f92986488f384310ab17105d"
+        },
+        {
+          "file": "Trecho-038.md",
+          "start_char": 1121,
+          "end_char": 2928,
+          "sha256": "683a0194bfa50e330c3d69432100ed512c5f9a4380b53c8b6ad4232b0886044a"
+        },
+        {
+          "file": "Trecho-039.md",
+          "start_char": 2928,
+          "end_char": 3553,
+          "sha256": "dce23f7933d554438fd276e416e348379f1886e49b8c2ace54cbd42cfdab455f"
+        },
+        {
+          "file": "Trecho-040.md",
+          "start_char": 3553,
+          "end_char": 4457,
+          "sha256": "5a01fa8ab99a0662b17c951033a99b599c05a573f86626265fd5376e53abdf0e"
+        },
+        {
+          "file": "Trecho-041.md",
+          "start_char": 4457,
+          "end_char": 8593,
+          "sha256": "cc7975c87238e4d3346f35c99aa37ce38e1f4faff98420ffd0908ec94ddf3527"
+        },
+        {
+          "file": "Trecho-042.md",
+          "start_char": 8593,
+          "end_char": 9109,
+          "sha256": "b0a3b81e933842092bee0c7d0468b21f2b39b36fff6196d7949ac60ffc8c8b00"
+        },
+        {
+          "file": "Trecho-043.md",
+          "start_char": 9109,
+          "end_char": 9404,
+          "sha256": "fddd25ebaa9dd6bcb46c6a7d8787586e76016c92c54e7e56ad45cb3f815cfcca"
+        }
+      ]
+    },
+    {
+      "id": "WS/PROMPT_NUVEM.md",
+      "path": "/Users/luisfelipexavier/Desktop/Hype World/PROMPT_NUVEM.md",
+      "backup": "/Users/luisfelipexavier/Desktop/Hype World/Backups/Biblioteca/2026-11-08/WS/PROMPT_NUVEM.md",
+      "sha256": "356c9e532c09f2f339c8dec81b357f369edc9f20efa2fe3f7f3b2e982065aec0",
+      "lines": 18,
+      "chars": 2343,
+      "tokens_est": 585.75,
+      "mtime_ns": 1792933882060971485,
+      "pieces": [
+        {
+          "file": "Trecho-044.md",
+          "start_char": 0,
+          "end_char": 2343,
+          "sha256": "356c9e532c09f2f339c8dec81b357f369edc9f20efa2fe3f7f3b2e982065aec0"
+        }
+      ]
+    },
+    {
+      "id": "WS/PADRAO_PERSONAGENS.md",
+      "path": "/Users/luisfelipexavier/Desktop/Hype World/Silent Stance/17 - Padrão aprovado para novas roupas/PADRAO_PERSONAGENS.md",
+      "backup": "/Users/luisfelipexavier/Desktop/Hype World/Backups/Biblioteca/2026-11-08/WS/PADRAO_PERSONAGENS.md",
+      "sha256": "ba59ef3751b01251c6b53ba2569e86bb8bcc5b3fabf4530b9523d6f1ab72d215",
+      "lines": 128,
+      "chars": 16914,
+      "tokens_est": 4228.5,
+      "mtime_ns": 1793914418619222817,
+      "pieces": [
+        {
+          "file": "Trecho-045.md",
+          "start_char": 0,
+          "end_char": 345,
+          "sha256": "4e6e9e31114826be973858d18f7e2d8d1dc1bec3cca8e22c79492c1b8137e9a1"
+        },
+        {
+          "file": "Trecho-046.md",
+          "start_char": 345,
+          "end_char": 1141,
+          "sha256": "2f77c30bb072ad87660483b39dcc847a5252fda81c87ff8f33f98547e0e74aa2"
+        },
+        {
+          "file": "Trecho-047.md",
+          "start_char": 1141,
+          "end_char": 3400,
+          "sha256": "d7ef333ec712e4e92b590fd82f3d9d36efd5c084f7f0b452334279f07f6994aa"
+        },
+        {
+          "file": "Trecho-048.md",
+          "start_char": 3400,
+          "end_char": 4875,
+          "sha256": "d79bf6921cdc6c38d2b7af1fed09c5d9986e8bb64e92564b23b659738be8742c"
+        },
+        {
+          "file": "Trecho-049.md",
+          "start_char": 4875,
+          "end_char": 7271,
+          "sha256": "1f9d54b87ba36625ec228d1e4f852b9a6a5f101eab488e2a40aaf7351e4de0b5"
+        },
+        {
+          "file": "Trecho-050.md",
+          "start_char": 7271,
+          "end_char": 9331,
+          "sha256": "894d5e9fef998058a3a3b9cef844c3721b606c9c933fbfd86b47b4de757cdc08"
+        },
+        {
+          "file": "Trecho-051.md",
+          "start_char": 9331,
+          "end_char": 10715,
+          "sha256": "6ac9dc47d63da070d43e1665299403da675c3eb58e450de0289297a1cc77963e"
+        },
+        {
+          "file": "Trecho-052.md",
+          "start_char": 10715,
+          "end_char": 12252,
+          "sha256": "259f0232835c9c89cb311f18a54c6ef9da111c8fd71eb9fbe61d1ff5d2253529"
+        },
+        {
+          "file": "Trecho-053.md",
+          "start_char": 12252,
+          "end_char": 13528,
+          "sha256": "ce5ab538b584da86785405edf060b5da82fde4269c3a58ed95777669f4b6a22b"
+        },
+        {
+          "file": "Trecho-054.md",
+          "start_char": 13528,
+          "end_char": 14988,
+          "sha256": "b8858f7f9fbc71ad1e227f8a9d35f927cdf55c2f2e440a15d26fa112ffbb5550"
+        },
+        {
+          "file": "Trecho-055.md",
+          "start_char": 14988,
+          "end_char": 15600,
+          "sha256": "84716a8a30c6896c6e1117cc8b83d225172615e47b74cee33dbf80aa3939e706"
+        },
+        {
+          "file": "Trecho-056.md",
+          "start_char": 15600,
+          "end_char": 16914,
+          "sha256": "13c906220335bcba35b053b867d88a6aa754c2562467ba5603bce14c4b415f9c"
+        }
+      ]
+    },
+    {
+      "id": "WS/Hype/Bem-vindo.md",
+      "path": "/Users/luisfelipexavier/Desktop/Hype World/Hype/Bem-vindo.md",
+      "backup": "/Users/luisfelipexavier/Desktop/Hype World/Backups/Biblioteca/2026-11-08/WS/Hype/Bem-vindo.md",
+      "sha256": "5e0a15657be6edba6925a7c7dbe28c12f3d52546df13de0d0a0e4eea66641515",
+      "lines": 5,
+      "chars": 196,
+      "tokens_est": 49.0,
+      "mtime_ns": 1794050344706038709,
+      "pieces": [
+        {
+          "file": "Boas-vindas.md",
+          "start_char": 0,
+          "end_char": 196,
+          "sha256": "5e0a15657be6edba6925a7c7dbe28c12f3d52546df13de0d0a0e4eea66641515"
+        }
+      ]
+    }
+  ],
+  "deduplicated_chunks": [
+    {
+      "file": "Trecho-001.md",
+      "sha256": "d03b931e24ce0f406aee11ee95352367e077b162907a1b5f47bc923fd422ea62",
+      "title": "CLAUDE.md — Projeto Jogo Ninja (Unreal Engine 5)",
+      "chars": 52
+    },
+    {
+      "file": "Trecho-002.md",
+      "sha256": "fa0f769df33fa8ef77458b399613d38ecc2649e2daf50aa741d9dc268b5ec13b",
+      "title": "CONTEXTO",
+      "chars": 403
+    },
+    {
+      "file": "Trecho-003.md",
+      "sha256": "a658d70623283d0d56b53271a6bcc51502be58a065975adf55e08881e176af92",
+      "title": "Visão do jogo",
+      "chars": 738
+    },
+    {
+      "file": "Trecho-004.md",
+      "sha256": "3cf0bab034760d35f210213ce0c701de7a5c1785435bce61aca130449d2bada9",
+      "title": "Ambiente",
+      "chars": 2756
+    },
+    {
+      "file": "Trecho-005.md",
+      "sha256": "9c3b250fd697087eec1064760ab8d6689e860bdcefec894d17eaa078da7fcf52",
+      "title": "TRABALHO PELA NUVEM (Claude Code em claude.ai/code)",
+      "chars": 1810
+    },
+    {
+      "file": "Trecho-006.md",
+      "sha256": "528dac7a7d19176f912789a325f9b18ab9a018ee41632dbcd9239e6d718c4a61",
+      "title": "Cabelos e roupas Uchiha (30/10/2026)",
+      "chars": 1179
+    },
+    {
+      "file": "Trecho-007.md",
+      "sha256": "e8d857e1976eff1263e7d1acf77c85d4246a4ff511c7575f58c2ed0606e0f767",
+      "title": "Personalização de personagem (29/10/2026)",
+      "chars": 4079
+    },
+    {
+      "file": "Trecho-008.md",
+      "sha256": "2412af0ac15b70b45f717dc6847b07e43a25fa463905893f6eb90e8fb8abf7e3",
+      "title": "Personalização de personagem (29/10/2026)",
+      "chars": 1147
+    },
+    {
+      "file": "Trecho-009.md",
+      "sha256": "204e499fc2de72d1ec67c244bd2828743ad2beb50a15b78261aae3dbff5a11b5",
+      "title": "Entrada inicial — histórico anterior à personalização (29/10/2026)",
+      "chars": 1928
+    },
+    {
+      "file": "Trecho-010.md",
+      "sha256": "43e6a1d32b3eaade5f1de3dd2c22c03a6812c48cedbe2785bc6f0fddddcc5f19",
+      "title": "ARQUITETURA E PADRÕES",
+      "chars": 1298
+    },
+    {
+      "file": "Trecho-011.md",
+      "sha256": "9d2bb50f898caa0fa5d445615e0f830e0cddcbf9aad16c356e2381949c39f317",
+      "title": "PLANO POR FASES",
+      "chars": 4103
+    },
+    {
+      "file": "Trecho-012.md",
+      "sha256": "0b59eb09834921ecfcc9a8f8f013733e9f5b41be8d2ced0963c7692ac373e19a",
+      "title": "PLANO POR FASES",
+      "chars": 4076
+    },
+    {
+      "file": "Trecho-013.md",
+      "sha256": "43f7ec18431955657e13cf6f01e5eabdf5ab489479888026691de27d6e80072a",
+      "title": "PLANO POR FASES",
+      "chars": 3047
+    },
+    {
+      "file": "Trecho-014.md",
+      "sha256": "b013235487741948e66526e66a134692305d6eaaf9a9ac16d6f6f2f1f502a6e8",
+      "title": "PLANO POR FASES",
+      "chars": 3748
+    },
+    {
+      "file": "Trecho-015.md",
+      "sha256": "382a6bc4f0a14e6694ba9575cc232d509f1b4cb64014e4f09a6ece794c3735a6",
+      "title": "PLANO POR FASES",
+      "chars": 3744
+    },
+    {
+      "file": "Trecho-016.md",
+      "sha256": "3e3413e46a9190d8a55471a710657fa07db2a2e8154cb2d364071349e5448dc3",
+      "title": "PLANO POR FASES",
+      "chars": 4065
+    },
+    {
+      "file": "Trecho-017.md",
+      "sha256": "c31674f18164e005a8c96fd22d6abbfc69b5b89c6362a878606d35a1360a8037",
+      "title": "PLANO POR FASES",
+      "chars": 3766
+    },
+    {
+      "file": "Trecho-018.md",
+      "sha256": "6ae4dcbb026cc0d8b24a23d4167e9162e19f677dd7309f01b1bec731f11c6b59",
+      "title": "PLANO POR FASES",
+      "chars": 3438
+    },
+    {
+      "file": "Trecho-019.md",
+      "sha256": "6024e83f8af3619efcff3086246b5901714ec67c36736cfec92604d47554ab46",
+      "title": "PLANO POR FASES",
+      "chars": 3538
+    },
+    {
+      "file": "Trecho-020.md",
+      "sha256": "b5ed1cb0a939edec7a20e5b202d3a1d61f0436dc0fbcd56fb8203751506399de",
+      "title": "PLANO POR FASES",
+      "chars": 3703
+    },
+    {
+      "file": "Trecho-021.md",
+      "sha256": "bdd2cb3fb33f6cd81f4b21ad944b50d3939323531e07b3293a2f94603a613ceb",
+      "title": "PLANO POR FASES",
+      "chars": 4085
+    },
+    {
+      "file": "Trecho-022.md",
+      "sha256": "3821e738eca187fdd37ca2006d9ad0f505708bc6f1de2c0e41ff5ab8327675db",
+      "title": "PLANO POR FASES",
+      "chars": 2528
+    },
+    {
+      "file": "Trecho-023.md",
+      "sha256": "2fe7903ab9ecb7bffec2d73b922421966bf304200484befabbeee894532a3c54",
+      "title": "PLANO POR FASES",
+      "chars": 2130
+    },
+    {
+      "file": "Trecho-024.md",
+      "sha256": "bfb6dbd5200469be71faaf8de37b8e8a56c86292e0b7db9487f841713f176226",
+      "title": "PLANO POR FASES",
+      "chars": 4080
+    },
+    {
+      "file": "Trecho-025.md",
+      "sha256": "2f9977c568e5275f031f77a26c4c0dba9963975986f72415d2d503cc80af8fa2",
+      "title": "PLANO POR FASES",
+      "chars": 4002
+    },
+    {
+      "file": "Trecho-026.md",
+      "sha256": "59fb7201e436ed8632b07746582e7f5c1296575d640796cc77a1d6c72ee2ee77",
+      "title": "PLANO POR FASES",
+      "chars": 1294
+    },
+    {
+      "file": "Trecho-027.md",
+      "sha256": "d00ab6acbcf81196792de50f3880c9fcf7b61a3aa7e2a87594dafa76099975af",
+      "title": "REGRAS DE EXECUÇÃO",
+      "chars": 759
+    },
+    {
+      "file": "Trecho-028.md",
+      "sha256": "627da5d64b11edac1bcaf3aa76436a31d458cf222abdb2bac4a1abca24005bd8",
+      "title": "REGRAS ANTI-ALUCINAÇÃO",
+      "chars": 498
+    },
+    {
+      "file": "Trecho-029.md",
+      "sha256": "4c284b0d782f84f9bdc70ced242f1bd757992f33e48b769538e9356b85013e64",
+      "title": "FORMATO DOS MEUS PEDIDOS",
+      "chars": 211
+    },
+    {
+      "file": "Trecho-030.md",
+      "sha256": "c7b5626983c108eefd649c0b96c6b951441e9ca8f93310041066164144346722",
+      "title": "RESPOSTA FINAL",
+      "chars": 223
+    },
+    {
+      "file": "Trecho-031.md",
+      "sha256": "97873a8ef5e3d893a20020a68a5f06beaa88e3b5006c7d3ac3247da2f7b38732",
+      "title": "Hype World — referência aprovada de personagens",
+      "chars": 1954
+    },
+    {
+      "file": "Trecho-032.md",
+      "sha256": "eb9d35d5274d88a1690aa72f7d4d02519c11a76af980b863862ca70d4dc4578f",
+      "title": "Trajes modulares do Indra (03/11/2026)",
+      "chars": 1467
+    },
+    {
+      "file": "Trecho-033.md",
+      "sha256": "ac56621ba4e1d2728925576748e450df2feb40fdd7f9aee8bd73810df9fe479d",
+      "title": "Hype World — padrão de personagens",
+      "chars": 38
+    },
+    {
+      "file": "Trecho-034.md",
+      "sha256": "fbeec7999af92bfca2b70c6c927bc380979056aeeec8b8305c3b04837040019d",
+      "title": "Referência atual: Silent Stance aprovado",
+      "chars": 1632
+    },
+    {
+      "file": "Trecho-035.md",
+      "sha256": "c8e6784f6601f37db429b4487dfe21221a5982f5058cd15bbf8e8ba9de5473f1",
+      "title": "Indra: manutenção do modo legado",
+      "chars": 881
+    },
+    {
+      "file": "Trecho-036.md",
+      "sha256": "a889d1c0cad8b7181439e8756b45cefdc3e8499af86782a87c7dc6504e122d7f",
+      "title": "Contexto para continuar: animações de dash / pulo / corrida via Higgsfield → DeepMotion",
+      "chars": 302
+    },
+    {
+      "file": "Trecho-037.md",
+      "sha256": "1262abf41094d3f97e87f707dc39e778fc456882f92986488f384310ab17105d",
+      "title": "1. Quem e o quê",
+      "chars": 819
+    },
+    {
+      "file": "Trecho-038.md",
+      "sha256": "683a0194bfa50e330c3d69432100ed512c5f9a4380b53c8b6ad4232b0886044a",
+      "title": "2. Pastas e ferramentas",
+      "chars": 1807
+    },
+    {
+      "file": "Trecho-039.md",
+      "sha256": "dce23f7933d554438fd276e416e348379f1886e49b8c2ace54cbd42cfdab455f",
+      "title": "3. Por que estamos fazendo isso",
+      "chars": 625
+    },
+    {
+      "file": "Trecho-040.md",
+      "sha256": "5a01fa8ab99a0662b17c951033a99b599c05a573f86626265fd5376e53abdf0e",
+      "title": "4. O que o vídeo de referência mostra (análise quadro a quadro)",
+      "chars": 904
+    },
+    {
+      "file": "Trecho-041.md",
+      "sha256": "cc7975c87238e4d3346f35c99aa37ce38e1f4faff98420ffd0908ec94ddf3527",
+      "title": "5. O plano (pipeline)",
+      "chars": 4136
+    },
+    {
+      "file": "Trecho-042.md",
+      "sha256": "b0a3b81e933842092bee0c7d0468b21f2b39b36fff6196d7949ac60ffc8c8b00",
+      "title": "6. Estado do jogo (resumo — detalhes no CLAUDE.md)",
+      "chars": 516
+    },
+    {
+      "file": "Trecho-043.md",
+      "sha256": "fddd25ebaa9dd6bcb46c6a7d8787586e76016c92c54e7e56ad45cb3f815cfcca",
+      "title": "7. Primeiro passo no chat novo",
+      "chars": 295
+    },
+    {
+      "file": "Trecho-044.md",
+      "sha256": "356c9e532c09f2f339c8dec81b357f369edc9f20efa2fe3f7f3b2e982065aec0",
+      "title": "PROMPT_NUVEM.md",
+      "chars": 2343
+    },
+    {
+      "file": "Trecho-045.md",
+      "sha256": "4e6e9e31114826be973858d18f7e2d8d1dc1bec3cca8e22c79492c1b8137e9a1",
+      "title": "Padrão aprovado — personagens, roupas e cabelos do Hype World",
+      "chars": 345
+    },
+    {
+      "file": "Trecho-046.md",
+      "sha256": "2f77c30bb072ad87660483b39dcc847a5252fda81c87ff8f33f98547e0e74aa2",
+      "title": "Refinamento atual da gola — etapa 18",
+      "chars": 796
+    },
+    {
+      "file": "Trecho-047.md",
+      "sha256": "d7ef333ec712e4e92b590fd82f3d9d36efd5c084f7f0b452334279f07f6994aa",
+      "title": "Referência atual e arquivos de partida",
+      "chars": 2259
+    },
+    {
+      "file": "Trecho-048.md",
+      "sha256": "d79bf6921cdc6c38d2b7af1fed09c5d9986e8bb64e92564b23b659738be8742c",
+      "title": "O que fez a roupa finalmente funcionar",
+      "chars": 1475
+    },
+    {
+      "file": "Trecho-049.md",
+      "sha256": "1f9d54b87ba36625ec228d1e4f852b9a6a5f101eab488e2a40aaf7351e4de0b5",
+      "title": "Fluxo para cada nova roupa",
+      "chars": 2396
+    },
+    {
+      "file": "Trecho-050.md",
+      "sha256": "894d5e9fef998058a3a3b9cef844c3721b606c9c933fbfd86b47b4de757cdc08",
+      "title": "Rig, retarget e mãos: reutilizar a correção existente",
+      "chars": 2060
+    },
+    {
+      "file": "Trecho-051.md",
+      "sha256": "6ac9dc47d63da070d43e1665299403da675c3eb58e450de0289297a1cc77963e",
+      "title": "Texturas e acabamento",
+      "chars": 1384
+    },
+    {
+      "file": "Trecho-052.md",
+      "sha256": "259f0232835c9c89cb311f18a54c6ef9da111c8fd71eb9fbe61d1ff5d2253529",
+      "title": "Exportação e importação aprovadas",
+      "chars": 1537
+    },
+    {
+      "file": "Trecho-053.md",
+      "sha256": "ce5ab538b584da86785405edf060b5da82fde4269c3a58ed95777669f4b6a22b",
+      "title": "Integração com a personalização",
+      "chars": 1276
+    },
+    {
+      "file": "Trecho-054.md",
+      "sha256": "b8858f7f9fbc71ad1e227f8a9d35f927cdf55c2f2e440a15d26fa112ffbb5550",
+      "title": "Critérios de entrega para outra roupa",
+      "chars": 1460
+    },
+    {
+      "file": "Trecho-055.md",
+      "sha256": "84716a8a30c6896c6e1117cc8b83d225172615e47b74cee33dbf80aa3939e706",
+      "title": "Cabelos: decisão aprovada mais recente",
+      "chars": 612
+    },
+    {
+      "file": "Trecho-056.md",
+      "sha256": "13c906220335bcba35b053b867d88a6aa754c2562467ba5603bce14c4b415f9c",
+      "title": "Roupas por clã — 05/11/2026",
+      "chars": 1314
+    },
+    {
+      "file": "Boas-vindas.md",
+      "sha256": "5e0a15657be6edba6925a7c7dbe28c12f3d52546df13de0d0a0e4eea66641515",
+      "title": "Bem-vindo.md",
+      "chars": 196
+    }
+  ]
+}

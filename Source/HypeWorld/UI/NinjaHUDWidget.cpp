@@ -209,7 +209,7 @@ void UNinjaHUDWidget::BuildLayout()
 	JutsuSlotBase.Reset();
 	JutsuSlotWidgets.Reset();
 	// Arte de cada slot: recortes do PNG do Felipe (Tools/editor/montar_slots_jutsu.py liga no WBP) ou a arte do jutsu do
-	// JutsuLoadout. Sem dados = slots vazios. Estilo da referência de 06/11/2026: círculos grandes, pouco espaço entre eles
+	// JutsuLoadout. Sem dados = slots vazios.
 	const TArray<FNinjaJutsuSlotData>& SlotData = JutsuSlotData;
 	// Size = diâmetro do slot com o aro; a pílula do custo desce até ~0,6 x Size abaixo do centro
 	const int32 Count = FMath::Max(1, JutsuSlotCount);
@@ -221,7 +221,7 @@ void UNinjaHUDWidget::BuildLayout()
 		const FVector2D Pos(StartX + i * (Size + JutsuSlotGap), CenterY);
 		UNinjaJutsuSlotWidget* SlotWidget = CreateWidget<UNinjaJutsuSlotWidget>(this, UNinjaJutsuSlotWidget::StaticClass());
 		SlotWidget->Setup(SlotData.IsValidIndex(i) ? SlotData[i] : FNinjaJutsuSlotData(), Size,
-			HudFontInfo(TEXT("ExtraBold"), Size * 0.19f), HudFontInfo(TEXT("ExtraBold"), Size * 0.29f));
+			HudFontInfo(TEXT("ExtraBold"), Size * 0.20f), HudFontInfo(TEXT("ExtraBold"), Size * 0.29f));
 		SlotWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		JutsuSlotWidgets.Add(SlotWidget);
 		JutsuSlots.Add(Place(SlotWidget, BottomCenter, Pos, UNinjaJutsuSlotWidget::BoxSizeFor(Size), UNinjaJutsuSlotWidget::DiscAlignment()));
@@ -403,6 +403,7 @@ void UNinjaHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 			ShownSlotJutsu[i] = Jutsu;
 			FNinjaJutsuSlotData Data;
 			Data.Icon = Jutsu->Icon;
+			Data.bStandaloneArt = true;
 			Data.ThemeColor = Jutsu->ThemeColor;
 			Data.Number = FMath::RoundToInt(Jutsu->ChakraCost);
 			JutsuSlotWidgets[i]->SetData(Data);
@@ -421,6 +422,7 @@ void UNinjaHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 		{
 			if (Uses > ShownJutsuUses[i])
 			{
+				SetSelectedJutsu(i);
 				JutsuSlotWidgets[i]->PlayUsed();
 			}
 			ShownJutsuUses[i] = Uses;

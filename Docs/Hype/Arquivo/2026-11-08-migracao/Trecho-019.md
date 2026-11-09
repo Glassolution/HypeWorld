@@ -1,0 +1,19 @@
+---
+status: arquivado
+atualizado: 2026-11-08
+---
+# PLANO POR FASES — trecho preservado
+
+> Conteúdo original preservado nesta migração; não é instrução vigente.
+> Origem e ordem exatas constam em Originais.json; não ler por padrão.
+
+<!-- HW-INICIO-ORIGINAL -->
+~~~~~~~~~~markdown
+- **Trote e curvas (25/10/2026, pedido do Felipe):** trote = Mixamo `Run2_Forward` (mesmo conjunto dos passos laterais Run2_Left/Right) a 520 cm/s, de lado 430 (`RunStrafeSpeed`); o `Run_Type01_Loop` do pack (natural 146, tocado 2,4x) foi reprovado. **O trote não desliga ao parar** (PvP: para e muda de lado); só o Shift muda; a corrida ninja parada 0,3 s volta para o trote (`UpdateAutoRun`). Curva em arco (`SprintSteerAngle` 30 ≈ 265°/s medido sem perder velocidade; 18 = 150°/s lento, 50 = 500°/s gira no lugar) só na corrida ninja; corpo `SprintRotationRate` 1000; câmera volta para as costas com `SprintCameraFollowSpeed` 8 e NÃO persegue quando o corpo corre para a câmera (>120°) — S vira na hora (~0,15 s) e corre para a câmera, sem ficar dando voltas. Taxa da animação pode ir até 0,8x. Script: `Tools/editor/ajustar_trote_corrida.py`; teste `Tools/editor/teste_trote_corrida.py`.
+- **Controles de corrida (ATUAL, 24/10/2026 — substitui o Shift de 3 cliques abaixo):** o padrão é **trotar** (`bWantsToRun = true` já no NinjaMovementComponent, 5,2 m/s); **Shift 1 clique = corrida ninja** (8 m/s), outro clique volta ao trote (`DoSprintStart`/`DoSprintEnd`); **Alt (esquerdo/direito) = andar** (1,5 m/s), outro Alt volta ao trote (`DoWalkToggle`, `WalkToggleAction` = `/Game/Ninja/Core/Input/IA_Walk`, criado por `Tools/editor/criar_tecla_andar.py`). Andando, Shift vai direto para a corrida ninja. Medido: 520 → Shift 800 → Shift 520 → Alt 150 → Alt 520. **Gotcha resolvido:** valor novo no CDO do BP só chega ao Play depois de `unreal.BlueprintEditorLibrary.compile_blueprint(bp)` (sem isso o Play usava o valor velho).
+- **Controles (atual, 24/10/2026):** WASD andar 1,5 m/s; **Shift = corrida automática por clique** (não segura): 1º clique trote 3,5 m/s (`Run_Type01_Loop`), 2º clique corrida ninja 8 m/s (`Run_Loop`), 3º clique volta a andar; **W duas vezes** (até `DoubleTapSprintWindow` 0,3 s entre os toques; vale segurando A/D) também liga a corrida ninja (`CheckForwardDoubleTap`: toque novo = W depois de um quadro sem ele; o analógico do controle empurrado 2x também conta); parar (sem direção 0,3 s) volta a andar (`UpdateAutoRun`). **Botão direito: 1 clique liga o modo de batalha** (pose de luta parado) até outro clique ou nocaute (`bBattleToggle` + ServerSetBattleToggle); segurando também defende. Espaço pulo / pulo duplo / pular da parede, **Q ou Ctrl dash**, LMB atacar (combo leve), F golpe forte/finalizador, C carregar chakra. (Texto antigo, de antes do pack:) WASD andar 1,7 m/s (animação Walk2 do Felipe), Shift segurar = correr 5 m/s, Shift 2 toques rápidos (segurar) = corrida ninja 8 m/s, Espaço pulo / pulo duplo / pular da parede, Ctrl dash/desvio, LMB atacar (combo leve), F golpe forte/finalizador, botão direito (parado/andando) defender, C carregar chakra, Câmera: andando, o corpo fica de costas para a câmera (A/D strafe, S de costas com as animações Walk2); parado, a câmera orbita livre e o corpo não gira; correndo (Shift 1x) para frente ou lado (até 112° da câmera) o corpo também fica de costas para a câmera e as pernas fazem strafe (Run2_Forward/Left/Right do Mixamo, 560/428/342 cm/s); para trás o corpo vira e corre. Na corrida ninja (Shift 2x) não há strafe: o corpo sempre vira para onde corre (A/D = corre de lado na tela, em linha reta). A câmera não persegue quem corre na direção dela nem com só A/D apertado (input a mais de 60° da câmera). Botão direito força o modo de costas para a câmera também correndo. Controle: L3 correr, B dash, X atacar, RB golpe forte, Y chakra.
+
+~~~~~~~~~~
+<!-- HW-FIM-ORIGINAL -->
+
+Relacionada: [[Indice]].

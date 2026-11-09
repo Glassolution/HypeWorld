@@ -95,9 +95,9 @@ public:
 	/** Diâmetro do slot com o aro (px em 1080p; a escala de DPI da interface ajusta outras resoluções), espaço entre os
 	 *  slots (centro a centro = Size + Gap) e margem de baixo (fração da altura da tela, até a pílula do custo) */
 	UPROPERTY(EditAnywhere, Category="HUD|Jutsus")
-	float JutsuSlotSize = 84.f;
+	float JutsuSlotSize = 54.f;
 	UPROPERTY(EditAnywhere, Category="HUD|Jutsus")
-	float JutsuSlotGap = 12.f;
+	float JutsuSlotGap = 10.f;
 	UPROPERTY(EditAnywhere, Category="HUD|Jutsus")
 	float JutsuBottomMargin = 0.03f;
 
@@ -110,7 +110,7 @@ public:
 
 	/** Quanto os slots descem fora do modo de batalha (px; sobra só a pontinha) */
 	UPROPERTY(EditAnywhere, Category="HUD|Jutsus")
-	float JutsuHiddenOffset = 112.f;
+	float JutsuHiddenOffset = 80.f;
 
 	/** Barrinha vertical do super pulo (referência do Felipe): tamanho (px) e posição em relação à cabeça do personagem
 	 *  na tela (px; + = direita / baixo) */

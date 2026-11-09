@@ -1,6 +1,6 @@
-// Slot de jutsu do HUD no estilo da referência do Felipe (06/11/2026, barra "Pied de l'Aube"): círculo grande com aro
+// Slot de jutsu do HUD no estilo da referência do Felipe (06/11/2026, barra "Pied de l'Aube"): círculo com aro
 // escuro de pincel e a arte do jutsu por dentro (M_UI_JutsuSlotRing, Tools/editor/criar_material_slot_anel.py). A arte
-// vem do recorte dos slots (o material usa só o círculo da arte; moldura e etiqueta antigas ficam de fora).
+// pode vir de uma ilustração quadrada ou do recorte antigo (sem moldura e etiqueta).
 // De trás para a frente: brilho azul de seleção (M_UI_JutsuGlow) -> aro + arte -> segundos do cooldown no meio
 // ("27.1s", branco, negrito, contorno escuro) -> pílula preta do custo de chakra sobre a borda de baixo do aro.
 // Estados: selecionado (maior, escala 1,1 em 0,12 s, brilho azul), hover (1,04), usado (pulso 1 -> 1,12 -> 1 em 0,18 s +
@@ -24,8 +24,10 @@ struct FNinjaJutsuSlotData
 {
 	GENERATED_BODY()
 
-	/** Arte do slot inteiro (recorte do PNG do Felipe: moldura + arte + etiqueta). Vazio = slot vazio */
+	/** Arte do jutsu. Sem textura = slot vazio. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Jutsu") TObjectPtr<UTexture2D> Icon = nullptr;
+	/** Textura quadrada de arte, sem a moldura e etiqueta do recorte antigo. */
+	bool bStandaloneArt = false;
 	/** Cor temática (brilho de seleção). Vento #7BE07A, raio #8C78FF, fogo #FF8A2B, Rasengan #3FA9FF, Sharingan #FF2A2A */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Jutsu") FLinearColor ThemeColor = FLinearColor(0.05f, 0.4f, 1.f);
 	/** Número da etiqueta = custo de chakra (o HUD deixa o slot "sem chakra" quando o chakra atual é menor) */
@@ -66,6 +68,7 @@ protected:
 private:
 
 	void Build();
+	void ApplyArt();
 
 	UPROPERTY() TObjectPtr<UImage> Glow;
 	UPROPERTY() TObjectPtr<UImage> Art;

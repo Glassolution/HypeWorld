@@ -7,9 +7,10 @@ Bordas por smoothstep com a largura de 1 pixel (DDX/DDY): sem serrilhado em qual
 Rodar: python3 -I Tools/ue_exec.py -f Tools/editor/criar_materiais_jutsu.py
 """
 import math
+from pathlib import Path
 import unreal
-FONTE = "/Users/luisfelipexavier/Desktop/Hype World/Tools/editor/criar_materiais_aura.py"
-_src = open(FONTE).read()
+FONTE = Path(unreal.Paths.project_dir()).resolve() / "Tools" / "editor" / "criar_materiais_aura.py"
+_src = FONTE.read_text(encoding="utf-8")
 exec(_src[:_src.index("packages = []")].replace('FOLDER = "/Game/Ninja/VFX/Materials"', 'FOLDER = "/Game/Ninja/UI/HUD/Jutsu"'))
 packages = []
 
